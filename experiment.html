@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PLT</title>
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-call-function.js"></script>
+    <script src="jspsych/plugin-preload.js"></script>
+    <script src="plugin-PLT.js"></script>
+    <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
+<style>
+    .jsPsychDE {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: whitesmoke;
+    }
+</style>
+<body>
+    <div id='display_element' class='jsPsychDE'></div>
+</body>
+<script>
+    const leftimgList = ['balloon1.png','balloon1.png','bowtie1.png','balloon1.png','balloon1.png','bowtie1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','balloon1.png',
+        'bowtie2.png','scrunchie1.png','hourglass1.png',
+        'scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
+        'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
+        'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
+    const rightimgList = ['bowtie1.png','bowtie1.png','balloon1.png','bowtie1.png','bowtie1.png','balloon1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','bowtie1.png',
+        'bowtie2.png','scrunchie1.png','hourglass1.png',
+        'scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
+        'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
+        'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
+    const leftoutcomeList = [1,0,1,1,1,2,0,0,2,0,0,0,0,1,0,2,0,0,0,0,1,1,0,1,1,1,2,0];
+    const rightoutcomeList = [0,2,0,0,0,0,1,1,0,1,1,1,2,0,1,0,1,1,1,2,0,0,2,0,0,0,0,1];
+
+    let procedure = []
+    let instructions = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: '<p>INSTRUCTION.</p>'
+    };
+    procedure.push(instructions)
+    for (let i = 0; i < leftimgList.length; i++) {
+        procedure.push({
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '<div style="font-size:60px">+</div>',
+                choices: "NO_KEYS",
+                trial_duration: 800,
+                data: {trialphase: "fixation"},
+        })
+        procedure.push({
+            type: jsPsychPLT,
+            imgLeft: 'imgs/'+leftimgList.shift(),
+            imgRight: 'imgs/'+rightimgList.shift(),
+            outcomeLeft: leftoutcomeList.shift(),
+            outcomeRight: rightoutcomeList.shift(),
+            data: {trialphase: "stimulus",}
+        })
+        if ((i+1) % 13 === 0 && i!==0) {
+            procedure.push({
+                type: jsPsychHtmlKeyboardResponse,
+                choices: ['s'],
+                stimulus: "New block! Press s to continue.",
+                data: {trialphase: "break"},
+            })
+        }
+    }
+    procedure.push({                
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "Well done! You have finished the experiment.",
+            data: {trialphase: "end"},
+        })
+
+    let jsPsych = initJsPsych({
+        display_element: 'display_element',
+        on_finish: () => {
+            jsPsych.data.get().localSave('csv', `PLT_data.csv`);
+        }
+    });
+
+    jsPsych.run(procedure)
+
+</script>
+</html>
