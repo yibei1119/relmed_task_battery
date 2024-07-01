@@ -59,11 +59,25 @@
 
     // Get condition from URL
     window.condition = jsPsych.data.getURLVariable('cond');
+    window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    window.studyId = jsPsych.data.getURLVariable('STUDY_ID');
+    window.sessionId = jsPsych.data.getURLVariable('SESSION_ID');
 
     // Parse condition
     window.earlyStop = window.condition[0] == "1"
     window.valenceGrouped = window.condition[1] == "1"
     window.rewardFirst = window.condition[2] == "1"
+
+    // Save participant variables to data
+    jsPsych.data.addProperties({
+        prolific_pid: window.prolificPID,
+        study_id: window.studyId,
+        session_id: window.sessionId,
+        condition: window.condition,
+        early_stop: window.earlyStop,
+        valence_grouped: window.valenceGrouped,
+        reward_first: window.rewardFirst
+    })
 
     window.skipThisBlock = false;
     window.accNumber = 0;
@@ -164,7 +178,7 @@
             return(pages)
         },
         show_clickable_nav: true,
-        data: {trialphase: "instruction"}
+        data: {trialphase: "instructions"}
     }
 ]
     
