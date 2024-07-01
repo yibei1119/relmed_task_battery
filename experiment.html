@@ -45,7 +45,24 @@
     //                                      3 is early stop & reward-punishment grouped, 4 is early stop & punishment-reward grouped, 
     //                                      5 is no early stop & interleaved, 6 is early stop & interleaved
 
-    let condition = 2; //tmp for testing use only. real condition should be assigned above dynamically
+    // Conditions:
+    // First digit - early stopping. 0 - no early stopping, 1 - early stopping
+    // Second digit - valence grouped / interleaved. 0 - interleaved, 1 - grouped.
+    // Third digit - reward first. 0 - punishment first, 1 - reward first, undefined - NA
+
+    // Initialize jsPysch object
+    let jsPsych = initJsPsych({
+        display_element: 'display_element',
+    });
+
+    // Get condition from URL
+    const condition = jsPsych.data.getURLVariable('cond');
+
+    // Parse condition
+    const earlyStop = condition[0] == "1"
+    const valenceGrouped = condition[1] == "1"
+    const rewardFirst = condition[2] == "1"
+
     window.skipThisBlock = false;
     window.accNumber = 0;
     window.blockNumber = 1;
@@ -54,17 +71,17 @@
     let instructions = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function (){
-            if (condition === 1)
+            if (condition === "011")
             return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
-            else if (condition === 3)
+            else if (condition === "111")
             return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
-            else if (condition === 2)
+            else if (condition === "010")
             return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
-            else if (condition === 4)
+            else if (condition === "110")
             return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
-            else if (condition === 5)
+            else if (condition === "00")
             return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of EITHER giving you coins OR taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards is the better option, and maximising the coins you have as best as your can over time.<br><br>Upon your selection, you will see the outcome of your selection.<br><br>A picture of a coin indicates the amount you have earned, and a picture of a broken coin indicates the amount you have lost.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
-            else if (condition === 6)
+            else if (condition === "10")
             return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of EITHER giving you coins OR taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards is the better option, and maximising the coins you have as best as your can over time.<br><br>Upon your selection, you will see the outcome of your selection.<br><br>A picture of a coin indicates the amount you have earned, and a picture of a broken coin indicates the amount you have lost.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
         },
         choices: ['s'],
@@ -96,7 +113,7 @@
                         window.accNumber = 0;
                     }
                     if (window.accNumber === 5){
-                        if (condition === 3 || condition === 4 || condition === 6){
+                        if (earlyStop){
                             window.skipThisBlock = true
                         }
                     }
@@ -113,7 +130,7 @@
     } 
 
     function draw_break(){
-        if (condition === 1 || condition === 2 || condition === 5) {
+        if (!earlyStop) {
             return {
                 timeline:[{
                     type: jsPsychHtmlKeyboardResponse,
@@ -129,7 +146,7 @@
                     },
                 }]
             }
-        } else if (condition === 3 || condition === 4 || condition === 6){
+        } else if (earlyStop){
             return {
                 timeline:[{
                     type: jsPsychHtmlKeyboardResponse,
@@ -174,28 +191,28 @@
         }
         // new instructions for the grouped conditions
         if ((trialNumber) === 156) {
-            if (condition === 1) {
+            if (condition === "011") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
                     stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br><br>Press S key to continue!</p>",
                     data: {trialphase: "changeInstruction"},
                 })
-            } else if (condition === 3) {
+            } else if (condition === "111") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
                     stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br><br>Press S key to continue!</p>",
                     data: {trialphase: "changeInstruction"},
                 })
-            } else if (condition === 2) {
+            } else if (condition === "010") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
                     stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br><br>Press S key to continue!</p>",
                     data: {trialphase: "changeInstruction"},
                 })
-            } else if (condition === 4) {
+            } else if (condition === "110") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
@@ -216,10 +233,6 @@
             jsPsych.data.get().localSave('csv', `PLT_data.csv`);
         }
     })
-
-    let jsPsych = initJsPsych({
-        display_element: 'display_element',
-    });
 
     jsPsych.run(procedure);
     
