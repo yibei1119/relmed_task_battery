@@ -24,64 +24,204 @@
     <div id='display_element' class='jsPsychDE'></div>
 </body>
 <script>
+    // SET UP MULTIPLE IMAGE LISTS AND OUTCOME LISTS FOR DIFFERENT CONDITIONS HERE
     const leftimgList = ['balloon1.png','balloon1.png','bowtie1.png','balloon1.png','balloon1.png','bowtie1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','balloon1.png',
-        'bowtie2.png','scrunchie1.png','hourglass1.png',
-        'scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
-        'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
-        'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
+    'bowtie2.png','scrunchie1.png','bowtie2.png','scrunchie1.png','scrunchie1.png','bowtie2.png','scrunchie1.png','bowtie2.png','bowtie2.png','scrunchie1.png','bowtie2.png','scrunchie1.png','scrunchie1.png',
+    'hourglass1.png','scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
+    'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
+    'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
     const rightimgList = ['bowtie1.png','bowtie1.png','balloon1.png','bowtie1.png','bowtie1.png','balloon1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','bowtie1.png',
-        'bowtie2.png','scrunchie1.png','hourglass1.png',
-        'scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
-        'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
-        'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
-    const leftoutcomeList = [1,0,1,1,1,2,0,0,2,0,0,0,0,1,0,2,0,0,0,0,1,1,0,1,1,1,2,0];
-    const rightoutcomeList = [0,2,0,0,0,0,1,1,0,1,1,1,2,0,1,0,1,1,1,2,0,0,2,0,0,0,0,1];
+    'scrunchie1.png','bowtie2.png','scrunchie1.png','bowtie2.png','bowtie2.png','scrunchie1.png','bowtie2.png','scrunchie1.png','scrunchie1.png','bowtie2.png','scrunchie1.png','bowtie2.png','bowtie2.png',
+    'hourglass1.png','scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
+    'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
+    'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
+    const leftoutcomeList = [1,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01];
+    const rightoutcomeList = [0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,1];
+    const totalTrialNumber = 312; // 12 (blocks) * 13 (trials) * 2 (reward/punishment conditions)
+    // get PID
+    // var PID = ;
+    
+    // ASSIGN CONDITIONS HERE BASED ON PID; 1 is no early stop & reward-punishment grouped, 2 is no early stop & punishment-reward grouped, 
+    //                                      3 is early stop & reward-punishment grouped, 4 is early stop & punishment-reward grouped, 
+    //                                      5 is no early stop & interleaved, 6 is early stop & interleaved
 
-    let procedure = []
+    let condition = 2; //tmp for testing use only. real condition should be assigned above dynamically
+    window.skipThisBlock = false;
+    window.accNumber = 0;
+    window.blockNumber = 1;
+    window.interimOutcome = 0;
+    
     let instructions = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: '<p>INSTRUCTION.</p>'
+        stimulus: function (){
+            if (condition === 1)
+            return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
+            else if (condition === 3)
+            return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
+            else if (condition === 2)
+            return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
+            else if (condition === 4)
+            return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
+            else if (condition === 5)
+            return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of EITHER giving you coins OR taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards is the better option, and maximising the coins you have as best as your can over time.<br><br>Upon your selection, you will see the outcome of your selection.<br><br>A picture of a coin indicates the amount you have earned, and a picture of a broken coin indicates the amount you have lost.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
+            else if (condition === 6)
+            return '<p>Welcome to the Card Collector\'s Challenge!<br><br>In this game, you will see two cards on each turn.<br><br>Each card has its own unique probability of EITHER giving you coins OR taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards is the better option, and maximising the coins you have as best as your can over time.<br><br>Upon your selection, you will see the outcome of your selection.<br><br>A picture of a coin indicates the amount you have earned, and a picture of a broken coin indicates the amount you have lost.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br>You will get a bonus based on your performance at the end of this game.<br><br><br>Press S key to start the game!</p>'
+        },
+        choices: ['s'],
+        trial_duration: null,
+        data: {trialphase: "instruction"},
     };
-    procedure.push(instructions)
-    for (let i = 0; i < leftimgList.length; i++) {
-        procedure.push({
+    
+    function make_bandit_trial(leftimage, rightimage, leftoutcome, rightoutcome) {
+        return {
+            timeline: [{
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: '<div style="font-size:60px">+</div>',
                 choices: "NO_KEYS",
                 trial_duration: 800,
                 data: {trialphase: "fixation"},
-        })
-        procedure.push({
-            type: jsPsychPLT,
-            imgLeft: 'imgs/'+leftimgList.shift(),
-            imgRight: 'imgs/'+rightimgList.shift(),
-            outcomeLeft: leftoutcomeList.shift(),
-            outcomeRight: rightoutcomeList.shift(),
-            data: {trialphase: "stimulus",}
-        })
-        if ((i+1) % 13 === 0 && i!==0) {
-            procedure.push({
-                type: jsPsychHtmlKeyboardResponse,
-                choices: ['s'],
-                stimulus: "New block! Press s to continue.",
-                data: {trialphase: "break"},
-            })
+            },{ // select the correct list based on the condition
+                type: jsPsychPLT,
+                imgLeft: 'imgs/'+leftimage,
+                imgRight: 'imgs/'+rightimage,
+                outcomeLeft: leftoutcome,
+                outcomeRight: rightoutcome,
+                data: {
+                    trialphase: "task",
+                },
+                on_finish: function(data) {
+                    if (data.isOptimal) {
+                        window.accNumber++;
+                    } else {
+                        window.accNumber = 0;
+                    }
+                    if (window.accNumber === 5){
+                        if (condition === 3 || condition === 4 || condition === 6){
+                            window.skipThisBlock = true
+                        }
+                    }
+                    data.blockNumber = window.blockNumber;
+                    window.interimOutcome = window.interimOutcome + data.chosenOutcome;
+                    console.log(window.accNumber)
+                }
+            }
+            ],
+            conditional_function: function(){
+                return !window.skipThisBlock
+            }
+        }
+    } 
+
+    function draw_break(){
+        if (condition === 1 || condition === 2 || condition === 5) {
+            return {
+                timeline:[{
+                    type: jsPsychHtmlKeyboardResponse,
+                    choices: ['s'],
+                    stimulus: "New round! You will see two new cards!",
+                    data: {
+                        trialphase: "break",
+                    },
+                    on_finish: (data)=>{
+                        data.earlybreak = window.skipThisBlock;
+                        data.blockNumber = window.blockNumber;
+                        window.blockNumber++; 
+                    },
+                }]
+            }
+        } else if (condition === 3 || condition === 4 || condition === 6){
+            return {
+                timeline:[{
+                    type: jsPsychHtmlKeyboardResponse,
+                    choices: ['s'],
+                    stimulus: ()=>{
+                        if (window.skipThisBlock){
+                            return "You've clearly identified the optimal card.<br><br>You will now see two new cards.<br><br>Press S key to continue.";
+                            // return `<p>You've clearly identified the optimal card. You have obtained ${window.interimOutcome} points.<br><br>You will now see two new cards.<br><br>Press S key to continue.</p>`;
+                        } else {
+                            return "New round! You will see two new cards.";
+                        }
+                    },
+                    data: {
+                        trialphase: "break",
+                    },
+                    on_finish: function(data){
+                        data.earlybreak = window.skipThisBlock;
+                        window.skipThisBlock = false;
+                        window.accNumber = 0;
+                        data.blockNumber = window.blockNumber;
+                        window.blockNumber++;
+                        window.interimOutcome = 0;
+                    }
+                }]
+            }
         }
     }
+    
+    let bandit_block = [];
+    let trialNumber = 0;
+    for (let i = 0; i < totalTrialNumber; i++){
+        let leftimage = leftimgList.shift();
+        let rightimage = rightimgList.shift();
+        let leftoutcome = leftoutcomeList.shift();
+        let rightoutcome = rightoutcomeList.shift();
+        trialNumber ++;
+
+        bandit_block.push(make_bandit_trial(leftimage, rightimage, leftoutcome, rightoutcome));
+        
+        if (trialNumber % 13 ==0) {
+            bandit_block.push(draw_break());
+        }
+        // new instructions for the grouped conditions
+        if ((trialNumber) === 156) {
+            if (condition === 1) {
+                bandit_block.push({
+                    type: jsPsychHtmlKeyboardResponse,
+                    choices: ['s'],
+                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br><br>Press S key to continue!</p>",
+                    data: {trialphase: "changeInstruction"},
+                })
+            } else if (condition === 3) {
+                bandit_block.push({
+                    type: jsPsychHtmlKeyboardResponse,
+                    choices: ['s'],
+                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br><br>Press S key to continue!</p>",
+                    data: {trialphase: "changeInstruction"},
+                })
+            } else if (condition === 2) {
+                bandit_block.push({
+                    type: jsPsychHtmlKeyboardResponse,
+                    choices: ['s'],
+                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br><br>Press S key to continue!</p>",
+                    data: {trialphase: "changeInstruction"},
+                })
+            } else if (condition === 4) {
+                bandit_block.push({
+                    type: jsPsychHtmlKeyboardResponse,
+                    choices: ['s'],
+                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br><br>Press S key to continue!</p>",
+                    data: {trialphase: "changeInstruction"},
+                })
+            }
+        }
+    }
+    
+    let procedure = [instructions];
+    procedure.push({ timeline: bandit_block});
     procedure.push({                
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: "Well done! You have finished the experiment.",
-            data: {trialphase: "end"},
-        })
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "Well done! You have finished the experiment.",
+        data: {trialphase: "end"},
+        on_start: () => {
+            jsPsych.data.get().localSave('csv', `PLT_data.csv`);
+        }
+    })
 
     let jsPsych = initJsPsych({
         display_element: 'display_element',
-        on_finish: () => {
-            jsPsych.data.get().localSave('csv', `PLT_data.csv`);
-        }
     });
 
-    jsPsych.run(procedure)
-
+    jsPsych.run(procedure);
+    
 </script>
 </html>

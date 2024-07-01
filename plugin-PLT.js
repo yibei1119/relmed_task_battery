@@ -53,6 +53,7 @@ jsPsychPLT = (function(jspsych) {
                 imageRight: '',
                 outcomeLeft: '',
                 outcomeRight: '',
+                optimalSide: '',
                 chosenImg: '',
                 chosenOutcome: '',
                 rt: '',
@@ -72,7 +73,7 @@ jsPsychPLT = (function(jspsych) {
             }
 
             this.data.initTime = performance.now()
-            this.data.info = trial.info
+            // this.data.info = trial.info
             if (trial.maxRespTime > 0) {
                 this.timing.maxRespTime = trial.maxRespTime
             }
@@ -143,9 +144,9 @@ jsPsychPLT = (function(jspsych) {
                     max-width: 10vw;
                     
                     text-wrap: normal;
-                    font-size: 2rem;
+                    font-size: 1.5rem;
                     font-weight: bold;
-                    line-height: 4rem;
+                    line-height: 3rem;
                 }
                 
                 .coin {
@@ -203,12 +204,18 @@ jsPsychPLT = (function(jspsych) {
                 const coin = document.createElement('img')
                 coin.id = 'coin'
                 coin.className = 'coin'
-                if (this.data.chosenOutcome === 2) {
-                    coin.src = 'imgs/2euro.png'
-                } else if (this.data.chosenOutcome === 1) {
-                    coin.src = 'imgs/1euro.png'
-                } else {
-                    coin.src = 'imgs/blankcoin.png'
+                if (this.data.chosenOutcome === 1) {
+                    coin.src = 'imgs/1pound.png'
+                } else if (this.data.chosenOutcome === 0.5) {
+                    coin.src = 'imgs/50pence.png'
+                } else if (this.data.chosenOutcome === 0.01) {
+                    coin.src = 'imgs/1penny.png'
+                } else if (this.data.chosenOutcome === -1) {
+                    coin.src = 'imgs/1poundbroken.png'
+                } else if (this.data.chosenOutcome === -0.5) {
+                    coin.src = 'imgs/50pencebroken.png'
+                } else if (this.data.chosenOutcome === -0.01) {
+                    coin.src = 'imgs/1pennybroken.png'
                 }
 
                 document.getElementById(this.data.choice).appendChild(coin)
@@ -243,6 +250,8 @@ jsPsychPLT = (function(jspsych) {
         }
 
         endTrial() {
+            this.data.optimalSide = this.contingency.outcome[0]>this.contingency.outcome[1]?'left':'right'
+            this.data.isOptimal = this.data.choice === this.data.optimalSide
             this.data.endTime = performance.now()
             this.data.duration = this.data.endTime - this.data.initTime
             this.jsPsych.pluginAPI.cancelAllKeyboardResponses()
