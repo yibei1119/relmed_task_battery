@@ -39,6 +39,7 @@
     const leftoutcomeList = [1,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01];
     const rightoutcomeList = [0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,1];
     const totalTrialNumber = 312; // 12 (blocks) * 13 (trials) * 2 (reward/punishment conditions)
+    const totalBlockNumber = 24;
     // get PID
     // var PID = ;
     
@@ -57,12 +58,12 @@
     });
 
     // Get condition from URL
-    const condition = jsPsych.data.getURLVariable('cond');
+    window.condition = jsPsych.data.getURLVariable('cond');
 
     // Parse condition
-    const earlyStop = condition[0] == "1"
-    const valenceGrouped = condition[1] == "1"
-    const rewardFirst = condition[2] == "1"
+    window.earlyStop = window.condition[0] == "1"
+    window.valenceGrouped = window.condition[1] == "1"
+    window.rewardFirst = window.condition[2] == "1"
 
     window.skipThisBlock = false;
     window.accNumber = 0;
@@ -128,14 +129,40 @@
     },
     {
         type: jsPsychInstructions,
-        pages: [
-            "<p>Well done! You would have earned £X in this game.</p>",
-            "To save time, if you select the better card five times in a row, \
+        pages: function() {
+            let pages = [
+                "<p>Well done! You would have earned £X in this game.</p>"
+            ];
+
+            if (window.earlyStop) {
+                pages.push("<p>To save time, if you select the better card five times in a row, \
             the game will end, and you will get all the remaining coins as if you \
-            had chosen the better card each time.",
-            "You are almost ready to play for real.\
-            You will play multiple rounds of The Card Collector's Challenge."
-        ],
+            had chosen the better card each time.</p>");
+            }
+
+            let final_page = "<p>You are almost ready to play for real.</p>\
+                <p>You will play multiple rounds of The Card Collector's Challenge.";
+            
+            if (window.valenceGrouped){
+                if (window.rewardFirst){
+                    final_page += "At first you'll play " +  totalBlockNumber / 2 + 
+                        " rounds to win coins, and then another " +  totalBlockNumber / 2 + 
+                        " rounds to avoid losing coins.</p>";
+                } else {
+                    final_page += "At first you'll play " +  totalBlockNumber / 2 + 
+                        " rounds to avoid losing coins, and then another " +  totalBlockNumber / 2 + 
+                        " rounds to win coins. You start the game with £x of coins.</p>";
+                }
+            } else {
+                final_page += "You will play  " +  totalBlockNumber  + 
+                        " rounds, sometimes to win coins, and sometimes to avoid losing them.<br>\
+                        You start the game with £x of coins. ";
+            }
+            
+            pages.push(final_page);
+
+            return(pages)
+        },
         show_clickable_nav: true,
         data: {trialphase: "instruction"}
     }
@@ -243,28 +270,28 @@
         }
         // new instructions for the grouped conditions
         if ((trialNumber) === 156) {
-            if (condition === "011") {
+            if (window.condition === "011") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
                     stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br><br>Press S key to continue!</p>",
                     data: {trialphase: "changeInstruction"},
                 })
-            } else if (condition === "111") {
+            } else if (window.condition === "111") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
                     stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br><br>Press S key to continue!</p>",
                     data: {trialphase: "changeInstruction"},
                 })
-            } else if (condition === "010") {
+            } else if (window.condition === "010") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
                     stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br><br>Press S key to continue!</p>",
                     data: {trialphase: "changeInstruction"},
                 })
-            } else if (condition === "110") {
+            } else if (window.condition === "110") {
                 bandit_block.push({
                     type: jsPsychHtmlKeyboardResponse,
                     choices: ['s'],
