@@ -52,6 +52,19 @@
     // Second digit - valence grouped / interleaved. 0 - interleaved, 1 - grouped.
     // Third digit - reward first. 0 - punishment first, 1 - reward first, undefined - NA
 
+    async function load_squences(condition) {
+        try {
+            const response = await fetch('PLT_task_structure_' + condition + '.json');
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log(data); // Handle the JSON data
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+
     // Initialize jsPysch object
     let jsPsych = initJsPsych({
         display_element: 'display_element',
@@ -78,6 +91,8 @@
         valence_grouped: window.valenceGrouped,
         reward_first: window.rewardFirst
     })
+
+    load_squences(window.condition);
 
     window.skipThisBlock = false;
     window.accNumber = 0;
