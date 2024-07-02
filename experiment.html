@@ -59,8 +59,9 @@
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
-            const data = await response.json()[session - 1];
-            console.log(data); // Handle the JSON data
+            const data = await response.json();
+            const sess_data = data[session - 1];
+            console.log(sess_data); // Handle the JSON data
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
         }
@@ -103,44 +104,43 @@
     
     let instructions = prepare_instructions()
 
-    function make_bandit_trial(leftimage, rightimage, leftoutcome, rightoutcome) {
-        return {
-            timeline: [{
-                type: jsPsychHtmlKeyboardResponse,
-                stimulus: '<div style="font-size:60px">+</div>',
-                choices: "NO_KEYS",
-                trial_duration: 800,
-                data: {trialphase: "fixation"},
-            },{
-                type: jsPsychPLT,
-                imgLeft: function() {'imgs/'+ jsPsych.timelineVariable('stimulus_left')},
-                imgRight: function() {'imgs/'+ jsPsych.timelineVariable('stimulus_right')},
-                outcomeLeft: jsPsych.timelineVariable('feedback_left'),
-                outcomeRight: jsPsych.timelineVariable('feedback_left'),
-                optimalRight: jsPsych.timelineVariable('optimal_right'),
-                data: {
-                    trialphase: "task",
-                },
-                on_finish: function(data) {
-                    if (data.isOptimal) {
-                        window.accNumber++;
-                    } else {
-                        window.accNumber = 0;
-                    }
-                    if (window.accNumber === 5){
-                        if (earlyStop){
-                            window.skipThisBlock = true
-                        }
-                    }
-                    data.blockNumber = window.blockNumber;
-                    window.interimOutcome = window.interimOutcome + data.chosenOutcome;
-                    console.log(window.accNumber)
+    PLT_trial =  {
+        timeline: [{
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '<div style="font-size:60px">+</div>',
+            choices: "NO_KEYS",
+            trial_duration: 800,
+            data: {trialphase: "fixation"},
+        },
+        {
+            type: jsPsychPLT,
+            imgLeft: function() {'imgs/'+ jsPsych.timelineVariable('stimulus_left')},
+            imgRight: function() {'imgs/'+ jsPsych.timelineVariable('stimulus_right')},
+            outcomeLeft: jsPsych.timelineVariable('feedback_left'),
+            outcomeRight: jsPsych.timelineVariable('feedback_left'),
+            optimalRight: jsPsych.timelineVariable('optimal_right'),
+            data: {
+                trialphase: "task",
+            },
+            on_finish: function(data) {
+                if (data.isOptimal) {
+                    window.accNumber++;
+                } else {
+                    window.accNumber = 0;
                 }
+                if (window.accNumber === 5){
+                    if (earlyStop){
+                        window.skipThisBlock = true
+                    }
+                }
+                data.blockNumber = window.blockNumber;
+                window.interimOutcome = window.interimOutcome + data.chosenOutcome;
+                console.log(window.accNumber)
             }
-            ],
-            conditional_function: function(){
-                return !window.skipThisBlock
-            }
+        }
+        ],
+        conditional_function: function(){
+            return !window.skipThisBlock
         }
     } 
 
