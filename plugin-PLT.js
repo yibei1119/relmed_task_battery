@@ -31,6 +31,11 @@ jsPsychPLT = (function(jspsych) {
                 pretty_name: 'Right Outcome',
                 default: '',
             },
+            optimalRight: {
+                type: jspsych.ParameterType.INT,
+                pretty_name: 'Is the optimal stimulus on the right?',
+                default: '',
+            },
             maxRespTime: {
                 type: jspsych.ParameterType.INT,
                 default: -1,
@@ -250,7 +255,7 @@ jsPsychPLT = (function(jspsych) {
         }
 
         endTrial() {
-            this.data.optimalSide = this.contingency.outcome[0]>this.contingency.outcome[1]?'left':'right'
+            this.data.optimalSide = this.optimalRight == 1 ? 'right' : 'left'
             this.data.isOptimal = this.data.choice === this.data.optimalSide
             this.data.endTime = performance.now()
             this.data.duration = this.data.endTime - this.data.initTime
