@@ -59,9 +59,9 @@
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
-            const data = await response.json();
-            const sess_data = data[session - 1];
-            console.log(sess_data); // Handle the JSON data
+            const structure = await response.json();
+            const sess_structure = structure[session - 1];
+            build_PLT_task(sess_structure); // Handle the JSON data
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
         }
@@ -104,6 +104,27 @@
     
     let instructions = prepare_instructions()
 
+    inter_block_msg = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: ['s'],
+        stimulus: function(){
+            if (earlyStop & window.skipThisBlock){
+                return "You've clearly identified the optimal card.<br><br>You will now see two new cards.<br><br>Press S key to continue.";
+            }else{
+                return "New round! You will see two new cards!";
+            }
+        },
+        data: {
+            trialphase: "break",
+        },
+        on_finish: (data) => {
+            data.earlybreak = window.skipThisBlock;
+            window.skipThisBlock = false;
+            window.accNumber = 0;
+            window.interimOutcome = 0;
+        }
+    }
+
     PLT_trial =  {
         timeline: [{
             type: jsPsychHtmlKeyboardResponse,
@@ -143,51 +164,21 @@
             return !window.skipThisBlock
         }
     } 
-
-    function draw_break(){
-        if (!earlyStop) {
-            return {
-                timeline:[{
-                    type: jsPsychHtmlKeyboardResponse,
-                    choices: ['s'],
-                    stimulus: "New round! You will see two new cards!",
-                    data: {
-                        trialphase: "break",
-                    },
-                    on_finish: (data)=>{
-                        data.earlybreak = window.skipThisBlock;
-                        data.blockNumber = window.blockNumber;
-                        window.blockNumber++; 
-                    },
-                }]
-            }
-        } else if (earlyStop){
-            return {
-                timeline:[{
-                    type: jsPsychHtmlKeyboardResponse,
-                    choices: ['s'],
-                    stimulus: ()=>{
-                        if (window.skipThisBlock){
-                            return "You've clearly identified the optimal card.<br><br>You will now see two new cards.<br><br>Press S key to continue.";
-                            // return `<p>You've clearly identified the optimal card. You have obtained ${window.interimOutcome} points.<br><br>You will now see two new cards.<br><br>Press S key to continue.</p>`;
-                        } else {
-                            return "New round! You will see two new cards.";
-                        }
-                    },
-                    data: {
-                        trialphase: "break",
-                    },
-                    on_finish: function(data){
-                        data.earlybreak = window.skipThisBlock;
-                        window.skipThisBlock = false;
-                        window.accNumber = 0;
-                        data.blockNumber = window.blockNumber;
-                        window.blockNumber++;
-                        window.interimOutcome = 0;
-                    }
-                }]
-            }
+    
+    function build_PLT_task(structure){
+        let PLT_task = [];
+        for (let i=0; i<window.totalBlockNumber; i++){
+            block = [
+                {
+                    timeline: [PLT_trial],
+                    timeline_variables: structure[i]
+                },
+                inter_block_msg
+            ]
+            PLT_task = PLT_task.concat(block)
         }
+
+        console.log(PLT_task)
     }
     
     let bandit_block = [];
