@@ -26,28 +26,6 @@
     <div id='display_element' class='jsPsychDE'></div>
 </body>
 <script>
-    // SET UP MULTIPLE IMAGE LISTS AND OUTCOME LISTS FOR DIFFERENT CONDITIONS HERE
-    const leftimgList = ['balloon1.png','balloon1.png','bowtie1.png','balloon1.png','balloon1.png','bowtie1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','balloon1.png',
-    'bowtie2.png','scrunchie1.png','bowtie2.png','scrunchie1.png','scrunchie1.png','bowtie2.png','scrunchie1.png','bowtie2.png','bowtie2.png','scrunchie1.png','bowtie2.png','scrunchie1.png','scrunchie1.png',
-    'hourglass1.png','scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
-    'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
-    'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
-    const rightimgList = ['bowtie1.png','bowtie1.png','balloon1.png','bowtie1.png','bowtie1.png','balloon1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','balloon1.png','bowtie1.png','bowtie1.png',
-    'scrunchie1.png','bowtie2.png','scrunchie1.png','bowtie2.png','bowtie2.png','scrunchie1.png','bowtie2.png','scrunchie1.png','scrunchie1.png','bowtie2.png','scrunchie1.png','bowtie2.png','bowtie2.png',
-    'hourglass1.png','scrunchie2.png','snowglobe1.png','hourglass2.png','snowglobe2.png','rug1.png','rug2.png',
-    'easteregg1.png','coatrack1.png','easteregg2.png','cushion1.png','coatrack2.png','cushion2.png',
-    'necktie1.png','necktie2.png','coffeemug1.png','chessboard1.png','coffeemug2.png','balloon2.png','chessboard2.png'];
-    const leftoutcomeList = [1,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01];
-    const rightoutcomeList = [0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,0.5,0.01,1,0.01,0.01,0.01,0.01,0.5,1,0.01,0.5,1,0.5,1,0.01,0.5,0.01,0.5,1,0.5,1,0.01,0.01,1,0.01,0.01,0.01,0.01,1];
-    const totalTrialNumber = 312; // 12 (blocks) * 13 (trials) * 2 (reward/punishment conditions)
-    window.totalBlockNumber = 24;
-    // get PID
-    // var PID = ;
-    
-    // ASSIGN CONDITIONS HERE BASED ON PID; 1 is no early stop & reward-punishment grouped, 2 is no early stop & punishment-reward grouped, 
-    //                                      3 is early stop & reward-punishment grouped, 4 is early stop & punishment-reward grouped, 
-    //                                      5 is no early stop & interleaved, 6 is early stop & interleaved
-
     // Conditions:
     // First digit - early stopping. 0 - no early stopping, 1 - early stopping
     // Second digit - valence grouped / interleaved. 0 - interleaved, 1 - grouped.
@@ -61,6 +39,8 @@
             }
             const structure = await response.json();
             const sess_structure = structure[session - 1];
+
+            window.totalBlockNumber = sess_structure.length
             run_full_experiment(sess_structure);
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
