@@ -61,7 +61,7 @@
             }
             const structure = await response.json();
             const sess_structure = structure[session - 1];
-            build_PLT_task(sess_structure); // Handle the JSON data
+            run_full_experiment(sess_structure);
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
         }
@@ -95,15 +95,11 @@
         reward_first: window.rewardFirst
     })
 
-    load_squences(window.condition, window.sessionNum);
-
     window.skipThisBlock = false;
     window.accNumber = 0;
     window.blockNumber = 1;
     window.interimOutcome = 0;
     
-    let instructions = prepare_instructions()
-
     inter_block_msg = {
         type: jsPsychHtmlKeyboardResponse,
         choices: ['s'],
@@ -124,6 +120,46 @@
             window.interimOutcome = 0;
         }
     }
+
+    inter_valence_msg = [
+        {
+            type: jsPsychHtmlKeyboardResponse,
+            choices: ['space'],
+            stimulus: function(){
+                if ((window.rewardFirst & window.sessionNum == 1) | ((!window.rewardFirst) & window.sessionNum == 2)) {
+                    return "<p>Well done.</p><p>You will now continue playing the Card Collector's Challenge, \
+                        but this time to <b>avoid losing coins</b>. To start this part of the challenge, you recieve a purse with \
+                        £x in coins. Every broken coin you discover will be deducted from your purse.</p>\
+                        <p>Your goal is to lose as few coins as possible. Your bonus payment will be based on the number of \
+                            coins you have left at the end of the challenge.</p>\
+                            <p>Press the space bar to continue.</p>"
+                } else {
+                    return "<p>Well done.</p><p>You will now continue playing the Card Collector's Challenge, \
+                        but this time to <b>win coins</b>.</p>\
+                        <p>Your goal is to win as many coins as possible. Your bonus payment will be based on the number of \
+                            coins you have at the end of the challenge.</p>\
+                            <p>Press the space bar to continue.</p>"
+                }
+            },
+            data: {
+                trialphase: "change_valence",
+            },
+            on_finish: (data) => {
+                data.earlybreak = window.skipThisBlock;
+                window.skipThisBlock = false;
+                window.accNumber = 0;
+                window.interimOutcome = 0;
+            }
+        },
+        {
+            type: jsPsychHtmlKeyboardResponse,
+            choice: ['d', 'k'],
+            stimulus: "<p>Place your fingers on the keyboard as shown below, and press either the 'F' or 'K' key to start playing again.</p>",
+            data: {
+                trialphase: "change_valence"
+            }
+        }
+    ]
 
     PLT_trial =  {
         timeline: [{
@@ -167,81 +203,52 @@
     
     function build_PLT_task(structure){
         let PLT_task = [];
-        for (let i=0; i<window.totalBlockNumber; i++){
+        for (let i=0; i < window.totalBlockNumber; i++){
             block = [
                 {
                     timeline: [PLT_trial],
                     timeline_variables: structure[i]
-                },
-                inter_block_msg
-            ]
+                }
+            ];
+            
+            // Add message
+            if (window.valenceGrouped & (i == (totalBlockNumber / 2 - 1))) {
+                block.push(inter_valence_msg);
+            } else {
+                block.push(inter_block_msg);
+            }
+            
             PLT_task = PLT_task.concat(block)
         }
 
-        console.log(PLT_task)
+        return PLT_task
     }
-    
-    let bandit_block = [];
-    let trialNumber = 0;
-    for (let i = 0; i < totalTrialNumber; i++){
-        let leftimage = leftimgList.shift();
-        let rightimage = rightimgList.shift();
-        let leftoutcome = leftoutcomeList.shift();
-        let rightoutcome = rightoutcomeList.shift();
-        trialNumber ++;
 
-        bandit_block.push(make_bandit_trial(leftimage, rightimage, leftoutcome, rightoutcome));
+    function run_full_experiment(structure){
         
-        if (trialNumber % 13 ==0) {
-            bandit_block.push(draw_break());
-        }
-        // new instructions for the grouped conditions
-        if ((trialNumber) === 156) {
-            if (window.condition === "011") {
-                bandit_block.push({
-                    type: jsPsychHtmlKeyboardResponse,
-                    choices: ['s'],
-                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br><br>Press S key to continue!</p>",
-                    data: {trialphase: "changeInstruction"},
-                })
-            } else if (window.condition === "111") {
-                bandit_block.push({
-                    type: jsPsychHtmlKeyboardResponse,
-                    choices: ['s'],
-                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of taking away your coins in this game.<br><br>Your goal is to figure out which of the two cards COSTS you the most coins, and AVOID LOSING the coins as best as your can over time.<br><br>Upon your selection, you will see a picture of a broken coin, indicating the amount you have lost from that selection.<br><br>If you choose the better card five times in a row within a round, you will be able to skip to the next round of game immediately.<br><br><br>Press S key to continue!</p>",
-                    data: {trialphase: "changeInstruction"},
-                })
-            } else if (window.condition === "010") {
-                bandit_block.push({
-                    type: jsPsychHtmlKeyboardResponse,
-                    choices: ['s'],
-                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br><br>Press S key to continue!</p>",
-                    data: {trialphase: "changeInstruction"},
-                })
-            } else if (window.condition === "110") {
-                bandit_block.push({
-                    type: jsPsychHtmlKeyboardResponse,
-                    choices: ['s'],
-                    stimulus: "CHANGES IN THE INSTRUCTION! Please read carefully.<br><br>In the following rounds, you will see two cards on each turn.<br><br>Each card has its own unique probability of giving you coins.<br><br>Your goal is to figure out which of the two cards GIVES you the most coins, and COLLECT as many coins as possible over time.<br><br>Upon your selection, you will see a picture of a coin, indicating the amount you have earned from that selection.<br><br><br>Press S key to continue!</p>",
-                    data: {trialphase: "changeInstruction"},
-                })
-            }
-        }
-    }
-    
-    let procedure = [];
-    procedure = procedure.concat(instructions);
-    procedure.push({ timeline: bandit_block});
-    procedure.push({                
-        type: jsPsychHtmlKeyboardResponse,
-        stimulus: "Well done! You have finished the experiment.",
-        data: {trialphase: "end"},
-        on_start: () => {
-            jsPsych.data.get().localSave('csv', `PLT_data.csv`);
-        }
-    })
+        // Add instructions
+        let procedure = prepare_instructions();
 
-    jsPsych.run(procedure);
-    
+        // Add PLT
+        procedure = procedure.concat(build_PLT_task(structure));
+
+        // Final messages and data saving
+        procedure.push({                
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "Well done! You have finished the experiment.",
+            data: {trialphase: "end"},
+            on_start: () => {
+                jsPsych.data.get().localSave('csv', `PLT_data.csv`);
+            }
+
+        
+        })
+
+        // Run
+        jsPsych.run(procedure);
+    }
+
+    load_squences(window.condition, window.sessionNum);
+        
 </script>
 </html>
