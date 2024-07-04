@@ -33,9 +33,28 @@
     // Second digit - valence grouped / interleaved. 0 - interleaved, 1 - grouped.
     // Third digit - reward first. 0 - punishment first, 1 - reward first, undefined - NA
 
+    function format_date_from_string(s){
+        const dateTime = new Date(s);
+
+        // Get individual components
+        const year = dateTime.getFullYear();
+        const month = String(dateTime.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const day = String(dateTime.getDate()).padStart(2, '0');
+        const hours = String(dateTime.getHours()).padStart(2, '0');
+        const minutes = String(dateTime.getMinutes()).padStart(2, '0');
+        const seconds = String(dateTime.getSeconds()).padStart(2, '0');
+
+        // Format the date and time
+        const formattedDate = `${year}-${month}-${day}`;
+        const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+        return formattedDate + "_" + formattedTime
+    }
+
     async function load_squences(condition, session) {
         try {
             const response = await fetch('PLT_task_structure_' + condition + '.json');
+            
             if (!response.ok) {
             throw new Error('Network response was not ok');
             }
@@ -43,6 +62,20 @@
             const sess_structure = structure[session - 1];
 
             window.totalBlockNumber = sess_structure.length
+
+            // Fetch the current time from the World Time API
+            const time_resp = await fetch('http://worldtimeapi.org/api/timezone/Europe/London');
+
+            if (!time_resp.ok) {
+            throw new Error('Network response was not ok');
+            }
+
+            const date_data = await time_resp.json();
+
+            const verifiedDateString = date_data.datetime;
+
+            window.startTime = format_date_from_string(verifiedDateString)
+
             run_full_experiment(sess_structure);
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -223,7 +256,7 @@
                 var jspsych_data = jsPsych.data.get().json();
 
                 var redcap_record = JSON.stringify([{
-                    Record_id: 1, // Mandatory, but ignored by REDcap
+                    record_id: 1, // Mandatory, but ignored by REDcap
                     prolific_pid: window.prolificPID,
                     study_id: window.studyId,
                     session_id: window.sessionId,
@@ -233,16 +266,17 @@
                     jspsych_data: jspsych_data
                 }])
 
-                fetch('https://2nqlv48ck0.execute-api.eu-north-1.amazonaws.com/prod/submit', {
+                fetch('https://h6pgstm0f9.execute-api.eu-north-1.amazonaws.com/prod/submit', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: redcap_record
                 })
-                .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'success') {
+                    console.log(data)
+                    console.log(data.status)
+                    if (data.status === 200) {
                         console.log('Data successfully submitted to REDCap');
                     } else {
                         console.error('Error submitting data:', data.message);
