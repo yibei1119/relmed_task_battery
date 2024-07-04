@@ -10,6 +10,7 @@
     <script src="jspsych/plugin-preload.js"></script>
     <script src="plugin-PLT.js"></script>
     <script src="instructions.js"></script>
+    <script src="utils.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
 </head>
 <style>
@@ -252,40 +253,7 @@
             type: jsPsychHtmlKeyboardResponse,
             stimulus: "Well done! You have finished the experiment.",
             data: {trialphase: "end"},
-            on_start: () => {
-                var jspsych_data = jsPsych.data.get().json();
-
-                var redcap_record = JSON.stringify([{
-                    record_id: 1, // Mandatory, but ignored by REDcap
-                    prolific_pid: window.prolificPID,
-                    study_id: window.studyId,
-                    session_id: window.sessionId,
-                    start_time: window.startTime,
-                    exp_code_version: code_version,
-                    group: window.condition,
-                    jspsych_data: jspsych_data
-                }])
-
-                fetch('https://h6pgstm0f9.execute-api.eu-north-1.amazonaws.com/prod/submit', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: redcap_record
-                })
-                .then(data => {
-                    console.log(data)
-                    console.log(data.status)
-                    if (data.status === 200) {
-                        console.log('Data successfully submitted to REDCap');
-                    } else {
-                        console.error('Error submitting data:', data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
+            on_start: saveDataREDCap
         })
 
         // Run
