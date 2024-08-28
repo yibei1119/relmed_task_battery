@@ -9,46 +9,65 @@
   <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
   <style>
     #experiment-container {
-        width: 100px;
-        height: 180px; /* Increased to accommodate space below the box */
-        margin: 20px auto;
-        position: relative;
+      width: 100px;
+      height: 180px;
+      /* Increased to accommodate space below the box */
+      margin: 20px auto;
+      position: relative;
     }
+
     #box {
-        width: 100px;
-        height: 100px;
-        background-color: #f0f0f0;
-        border: 2px solid #000;
-        transition: transform 0.1s;
-        position: absolute;
-        top: 0;
-        left: 0;
+      width: 100px;
+      height: 100px;
+      background-color: #f0f0f0;
+      border: 2px solid #000;
+      transition: transform 0.1s;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
+
     #coin-container {
-        width: 100px;
-        height: 80px;
-        position: absolute;
-        top: 100px; /* Position it right below the box */
-        left: 0;
-        pointer-events: none;
+      width: 100px;
+      height: 80px;
+      position: absolute;
+      top: 100px;
+      /* Position it right below the box */
+      left: 0;
+      pointer-events: none;
     }
+
     .coin {
-        width: 20px;
-        height: 20px;
-        background-color: gold;
-        border-radius: 50%;
-        position: absolute;
-        top: 0; /* Start at the top of the coin container */
-        opacity: 0;
+      width: 20px;
+      height: 20px;
+      background-color: gold;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      /* Start at the top of the coin container */
+      opacity: 0;
     }
+
     @keyframes dropCoin {
-        0% { transform: translateY(0); opacity: 1; }
-        /* 60% { transform: translateY(60px); opacity: 1; } */
-        80% { transform: translateY(60px); opacity: 1; }
-        100% { transform: translateY(60px); opacity: 0.5; }
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* 60% { transform: translateY(60px); opacity: 1; } */
+      80% {
+        transform: translateY(60px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(60px);
+        opacity: 0.5;
+      }
     }
+
     .coin-drop {
-        animation: dropCoin 0.5s ease-in-out;
+      animation: dropCoin 0.5s ease-in-out;
     }
   </style>
 </head>
@@ -62,24 +81,42 @@
       }
     });
 
+    // Configuration object
+    const experimentConfig = {
+      ratios: [1, 2, 4, 8, 32, 64],
+      magnitudes: [1, 2, 5, 10, 20, 50, 100, 200],
+      initialRatio: 1,
+      initialMagnitude: 0,
+      scheduleChangeDuration: 6000, // in milliseconds
+      trialDuration: 60000, // in milliseconds
+    };
+
     let totalReward = 0;
     let pressCount = 0;
-    let currentRatio = 1;
-    let currentMagnitude = 1;
+    let currentRatio = experimentConfig.initialRatio;
+    let currentMagnitude = experimentConfig.initialMagnitude;
     let lastChangeTime = 0;
 
-    const ratios = [1, 2, 4, 8];
-    const magnitudes = [1, 2, 3, 4, 5];
+    function updateScheduleInfo() {
+      const scheduleInfo = document.getElementById('schedule-info');
+      if (scheduleInfo) {
+        scheduleInfo.innerHTML = `Current Ratio: ${currentRatio} | Reward Magnitude: ${currentMagnitude}`;
+      }
+    }
 
     function updateRewardSchedule() {
-      currentRatio = jsPsych.randomization.sampleWithoutReplacement(ratios, 1)[0];
-      currentMagnitude = jsPsych.randomization.sampleWithoutReplacement(magnitudes, 1)[0];
+      currentRatio = jsPsych.randomization.sampleWithoutReplacement(experimentConfig.ratios, 1)[0];
+      currentMagnitude = jsPsych.randomization.sampleWithoutReplacement(experimentConfig.magnitudes, 1)[0];
       pressCount = 0;
       updateScheduleInfo();
     }
 
-    function updateScheduleInfo() {
-      document.getElementById('schedule-info').innerHTML = `Current Ratio: ${currentRatio} | Reward Magnitude: ${currentMagnitude}`;
+    // Function to update experiment configuration
+    function updateExperimentConfig(newConfig) {
+      Object.assign(experimentConfig, newConfig);
+      currentRatio = experimentConfig.initialRatio;
+      currentMagnitude = experimentConfig.initialMagnitude;
+      updateScheduleInfo();
     }
 
     function shakeBox() {
@@ -129,15 +166,15 @@
     const boxShakingTask = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
-                <div id="experiment-container" style="position: relative;">
-                    <div id="box"></div>
-                    <div id="coin-container"></div>
-                </div>
-                <div id="reward-counter">Total Reward: 0</div>
-                <div id="schedule-info"></div>
-            `,
+        <div id="experiment-container" style="position: relative;">
+            <div id="box"></div>
+            <div id="coin-container"></div>
+        </div>
+        <div id="reward-counter">Total Reward: 0</div>
+        <div id="schedule-info"></div>
+    `,
       choices: [' '],
-      trial_duration: 60000,
+      trial_duration: experimentConfig.trialDuration,
       response_ends_trial: false,
       on_load: function () {
         updateRewardSchedule();
@@ -146,29 +183,31 @@
         // Set up interval for schedule changes
         const intervalId = setInterval(() => {
           const scheduleInfo = document.getElementById('schedule-info');
-          scheduleInfo.innerHTML += '<br>Schedule changing...';
-          setTimeout(() => {
-            updateRewardSchedule();
-            scheduleInfo.innerHTML = scheduleInfo.innerHTML.replace('<br>Schedule changing...', '');
-          }, 1500);
-        }, 6000);
+          if (scheduleInfo) {
+            scheduleInfo.innerHTML += '<br>Schedule changing...';
+            setTimeout(() => {
+              updateRewardSchedule();
+              scheduleInfo.innerHTML = scheduleInfo.innerHTML.replace('<br>Schedule changing...', '');
+            }, 1500);
+          }
+        }, experimentConfig.scheduleChangeDuration);
 
         var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-            callback_function: function(info) {
-                    shakeBox();
-                    pressCount++;
+          callback_function: function (info) {
+            shakeBox();
+            pressCount++;
 
-                    if (pressCount === currentRatio) {
-                        totalReward += currentMagnitude;
-                        document.getElementById('reward-counter').innerHTML = `Total Reward: ${totalReward}`;
-                        pressCount = 0;
-                        dropCoin();
-                    }
-                },
-            valid_responses: [' '],
-            rt_method: 'performance',
-            persist: true,
-            allow_held_key: false
+            if (pressCount === currentRatio) {
+              totalReward += currentMagnitude;
+              document.getElementById('reward-counter').innerHTML = `Total Reward: ${totalReward}`;
+              pressCount = 0;
+              dropCoin();
+            }
+          },
+          valid_responses: [' '],
+          rt_method: 'performance',
+          persist: true,
+          allow_held_key: false
         });
       },
       on_finish: function (data) {
@@ -187,6 +226,14 @@
       },
       choices: ['Finish'],
     };
+
+    // Flexibly set up and partially update configuration
+    updateExperimentConfig({
+      ratios: [1],
+      magnitudes: [100, 200],
+      scheduleChangeDuration: 6000, // in milliseconds
+      trialDuration: 30000, // in milliseconds
+    });
 
     jsPsych.run([instructions, boxShakingTask, debriefing]);
   </script>
