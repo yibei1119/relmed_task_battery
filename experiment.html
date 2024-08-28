@@ -85,39 +85,38 @@
     const experimentConfig = {
       ratios: [1, 2, 4, 8, 32, 64],
       magnitudes: [1, 2, 5, 10, 20, 50, 100, 200],
-      initialRatio: 1,
-      initialMagnitude: 0,
-      scheduleChangeDuration: 6000, // in milliseconds
-      trialDuration: 60000, // in milliseconds
+      trialDuration: 6000, // in milliseconds
+      minITI: 1400,
+      maxITI: 1600
     };
 
     let totalReward = 0;
-    let pressCount = 0;
-    let currentRatio = experimentConfig.initialRatio;
-    let currentMagnitude = experimentConfig.initialMagnitude;
-    let lastChangeTime = 0;
+    let totalPresses = 0;
 
-    function updateScheduleInfo() {
-      const scheduleInfo = document.getElementById('schedule-info');
-      if (scheduleInfo) {
-        scheduleInfo.innerHTML = `Current Ratio: ${currentRatio} | Reward Magnitude: ${currentMagnitude}`;
+    // Generate trials
+    function generateTrials() {
+      let trials = [];
+      for (let magnitude of experimentConfig.magnitudes) {
+        for (let ratio of experimentConfig.ratios) {
+          trials.push({ magnitude, ratio });
+        }
       }
+      return jsPsych.randomization.shuffle(trials);
     }
 
-    function updateRewardSchedule() {
-      currentRatio = jsPsych.randomization.sampleWithoutReplacement(experimentConfig.ratios, 1)[0];
-      currentMagnitude = jsPsych.randomization.sampleWithoutReplacement(experimentConfig.magnitudes, 1)[0];
-      pressCount = 0;
-      updateScheduleInfo();
+    // Trial stimulus function
+    function generateTrialStimulus(magnitude, ratio) {
+      return `
+        <div id="experiment-container">
+            <div id="box"></div>
+            <div id="coin-container"></div>
+        </div>
+        <div id="reward-counter">Total Reward: ${totalReward}</div>
+        <div id="trial-info">Magnitude: ${magnitude}, Ratio: ${ratio}</div>
+    `;
     }
 
-    // Function to update experiment configuration
-    function updateExperimentConfig(newConfig) {
-      Object.assign(experimentConfig, newConfig);
-      currentRatio = experimentConfig.initialRatio;
-      currentMagnitude = experimentConfig.initialMagnitude;
-      updateScheduleInfo();
-    }
+    // Functions for animation
 
     function shakeBox() {
       const box = document.getElementById('box');
@@ -152,90 +151,133 @@
       }, 50);
     }
 
-    const instructions = {
-      type: jsPsychHtmlButtonResponse,
-      stimulus: `
-                <p>Welcome to the Box Shaking Experiment!</p>
-                <p>Press the spacebar to shake the box and earn rewards.</p>
-                <p>The reward schedule and magnitude will change periodically.</p>
-                <p>Try to earn as many rewards as possible!</p>
-            `,
-      choices: ['Start'],
-    };
-
-    const boxShakingTask = {
+    // Box shaking trial
+    const boxShakingTrial = {
       type: jsPsychHtmlKeyboardResponse,
-      stimulus: `
-        <div id="experiment-container" style="position: relative;">
-            <div id="box"></div>
-            <div id="coin-container"></div>
-        </div>
-        <div id="reward-counter">Total Reward: 0</div>
-        <div id="schedule-info"></div>
-    `,
-      choices: [' '],
+      stimulus: function () {
+        return generateTrialStimulus(jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio'));
+      },
+      choices: 'NO_KEYS',
+      // response_ends_trial: false,
       trial_duration: experimentConfig.trialDuration,
-      response_ends_trial: false,
+      save_timeline_variables: true,
       on_load: function () {
-        updateRewardSchedule();
-        lastChangeTime = performance.now();
-
-        // Set up interval for schedule changes
-        const intervalId = setInterval(() => {
-          const scheduleInfo = document.getElementById('schedule-info');
-          if (scheduleInfo) {
-            scheduleInfo.innerHTML += '<br>Schedule changing...';
-            setTimeout(() => {
-              updateRewardSchedule();
-              scheduleInfo.innerHTML = scheduleInfo.innerHTML.replace('<br>Schedule changing...', '');
-            }, 1500);
-          }
-        }, experimentConfig.scheduleChangeDuration);
-
-        var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-          callback_function: function (info) {
+        this.pressCount = 0;
+        this.trialPresses = 0;
+        this.trialReward = 0;
+        this.lastPressTime = 0;
+        this.RTs = [];
+        const ratio = jsPsych.evaluateTimelineVariable('ratio');
+        const magnitude = jsPsych.evaluateTimelineVariable('magnitude');
+        const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: (info) => {
+            this.RTs.push(info.rt - this.lastPressTime);
+            this.lastPressTime = info.rt;
             shakeBox();
-            pressCount++;
+            this.pressCount++;
+            this.trialPresses++;
+            totalPresses++;
 
-            if (pressCount === currentRatio) {
-              totalReward += currentMagnitude;
+            if (this.pressCount === ratio) {
+              totalReward += magnitude;
+              this.trialReward += magnitude;
               document.getElementById('reward-counter').innerHTML = `Total Reward: ${totalReward}`;
-              pressCount = 0;
+              this.pressCount = 0;
               dropCoin();
             }
           },
           valid_responses: [' '],
           rt_method: 'performance',
           persist: true,
-          allow_held_key: false
+          allow_held_key: false,
+          minimum_valid_rt: 50
         });
       },
       on_finish: function (data) {
-        data.total_reward = totalReward;
+        // Clean up listener
         jsPsych.pluginAPI.cancelAllKeyboardResponses();
+
+        // Record trial data
+        data.RTs = this.RTs;
+        data.trial_presses = this.trialPresses;
+        data.trial_reward = this.trialReward;
+        data.total_presses = totalPresses;
+        data.total_reward = totalReward;
       }
     };
 
+    // Inter-trial interval
+    const interTrialInterval = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function () {
+        return `
+            <div>Preparing next trial...</div>
+            <div id="reward-counter">Total Reward: ${totalReward}</div>
+        `;
+      },
+      choices: "NO_KEYS",
+      on_start: function (trial) {
+        trial.trial_duration = Math.floor(Math.random() * (experimentConfig.maxITI - experimentConfig.minITI) + experimentConfig.minITI);
+      },
+      save_trial_parameters: {
+        trial_duration: true
+      }
+    };
+
+    // Create timeline
+    // Instructions
+    const instructions = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+        <p>Welcome to the Box Shaking Experiment!</p>
+        <p>In this experiment, you will see a box on the screen.</p>
+        <p>Your task is to press the spacebar to shake the box.</p>
+        <p>Sometimes, shaking the box will result in a coin dropping.</p>
+        <p>The number of shakes needed for a coin to drop and the value of the coin will change throughout the experiment.</p>
+        <p>Try to earn as many points as possible!</p>
+        <p>Each trial will last for 6 seconds, followed by a short break.</p>
+        <p>Press the button below when you're ready to begin.</p>
+    `,
+      choices: ['Start Experiment']
+    };
+
+    // Generate trials
+    const trials = generateTrials();
+
+    // Create main experiment timeline
+    const experimentTimeline = [];
+    trials.forEach(trial => {
+      experimentTimeline.push({
+        timeline: [boxShakingTrial, interTrialInterval],
+        timeline_variables: [trial]
+      });
+    });
+
+    // Debriefing
     const debriefing = {
       type: jsPsychHtmlButtonResponse,
       stimulus: function () {
         return `
-                    <p>Thank you for participating in the experiment!</p>
-                    <p>You earned a total reward of ${totalReward}.</p>
-                `;
+            <p>Thank you for participating in the experiment!</p>
+            <p>You earned a total of ${totalReward} points.</p>
+            <p>In this experiment, we were studying how different reward schedules and magnitudes affect behavior.</p>
+            <p>Sometimes you needed more shakes to get a reward, and sometimes the rewards were larger.</p>
+            <p>Your data will help us understand how people respond to different patterns of reinforcement.</p>
+            <p>If you have any questions about the experiment, please ask the experimenter now.</p>
+        `;
       },
-      choices: ['Finish'],
+      choices: ['Finish']
     };
 
-    // Flexibly set up and partially update configuration
-    updateExperimentConfig({
-      ratios: [1],
-      magnitudes: [100, 200],
-      scheduleChangeDuration: 6000, // in milliseconds
-      trialDuration: 30000, // in milliseconds
-    });
+    // Combine all parts into the full timeline
+    const fullTimeline = [
+      instructions,
+      ...experimentTimeline.slice(0, 1),
+      debriefing
+    ];
 
-    jsPsych.run([instructions, boxShakingTask, debriefing]);
+    // Run the experiment
+    jsPsych.run(fullTimeline);
   </script>
 </body>
 
