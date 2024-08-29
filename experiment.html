@@ -85,13 +85,13 @@
     const experimentConfig = {
       ratios: [1, 2, 4, 8, 32, 64],
       magnitudes: [1, 2, 5, 10, 20, 50, 100, 200],
-      trialDuration: 6000, // in milliseconds
+      trialDuration: 1000, // in milliseconds
       minITI: 1400,
       maxITI: 1600
     };
 
-    let totalReward = 0;
-    let totalPresses = 0;
+    window.totalReward = 0;
+    window.totalPresses = 0;
 
     // Generate trials
     function generateTrials() {
@@ -161,28 +161,40 @@
       // response_ends_trial: false,
       trial_duration: experimentConfig.trialDuration,
       save_timeline_variables: true,
-      on_load: function () {
-        this.pressCount = 0;
-        this.trialPresses = 0;
-        this.trialReward = 0;
-        this.lastPressTime = 0;
-        this.RTs = [];
+      data: {
+        trial_presses: () => {return window.trialPresses},
+        trial_reward: () => {return window.trialReward},
+        response_time: () => {return window.responseTime},
+        // Record global data
+        total_presses: () => {return totalPresses},
+        total_reward: () => {return totalReward}
+      },
+      on_start: function (trial) {
+        // Create a shared state object
+        window.trialPresses = 0;
+        window.trialReward = 0;
+        window.responseTime = [];
+
+        let lastPressTime = 0;
+        let pressCount = 0;
+        
         const ratio = jsPsych.evaluateTimelineVariable('ratio');
         const magnitude = jsPsych.evaluateTimelineVariable('magnitude');
-        const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-          callback_function: (info) => {
-            this.RTs.push(info.rt - this.lastPressTime);
-            this.lastPressTime = info.rt;
-            shakeBox();
-            this.pressCount++;
-            this.trialPresses++;
-            totalPresses++;
 
-            if (this.pressCount === ratio) {
-              totalReward += magnitude;
-              this.trialReward += magnitude;
-              document.getElementById('reward-counter').innerHTML = `Total Reward: ${totalReward}`;
-              this.pressCount = 0;
+        const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: function(info) {
+            window.responseTime.push(info.rt - lastPressTime);
+            lastPressTime = info.rt;
+            shakeBox();
+            pressCount++;
+            window.trialPresses++;
+            window.totalPresses++;
+
+            if (pressCount === ratio) {
+              window.trialReward += magnitude;
+              window.totalReward += magnitude;
+              document.getElementById('reward-counter').innerHTML = `Total Reward: ${window.totalReward}`;
+              pressCount = 0;
               dropCoin();
             }
           },
@@ -196,13 +208,6 @@
       on_finish: function (data) {
         // Clean up listener
         jsPsych.pluginAPI.cancelAllKeyboardResponses();
-
-        // Record trial data
-        data.RTs = this.RTs;
-        data.trial_presses = this.trialPresses;
-        data.trial_reward = this.trialReward;
-        data.total_presses = totalPresses;
-        data.total_reward = totalReward;
       }
     };
 
@@ -212,16 +217,14 @@
       stimulus: function () {
         return `
             <div>Preparing next trial...</div>
-            <div id="reward-counter">Total Reward: ${totalReward}</div>
+            <div id="reward-counter">Total Reward: ${window.totalReward}</div>
         `;
       },
       choices: "NO_KEYS",
       on_start: function (trial) {
         trial.trial_duration = Math.floor(Math.random() * (experimentConfig.maxITI - experimentConfig.minITI) + experimentConfig.minITI);
       },
-      save_trial_parameters: {
-        trial_duration: true
-      }
+      save_trial_parameters: {trial_duration: true}
     };
 
     // Create timeline
@@ -272,7 +275,7 @@
     // Combine all parts into the full timeline
     const fullTimeline = [
       instructions,
-      ...experimentTimeline.slice(0, 1),
+      ...experimentTimeline.slice(0, 2),
       debriefing
     ];
 
