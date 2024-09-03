@@ -21,7 +21,7 @@
       position: relative;
       width: 50vmin;
       /* Use vmin for better scaling across devices */
-      height: 100vmin;
+      height: 80vmin;
       display: flex;
       justify-content: center;
     }
@@ -79,8 +79,11 @@
     }
 
     #info-container {
-      margin-top: 2vmin;
-      text-align: center;
+      height: 5vmin;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     #reward-counter,
@@ -135,6 +138,22 @@
         transform: translate(1%, -1.5%) rotate(-2deg);
       }
     }
+
+    .grayscale-blur {
+      filter: grayscale(100%) blur(5px);
+      opacity: 0.9;
+    }
+
+    #iti-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3vmin;
+      color: #333;
+      text-align: center;
+      z-index: 10;
+    }
   </style>
 </head>
 
@@ -151,7 +170,7 @@
     const experimentConfig = {
       ratios: [1],
       magnitudes: [1, 2, 5, 10, 20, 50, 100, 200],
-      trialDuration: 600000, // in milliseconds
+      trialDuration: 6000, // in milliseconds
       minITI: 1400,
       maxITI: 1600
     };
@@ -172,7 +191,7 @@
 
     // Trial stimulus function
     function generateTrialStimulus(magnitude, ratio) {
-      const magnitude_text = (magnitude/100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' });
+      const magnitude_text = (magnitude / 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' });
       const ratio_text = ratio === 1 ? 'time' : 'times';
       return `
     <div class="experiment-wrapper">
@@ -182,7 +201,7 @@
       </div>
       <div id="info-container">
         <!-- <div id="reward-counter">Total Reward: ${window.totalReward}</div> -->
-        <div id="trial-info">Press ${ratio  + ' ' + ratio_text} for ${magnitude_text}</div>
+        <div id="trial-info">Press ${ratio + ' ' + ratio_text} for ${magnitude_text}</div>
         <!-- <div id="trial-info">Ratio: ${ratio}</div> -->
       </div>
     </div>
@@ -299,8 +318,14 @@
       type: jsPsychHtmlKeyboardResponse,
       stimulus: function () {
         return `
-            <div>Preparing next trial...</div>
-            <!-- <div id="reward-counter">Total Reward: ${window.totalReward}</div> -->
+      <div class="experiment-wrapper">
+        <div id="experiment-container">
+          <img id="piggy-bank" src="img/piggy-bank.png" alt="Piggy Bank" class="grayscale-blur">
+        </div>
+        <div id="info-container">
+          <div id="iti-text">Preparing next trial...</div>
+        </div>
+      </div>
         `;
       },
       choices: "NO_KEYS",
@@ -345,7 +370,7 @@
       stimulus: function () {
         return `
             <p>Thank you for participating in the experiment!</p>
-            <p>You earned a total of ${totalReward} points.</p>
+            <p>You earned a total of ${(totalReward / 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in the game.</p>
             <p>In this experiment, we were studying how different reward schedules and magnitudes affect behavior.</p>
             <p>Sometimes you needed more shakes to get a reward, and sometimes the rewards were larger.</p>
             <p>Your data will help us understand how people respond to different patterns of reinforcement.</p>
