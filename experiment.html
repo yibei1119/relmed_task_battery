@@ -158,17 +158,21 @@
     #progress-container {
       width: 50vmin;
       height: 3vmin;
-      background-color: #f0f0f0;
+      background-color: #e0e0e0;
+      /* Light gray background */
       border-radius: 1.5vmin;
       margin-top: 2vmin;
       overflow: hidden;
       position: relative;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      /* Subtle inner shadow for depth */
     }
 
     #progress-bar {
       height: 100%;
       width: 0%;
-      background-color: #4CAF50;
+      background-color: #90a4ae;
+      /* Soft blue-gray */
       transition: width 0.2s ease-in-out;
     }
 
@@ -177,11 +181,11 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #333;
+      color: #546e7a;
+      /* Dark blue-gray for text */
       font-size: 2vmin;
       font-weight: bold;
     }
-
   </style>
 </head>
 
@@ -196,7 +200,7 @@
 
     // Configuration object
     const experimentConfig = {
-      ratios: [32],
+      ratios: [16],
       magnitudes: [1, 2, 5, 10, 20, 50, 100, 200],
       trialDuration: 6000, // in milliseconds
       minITI: 1400,
@@ -337,9 +341,11 @@
               dropCoin(magnitude);
 
               // Show full progress bar briefly before resetting
+              progressBar.style.backgroundColor = '#78909c'; // Slightly darker shade for completion
               setTimeout(() => {
                 pressCount = 0;
                 progressBar.style.width = '0%';
+                progressBar.style.backgroundColor = '#90a4ae'; // Reset to original color
                 progressText.textContent = `0/${ratio}`;
               }, 200);
             }
