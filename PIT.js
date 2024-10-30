@@ -78,9 +78,7 @@ var PITtrialList = [{"magnitude":2,"ratio":8,"coin":-0.01,"trialDuration":6902},
   {"magnitude":2,"ratio":1,"coin":-0.5,"trialDuration":6535},
   {"magnitude":2,"ratio":8,"coin":0.5,"trialDuration":6501},
   {"magnitude":2,"ratio":1,"coin":0.5,"trialDuration":7009},
-  {"magnitude":2,"ratio":1,"coin":-1,"trialDuration":7490}];
-
-  // var PITtrialList = jsPsych.randomization.shuffleNoRepeats(PITtrialList, function(trial1, trial2) {trial1.coin == trial2.coin && trial1.ratio == trial2.ratio && trial1.magnitude == trial2.magnitude});
+  {"magnitude":2,"ratio":1,"coin":-1,"trialDuration":7490}].slice(0, 35);
 
 // Trial stimulus function
 function generatePITstimulus(coin, ratio) {
