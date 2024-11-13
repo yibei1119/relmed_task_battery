@@ -57,7 +57,7 @@ const kick_out = {
         `
         }
     ],
-    choices: ["space"],
+    choices: ["Space"],
     data: {
       trialphase: 'speed-accuracy'
     }
