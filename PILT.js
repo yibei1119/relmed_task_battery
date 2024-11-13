@@ -1,5 +1,5 @@
 // Function setting up PILT blocks
-window.defaul_response_deadline = 3000;
+window.default_response_deadline = 4000;
 window.pilt_test_confidence_every = 4;
 
 window.skipThisBlock = false;
