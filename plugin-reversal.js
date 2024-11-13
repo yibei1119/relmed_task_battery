@@ -40,7 +40,7 @@ var jsPsychReversal = (function (jspsych) {
             /** Response deadline */
             response_deadline: {
                 type: jspsych.ParameterType.INT,
-                default: 3000
+                default: 3500
             },
             /** Duration of warning message */
             warning_duration: {
