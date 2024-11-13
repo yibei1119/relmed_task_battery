@@ -40,24 +40,14 @@ const kick_out = {
     },
     css_classes: ['instructions'],
     timeline: [
-        {   
-            stimulus: '...',
-            trial_duration: 200,
-            on_finish: function(trial) {
-                // Save data
-                saveDataREDCap(retry = 3);
-                // Allow refresh
-                window.removeEventListener('beforeunload', preventRefresh);
-            }
-        },
         {
         stimulus: `<p>You might be making taking a little too long to make your choices.</p>
         <p>We're interested in your quick judgments, so please try to respond a little faster—even if it feels a bit less precise.</p>
-        <p>Press the space bar to continue.</p>
+        <p>Press either the right or left arrow to continue.</p>
         `
         }
     ],
-    choices: ["Space"],
+    choices: ["arrowright", "arrowleft"],
     data: {
       trialphase: 'speed-accuracy'
     }
