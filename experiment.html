@@ -2,13 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PLT</title>
+    <title>Coin and card games</title>
     <script src="jspsych/jspsych.js"></script>
     <script>
+        window.maxWarnings = 15;
+
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
             display_element: 'display_element',
         });
+        
+        // Get condition from URL, all caps are prolific, lowercase are ours
+        window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
+        window.debug = prolificPID.includes("debug");
+        window.studyId = jsPsych.data.getURLVariable('STUDY_ID');
+        window.sessionId = jsPsych.data.getURLVariable('SESSION_ID');
+        window.sessionNum = jsPsych.data.getURLVariable('session_num');
+
+        // Save participant variables to data
+        jsPsych.data.addProperties({
+            prolific_pid: window.prolificPID,
+            study_id: window.studyId,
+            session_id: window.sessionId,
+            session: window.sessionNum,
+            n_warnings: 0,
+            version: "6.01"
+        })
     </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
     <script src="jspsych/plugin-html-button-response.js"></script>
@@ -21,9 +40,9 @@
     <script src="jspsych/plugin-survey-text.js"></script>
     <script src="jspsych/plugin-fullscreen.js"></script>
     <script src="utils.js"></script>
-    <script src="plugin-PLT.js"></script>
+    <script src="plugin-PILT.js"></script>
+    <script src="pilot6_reversal_sequence.js"></script>
     <script src="plugin-reversal.js"></script>
-    <script src="pilot_PPI_reversal_sequence.js"></script>
     <script src="reversal.js"></script>
     <script src="plugin-coin-lottery.js"></script>
     <script src="PILT.js"></script>
@@ -33,9 +52,12 @@
     <script src="post-vigour-test.js"></script>
     <script src="PIT.js"></script>
     <script src="acceptability.js"></script>
+    <script src="questionnaires.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
     <link href="vigour_styles.css" rel="stylesheet" type="text/css" />
+    <link href="PIT_styles.css" rel="stylesheet" type="text/css" />
     <link href="reversal.css" rel="stylesheet" type="text/css" />
+    <link href="PILT.css" rel="stylesheet" type="text/css" />
 </head>
 <style>
     .jsPsychDE {
@@ -61,23 +83,6 @@
     <div id="persist-coin-container"></div>
 </body>
 <script>
-// Get condition from URL, all caps are prolific, lowercase are ours
-    window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
-    window.debug = prolificPID.includes("debug");
-    window.studyId = jsPsych.data.getURLVariable('STUDY_ID');
-    window.sessionId = jsPsych.data.getURLVariable('SESSION_ID');
-    window.sessionNum = jsPsych.data.getURLVariable('session_num');
-
-    // Save participant variables to data
-    jsPsych.data.addProperties({
-        prolific_pid: window.prolificPID,
-        study_id: window.studyId,
-        session_id: window.sessionId,
-        session: window.sessionNum,
-        n_warnings: 0,
-        version: "PPI_oct31"
-    })
-
     // Preliminary checks
     const preliminary_checks = [
         {
@@ -105,14 +110,16 @@
         },
         {
             type: jsPsychPreload,
-            images: [
+            images: [[
                 "1penny.png", "1pennybroken.png",
                 "1pound.png", "1poundbroken.png",
                 "50pence.png", "50pencebroken.png",
                 "safe.png",
                 "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
-                "marble1.png", "marble2.png", "marble3.png", "marble4.png", "marble5.png", "marble6.png", "occluding_clouds.png"
+                "occluding_clouds.png"
             ].map(s => "imgs/" + s),
+            ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/session" + sessionNum + "/" + s)
+            ].flat(),
             post_trial_gap: 800
         },
         {
@@ -149,48 +156,75 @@
         }
     ]
 
-    function run_full_experiment(PILT_structure, test_structure){
+    function run_full_experiment(PILT_structure, test_structure, WM_procedure){
 
         let procedure = [];
 
-        // 0.0 Preliminary screen checks and load images
+        // Preliminary screen checks and load images
         procedure = procedure.concat(preliminary_checks);
 
-        // 1.0 Add PILT timeline
-        procedure = procedure.concat(return_PILT_full_sequence(PILT_structure, test_structure));
+        // Add PILT timeline
+        PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure);
+        procedure = procedure.concat(PILT_tasks.PILT_procedure);
+        procedure = procedure.concat([
+            acceptability_intro,
+            acceptability_PILT
+        ]);
 
-        // 1.1 Add coin lottery
-        procedure.push(lottery_instructions);
-        procedure.push(coin_lottery);
-
-        // 2.0 Add vigour task timeline
+        // Add vigour task timeline
         const vigourTimeline = [
             vigourInstructions,
             ...experimentTimeline,
         ];
         procedure = procedure.concat(vigourTimeline);
+        procedure = procedure.concat([
+            acceptability_intro,
+            acceptability_vigour
+        ]);
 
-        // 2.1 Add vigour bonus message
-        procedure.push(vigour_bonus);
-
-        // 3.0 Add PIT timeline: instructions, trials, bonus
+        // Add PIT timeline: instructions, trials, bonus
         const PITtimeline = [
             PITinstructions,
-            PITtrials,
-            PIT_bonus
+            PITtrials
         ];
         procedure = procedure.concat(PITtimeline);
+        procedure = procedure.concat([
+            acceptability_intro,
+            acceptability_PIT
+        ]);
 
-         // 4.0 Add post-vigour test
+        // Add post-vigour test
         procedure = procedure.concat(postVigourInstructions);
         procedure = procedure.concat(postVigourTrials);
 
-        // 5.0 Add reversal timeline
+        // // PILT & Pavlovian test /// PUT Pavlovian first!!!
+        procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+
+        // Add WM block
+        procedure.push(PILT_tasks.WM_procedure);
+        procedure = procedure.concat([
+            acceptability_intro,
+            acceptability_wm
+        ]);
+
+        // Add reversal timeline
         procedure = procedure.concat(reversal_instructions);
         procedure = procedure.concat(reversal_blocks);
+        procedure = procedure.concat([
+            acceptability_intro,
+            acceptability_reversal
+        ]);
 
-        // 6.0 Debrief questions
-        procedure = procedure.concat(acceptability);
+        // Add questionnaire timeline
+        procedure = procedure.concat(questionnaires_timeline);
+
+        // Add vigour bonus message
+        procedure.push(vigour_PIT_bonus);
+
+        // Add coin lottery
+        procedure.push(lottery_instructions);
+        procedure.push(coin_lottery);
+        
 
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
@@ -199,6 +233,12 @@
         if (!debug) {
             // Prevent right-click
             document.addEventListener('contextmenu', event => event.preventDefault());
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I") || (e.metaKey && e.code === "KeyI")) {
+                    e.preventDefault();
+                }
+            });
 
             // Prompt before refresh
             // Prompt before refresh

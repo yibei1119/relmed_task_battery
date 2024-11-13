@@ -95,6 +95,7 @@ const postVigourTrial = {
     const pair = jsPsych.evaluateTimelineVariable('pair');
     updateDualPiggyTails(pair.left.magnitude, pair.left.ratio, "left");
     updateDualPiggyTails(pair.right.magnitude, pair.right.ratio, "right");
+    // console.log([pair.left.magnitude, pair.left.ratio, pair.right.magnitude, pair.right.ratio]);
   },
   on_finish: function (data) {
     const pair = jsPsych.evaluateTimelineVariable('pair');
@@ -115,15 +116,15 @@ const postVigourTrial = {
 
 // Generate all pair combinations
 const postVigourPairs =
-  [{ "left": { "magnitude": 5, "ratio": 1 }, "right": { "magnitude": 2, "ratio": 8 } },
-  { "left": { "magnitude": 5, "ratio": 8 }, "right": { "magnitude": 2, "ratio": 16 } },
-  { "left": { "magnitude": 5, "ratio": 16 }, "right": { "magnitude": 2, "ratio": 1 } },
-  { "left": { "magnitude": 2, "ratio": 1 }, "right": { "magnitude": 1, "ratio": 1 } },
-  { "left": { "magnitude": 2, "ratio": 8 }, "right": { "magnitude": 5, "ratio": 8 } },
-  { "left": { "magnitude": 2, "ratio": 16 }, "right": { "magnitude": 5, "ratio": 16 } },
-  { "left": { "magnitude": 1, "ratio": 1 }, "right": { "magnitude": 1, "ratio": 8 } },
-  { "left": { "magnitude": 1, "ratio": 8 }, "right": { "magnitude": 1, "ratio": 16 } },
-  { "left": { "magnitude": 1, "ratio": 16 }, "right": { "magnitude": 5, "ratio": 1 } }];
+  [{"left":{"magnitude":5,"ratio":1},"right":{"magnitude":1,"ratio":16}},
+    {"left":{"magnitude":2,"ratio":1},"right":{"magnitude":1,"ratio":8}},
+    {"left":{"magnitude":2,"ratio":16},"right":{"magnitude":5,"ratio":8}},
+    {"left":{"magnitude":1,"ratio":16},"right":{"magnitude":5,"ratio":1}},
+    {"left":{"magnitude":1,"ratio":1},"right":{"magnitude":5,"ratio":8}},
+    {"left":{"magnitude":1,"ratio":8},"right":{"magnitude":2,"ratio":1}},
+    {"left":{"magnitude":5,"ratio":16},"right":{"magnitude":2,"ratio":1}},
+    {"left":{"magnitude":2,"ratio":8},"right":{"magnitude":1,"ratio":16}},
+    {"left":{"magnitude":5,"ratio":8},"right":{"magnitude":2,"ratio":16}}];
 
 // Create timeline for post-vigour task
 const postVigourTrials = [];
@@ -143,9 +144,12 @@ const postVigourInstructions = {
       <p><span class="highlight">Your job is to choose which one you would prefer to play with in the future.</span></p>
       <p>Use the <span class="spacebar-icon">←</span> [left arrow] to choose the left piggy bank.</p>
       <p>Use the <span class="spacebar-icon">→</span> [right arrow] to choose the right piggy bank.</p>
-      <p>Press <span class="spacebar-icon">Spacebar</span> to begin the task.</p>
+      <p>When you're ready, press <span class="spacebar-icon">B</span> to begin.</p>
     </div>
   `,
-  choices: [' '],
-  post_trial_gap: 300
+  choices: ['b'],
+  post_trial_gap: 400,
+  simulation_options: {
+    simulate: false
+  }
 };

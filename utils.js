@@ -51,7 +51,7 @@ const kick_out = {
             }
         },
         {
-        stimulus: `<p>It seems that you are not following the study instructions.</p>
+        stimulus: `<p>You may not be following the study instructions as intended, as you didn't respond more than 15 times.</p>
             <p>Unfortunately, you cannot continue with this study.</p>
             <p>If you believe this is a mistake, please email haoyang.lu@ucl.ac.uk, explaining the circumstances.</p>
             <p>Please return this study on Prolific.</p>
@@ -179,18 +179,18 @@ function format_date_from_string(s){
 }
 
 // Functions for computing remaining feedback after early stop
-function countPLTAfterLastNonPLT(arr) {
+function countPILTAfterLastNonPILT(arr) {
     let count = 0;
-    let foundNonPLT = false;
+    let foundNonPILT = false;
     
     // Iterate from the end to the beginning of the array
     for (let i = arr.length - 1; i >= 0; i--) {
-      if (arr[i] !== "PLT") {
-        // If a non-PLT string is found, stop the iteration
-        foundNonPLT = true;
+      if (arr[i] !== "PILT") {
+        // If a non-PILT string is found, stop the iteration
+        foundNonPILT = true;
         break;
       } else {
-        // If foundNonPLT is true and we encounter "PLT", increase the count
+        // If foundNonPILT is true and we encounter "PILT", increase the count
         count++;
       }
     }
@@ -210,34 +210,67 @@ function getSumofMax(arr1, arr2) {
 
 // Extract observed coins for lottery
 function get_coins_from_data() {
-    // Get block numbers for filtering
-    let blocks = jsPsych.data.get().filter({trial_type: "PLT"}).select('block').values;
 
-    // Get block valence for each trial
-    let valence = jsPsych.data.get().filter({trial_type: "PLT"}).select('valence').values;
+    // Get PILT trials
+    let trials = jsPsych.data.get().filter({trial_type: "PILT"});
+
+    // Get block numbers for filtering
+    let blocks = trials.select('block').values;
 
     // Get left and right outcome for each trial
-    let outcomeRight = jsPsych.data.get().filter({trial_type: "PLT"}).select('outcomeRight').values;
-    let outcomeLeft = jsPsych.data.get().filter({trial_type: "PLT"}).select('outcomeLeft').values;
+    let feedback_right = trials.select('feedback_right').values;
+    let feedback_left = trials.select('feedback_left').values;
+    let feedback_middle = trials.select('feedback_middle').values;
 
-    // Get choice
-    let choice = jsPsych.data.get().filter({trial_type: "PLT"}).select('choice').values;
+    // Get response
+    let response = trials.select('response').values;
+
+    // Get presented feedback
+    let chosen_feedback = trials.select('chosen_feedback').values;
 
     let coins_for_lottery = []
-    for (i=0; i<valence.length; i++){
+    for (i=0; i<response.length; i++){
 
-        if ((typeof blocks[i] !== "number") || choice[i] == "noresp"){
-
+        // Skip practice blocks
+        if (typeof blocks[i] !== "number"){
             continue
         }
 
-        if (valence[i] == 1){
-            coins_for_lottery.push(choice[i] == "right" ? outcomeRight[i] : outcomeLeft[i]);
+        // Worst outcome for missed response
+        if (response === "noresp"){
+            const worst = Math.min(...[feedback_right[i], feedback_left[i], feedback_middle[i]].filter(item => typeof item === 'number'));
 
+            coins_for_lottery.push(worst);
         } else {
-            coins_for_lottery.push(choice[i] == "right" ? -outcomeLeft[i] : -outcomeRight[i]);
-
+            coins_for_lottery.push(chosen_feedback[i]);
         }
+        
+    }
+
+    // Get reversal trials
+    trials = jsPsych.data.get().filter({trial_type: "reversal"});
+
+    // Get left and right outcome for each trial
+    feedback_right = trials.select('feedback_right').values;
+    feedback_left = trials.select('feedback_left').values;
+    
+    // Get response
+    response = trials.select('response').values;
+
+    // Get chosen feedback
+    chosen_feedback = trials.select('chosen_feedback').values;
+
+    for (i=0; i<response.length; i++){
+
+        // Worst outcome for missed response
+        if ((response !== "right") & (response !== "left")){
+            const worst = Math.min(feedback_right[i], feedback_left[i]);
+
+            coins_for_lottery.push(worst);
+        } else {
+            coins_for_lottery.push(chosen_feedback[i]);
+        }
+        
     }
 
     return coins_for_lottery
@@ -311,7 +344,9 @@ function computeBestRest(structure){
 
         // Compute reverse cumulative sums
         for (let i=structure[b].length - 2; i>=0; i--){
-            const next_optimal_outcome = structure[b][i + 1].optimal_right === 1 ? structure[b][i + 1].feedback_right : structure[b][i + 1].feedback_left
+            const next_optimal_outcome = (structure[b][i + 1].n_stimuli === 2) ? 
+                (structure[b][i + 1].optimal_right === 1 ? structure[b][i + 1].feedback_right : structure[b][i + 1].feedback_left) :
+                (structure[b][i + 1][`feedback_${structure[b][i + 1].optimal_side}`])
 
             structure[b][i].rest_1pound = structure[b][i + 1].rest_1pound + 
                 (Math.abs(next_optimal_outcome) == 1);
@@ -348,7 +383,7 @@ function isValidNumber(value) {
 // Function to compile inter_block_stimulus
 function inter_block_stimulus(){
 
-    const last_trial = jsPsych.data.get().filter({trial_type: "PLT"}).last(1);
+    const last_trial = jsPsych.data.get().filter({trial_type: "PILT"}).last(1);
 
     // Valence of block
     const valence = last_trial.select("valence").values[0];
@@ -357,12 +392,20 @@ function inter_block_stimulus(){
     const block = last_trial.select('block').values[0];
 
     // Number of pairs in block
-    const n_pairs = last_trial.select("n_pairs").values[0]
+    const n_groups = last_trial.select("n_groups").values[0]
+
+    // Number of stimuli in block
+    const n_stimuli = last_trial.select("n_stimuli").values[0];
+
+    // Are there 50pence coins in the block?
+    const feedbacks = jsPsych.data.get().filter({trial_type: "PILT", block: block}).select("feedback_right").values;
+    const fifty = feedbacks.includes(0.5) || feedbacks.includes(-0.5);
+    console.log(fifty)
 
     // Find chosen outcomes for block
-    let chosen_outcomes = jsPsych.data.get().filter({trial_type: "PLT",
+    let chosen_outcomes = jsPsych.data.get().filter({trial_type: "PILT",
         block: block
-    }).select('chosenOutcome').values;
+    }).select('chosen_feedback').values;
 
     // Summarize into counts
     chosen_outcomes = countOccurrences(chosen_outcomes);
@@ -373,12 +416,12 @@ function inter_block_stimulus(){
     // Add text and tallies for early stop
     if (window.skipThisBlock){
         
-        txt += `<p>You've found the better ${n_pairs > 1 ? "cards" : "card"}.</p><p>You will skip the remaining turns and `;
+        txt += `<p>You've found the better ${n_groups > 1 ? "cards" : "card"}.</p><p>You will skip the remaining turns and `;
         
         txt += valence == 1 ? `collect the remaining coins hidden under ` : 
-            `lose only the remaining coins hidden under`;
+            `lose only the remaining coins hidden under `;
 
-        txt +=  n_pairs > 1 ? "these cards." : "this card."
+        txt +=  n_groups > 1 ? "these cards." : "this card."
         
         txt += `<p><img src='imgs/safe.png' style='width:100px; height:100px;'></p>
         <p>Altogether, these coins were ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:<p>`
@@ -397,30 +440,47 @@ function inter_block_stimulus(){
     if (valence == 1){
 
         txt += `<div style='display: grid'><table><tr>
-            <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-            <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>
-            <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+            <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+        
+        if (fifty){
+            txt +=  `<td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`
+        }
+           
+        txt += `<td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
             </tr>
             <tr>
-            <td>${isValidNumber(chosen_outcomes[1]) ? chosen_outcomes[1] : 0}</td>
-            <td>${isValidNumber(chosen_outcomes[0.5]) ? chosen_outcomes[0.5] : 0}</td>
-            <td>${isValidNumber(chosen_outcomes[0.01]) ? chosen_outcomes[0.01] : 0}</td>
+            <td>${isValidNumber(chosen_outcomes[1]) ? chosen_outcomes[1] : 0}</td>`;
+
+        if (fifty) {
+            txt += `<td>${isValidNumber(chosen_outcomes[0.5]) ? chosen_outcomes[0.5] : 0}</td>`
+        }    
+            
+        txt += `<td>${isValidNumber(chosen_outcomes[0.01]) ? chosen_outcomes[0.01] : 0}</td>
             </tr></table></div>`;
     } else {
         txt += `<div style='display: grid'><table>
-            <tr><td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-            <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>
-            <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+            <tr><td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+            
+        if (fifty){
+            txt += `<td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`;
+        }
+            
+        txt += `<td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
             </tr>
             <tr>
-            <td>${isValidNumber(chosen_outcomes[-1]) ? chosen_outcomes[-1] : 0}</td>
-            <td>${isValidNumber(chosen_outcomes[-0.5]) ? chosen_outcomes[-0.5] : 0}</td>
-            <td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
+            <td>${isValidNumber(chosen_outcomes[-1]) ? chosen_outcomes[-1] : 0}</td>`
+
+        if (fifty){
+            txt += `<td>${isValidNumber(chosen_outcomes[-0.5]) ? chosen_outcomes[-0.5] : 0}</td>`;
+        }
+            
+        txt += `<td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
             </tr></table></div>`;
     }
 
     if (isValidNumber(block)){
-        txt += `<p>Place your fingers on the left and right arrow keys, and press either one to continue.</p>`
+        txt += n_stimuli === 2 ? `<p>Place your fingers on the left and right arrow keys, and press either one to continue.</p>` :
+         `<p>Place your fingers on the left, right, and up arrow keys, and press either one to continue.</p>`
     }
 
     return txt

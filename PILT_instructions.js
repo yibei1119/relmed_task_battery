@@ -1,4 +1,4 @@
-// Instructions for the PLT
+// Instructions for the PILT
 const small_coin_size = 70;
 
 function prepare_PILT_instructions() {
@@ -17,7 +17,7 @@ function prepare_PILT_instructions() {
         pages: () => {
 
             let pages = [
-                `<p>Welcome!</p>
+                ` <p>Welcome!</p>
                 <p>In this study you will complete a few tasks. Let's start with the first game.</p>`
             ];
 
@@ -65,21 +65,27 @@ function prepare_PILT_instructions() {
                 data: {trialphase: "instruction"}
             },
             {
-                timeline: build_PLT_task(
+                timeline: build_PILT_task(
                     [[
                         {
-                            stimulus_left: "binoculars.png",
-                            stimulus_right: "clock.png",
+                            stimulus_left: "ukulele1.jpg",
+                            stimulus_right: "envelope1.jpg",
+                            stimulus_middle: "",
+                            feedback_middle: "",
+                            n_stimuli: 2,
+                            present_pavlovian: true,
+                            pavlovian_images: pavlovian_images_f(),
+                            optimal_side: "",
                             feedback_left: 1,
                             feedback_right: 1,
                             optimal_right: 1,
                             block: "practice1",
                             trial: 1,
                             valence: 1,
-                            maxRespTime: -1,
-                            pair: 1,
-                            cpair: 1,
-                            n_pairs: 1,
+                            response_deadline: -1,
+                            stimulus_group: 1,
+                            stimulus_group_id: 1,
+                            n_groups: 1,
                             rest_1pound: 0,
                             rest_50pence: 0,
                             rest_1penny: 0
@@ -96,7 +102,8 @@ function prepare_PILT_instructions() {
         css_classes: ['instructions'],
         pages: [
             `${window.sessionNum == 1 ? `<p>You found a one pound coin!</p>` : ``}
-            <p>In the game, some cards will be better than others.</p>`
+            <p>Some cards are better than others, but even good cards can sometimes only give a penny 
+            or might sometimes break a one pound coin.</p>`
         ],
         show_clickable_nav: true,
         data: {trialphase: "instruction"}
@@ -121,21 +128,27 @@ function prepare_PILT_instructions() {
 
     inst.push(
         {
-            timeline: build_PLT_task(
+            timeline: build_PILT_task(
                 [
                     dumbbell_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "flashlight.png" : "dumbbell.png",
-                            stimulus_right: e ? "dumbbell.png" : "flashlight.png",
+                            stimulus_left: e ? "strainer1.jpg" : "can2.jpg",
+                            stimulus_right: e ? "can2.jpg" : "strainer1.jpg",
+                            stimulus_middle: "",
+                            feedback_middle: "",
+                            present_pavlovian: true,
+                            pavlovian_images: pavlovian_images_f(),
+                            n_stimuli: 2,
+                            optimal_side: "",
                             feedback_left: e ? 0.01 : reward_magnitude[i],
                             feedback_right: e ? reward_magnitude[i] : 0.01,
                             optimal_right: e,
                             block: "practice2",
                             trial: i,
                             valence: 1,
-                            pair: 1,
-                            cpair: 1,
-                            n_pairs: 1,
+                            stimulus_group: 1,
+                            stimulus_group_id: 1,
+                            n_groups: 1,
                             rest_1pound: 0,
                             rest_50pence: 0,
                             rest_1penny: 0
@@ -172,21 +185,27 @@ function prepare_PILT_instructions() {
 
     inst.push(
         {
-            timeline: build_PLT_task(
+            timeline: build_PILT_task(
                 [
                     hammer_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "tricycle.png" : "hammer.png",
-                            stimulus_right: e ? "hammer.png" : "tricycle.png",
+                            stimulus_left: e ? "harp1.jpg" : "cantaloupe1.jpg",
+                            stimulus_right: e ? "cantaloupe1.jpg" : "harp1.jpg",
+                            stimulus_middle: "",
+                            feedback_middle: "",
+                            present_pavlovian: true,
+                            pavlovian_images: pavlovian_images_f(),
+                            n_stimuli: 2,
+                            optimal_side: "",
                             feedback_left: e ? -1 : punishment_magnitude[i],
                             feedback_right: e ? punishment_magnitude[i] : -1,
                             optimal_right: e,
                             block: "practice3",
                             trial: i,
                             valence: -1,
-                            pair: 1,
-                            cpair: 1,
-                            n_pairs: 1,
+                            stimulus_group: 1,
+                            stimulus_group_id: 1,
+                            n_groups: 1,
                             rest_1pound: 0,
                             rest_50pence: 0,
                             rest_1penny: 0
@@ -214,7 +233,7 @@ function prepare_PILT_instructions() {
 
     let quiz_questions = [
         {
-            prompt: "In this game, some cards are better than others.",
+            prompt: "Some cards are better than others, but even good cards can sometimes only give a penny or break a one pound coin.",
             options: ["True", "False"],
             required: true
         },
@@ -234,7 +253,7 @@ function prepare_PILT_instructions() {
         {
             type: jsPsychSurveyMultiChoice,
             questions: quiz_questions,
-            preamble: `<div class=instuctions><p>For each statement, please indicate whether it is true or false:</p></div>`,
+            preamble: `<div class=instructions><p>For each statement, please indicate whether it is true or false:</p></div>`,
             data: {
                 trialphase: "instruction_quiz"
             },
@@ -310,3 +329,43 @@ const lottery_instructions = {
     show_clickable_nav: true,
     data: {trialphase: "lottery_instructions"}
 }
+
+// Post-PILT test instructions
+const test_instructions = {
+    type: jsPsychInstructions,
+    css_classes: ['instructions'],
+    pages: [
+        '<p>You will now continue to another round of the card choosing game.</p>\
+            <p>The game proceeds the same as before, except you won\'t be able to see the coins you discover and collect.</p>\
+            <p>You will be presented with cards you already know. Do you best to choose the best card possible on each turn.</p>'
+    ],
+    show_clickable_nav: true,
+    data: {trialphase: "post-PILT_test_instructions"}
+}
+
+// WM instructions
+const WM_instructions = [
+    {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+            '<p>Next, you will return to the card choosing game.</p>\
+                <p>Your goal remains to collect and keep from breaking as many high-value coins as you can.</p>',
+            `<p>This time, you will choose between three cards on every turn.<p>
+            <p>Use the right arrow key to choose the card on the right, the left arrow key to choose the card on the left, 
+            and <b>use the upwards arrow key to choose the card in the middle.</b>
+            `
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: "WM_instructions"}
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        css_classes: ['instructions'],
+        stimulus: `<p>Let's start playing!</p>
+        <p>Place your fingers on the left, right, and up arrow keys, and press the up arrow key to start playing.</p>`,
+        choices: ['arrowup'],
+        data: {trialphase: "WM_instructions"}
+    }
+]
+
