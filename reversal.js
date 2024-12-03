@@ -88,6 +88,9 @@ const reversal_instructions = [
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
+            `<p>Welcome back!</p>
+            <p>You will now play another game of trial and error learning.</p>
+            <p>Like before, this is a fast game, in which everyone is expected to make more than a few mistakes.</p>`,
             `<p>Next, you will meet two friendly squirrels, each with a bag of coins to share. 
             Use the arrow keys to choose either the left or right squirrel. 
             The squirrel you pick will give you a coin to add to your safe.</p>`,
