@@ -1,5 +1,5 @@
 // Instructions for the PILT
-const small_coin_size = 70;
+const small_coin_size = 100;
 
 function prepare_PILT_instructions() {
     const inter_block_instruct = {
@@ -28,28 +28,28 @@ function prepare_PILT_instructions() {
 
             pages = pages.concat([
             `<p><b>THE CARD CHOOSING GAME</b></p>
-                <p>In this game you are the owner of a safe.</p>
+                <p>In this game, you own a safe.</p>
                 <img src='imgs/safe.png' style='width:100px; height:100px;'>
-                <p>At the start of the game, your safe contains:</p>
+                <p>At the start, your safe contains:</p>
                 <div style='display: grid'><table><tr><td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>
                 <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr>
                 <tr><td>60x one pound coins</td><td>60x fifty pence coins</td><td>60x one penny coins</td></tr></table></div>
                 <p>At the end of the game, you will draw one coin from your safe, and that will be your bonus payment.</p>
-                <p>Your goal is to add coins to your safe while avoid losing coins already in it.</p>`,
-            `<p>On each turn of this game, you will see two cards.
-                You have three seconds to flip one of the two cards.</p>
-                <p>This will reveal the coin you collect: either 1 pound, 50 pence, or 1 penny.</p>
+                <p><b>Your goal:</b> Add coins to your safe and avoid losing the ones already in it.</p>`,
+            `<p>On each turn, you will see two cards.
+                You have four seconds to flip one of the two cards.</p>
+                <p>Flipping a card reveals a coin you collect: £1, 50 pence, or 1 penny.</p>
                 <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
                 <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
-            `<p>When you flip a card, you might also see broken coins like these:</p>\
+            `<p>Sometimes, you might lose coins. This happens if you uncover a broken coin:</p>\
                 <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
                 <td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>
-                <p>This means that such a coin was broken from your safe.</p>`
+                <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
+            `<p>Your goal is to collect high-value coins and avoid losing them.</p>`
         ]);
         return pages
     },
@@ -63,9 +63,9 @@ function prepare_PILT_instructions() {
             {
                 type: jsPsychHtmlKeyboardResponse,
                 css_classes: ['instructions'],
-                stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
-                        <p>Let's try it out now! Flip a card on the next screen.</p>
-                        <p>Place your fingers on the left and right arrow keys, and press either one to continue.</p>`,
+                stimulus: `<p>Choose a card by pressing the <b>left</b> or <b>right arrow key</b> on your keyboard.</p>
+                        <p>Let's practice! On the next screen, flip a card.</p>
+                        <p>Place your fingers on the left and right arrow keys, then press either one to continue.</p>`,
                 choices: ['arrowleft', 'arrowright'],
                 data: {trialphase: "instruction"}
             },
@@ -106,9 +106,8 @@ function prepare_PILT_instructions() {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `${window.sessionNum == 1 ? `<p>You found a one pound coin!</p>` : ``}
-            <p>Some cards are better than others, but even good cards can sometimes only give a penny 
-            or might sometimes break a one pound coin.</p>`
+            `${window.sessionNum == 1 ? `<p>You found a <b>£1 coin!</b></p>` : ``}
+            <p>Some cards are better than others, but even good cards can sometimes give only a penny or break a £1 coin.</p>`
         ],
         show_clickable_nav: true,
         data: {trialphase: "instruction"}
@@ -116,9 +115,9 @@ function prepare_PILT_instructions() {
     {
         type: jsPsychHtmlKeyboardResponse,
         css_classes: ['instructions'],
-        stimulus: `<p>Let's practice collecting coins. \
-            On the next screen, choose card to collect as much money as you can.</p>
-            <p>Place your fingers on the left and right arrow keys, and press either one to start practicing.</p>`,
+        stimulus: `<p>Let's practice collecting coins. 
+            On the next screen, choose a card to collect as much money as possible.</p>
+            <p>Place your fingers on the left and right arrow keys, then press either one to start.</p>`,
         choices: ['arrowleft', 'arrowright'],
         data: {trialphase: "instruction"}
     }]);
@@ -171,9 +170,9 @@ function prepare_PILT_instructions() {
         {
             type: jsPsychHtmlKeyboardResponse,
             css_classes: ['instructions'],
-            stimulus: `<p>Now, let's practice avoiding losing coins. 
-            On the next screen, choose card to lose as little money as you can.</p>
-            <p>Place your fingers on the left and right arrow keys, and press either one to start practicing.</p>`,
+            stimulus: `<p>Now, let's practice <b>avoiding losing coins</b>!</p>
+            <p>On the next screen, choose a card to lose as little money as possible.</p>
+            <p>Place your fingers on the left and right arrow keys, then press either one to start.</p>`,
             choices: ['arrowright', 'arrowleft'],
             data: {trialphase: "instruction"}
         }
@@ -228,9 +227,9 @@ function prepare_PILT_instructions() {
             {
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
-                pages: [`<p>Before you start playing, we will ask you to answer a few questions about the instructions you have just read.</p>
-                        <p>You must answer all questions correctly to begin the challenge.</p>\
-                        <p>Otherwise, you can repeat the instructions and try again.</p>`],
+                pages: [`<p>Before you start playing, you'll answer a few questions about the instructions you just read.</p>
+                        <p>You must answer all questions correctly to begin the game.</p>\
+                        <p>If not, you can review the instructions and try again.</p>`],
                 show_clickable_nav: true,
                 data: {trialphase: "instruction"}
             }
@@ -238,17 +237,17 @@ function prepare_PILT_instructions() {
 
     let quiz_questions = [
         {
-            prompt: "Some cards are better than others, but even good cards can sometimes only give a penny or break a one pound coin.",
+            prompt: "Some cards are better than others, but even the best cards might only give a penny or break a £1 coin.",
             options: ["True", "False"],
             required: true
         },
         {
-            prompt: "If I find a broken coin, that means a coin was broken in my safe.",
+            prompt: "If I find a broken coin, that means I lost that coin.",
             options: ["True", "False"],
             required: true
         },
         {
-            prompt: "My goal is to collect and keep from breaking as many high-value coins as I can.",
+            prompt: "My goal is to collect as many high-value coins as I can and avoid breaking them.",
             options: ["True", "False"],
             required: true
         },
@@ -306,7 +305,7 @@ function prepare_PILT_instructions() {
             type: jsPsychHtmlKeyboardResponse,
             css_classes: ['instructions'],
             stimulus: `<p>Great! Let's start playing for real.</p>
-            <p>Place your fingers on the left and right arrow keys, and press either one to start playing.</p>`,
+            <p>Place your fingers on the left and right arrow keys, then press either one to start.</p>`,
             choices: ['arrowright', 'arrowleft'],
             data: {trialphase: "instruction"}
         }
