@@ -18,6 +18,7 @@
         window.studyId = jsPsych.data.getURLVariable('STUDY_ID');
         window.sessionId = jsPsych.data.getURLVariable('SESSION_ID');
         window.sessionNum = jsPsych.data.getURLVariable('session_num');
+        window.task = jsPsych.data.getURLVariable('task');
 
         // Save participant variables to data
         jsPsych.data.addProperties({
@@ -26,7 +27,8 @@
             session_id: window.sessionId,
             session: window.sessionNum,
             n_warnings: 0,
-            version: "dec05"
+            version: "dec05",
+            task: window.task
         })
     </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
@@ -164,66 +166,70 @@
 
         // Add PILT timeline
         PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure);
-        procedure = procedure.concat(PILT_tasks.PILT_procedure);
-        procedure = procedure.concat([
-            acceptability_intro,
-            acceptability_PILT
-        ]);
 
-        // Add vigour task timeline
-        const vigourTimeline = [
-            vigourInstructions,
-            ...experimentTimeline,
-        ];
-        procedure = procedure.concat(vigourTimeline);
-        procedure = procedure.concat([
-            acceptability_intro,
-            acceptability_vigour
-        ]);
 
-        // Add PIT timeline: instructions, trials, bonus
-        const PITtimeline = [
-            PITinstructions,
-            PITtrials
-        ];
-        procedure = procedure.concat(PITtimeline);
-        procedure = procedure.concat([
-            acceptability_intro,
-            acceptability_PIT
-        ]);
+        if (window.task === "pilt-to-test") {
+            procedure = procedure.concat(PILT_tasks.PILT_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PILT
+            ]);
 
-        // Add post-vigour test
-        procedure = procedure.concat(postVigourInstructions);
-        procedure = procedure.concat(postVigourTrials);
+            // Add vigour task timeline
+            const vigourTimeline = [
+                vigourInstructions,
+                ...experimentTimeline,
+            ];
+            procedure = procedure.concat(vigourTimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_vigour
+            ]);
 
-        // // PILT & Pavlovian test /// PUT Pavlovian first!!!
-        procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            // Add PIT timeline: instructions, trials, bonus
+            const PITtimeline = [
+                PITinstructions,
+                PITtrials
+            ];
+            procedure = procedure.concat(PITtimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PIT
+            ]);
 
-        // Add WM block
-        procedure.push(PILT_tasks.WM_procedure);
-        procedure = procedure.concat([
-            acceptability_intro,
-            acceptability_wm
-        ]);
+            // Add post-vigour test
+            procedure = procedure.concat(postVigourInstructions);
+            procedure = procedure.concat(postVigourTrials);
 
-        // Add reversal timeline
-        procedure = procedure.concat(reversal_instructions);
-        procedure = procedure.concat(reversal_blocks);
-        procedure = procedure.concat([
-            acceptability_intro,
-            acceptability_reversal
-        ]);
+            // // PILT & Pavlovian test /// PUT Pavlovian first!!!
+            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
 
-        // Add questionnaire timeline
-        // procedure = procedure.concat(questionnaires_timeline);
+            // Add vigour bonus message
+            procedure.push(vigour_PIT_bonus);
 
-        // Add vigour bonus message
-        procedure.push(vigour_PIT_bonus);
-
-        // Add coin lottery
-        procedure.push(lottery_instructions);
-        procedure.push(coin_lottery);
+            // Add coin lottery
+            procedure.push(lottery_instructions);
+            procedure.push(coin_lottery);
+        }
         
+        if (window.task === "wm") {
+            // Add WM block
+            procedure.push(PILT_tasks.WM_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_wm
+            ]);
+        }
+
+        if (window.task === "reversal") {
+            // Add reversal timeline
+            procedure = procedure.concat(reversal_instructions);
+            procedure = procedure.concat(reversal_blocks);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_reversal
+            ]);
+        }        
 
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
