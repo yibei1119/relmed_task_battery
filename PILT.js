@@ -444,7 +444,8 @@ function build_PILT_task(structure, insert_msg = true) {
             {
                 type: jsPsychPreload,
                 images: preload_images,
-                post_trial_gap: 800
+                post_trial_gap: 800,
+                continue_after_error: true
             },
             {
                 timeline: [

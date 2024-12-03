@@ -122,7 +122,9 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
         console.error('Error:', error);
         if (retry > 0) {
             console.log('Retrying to submit data...');
-            saveDataREDCap(retry - 1);
+            setTimeout(function(){
+                saveDataREDCap(retry - 1);
+            }, 1000);
         } else {
             console.error('Failed to submit data after retrying.');
             callback(error); // Call the callback function with the error if retries are exhausted
@@ -133,7 +135,7 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
 // Function to call at the end of the experiment
 function end_experiment() {
 
-    saveDataREDCap(3, (error) => {
+    saveDataREDCap(10, (error) => {
         if (error) {
             console.error('Failed to save data:', error);
             // Handle the error appropriately, maybe notify the user or retry
