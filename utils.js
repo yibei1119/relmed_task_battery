@@ -87,7 +87,7 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
 
     var redcap_record = JSON.stringify([{
         record_id: auto_number ? 1 : window.record_id, // Mandatory, but if auto_number then ignored by REDcap
-        prolific_pid: window.prolificPID,
+        relmed_pid: window.relmedPID,
         study_id: window.studyId,
         session_id: window.sessionId,
         start_time: jsPsych.getStartTime(),
