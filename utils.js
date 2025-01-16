@@ -79,10 +79,6 @@ function check_fullscreen(){
 // Save data to REDCap
 function saveDataREDCap(retry = 1, callback = () => {}) {
 
-    const auto_number = window.record_id == undefined
-
-    console.log(auto_number)
-
     var jspsych_data = jsPsych.data.get().ignore('stimulus').json();
 
     var redcap_record = JSON.stringify([{
@@ -95,41 +91,22 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
         auto_number: auto_number ? 'true' : 'false'
     }])
 
-    fetch('https://h6pgstm0f9.execute-api.eu-north-1.amazonaws.com/prod/submit', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: redcap_record
-    })
-    .then(data => {
-        if (data.status === 200) {
-            console.log('Data successfully submitted to REDCap');
+    try {
+        if (window.parent && window.parent.postMessage) {
+            window.parent.postMessage({ 
+                data: jspsych_data 
+            }, '*');
         } else {
-            console.error('Error submitting data:', data.message);
+            throw new Error("Parent window or postMessage is unavailable.");
         }
-        return data.json()
-    })
-    .then(data => {
-        console.log(data)
-        if (auto_number){
-            window.record_id = JSON.parse('[' + data.record_import_response[0] + ']')[0]
-        }
-        callback(); // Call the callback function if submission is successful
+    } catch (error) {
+        console.error("Failed to send message to parent window:", error);
+    
+        // Implement a fallback or handle the error
+        setTimeout(function(){
+            saveDataREDCap(retry - 1);
+        }, 1000);
     }
-    )
-    .catch(error => {
-        console.error('Error:', error);
-        if (retry > 0) {
-            console.log('Retrying to submit data...');
-            setTimeout(function(){
-                saveDataREDCap(retry - 1);
-            }, 1000);
-        } else {
-            console.error('Failed to submit data after retrying.');
-            callback(error); // Call the callback function with the error if retries are exhausted
-        }
-    });
 }
 
 // Function to call at the end of the experiment
