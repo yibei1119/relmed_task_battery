@@ -103,16 +103,6 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
 
     var jspsych_data = jsPsych.data.get().ignore('stimulus').json();
 
-    var redcap_record = JSON.stringify([{
-        record_id: auto_number ? 1 : window.record_id, // Mandatory, but if auto_number then ignored by REDcap
-        relmed_pid: window.relmedPID,
-        study_id: window.studyId,
-        session_id: window.sessionId,
-        start_time: jsPsych.getStartTime(),
-        jspsych_data: jspsych_data,
-        auto_number: auto_number ? 'true' : 'false'
-    }])
-
     postToParent(
         { 
             data: jspsych_data 
