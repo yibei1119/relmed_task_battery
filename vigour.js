@@ -259,7 +259,7 @@ const piggyBankTrial = {
     }
   },
   on_start: function (trial) {
-    if (window.prolificPID.includes("simulate")) {
+    if (window.relmedPID.includes("simulate")) {
       trial.trial_duration = 1000;
     }
     // Create a shared state object
