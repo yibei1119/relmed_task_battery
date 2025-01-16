@@ -74,6 +74,21 @@ function check_fullscreen(){
         return false
     }
 }
+
+function postToParent(message, fallback = () => {}) {
+    try {
+        if (window.parent && window.parent.postMessage) {
+            window.parent.postMessage(message, '*');
+        } else {
+            throw new Error("Parent window or postMessage is unavailable.");
+        }
+    } catch (error) {
+        console.error("Failed to send message to parent window:", error);
+    
+        // Implement a fallback or handle the error
+        fallback();
+    }
+}
   
 
 // Save data to REDCap
@@ -91,22 +106,16 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
         auto_number: auto_number ? 'true' : 'false'
     }])
 
-    try {
-        if (window.parent && window.parent.postMessage) {
-            window.parent.postMessage({ 
-                data: jspsych_data 
-            }, '*');
-        } else {
-            throw new Error("Parent window or postMessage is unavailable.");
+    postToParent(
+        { 
+            data: jspsych_data 
+        },
+        () => {
+            setTimeout(function () {
+                saveDataREDCap(retry - 1);
+            }, 1000);
         }
-    } catch (error) {
-        console.error("Failed to send message to parent window:", error);
-    
-        // Implement a fallback or handle the error
-        setTimeout(function(){
-            saveDataREDCap(retry - 1);
-        }, 1000);
-    }
+    )
 }
 
 // Function to call at the end of the experiment
@@ -121,10 +130,12 @@ function end_experiment() {
             window.removeEventListener('beforeunload', preventRefresh);
 
             // Redirect
-            if(window.parent && window.parent.postMessage) {
 
-                window.parent.postMessage({message: "endTask"}, '*')
-            }
+            postToParent(
+                { 
+                    message: "endTask"
+                }
+            )
         }
     });
 }
