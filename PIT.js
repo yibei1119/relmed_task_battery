@@ -276,7 +276,7 @@ const PITruleInstruction_2 = {
     `
     <div id="instruction-text" style="text-align: left">
       <p><strong>In this cloudy place, the background will also change occasionally.</strong></p>
-      <p>You may recognize some patterns in the background from the previous <strong>Card Choosing Game</strong>&#8212;try to remember what you learned there.</p>
+      <p>These patterns previously appread in the background during the <strong>Card Choosing Game</strong>&#8212. Each time a coin was revealed, it had one of these background behind it.</p>
 
           <div class="pav-stimuli-container">
                 <div class="pit-pav-row">
@@ -291,8 +291,8 @@ const PITruleInstruction_2 = {
     </div>
     `, `
     <div id="instruction-text" style="text-align: left">
-          <p><span class="highlight">Each time you see one of the backgrounds shown below, a coin will be added or removed in addition to your bonus for that round.</span></p>
-          <p>If a round is selected at the end of the game, the adjusted bonus from that round will be paid.</p>
+          <p><span class="highlight">Each time you see one of the backgrounds shown below, a coin will be added or removed from your winnings, independently of what you shake out of the pig.</span></p>
+          <p>If a round is selected at the end of the game, you will receive the sum you shook out of your pig, with a coin added or subtracted according to the background.</p>
 
           <div class="pav-stimuli-container">
                 <div class="pit-pav-row">
