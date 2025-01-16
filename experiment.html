@@ -86,28 +86,6 @@
     // Preliminary checks
     const preliminary_checks = [
         {
-            type: jsPsychBrowserCheck,
-            css_classes: ['instructions'],
-            features: ["width", "height",
-                "browser",
-                "mobile",
-                "fullscreen"
-            ],
-            minimum_height: 500,
-            minimum_width: 900,
-            inclusion_function: (data) => {
-                return (data.mobile === false) &&
-                    (data.fullscreen === true)
-            },
-            exclusion_message: () => {
-                return `<div class=instructions><p>Looks like your device is not compatible with this study. 
-                    Please do not use a mobile device. 
-                    Your browser has to be able to dispaly in fullscreen mode, 
-                    and meet the minimal window size requirements.</p>
-                    <p>Please reopen this study on a device that matches these criteria.</p></div>`
-            }
-        },
-        {
             type: jsPsychPreload,
             images: [[
                 "1penny.png", "1pennybroken.png",
