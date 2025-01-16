@@ -424,7 +424,7 @@ const coin_lottery = {
 }
 
 // Build PILT task block
-function build_PILT_task(structure, insert_msg = true) {
+function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
     let PILT_task = [];
     for (let i = 0; i < structure.length; i++) {
 
@@ -486,7 +486,7 @@ function build_PILT_task(structure, insert_msg = true) {
                     const block = jsPsych.evaluateTimelineVariable('block');
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
-                        updateState("pilt_start_block_" + block)
+                        updateState(`${task_name}_start_block_${block}`)
                     }
                 }
             }
@@ -584,7 +584,7 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure) {
     // WM block
     let WM_procedure = WM_instructions;
 
-    WM_procedure = WM_procedure.concat(build_PILT_task(WM_structure));
+    WM_procedure = WM_procedure.concat(build_PILT_task(WM_structure, task_name = "wm"));
 
 
     return {
