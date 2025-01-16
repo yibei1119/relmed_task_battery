@@ -12,49 +12,50 @@ function prepare_PILT_instructions() {
 
     let inst =  [
         {
-        type: jsPsychInstructions,
-        css_classes: ['instructions'],
-        pages: () => {
+            type: jsPsychInstructions,
+            css_classes: ['instructions'],
+            pages: () => {
 
-            let pages = [
-                ` <p>Welcome!</p>
-                <p>In this study, you'll play a few simple games of learning from trial and error.</p>
-                <p>Your goal in each game is to win as many coins as possible.</p>
-                <p>The games might feel a bit fast-paced because we're interested in your quick, intuitive judgments.</p>
-                <p>Since the games are about learning from trial and error, everyone is expected to make quite a few mistakes when they play.</p>
-                <p>Let's start with the first game.</p>
-                `
-            ];
+                let pages = [
+                    ` <p>Welcome!</p>
+                    <p>In this study, you'll play a few simple games of learning from trial and error.</p>
+                    <p>Your goal in each game is to win as many coins as possible.</p>
+                    <p>The games might feel a bit fast-paced because we're interested in your quick, intuitive judgments.</p>
+                    <p>Since the games are about learning from trial and error, everyone is expected to make quite a few mistakes when they play.</p>
+                    <p>Let's start with the first game.</p>
+                    `
+                ];
 
-            pages = pages.concat([
-            `<p><b>THE CARD CHOOSING GAME</b></p>
-                <p>In this game, you own a safe.</p>
-                <img src='imgs/safe.png' style='width:100px; height:100px;'>
-                <p>At the start, your safe contains:</p>
-                <div style='display: grid'><table><tr><td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>
-                <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr>
-                <tr><td>60x one pound coins</td><td>60x fifty pence coins</td><td>60x one penny coins</td></tr></table></div>
-                <p>At the end of the game, you will draw one coin from your safe, and that will be your bonus payment.</p>
-                <p><b>Your goal:</b> Add coins to your safe and avoid losing the ones already in it.</p>`,
-            `<p>On each turn, you will see two cards.
-                You have four seconds to flip one of the two cards.</p>
-                <p>Flipping a card reveals a coin you collect: £1, 50 pence, or 1 penny.</p>
-                <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
-                <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
-            `<p>Sometimes, you might lose coins. This happens if you uncover a broken coin:</p>\
-                <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
-                <td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
-            `<p>Your goal is to collect high-value coins and avoid losing them.</p>`
-        ]);
-        return pages
-    },
+                pages = pages.concat([
+                `<p><b>THE CARD CHOOSING GAME</b></p>
+                    <p>In this game, you own a safe.</p>
+                    <img src='imgs/safe.png' style='width:100px; height:100px;'>
+                    <p>At the start, your safe contains:</p>
+                    <div style='display: grid'><table><tr><td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+                    <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>
+                    <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr>
+                    <tr><td>60x one pound coins</td><td>60x fifty pence coins</td><td>60x one penny coins</td></tr></table></div>
+                    <p>At the end of the game, you will draw one coin from your safe, and that will be your bonus payment.</p>
+                    <p><b>Your goal:</b> Add coins to your safe and avoid losing the ones already in it.</p>`,
+                `<p>On each turn, you will see two cards.
+                    You have four seconds to flip one of the two cards.</p>
+                    <p>Flipping a card reveals a coin you collect: £1, 50 pence, or 1 penny.</p>
+                    <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
+                    <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+                    <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+                    <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
+                `<p>Sometimes, you might lose coins. This happens if you uncover a broken coin:</p>\
+                    <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
+                    <td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+                    <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+                    <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
+                `<p>Your goal is to collect high-value coins and avoid losing them.</p>`
+            ]);
+            return pages
+            },
         show_clickable_nav: true,
-        data: {trialphase: "instruction"}
+        data: {trialphase: "instruction"},
+        on_start: () => {updateState("start_instructions")}
     }
     ];
 
