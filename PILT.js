@@ -536,8 +536,8 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure) {
 
     // Add PILT
     let PILT_blocks = build_PILT_task(structure);
-    // PILT_blocks[0]["on_start"] = updateState("pilt_task_start");
-    PILT_procedure = PILT_procedure.concat();
+    PILT_blocks[0]["on_start"] = () => {updateState("pilt_task_start")};
+    PILT_procedure = PILT_procedure.concat(PILT_blocks);
     console.log(PILT_procedure)
 
     // Add test
