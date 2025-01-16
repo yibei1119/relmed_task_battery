@@ -112,7 +112,9 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
                 saveDataREDCap(retry - 1);
             }, 1000);
         }
-    )
+    );
+
+    callback();
 }
 
 // Function to call at the end of the experiment
