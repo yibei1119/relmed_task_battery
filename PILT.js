@@ -425,6 +425,7 @@ const coin_lottery = {
 
 // Build PILT task block
 function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
+    console.log(task_name)
     let PILT_task = [];
     for (let i = 0; i < structure.length; i++) {
 
@@ -584,7 +585,7 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure) {
     // WM block
     let WM_procedure = WM_instructions;
 
-    WM_procedure = WM_procedure.concat(build_PILT_task(WM_structure, task_name = "wm"));
+    WM_procedure = WM_procedure.concat(build_PILT_task(WM_structure, true, "wm"));
 
 
     return {
