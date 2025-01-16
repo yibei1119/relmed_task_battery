@@ -133,6 +133,8 @@ function end_experiment() {
                     message: "endTask"
                 }
             )
+
+            console.log("endTask")
         }
     });
 }
