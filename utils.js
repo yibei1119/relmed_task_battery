@@ -144,7 +144,10 @@ function end_experiment() {
             window.removeEventListener('beforeunload', preventRefresh);
 
             // Redirect
-            document.body.innerHTML += "<p>You may now close this window.</p>";
+            if(window.parent && window.parent.postMessage) {
+
+                window.parent.postMessage({message: "endTask"}, '*')
+            }
         }
     });
 }
