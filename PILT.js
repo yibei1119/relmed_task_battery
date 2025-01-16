@@ -439,6 +439,15 @@ function build_PILT_task(structure, insert_msg = true) {
         let preload_images = structure[i].flatMap(item => [item.stimulus_right, item.stimulus_left]);
         preload_images = [...new Set(preload_images)].map(value => `imgs/PILT_stims/${value}`);
 
+        // Get valence for the block
+        const valence = structure[i][0]["valence"];
+
+        // Get n_stimuli for this block
+        const n_stimuli = structure[i][0]["n_stimuli"];
+
+        // Get block number
+        const block_number = structure[i][0]["block"];
+
         // Build block
         block = [
             {
@@ -446,7 +455,27 @@ function build_PILT_task(structure, insert_msg = true) {
                 images: preload_images,
                 post_trial_gap: 800,
                 continue_after_error: true
-            },
+            }
+        ];
+
+        if (isValidNumber(block_number)){
+            block.push(
+                {
+                    type: jsPsychHtmlKeyboardResponse,
+                    stimulus: `
+                        <p>On the next round you will play to <b>${valence > 0 ? "win" : "avoid losing"} coins</b>.<p>` + 
+                       ( n_stimuli === 2 ? `<p>Place your fingers on the left and right arrow keys, and press either one to continue.</p>` :
+                        `<p>Place your fingers on the left, right, and up arrow keys, and press either one to continue.</p>`),
+                    choices: n_stimuli === 2 ? ['arrowright', 'arrowleft'] : ['arrowright', 'arrowleft', 'arrowup'],
+                    css_classes: ['instructions'],
+                    data: {
+                        trialphase: "pre_block",
+                    },
+                }
+            )
+        }
+            
+        block.push(
             {
                 timeline: [
                     PILT_trial
@@ -461,8 +490,8 @@ function build_PILT_task(structure, insert_msg = true) {
                     }
                 }
             }
-        ];
-
+        );
+        
         // Add message
         if (insert_msg) {
             block.push(inter_block_msg);
