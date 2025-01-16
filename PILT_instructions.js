@@ -55,7 +55,7 @@ function prepare_PILT_instructions() {
             },
         show_clickable_nav: true,
         data: {trialphase: "instruction"},
-        on_start: () => {updateState("start_instructions")}
+        on_start: () => {updateState("pilt_start_instructions")}
     }
     ];
 
