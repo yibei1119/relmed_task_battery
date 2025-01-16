@@ -451,7 +451,15 @@ function build_PILT_task(structure, insert_msg = true) {
                 timeline: [
                     PILT_trial
                 ],
-                timeline_variables: structure[i]
+                timeline_variables: structure[i],
+                on_start: () => {
+
+                    const block = jsPsych.evaluateTimelineVariable('block');
+
+                    if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
+                        updateState("pilt_start_block_" + block)
+                    }
+                }
             }
         ];
 
@@ -538,7 +546,6 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure) {
     let PILT_blocks = build_PILT_task(structure);
     PILT_blocks[0]["on_start"] = () => {updateState("pilt_task_start")};
     PILT_procedure = PILT_procedure.concat(PILT_blocks);
-    console.log(PILT_procedure)
 
     // Add test
     let PILT_test_procedure = [];
