@@ -22,8 +22,8 @@ function generatePITstimulus(coin, ratio) {
     0.01: "PIT3.png",
     1.0: "PIT1.png",
     0.5: "PIT2.png",
-    "-0.01": "PIT6.png",
-    "-1": "PIT4.png",
+    "-0.01": "PIT4.png",
+    "-1": "PIT6.png",
     "-0.5": "PIT5.png"
   };
   PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "imgs/Pav_stims/session" + sessionNum + "/" + v]));
@@ -275,8 +275,8 @@ const PITruleInstruction_2 = {
     </div>`,
     `
     <div id="instruction-text" style="text-align: left">
-      <p><strong>In this cloudy place, the background will also change occasionally.</strong></p>
-      <p>These patterns previously appread in the background during the <strong>Card Choosing Game</strong>&#8212. Each time a coin was revealed, it had one of these background behind it.</p>
+      <p><span class="highlight">In this cloudy place, the background will also change occasionally.</span></p>
+      <p>These are the backgrounds you will see. Each background will either add or remove <strong>one</strong> coin from your earnings, regardless of what you do.</p>
 
           <div class="pav-stimuli-container">
                 <div class="pit-pav-row">
@@ -291,14 +291,15 @@ const PITruleInstruction_2 = {
     </div>
     `, `
     <div id="instruction-text" style="text-align: left">
-          <p><span class="highlight">Each time you see one of the backgrounds shown below, a coin will be added or removed from your winnings, independently of what you shake out of the pig.</span></p>
-          <p>If a round is selected at the end of the game, you will receive the sum you shook out of your pig, with a coin added or subtracted according to the background.</p>
+          <p><strong>Here's how each background affects your earnings:</strong></p>
+          <p>The backgrounds on the left will <strong>add</strong> £1, 50p, or 1p, while the backgrounds on the right will <strong>remove</strong> 1p, 50p, or £1, regardless of what you do.</p>
 
           <div class="pav-stimuli-container">
                 <div class="pit-pav-row">
                       <img src=${"imgs/Pav_stims/session" + sessionNum + "/PIT1.png"} class="pit-pav-icon">
                       <img src=${"imgs/Pav_stims/session" + sessionNum + "/PIT2.png"} class="pit-pav-icon">
                       <img src=${"imgs/Pav_stims/session" + sessionNum + "/PIT3.png"} class="pit-pav-icon">
+                      <div class="vertical"></div>
                       <img src=${"imgs/Pav_stims/session" + sessionNum + "/PIT4.png"} class="pit-pav-icon">
                       <img src=${"imgs/Pav_stims/session" + sessionNum + "/PIT5.png"} class="pit-pav-icon">
                       <img src=${"imgs/Pav_stims/session" + sessionNum + "/PIT6.png"} class="pit-pav-icon">
@@ -307,9 +308,10 @@ const PITruleInstruction_2 = {
                       <img src="imgs/1pound.png" class="pit-coin-icon">
                       <img src="imgs/50pence.png" class="pit-coin-icon">
                       <img src="imgs/1penny.png" class="pit-coin-icon">
-                      <img src="imgs/1poundbroken.png" class="pit-coin-icon">
-                      <img src="imgs/50pencebroken.png" class="pit-coin-icon">
+                      <div class="vertical"></div>
                       <img src="imgs/1pennybroken.png" class="pit-coin-icon">
+                      <img src="imgs/50pencebroken.png" class="pit-coin-icon">
+                      <img src="imgs/1poundbroken.png" class="pit-coin-icon">
                 </div>
           </div>
     </div>
