@@ -15,7 +15,7 @@
         // Get condition from URL, all caps are prolific, lowercase are ours
         window.relmedPID = jsPsych.data.getURLVariable('RELMED_PID');
         window.debug = window.relmedPID.includes("debug");
-        window.demo = window.relmedPID.includes("DEMO") | window.relmedPID.includes("STAFF");
+        window.demo = window.relmedPID.includes("DEMO") | window.relmedPID.includes("STAF");
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.sessionNum = jsPsych.data.getURLVariable('session_num');
         window.task = jsPsych.data.getURLVariable('task');
