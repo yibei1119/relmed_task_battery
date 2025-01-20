@@ -514,7 +514,11 @@ async function load_squences(session) {
             throw new Error('Network response was not ok');
         }
         const structure = await response.json();
-        const sess_structure = structure[session - 1];
+        let sess_structure = structure[session - 1];
+
+        if (window.demo){
+            sess_structure = sess_structure.slice(0,3);
+        }
 
         window.totalBlockNumber = sess_structure.length
 
@@ -528,6 +532,10 @@ async function load_squences(session) {
         const test_structure = await test_response.json();
 
         let test_sess_structure = test_structure[session - 1];
+
+        if (window.demo){
+            test_sess_structure = [test_sess_structure[0].slice(0,10)];
+        }
 
         // Add folder to stimuli, and rename block
         for (i=0; i<test_sess_structure.length; i++){
@@ -549,12 +557,18 @@ async function load_squences(session) {
         }
 
         // Add Pavlovaian test to the end of test strucutre
-        test_sess_structure = [pav_test_structure].concat(test_sess_structure);
+        if (!window.demo){
+            test_sess_structure = [pav_test_structure].concat(test_sess_structure);
+        }
 
         // Fetch WM structure
         const WM_response = await fetch('pilot6_WM.json');
         const WM_structure = await WM_response.json();
-        const WM_sess_structure = WM_structure[session - 1];
+        let WM_sess_structure = WM_structure[session - 1];
+
+        if (window.demo){
+            WM_sess_structure = WM_sess_structure.slice(0,3);
+        }
 
         run_full_experiment(sess_structure, test_sess_structure, WM_sess_structure);
     } catch (error) {
