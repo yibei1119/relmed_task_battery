@@ -517,7 +517,7 @@ async function load_squences(session) {
         let sess_structure = structure[session - 1];
 
         if (window.demo){
-            sess_structure = sess_structure.slice(0,3);
+            sess_structure = sess_structure.slice(0,6);
         }
 
         window.totalBlockNumber = sess_structure.length
@@ -534,7 +534,7 @@ async function load_squences(session) {
         let test_sess_structure = test_structure[session - 1];
 
         if (window.demo){
-            test_sess_structure = [test_sess_structure[0].slice(0,10)];
+            test_sess_structure = [test_sess_structure[0].slice(0,25)];
         }
 
         // Add folder to stimuli, and rename block
