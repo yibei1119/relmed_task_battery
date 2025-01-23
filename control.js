@@ -13,25 +13,40 @@ const ctrlConfig = {
   }
 };
 
-// Define the base structure for the game interface
-const exploreTrial = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `
+const ctrlTrials = [{"left": "green", "right": "blue", "near": "coconut"}, {"left": "red", "right": "yellow", "near": "orange"}];
+
+function generateCtrlTrial(left, right, near) {
+  const far = ctrlConfig.baseRule[near];
+  stimulus = `
     <main class="main-stage">
-      <img class="background" src="imgs/Ocean.png" alt="Background"/>
+      <img class="background" src="imgs/ocean.png" alt="Background"/>
       <section class="scene">
-        <!-- <div class="upper-frame">
-          
-        </div> -->
-        <img class="island-far" src="imgs/Island_Orange.png" alt="Farther island" />
+        <img class="island-far" src="imgs/island_${far}.png" alt="Farther island" />
         <div class="overlap-group">
-          <img class="ship-left" src="imgs/Ship_Blue.png" alt="Left ship" />
-          <img class="island-near" src="imgs/Island_Coconut.png" alt="Nearer island" />
-          <img class="ship-right" src="imgs/Ship_Yellow.png" alt="Right ship" />
+          <div class="choice-left">
+            <div class="fuel-container-left"></div>
+            <img class="ship-left" src="imgs/ship_${left}.png" alt="Left ship" />
+            <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
+          </div>
+          <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
+          <div class="choice-right">
+            <div class="fuel-container-right"></div>
+            <img class="ship-right" src="imgs/ship_${right}.png" alt="Right ship" />
+            <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
+          </div>
         </div>
       </section>
     </main>
-  `
+  `;
+  return stimulus;
+}
+
+// Define the base structure for the game interface
+const exploreTrial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: () => {
+    return generateCtrlTrial(jsPsych.evaluateTimelineVariable('left'), jsPsych.evaluateTimelineVariable('right'), jsPsych.evaluateTimelineVariable('near'));
+  }
 };
 
 // Add the fuel animation function
@@ -43,6 +58,10 @@ const addFuel = () => {
 };
 
 // Create the instruction pages timeline
-const expTimeline = {
-  timeline: [exploreTrial]
-};
+var expTimeline = [];
+ctrlTrials.forEach(trial => {
+  expTimeline.push({
+    timeline: [exploreTrial],
+    timeline_variables: [trial]
+  });
+});
