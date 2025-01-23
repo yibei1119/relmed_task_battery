@@ -1,0 +1,58 @@
+.main-stage, .scene {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 600px;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.background {
+  position: relative;
+  object-fit: contain;
+  width: auto;
+  height: 100%;
+  z-index: -1;
+}
+
+.scene {
+  position: absolute;
+  z-index: 0;
+}
+
+.island-far {
+  position: absolute;
+  width: auto;
+  height: 18.75%;
+  top: 15.5%;
+}
+
+.overlap-group {
+  position: absolute;
+  width: auto;
+  top: 49%;
+  height: 46.875%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.island-near {
+  position: relative;
+  width: auto;
+  height: 100%;
+  margin: 0 -22%;
+  z-index: 1;
+}
+
+.ship-left, .ship-right {
+  position: relative;
+  width: auto;
+  height: 42%;
+  top: 44.25%;
+  z-index: 2;
+}
+
+.ship-right {
+  transform: scaleX(-1);
+}
