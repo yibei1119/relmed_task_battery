@@ -73,11 +73,41 @@
 
 .arrow-left, .arrow-right {
   position: absolute;
-  width: 6vh;
-  height: 6vh;
+  width: 7.5vh;
+  height: 7.5vh;
   bottom: 0%
 }
 
 .ship-right, .arrow-right {
   transform: scaleX(-1);
+}
+
+/* New styles for the highlighting and fuel animation */
+.highlight {
+  filter: brightness(0) saturate(100%) invert(87%) sepia(19%) saturate(4059%) hue-rotate(358deg) brightness(101%) contrast(106%);
+}
+
+.fuel-icon {
+  width: 8vh;
+  height: 8vh;
+  position: absolute;
+}
+
+.fuel-animation {
+  animation: fuelAppear 0.5s ease-out forwards;
+}
+
+@keyframes fuelAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(-8vh);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8vh);
+  }
 }

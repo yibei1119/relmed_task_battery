@@ -1,3 +1,4 @@
+// Configuration object for the control condition
 const ctrlConfig = {
   baseRule: {
     banana: "coconut",
@@ -13,7 +14,10 @@ const ctrlConfig = {
   }
 };
 
-const ctrlTrials = [{"left": "green", "right": "blue", "near": "coconut"}, {"left": "red", "right": "yellow", "near": "orange"}];
+const ctrlTrials = [
+  {"left": "green", "right": "blue", "near": "coconut"}, 
+  {"left": "red", "right": "yellow", "near": "orange"}
+];
 
 function generateCtrlTrial(left, right, near) {
   const far = ctrlConfig.baseRule[near];
@@ -41,23 +45,64 @@ function generateCtrlTrial(left, right, near) {
   return stimulus;
 }
 
-// Define the base structure for the game interface
+// Define the base structure for the game interface with enhanced interaction
 const exploreTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
-    return generateCtrlTrial(jsPsych.evaluateTimelineVariable('left'), jsPsych.evaluateTimelineVariable('right'), jsPsych.evaluateTimelineVariable('near'));
+    return generateCtrlTrial(
+      jsPsych.evaluateTimelineVariable('left'), 
+      jsPsych.evaluateTimelineVariable('right'), 
+      jsPsych.evaluateTimelineVariable('near')
+    );
+  },
+  choices: ['ArrowLeft', 'ArrowRight'],
+  response_ends_trial: false,
+  // trial_duration: 3000,  // 3 second time limit
+  on_load: () => {
+    let selectedKey = null;
+    const leftArrow = document.querySelector('.arrow-left');
+    const rightArrow = document.querySelector('.arrow-right');
+    const leftContainer = document.querySelector('.fuel-container-left');
+    const rightContainer = document.querySelector('.fuel-container-right');
+
+    // Function to create and animate a fuel icon
+    function createFuelIcon(container) {
+      const fuelIcon = document.createElement('img');
+      fuelIcon.src = 'imgs/fuel.png';  // Make sure you have this image
+      fuelIcon.className = 'fuel-icon fuel-animation';
+      container.appendChild(fuelIcon);
+
+      // Remove the fuel icon after animation completes
+      fuelIcon.addEventListener('animationend', () => {
+        container.removeChild(fuelIcon);
+      });
+    }
+
+    // Event listener for keydown events
+    document.addEventListener('keydown', (e) => {
+      if (!selectedKey) {  // First key press
+        if (e.key === 'ArrowLeft') {
+          selectedKey = 'left';
+          leftArrow.classList.add('highlight');
+          rightArrow.style.visibility = 'hidden';
+          createFuelIcon(leftContainer);
+        } else if (e.key === 'ArrowRight') {
+          selectedKey = 'right';
+          rightArrow.classList.add('highlight');
+          leftArrow.style.visibility = 'hidden';
+          createFuelIcon(rightContainer);
+        }
+      } else {  // Subsequent key presses
+        if ((selectedKey === 'left' && e.key === 'ArrowLeft') ||
+            (selectedKey === 'right' && e.key === 'ArrowRight')) {
+          createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
+        }
+      }
+    });
   }
 };
 
-// Add the fuel animation function
-const addFuel = () => {
-  const fuelIcon = document.querySelector('.fuel-icon');
-  fuelIcon.classList.remove('adding');
-  void fuelIcon.offsetWidth; // Trigger reflow
-  fuelIcon.classList.add('adding');
-};
-
-// Create the instruction pages timeline
+// Create the timeline
 var expTimeline = [];
 ctrlTrials.forEach(trial => {
   expTimeline.push({
