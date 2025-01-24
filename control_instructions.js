@@ -58,9 +58,8 @@ const instructionPages = [
                   ${createOceanCurrents()}
               </section>
               ${createInstructionDialog(`
-                  <h2>Welcome to Captain's Route!</h2>
-                  <p>Before we begin, let's look at the key elements you'll interact with in this task. 
-                  You'll be navigating ships between islands, managing fuel, and mastering ocean currents.</p>
+                  <h2>Welcome to Captain's Quest!</h2>
+                  <p>You're about to become a ship captain managing an important fruit trading network. Your mission is to transport valuable cargo between island factories while mastering the challenges of ocean currents.</p>
               `)}
               ${createProgressBar(1, 6)}
           </div>
@@ -76,7 +75,7 @@ const instructionPages = [
                   <img class="island-far" src="imgs/island_coconut.png" alt="Farther island" />
                   <div class="island-indicator far-indicator">
                       <span class="selection-dot"></span>
-                      <div class="selection-label">Destination Island</div>
+                      <div class="selection-label">Distant Island</div>
                   </div>
                   
                   <div class="overlap-group">
@@ -88,8 +87,9 @@ const instructionPages = [
                   </div>
               </section>
               ${createInstructionDialog(`
-                  <p>Your journey begins at the main island, where you'll find a factory and two ships ready for departure. 
-                  In the distance, you'll spot another island. There are four factory types across the islands: 
+                  <p>Each of your journey begins at the main island, where you'll find a factory and two ships ready for departure. 
+                  In the distance, you'll spot another island.</p>
+                  <p>There are four factory types across the islands: 
                   Coconut, Orange, Grape, and Banana.</p>
               `)}
               ${createProgressBar(2, 6)}
@@ -107,23 +107,24 @@ const instructionPages = [
                   <div class="overlap-group">
                       <div class="choice-left">
                           <div class="selection-indicator">
-                              <span class="selection-dot"></span>
-                              <div class="selection-label">Press ← to select</div>
+                          <div class="selection-label">Press ← to select</div>
+                          <span class="selection-dot"></span>
                           </div>
                           <img class="ship-left" src="imgs/ship_green.png" alt="Left ship" />
                       </div>
                       <div class="choice-right">
                           <div class="selection-indicator">
-                              <span class="selection-dot"></span>
-                              <div class="selection-label">Press → to select</div>
+                          <div class="selection-label">Press → to select</div>
+                          <span class="selection-dot"></span>
                           </div>
                           <img class="ship-right" src="imgs/ship_blue.png" alt="Right ship" />
                       </div>
                   </div>
               </section>
               ${createInstructionDialog(`
-                  <p>Use the <strong>left</strong> and <strong>right</strong> arrow keys to select your ship. 
-                  Each ship has its own route and destination factory. Once selected, you cannot change ships during the journey.</p>
+                  <p>Your fleet consists of four distinct ships, each marked by unique colors and symbols.
+                  Every ship has its intended destination factory. Choose your ship carefully - you cannot change selection once made.</p>
+                  <p>Use the <strong>left</strong> and <strong>right</strong> arrow keys to select your ship.</p>
               `)}
               ${createProgressBar(3, 6)}
           </div>
@@ -140,8 +141,9 @@ const instructionPages = [
                   <div class="label">Ocean Current Direction</div>
               </div>
               ${createInstructionDialog(`
-                  <p>Watch the ocean currents carefully! Without sufficient fuel, your ship might drift to the distant island. 
-                  The white lines show the current's strength and direction.</p>
+                  <p>However, the journey isn't always straightforward...</p>
+                  <p>The ocean's natural flow can affect your ship's course. Without sufficient fuel, your ship might drift to the distant island instead of its intended destination.</p>
+                  <p>Watch the sea surface carefully - currents come in three different strength levels.</p>
               `)}
               ${createProgressBar(4, 6)}
           </div>
@@ -166,8 +168,8 @@ const instructionPages = [
                   </div>
               </section>
               ${createInstructionDialog(`
-                  <p>After selecting your ship, rapidly press the same arrow key to add fuel. 
-                  You have three seconds from the start of each journey to add as much fuel as needed.</p>
+                  <p>To ensure your ship reaches its intended destination, add fuel to your chosen ship by pressing keys. Each keypress adds fuel, helping your ship resist the currents.</p>
+                  <p>You have three seconds from the start of each journey to add as much fuel as needed.</p>
               `)}
               ${createProgressBar(5, 6)}
           </div>
@@ -180,11 +182,12 @@ const instructionPages = [
           <div class="instruction-stage">
               <img class="background" src="imgs/ocean.png" alt="Background"/>
               ${createInstructionDialog(`
-                  <p>During your journey, you'll encounter special missions:</p>
+                  <p>During your command, you'll encounter two types of special missions:</p>
                   <ul>
-                      <li><strong>Captain's Challenge:</strong> Predict ships' destinations based on their fuel levels</li>
-                      <li><strong>Priority Delivery:</strong> Complete special delivery requests to specific factories</li>
+                      <li><strong>Captain's Forecast:</strong> Predict where ships will dock based on their type, currents, and fuel levels</li>
+                      <li><strong>Priority Delivery:</strong> Complete special delivery requests to specific factories for extra rewards</li>
                   </ul>
+                  <p>Success in these missions depends on your understanding of ship routes and ocean currents.</p>
                   <p>Ready to set sail?</p>
               `)}
               ${createProgressBar(6, 6)}
@@ -200,7 +203,9 @@ const instructionTrial = {
   show_clickable_nav: true,
   button_label_next: "Next",
   button_label_previous: "Previous",
-  show_page_number: true
+  show_page_number: true,
+  data: { phase: 'ctrl_instructions' },
+  post_trial_gap: 800
 };
 
 // Add instructions to the timeline
