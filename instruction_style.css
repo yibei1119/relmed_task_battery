@@ -1,0 +1,444 @@
+/* Base layout and container styles */
+.instruction-stage {
+  width: 900px;
+  height: 600px;
+  margin: 0 auto;
+  position: relative;
+  overflow: visible;
+  transform: translateY(-40px); /* Move everything up slightly */
+}
+
+/* Background elements positioning */
+.instruction-stage .background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transform: translateY(-20px); /* Move everything up slightly */
+}
+
+/* Scene layout and positioning */
+.instruction-stage .scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70%; /* Increased height for more space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* Ocean current animation styling */
+.ocean-current {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.current-line {
+  position: absolute;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  width: 40%;
+  transform-origin: left center;
+  animation: flowRight 3s infinite linear;
+}
+
+.current-line:nth-child(1) { top: 45%; }
+.current-line:nth-child(2) { top: 48%; }
+.current-line:nth-child(3) { top: 51%; }
+
+/* Island positioning and styling */
+.instruction-stage .island-far {
+  position: absolute;
+  width: auto;
+  height: 18.75%;
+  top: 12.5%; /* Moved up slightly */
+  z-index: 2;
+}
+
+.instruction-stage .overlap-group {
+  position: absolute;
+  width: 100%;
+  top: 35%; /* Moved up slightly */
+  height: 46.875%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 3;
+}
+
+.instruction-stage .island-near {
+  position: relative;
+  width: auto;
+  height: 100%;
+  margin: 0 -22%;
+  z-index: 3;
+}
+
+/* Ship elements styling */
+.instruction-stage .choice-left,
+.instruction-stage .choice-right {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.instruction-stage .ship-left,
+.instruction-stage .ship-right {
+  position: relative;
+  width: auto;
+  height: 42%;
+  top: 44.25%;
+  z-index: 4;
+}
+
+.instruction-stage .ship-right {
+  transform: scaleX(-1);
+}
+
+/* Label styling */
+.label {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #2C3E50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Pulse highlight for ships */
+.pulse-highlight {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.2);
+  animation: pulse 2s infinite;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pulse-highlight .label {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Key press animation */
+.key-animation {
+  position: absolute;
+  top: 60%;
+  z-index: 6;
+}
+
+.key-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: keyPress 2s infinite;
+}
+
+.press-animation {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  animation: pressRipple 2s infinite;
+}
+
+/* Fuel container and animation */
+.instruction-stage .fuel-container-left,
+.instruction-stage .fuel-container-right {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  height: 40%;
+  z-index: 5;
+}
+
+.fuel-icon {
+  width: 8vh;
+  height: 8vh;
+  position: absolute;
+}
+
+.fuel-animation {
+  animation: fuelAppear 0.5s ease-out forwards;
+}
+
+.fuel-animation.repeating {
+  animation: fuelAppear 2s ease-out infinite;
+}
+
+/* Instruction dialog styling */
+.instruction-dialog {
+  position: absolute;
+  bottom: -40px; /* Moved down further */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+
+.instruction-content {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  text-align: left;
+  color: #2C3E50;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Navigation controls */
+.jspsych-instructions-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0 0 0;
+  margin-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.jspsych-instructions-nav button {
+  background-color: #2B6CB0;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.jspsych-instructions-nav button:hover {
+  background-color: #2C5282;
+}
+
+.jspsych-instructions-nav button:disabled {
+  background-color: #CBD5E0;
+  cursor: not-allowed;
+}
+
+/* Progress bar styling */
+.progress-bar-container {
+  position: absolute;
+  top: 116%;
+  left: 50%;
+  transform: translateX(-47%);
+  width: 200px;
+  height: 4px;
+  background: rgba(187, 187, 187, 0.3);
+  border-radius: 2px;
+  z-index: 15;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #FFD700;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Animations */
+@keyframes flowRight {
+  0% { 
+      transform: translateX(0) scaleX(1);
+      opacity: 0;
+  }
+  20% {
+      opacity: 1;
+  }
+  100% { 
+      transform: translateX(150%) scaleX(0.5);
+      opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+      transform: translate(-50%, -50%) scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+  }
+  70% {
+      transform: translate(-50%, -50%) scale(1);
+      box-shadow: 0 0 0 20px rgba(255, 215, 0, 0);
+  }
+  100% {
+      transform: translate(-50%, -50%) scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+@keyframes fuelAppear {
+  0% {
+      opacity: 0;
+      transform: translateY(-8vh);
+  }
+  50% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+  100% {
+      opacity: 0;
+      transform: translateY(8vh);
+  }
+}
+
+@keyframes keyPress {
+  0%, 100% {
+      transform: translateY(30px);
+  }
+  50% {
+      transform: translateY(36px);
+  }
+}
+
+@keyframes pressRipple {
+  0% {
+      transform: scale(1);
+      opacity: 0.5;
+  }
+  100% {
+      transform: scale(2);
+      opacity: 0;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 900px) {
+  .instruction-stage {
+      width: 100%;
+      height: 100vh;
+  }
+
+  .instruction-dialog {
+      width: 90%;
+      padding: 15px;
+  }
+
+  .label {
+      font-size: 12px;
+      padding: 3px 6px;
+  }
+}
+
+/* Current indicator styling */
+.current-indicator {
+  position: absolute;
+  top: 45%;
+  right: 20%;
+  z-index: 6;
+}
+
+.current-indicator .label {
+  position: relative;
+  display: inline-block;
+}
+
+/* Fuel label positioning */
+.fuel-label {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Selection indicator styling */
+.selection-indicator {
+  position: absolute;
+  top: 80%; /* Position above the ship */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 6;
+}
+
+/* Island indicator positioning */
+.island-indicator {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 6;
+}
+
+.far-indicator {
+  top: 20%;
+  right: 30%;
+}
+
+.near-indicator {
+  top: 45%;
+  right: 30%;
+}
+
+/* Shared dot and label styles */
+.selection-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #FFD700;
+  border-radius: 50%;
+  animation: dotPulse 2s infinite;
+  flex-shrink: 0;
+}
+
+.selection-label {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #2C3E50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+@keyframes dotPulse {
+  0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+  }
+  100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
