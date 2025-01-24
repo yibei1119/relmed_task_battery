@@ -25,8 +25,10 @@
   <script src="utils.js"></script>
   <script src="control_instructions.js"></script>
   <script src="control.js"></script>
+  <script src="control_instructions.js"></script>
   <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
   <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="instruction_style.css" rel="stylesheet" type="text/css" />
 </head>
 <style>
   .jsPsychDE {
@@ -62,9 +64,9 @@
   };
   const ctrlTimeline = [
     preload,
-    expTimeline
-  ];
-
+    ...expTimeline
+];
+  addInstructionsToTimeline(ctrlTimeline);
   // Run or simulate the experiment
   // jsPsych.simulate(ctrlTimeline, "visual");
   jsPsych.run(ctrlTimeline);
