@@ -2,9 +2,16 @@
 const createOceanCurrents = () => {
   return `
       <div class="ocean-current">
-          <div class="current-line"></div>
-          <div class="current-line"></div>
-          <div class="current-line"></div>
+          <div class="current-group left-currents">
+              <div class="current-line"></div>
+              <div class="current-line"></div>
+              <div class="current-line"></div>
+          </div>
+          <div class="current-group right-currents">
+              <div class="current-line"></div>
+              <div class="current-line"></div>
+              <div class="current-line"></div>
+          </div>
       </div>
   `;
 };
