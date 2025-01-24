@@ -57,9 +57,10 @@ const exploreTrial = {
   },
   choices: ['ArrowLeft', 'ArrowRight'],
   response_ends_trial: false,
-  // trial_duration: 3000,  // 3 second time limit
+  trial_duration: 3000,  // 3 second time limit
   on_load: () => {
     let selectedKey = null;
+    let lastPressTime = 0;
     const leftArrow = document.querySelector('.arrow-left');
     const rightArrow = document.querySelector('.arrow-right');
     const leftContainer = document.querySelector('.fuel-container-left');
@@ -68,7 +69,7 @@ const exploreTrial = {
     // Function to create and animate a fuel icon
     function createFuelIcon(container) {
       const fuelIcon = document.createElement('img');
-      fuelIcon.src = 'imgs/fuel.png';  // Make sure you have this image
+      fuelIcon.src = 'imgs/fuel.png';
       fuelIcon.className = 'fuel-icon fuel-animation';
       container.appendChild(fuelIcon);
 
@@ -78,28 +79,61 @@ const exploreTrial = {
       });
     }
 
-    // Event listener for keydown events
-    document.addEventListener('keydown', (e) => {
-      if (!selectedKey) {  // First key press
-        if (e.key === 'ArrowLeft') {
+    // Function to handle keyboard responses
+    function handleKeypress(info) {
+      const currentTime = info.rt;
+      
+      if (!selectedKey) {  // First key press - only select the ship
+        if (info.key === 'ArrowLeft') {
           selectedKey = 'left';
           leftArrow.classList.add('highlight');
-          rightArrow.style.visibility = 'hidden';
-          createFuelIcon(leftContainer);
-        } else if (e.key === 'ArrowRight') {
+          // Hide the entire right choice (ship, arrow, and container)
+          document.querySelector('.choice-right').style.visibility = 'hidden';
+          
+          // Set up listener for subsequent left key presses
+          setupRepeatedKeypress('ArrowLeft', leftContainer);
+        } else if (info.key === 'ArrowRight') {
           selectedKey = 'right';
           rightArrow.classList.add('highlight');
-          leftArrow.style.visibility = 'hidden';
-          createFuelIcon(rightContainer);
+          // Hide the entire left choice (ship, arrow, and container)
+          document.querySelector('.choice-left').style.visibility = 'hidden';
+          
+          // Set up listener for subsequent right key presses
+          setupRepeatedKeypress('ArrowRight', rightContainer);
         }
-      } else {  // Subsequent key presses
-        if ((selectedKey === 'left' && e.key === 'ArrowLeft') ||
-            (selectedKey === 'right' && e.key === 'ArrowRight')) {
-          createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
-        }
+        lastPressTime = currentTime;
       }
-    });
-  }
+    }
+
+    // Function to handle repeated keypresses
+    function handleRepeatedKeypress(info) {
+      createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
+    }
+
+    // Function to set up listener for repeated keypresses
+    function setupRepeatedKeypress(key, container) {
+      jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: handleRepeatedKeypress,
+        valid_responses: [key],
+        rt_method: 'performance',
+        persist: true,
+        allow_held_key: false,
+        minimum_valid_rt: 0
+      });
+    }
+
+    // Initial keyboard listener for the first choice
+    setTimeout(() => {
+        jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: handleKeypress,
+          valid_responses: ['ArrowLeft', 'ArrowRight'],
+          rt_method: 'performance',
+          persist: false,
+          allow_held_key: false,
+          minimum_valid_rt: 0
+        });
+      }, 100);
+    }
 };
 
 // Create the timeline
