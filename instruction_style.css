@@ -53,8 +53,8 @@
 }
 
 .left-currents {
-  left: 15%;
-  bottom: 30%;
+  right: 15%;
+  bottom: 60%;
   transform: rotate(30deg);
 }
 
@@ -62,6 +62,14 @@
   right: -15%;
   bottom: 60%;
   transform: rotate(-30deg);
+}
+
+/* Static current trace */
+.current-trace {
+  position: absolute;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  width: 25%;
 }
 
 .current-line {
@@ -73,20 +81,38 @@
 }
 
 .left-currents .current-line {
-  animation: flowLeftDiagonal 5s infinite ease-in;
+  animation: flowLeftDiagonal 3s infinite linear;
 }
 
 .right-currents .current-line {
-  animation: flowRightDiagonal 5s infinite ease-in;
+  animation: flowRightDiagonal 3s infinite linear;
 }
 
-.left-currents .current-line:nth-child(1) { top: 45%; left: 50px; }
-.left-currents .current-line:nth-child(2) { top: 49%; left: 20px; }
-.left-currents .current-line:nth-child(3) { top: 55%; left: 30px; }
+.left-currents .current-line:nth-child(4) { 
+  top: 45%; 
+  right: calc(5% + 50px);
+}
+.left-currents .current-line:nth-child(5) { 
+  top: 49%; 
+  right: calc(5% + 20px);
+}
+.left-currents .current-line:nth-child(6) { 
+  top: 55%; 
+  right: calc(5% + 30px);
+}
 
-.right-currents .current-line:nth-child(1) { top: 45%; left: 50px; }
-.right-currents .current-line:nth-child(2) { top: 49%; left: 20px; }
-.right-currents .current-line:nth-child(3) { top: 55%; left: 30px; }
+.right-currents .current-line:nth-child(4) { 
+  top: 45%; 
+  left: calc(50px);
+}
+.right-currents .current-line:nth-child(5) { 
+  top: 49%; 
+  left: calc(20px);
+}
+.right-currents .current-line:nth-child(6) { 
+  top: 55%; 
+  left: calc(30px);
+}
 
 /* Island positioning and styling */
 .instruction-stage .island-far {
@@ -304,25 +330,32 @@
 /* Animations */
 @keyframes flowLeftDiagonal {
   0% { 
-      transform: translateX(100%) scaleX(1);
-      opacity: 1;
+    transform: translateX(60%) scaleX(0.4);
+    opacity: 0.25;
+  }
+  10% { 
+    transform: translateX(50%) scaleX(0.5);
+    opacity: 1;
   }
   100% { 
-      transform: translateX(0) scaleX(1);
-      opacity: 0;
+    transform: translateX(0%) scaleX(0.5);
+    opacity: 0.5;
   }
 }
 
 @keyframes flowRightDiagonal {
   0% { 
-      transform: translateX(0) scaleX(0.8);
-      opacity: 1;
+    transform: translateX(15%) scaleX(0.4);
+    opacity: 0.25;
+  }
+  10% { 
+    transform: translateX(20%) scaleX(0.5);
+    opacity: 1;
   }
   100% { 
-      transform: translateX(100%) scaleX(0.2);
-      opacity: 0;
-  }
-}
+    transform: translateX(70%) scaleX(0.5);
+    opacity: 0.5;
+  }}
 
 @keyframes pulse {
   0% {
