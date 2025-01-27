@@ -15,11 +15,11 @@ const ctrlConfig = {
 };
 
 const ctrlTrials = [
-  {"left": "green", "right": "blue", "near": "coconut"}, 
-  {"left": "red", "right": "yellow", "near": "orange"}
+  {"left": "green", "right": "blue", "near": "coconut", "current": 3}, 
+  {"left": "red", "right": "yellow", "near": "orange", "current": 1}
 ];
 
-function generateCtrlTrial(left, right, near) {
+function generateCtrlTrial(left, right, near, current) {
   const far = ctrlConfig.baseRule[near];
   stimulus = `
     <main class="main-stage">
@@ -52,12 +52,14 @@ const exploreTrial = {
     return generateCtrlTrial(
       jsPsych.evaluateTimelineVariable('left'), 
       jsPsych.evaluateTimelineVariable('right'), 
-      jsPsych.evaluateTimelineVariable('near')
+      jsPsych.evaluateTimelineVariable('near'),
+      jsPsych.evaluateTimelineVariable('current')
     );
   },
   choices: ['ArrowLeft', 'ArrowRight'],
   response_ends_trial: false,
-  trial_duration: 3000,  // 3 second time limit
+  trial_duration: 10000,  // 3 second time limit
+  post_trial_gap: 300,
   on_load: () => {
     let selectedKey = null;
     let lastPressTime = 0;
