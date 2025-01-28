@@ -13,12 +13,12 @@
   object-fit: contain;
   width: auto;
   height: 100%;
-  z-index: -1;
+  z-index: 0;
 }
 
 .scene {
   position: absolute;
-  z-index: 0;
+  z-index: 2;
 }
 
 .island-far {
@@ -26,6 +26,7 @@
   width: auto;
   height: 18.75%;
   top: 15.5%;
+  z-index: 2;
 }
 
 .overlap-group {
@@ -35,6 +36,8 @@
   height: 46.875%;
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
+  z-index: 3;
 }
 
 .island-near {
@@ -42,7 +45,7 @@
   width: auto;
   height: 100%;
   margin: 0 -22%;
-  z-index: 1;
+  z-index: 3;
 }
 
 .choice-left, .choice-right {
@@ -61,6 +64,7 @@
   align-items: center;
   top: 0%;
   height: 40%;
+  z-index: 5;
 }
 
 .ship-left, .ship-right {
@@ -68,7 +72,7 @@
   width: auto;
   height: 42%;
   top: 44.25%;
-  z-index: 2;
+  z-index: 4;
 }
 
 .arrow-left, .arrow-right {

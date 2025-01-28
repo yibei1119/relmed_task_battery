@@ -16,15 +16,16 @@ const createOceanCurrents = (level = 3) => {
             ]
         };
 
-        const currentPositions = positions[level] || positions[3]; // Default to 3 if invalid level
+        const currentPositions = positions[level] || positions[3];
         
         currentPositions.forEach(({ top, offset }) => {
+            const position = isLeft ? 'right' : 'left';
+            const styles = `top: ${top}%; ${position}: calc(5% + ${offset}px);`;
+            
             if (isTrace) {
-                const position = isLeft ? 'right' : 'left';
-                lines += `
-                    <div class="current-trace" style="top: ${top}%; ${position}: calc(5% + ${offset}px);"></div>`;
+                lines += `<div class="current-trace" style="${styles}"></div>`;
             } else {
-                lines += `<div class="current-line"></div>`;
+                lines += `<div class="current-line" style="${styles}"></div>`;
             }
         });
         return lines;
@@ -47,7 +48,6 @@ const createOceanCurrents = (level = 3) => {
         </div>
     `;
 };
-
 const createInstructionDialog = (content) => {
     return `
     <div class="instruction-dialog">
@@ -94,7 +94,7 @@ const instructionPages = [
                         <img class="ship-right" src="imgs/ship_blue.png" alt="Right ship" />
                     </div>
                 </div>
-                ${createOceanCurrents()}
+                ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
                 <h2>Welcome to Captain's Quest!</h2>
@@ -175,14 +175,14 @@ const instructionPages = [
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
-            ${createOceanCurrents()}
+            ${createOceanCurrents(2)}
             <div class="current-indicator">
-                <div class="label">Ocean Current Direction</div>
+                <div class="label">Ocean Current level: 2 (Mid)</div>
             </div>
             ${createInstructionDialog(`
                 <p>However, the journey isn't always straightforward...</p>
                 <p>The ocean's natural flow can affect your ship's course. Without sufficient fuel, your ship might drift to the distant island instead of its intended destination.</p>
-                <p>Watch the sea surface carefully - currents come in three different strength levels.</p>
+                <p>Watch the sea surface carefully - currents come in three different strength levels: 1 (Low), 2 (Mid), and 3 (High).</p>
             `)}
             ${createProgressBar(4, 6)}
         </div>

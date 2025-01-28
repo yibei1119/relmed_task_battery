@@ -39,6 +39,7 @@ function generateCtrlTrial(left, right, near, current) {
             <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
           </div>
         </div>
+        ${createOceanCurrents(current)}
       </section>
     </main>
   `;

@@ -88,32 +88,6 @@
   animation: flowRightDiagonal 3s infinite linear;
 }
 
-.left-currents .current-line:nth-child(4) { 
-  top: 45%; 
-  right: calc(5% + 50px);
-}
-.left-currents .current-line:nth-child(5) { 
-  top: 49%; 
-  right: calc(5% + 20px);
-}
-.left-currents .current-line:nth-child(6) { 
-  top: 55%; 
-  right: calc(5% + 30px);
-}
-
-.right-currents .current-line:nth-child(4) { 
-  top: 45%; 
-  left: calc(50px);
-}
-.right-currents .current-line:nth-child(5) { 
-  top: 49%; 
-  left: calc(20px);
-}
-.right-currents .current-line:nth-child(6) { 
-  top: 55%; 
-  left: calc(30px);
-}
-
 /* Island positioning and styling */
 .instruction-stage .island-far {
   position: absolute;
@@ -331,7 +305,7 @@
 @keyframes flowLeftDiagonal {
   0% { 
     transform: translateX(60%) scaleX(0.4);
-    opacity: 0.25;
+    opacity: 0.15;
   }
   10% { 
     transform: translateX(50%) scaleX(0.5);
@@ -345,11 +319,11 @@
 
 @keyframes flowRightDiagonal {
   0% { 
-    transform: translateX(15%) scaleX(0.4);
-    opacity: 0.25;
+    transform: translateX(0%) scaleX(0.4);
+    opacity: 0.15;
   }
   10% { 
-    transform: translateX(20%) scaleX(0.5);
+    transform: translateX(5%) scaleX(0.5);
     opacity: 1;
   }
   100% { 
