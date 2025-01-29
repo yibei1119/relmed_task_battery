@@ -57,13 +57,23 @@ const exploreTrial = {
       jsPsych.evaluateTimelineVariable('current')
     );
   },
-  choices: ['ArrowLeft', 'ArrowRight'],
+  choices: "NO_KEYS",
   response_ends_trial: false,
-  trial_duration: 10000,  // 3 second time limit
+  trial_duration: 3000,  // 3 second time limit
   post_trial_gap: 300,
+  data: {
+    trialphase: "ctrl_explore",
+    responseTime: () => {return window.responseTime},
+    choice: () => {return window.choice},
+    choice_rt: () => {return window.choice_rt},
+    trial_presses: () => { return window.responseTime.length},
+  },
   on_load: () => {
     let selectedKey = null;
     let lastPressTime = 0;
+    window.responseTime = [];
+    window.choice = null;
+    window.choice_rt = 0;
     const leftArrow = document.querySelector('.arrow-left');
     const rightArrow = document.querySelector('.arrow-right');
     const leftContainer = document.querySelector('.fuel-container-left');
@@ -84,8 +94,6 @@ const exploreTrial = {
 
     // Function to handle keyboard responses
     function handleKeypress(info) {
-      const currentTime = info.rt;
-      
       if (!selectedKey) {  // First key press - only select the ship
         if (info.key === 'ArrowLeft') {
           selectedKey = 'left';
@@ -94,7 +102,7 @@ const exploreTrial = {
           document.querySelector('.choice-right').style.visibility = 'hidden';
           
           // Set up listener for subsequent left key presses
-          setupRepeatedKeypress('ArrowLeft', leftContainer);
+          setupRepeatedKeypress('ArrowLeft');
         } else if (info.key === 'ArrowRight') {
           selectedKey = 'right';
           rightArrow.classList.add('highlight');
@@ -102,19 +110,23 @@ const exploreTrial = {
           document.querySelector('.choice-left').style.visibility = 'hidden';
           
           // Set up listener for subsequent right key presses
-          setupRepeatedKeypress('ArrowRight', rightContainer);
+          setupRepeatedKeypress('ArrowRight');
         }
-        lastPressTime = currentTime;
       }
+      window.choice = selectedKey;
+      window.choice_rt = info.rt;
+      jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
     }
 
     // Function to handle repeated keypresses
     function handleRepeatedKeypress(info) {
+      window.responseTime.push(info.rt - lastPressTime);
+      lastPressTime = info.rt;
       createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
     }
 
     // Function to set up listener for repeated keypresses
-    function setupRepeatedKeypress(key, container) {
+    function setupRepeatedKeypress(key) {
       jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleRepeatedKeypress,
         valid_responses: [key],
@@ -126,16 +138,17 @@ const exploreTrial = {
     }
 
     // Initial keyboard listener for the first choice
-    setTimeout(() => {
-        jsPsych.pluginAPI.getKeyboardResponse({
-          callback_function: handleKeypress,
-          valid_responses: ['ArrowLeft', 'ArrowRight'],
-          rt_method: 'performance',
-          persist: false,
-          allow_held_key: false,
-          minimum_valid_rt: 0
-        });
-      }, 100);
+    var firstKey_listener = jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: handleKeypress,
+        valid_responses: ['ArrowLeft', 'ArrowRight'],
+        rt_method: 'performance',
+        persist: false,
+        allow_held_key: false,
+        minimum_valid_rt: 100
+      });
+    },
+    on_finish: () => {
+      jsPsych.pluginAPI.cancelAllKeyboardResponses();
     }
 };
 
