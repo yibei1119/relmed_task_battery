@@ -199,12 +199,13 @@ function generateCtrlFeedback() {
 }
 
 const exploreFeedback = {
+  timeline: [{
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
     return generateCtrlFeedback()
   },
   choices: "NO_KEYS",
-  trial_duration: 100000000,
+  trial_duration: 1500,
   post_trial_gap: 500,
   data: {
     trialphase: "ctrl_explore_feedback"
@@ -220,13 +221,82 @@ const exploreFeedback = {
       shipContainer.style.visibility = 'visible';
     }
   }
+}],
+  conditional_function: function () {
+    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    return last_trial_choice !== null;
+  }
+};
+
+// Warnings for unresponsive trials
+// Function to create and show warning
+function showTemporaryWarning(message, duration = 800) {
+  // Create warning element
+  const warningElement = document.createElement('div');
+  warningElement.id = 'vigour-warning-temp';
+  warningElement.innerText = message;
+
+  // Style the warning
+  warningElement.style.cssText = `
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: rgba(244, 206, 92, 0.9);
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #182b4b;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    text-align: center;
+    letter-spacing: 0.0px;
+  `;
+
+  // Add to document body
+  document.body.appendChild(warningElement);
+
+  // Force reflow to ensure transition works
+  warningElement.offsetHeight;
+
+  // Show warning
+  warningElement.style.opacity = '1';
+
+  // Remove after duration
+  setTimeout(() => {
+    warningElement.style.opacity = '0';
+    setTimeout(() => {
+      warningElement.remove();
+    }, 200); // Wait for fade out transition
+  }, duration);
+}
+const noChoiceWarning = {
+  timeline: [{
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "NO_KEYS",
+    stimulus: "",
+    data: {
+      trialphase: "no_choice_warning"
+    },
+    trial_duration: 1000,
+    on_load: function () {
+      showTemporaryWarning("Don't forget to participate!", 800);
+    }
+  }],
+  conditional_function: function () {
+    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    return last_trial_choice === null;
+  }
 };
 
 // Create the timeline
 var expTimeline = [];
 ctrlTrials.forEach(trial => {
   expTimeline.push({
-    timeline: [exploreTrial, exploreFeedback],
+    timeline: [exploreTrial, exploreFeedback, noChoiceWarning],
     timeline_variables: [trial]
   });
 });

@@ -140,7 +140,7 @@
   width: auto;
   height: 20vh;
   top: 100%;
-  animation: moveShipUp 1s ease-out forwards;
+  animation: moveShipUp 0.5s ease-out forwards;
 }
 
 @keyframes moveShipUp {
@@ -163,7 +163,7 @@
 .path-animation {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  animation: fadeInPath 1s ease-in forwards;
+  animation: fadeInPath 0.5s ease-in forwards;
 }
 
 @keyframes fadeIn {
