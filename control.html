@@ -49,6 +49,7 @@
     type: jsPsychPreload,
     images: [
       "ocean.png",
+      "ocean_above.png",
       "island_banana.png",
       "island_coconut.png",
       "island_grape.png",
@@ -57,7 +58,8 @@
       "ship_green.png",
       "ship_red.png",
       "ship_yellow.png",
-      "left.png"
+      "left.png",
+  
     ].map(s => "imgs/" + s),
     post_trial_gap: 800,
     continue_after_error: true
@@ -66,7 +68,7 @@
     preload,
     ...expTimeline
 ];
-  addInstructionsToTimeline(ctrlTimeline);
+  // addInstructionsToTimeline(ctrlTimeline);
   // Run or simulate the experiment
   // jsPsych.simulate(ctrlTimeline, "visual");
   jsPsych.run(ctrlTimeline);

@@ -17,7 +17,6 @@
   height: 100%;
   object-fit: cover;
   z-index: 0;
-  transform: translateY(-20px); /* Move everything up slightly */
 }
 
 /* Scene layout and positioning */
@@ -38,8 +37,8 @@
 .ocean-current {
   position: absolute;
   width: 100%;
-  height: 81.5%;
-  top: 18.5%;
+  height: 78%;
+  top: 22%;
   left: 0;
   overflow: hidden;
   pointer-events: none;

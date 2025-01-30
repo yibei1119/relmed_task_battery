@@ -59,8 +59,9 @@ const exploreTrial = {
   },
   choices: "NO_KEYS",
   response_ends_trial: false,
-  trial_duration: 3000,  // 3 second time limit
+  trial_duration: 4000,  // 3 second time limit
   post_trial_gap: 300,
+  save_timeline_variables: true,
   data: {
     trialphase: "ctrl_explore",
     responseTime: () => {return window.responseTime},
@@ -149,14 +150,83 @@ const exploreTrial = {
     },
     on_finish: () => {
       jsPsych.pluginAPI.cancelAllKeyboardResponses();
+      console.log(jsPsych.data.getLastTrialData().values()[0]);
     }
+};
+
+function generateCtrlFeedback() {
+  // Get last trial's data
+  const lastTrial = jsPsych.data.getLastTrialData().values()[0];
+  const choice = lastTrial.choice; // 'left' or 'right'
+  const chosenColor = lastTrial.timeline_variables[choice]; // Get the color of the chosen side
+  const nearIsland = lastTrial.timeline_variables.near; // Get the near island from last trial
+
+  // Determine destination island
+  let destinationIsland;
+  let currentRule;
+  if (currentRule === 'base') {
+    // Use base rule - show opposite of near island
+    destinationIsland = ctrlConfig.baseRule[nearIsland];
+  } else {
+    // Use control rule - based on chosen ship's color
+    destinationIsland = ctrlConfig.controlRule[chosenColor];
+  }
+
+  // Generate HTML for the feedback
+  const html = `
+    <main class="main-stage">
+      <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+      <section class="scene">
+        <svg class="trajectory-path">
+          <line x1="0" y1="100%" x2="0" y2="0" 
+                stroke="rgba(255,255,255,0.5)" 
+                stroke-width="2" 
+                class="path-animation"/>
+        </svg>
+        <img class="destination-island" 
+            src="imgs/island_icon_${destinationIsland}.png" 
+            alt="Destination island" />
+      <div class="ship-container">
+        <img class="ship-feedback" 
+              src="imgs/ship_icon_${chosenColor}.png" 
+              alt="Chosen ship" />
+        </div>
+      </section>
+    </main>
+  `;
+
+  return html;
+}
+
+const exploreFeedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: () => {
+    return generateCtrlFeedback()
+  },
+  choices: "NO_KEYS",
+  trial_duration: 100000000,
+  post_trial_gap: 500,
+  data: {
+    trialphase: "ctrl_explore_feedback"
+  },
+  on_load: () => {
+    // Clean up any leftover style elements from previous trials
+    const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
+    oldStyles.forEach(style => style.remove());
+
+    // Ensure the ship starts at the correct position
+    const shipContainer = document.querySelector('.ship-container');
+    if (shipContainer) {
+      shipContainer.style.visibility = 'visible';
+    }
+  }
 };
 
 // Create the timeline
 var expTimeline = [];
 ctrlTrials.forEach(trial => {
   expTimeline.push({
-    timeline: [exploreTrial],
+    timeline: [exploreTrial, exploreFeedback],
     timeline_variables: [trial]
   });
 });
