@@ -67,6 +67,26 @@
   z-index: 5;
 }
 
+.fuel-indicator-container {
+  position: absolute;
+  width: 15vh;
+  height: 2vh;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  top: 17.5vh; /* Position it below where fuel icons appear */
+  overflow: hidden;
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.3s ease;
+}
+
+.fuel-indicator-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #ffd700;
+  transition: width 0.1s ease-out;
+}
+
 .ship-left, .ship-right {
   position: relative;
   width: auto;
@@ -104,15 +124,15 @@
 @keyframes fuelAppear {
   0% {
     opacity: 0;
-    transform: translateY(-8vh);
+    transform: translateY(-10.5vh);
   }
   50% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-2.5vh);
   }
   100% {
     opacity: 0;
-    transform: translateY(8vh);
+    transform: translateY(5.5vh);
   }
 }
 

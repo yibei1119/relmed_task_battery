@@ -21,20 +21,28 @@ const ctrlTrials = [
 
 function generateCtrlTrial(left, right, near, current) {
   const far = ctrlConfig.baseRule[near];
-  stimulus = `
+  const stimulus = `
     <main class="main-stage">
       <img class="background" src="imgs/ocean.png" alt="Background"/>
       <section class="scene">
         <img class="island-far" src="imgs/island_${far}.png" alt="Farther island" />
         <div class="overlap-group">
           <div class="choice-left">
-            <div class="fuel-container-left"></div>
+            <div class="fuel-container-left">
+              <div class="fuel-indicator-container">
+                <div class="fuel-indicator-bar"></div>
+              </div>
+            </div>
             <img class="ship-left" src="imgs/ship_${left}.png" alt="Left ship" />
             <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
           </div>
           <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
           <div class="choice-right">
-            <div class="fuel-container-right"></div>
+            <div class="fuel-container-right">
+              <div class="fuel-indicator-container">
+                <div class="fuel-indicator-bar"></div>
+              </div>
+            </div>
             <img class="ship-right" src="imgs/ship_${right}.png" alt="Right ship" />
             <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
           </div>
@@ -72,6 +80,7 @@ const exploreTrial = {
   on_load: () => {
     let selectedKey = null;
     let lastPressTime = 0;
+    let trial_presses = 0;
     window.responseTime = [];
     window.choice = null;
     window.choice_rt = 0;
@@ -99,31 +108,47 @@ const exploreTrial = {
         if (info.key === 'ArrowLeft') {
           selectedKey = 'left';
           leftArrow.classList.add('highlight');
-          // Hide the entire right choice (ship, arrow, and container)
           document.querySelector('.choice-right').style.visibility = 'hidden';
-          
-          // Set up listener for subsequent left key presses
+          // Show the progress bar
+          document.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
           setupRepeatedKeypress('ArrowLeft');
         } else if (info.key === 'ArrowRight') {
           selectedKey = 'right';
           rightArrow.classList.add('highlight');
-          // Hide the entire left choice (ship, arrow, and container)
           document.querySelector('.choice-left').style.visibility = 'hidden';
-          
-          // Set up listener for subsequent right key presses
+          // Show the progress bar
+          document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
           setupRepeatedKeypress('ArrowRight');
         }
+        window.choice = selectedKey;
+        window.choice_rt = info.rt;
+        jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
       }
-      window.choice = selectedKey;
-      window.choice_rt = info.rt;
-      jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
     }
 
     // Function to handle repeated keypresses
     function handleRepeatedKeypress(info) {
+      trial_presses++;
       window.responseTime.push(info.rt - lastPressTime);
       lastPressTime = info.rt;
+      
+      // Create and animate fuel icon
       createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
+      
+      // Update fuel indicator bar
+      const container = selectedKey === 'left' ? 
+        document.querySelector('.fuel-container-left') : 
+        document.querySelector('.fuel-container-right');
+      const fuelBar = container.querySelector('.fuel-indicator-bar');
+      
+      // Calculate progress (40 presses = 100%)
+      const progress = Math.min((trial_presses / 40) * 100, 100);
+      fuelBar.style.width = `${progress}%`;
+      
+      // Optional: Change color when full
+      if (progress === 100) {
+        fuelBar.style.backgroundColor = '#00ff00';
+      }
     }
 
     // Function to set up listener for repeated keypresses
