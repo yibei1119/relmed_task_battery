@@ -320,7 +320,7 @@ const noChoiceWarning = {
 // Prediction trial
 function generateCtrlPrediction(ship, near, current, fuel) {
   const stimulus = `
-        <div class="instruction-stage">
+  <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
                 <div class="overlap-group">
