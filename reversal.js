@@ -24,6 +24,7 @@ var reversal_blocks = [
         continue_after_error: true,
         on_finish: () => {
             updateState(`reversal_start_task`)
+            updateState(`no_resumption`)
         }
     }
 ];

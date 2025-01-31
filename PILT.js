@@ -594,12 +594,20 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure) {
     // Add test
     let PILT_test_procedure = [];
     PILT_test_procedure.push(test_instructions);
-    PILT_test_procedure = PILT_test_procedure.concat(build_post_PILT_test(test_structure));
+    let test_blocks = build_post_PILT_test(test_structure);
+    test_blocks[0]["on_start"] = () => {
+        updateState("post_test_task_start");
+        updateState("no_resume");
+    };
+    PILT_test_procedure = PILT_test_procedure.concat(test_blocks);
 
     // WM block
-    let WM_procedure = WM_instructions;
-
-    WM_procedure = WM_procedure.concat(build_PILT_task(WM_structure, true, "wm"));
+    let WM_blocks = build_PILT_task(WM_structure, true, "wm");
+    WM_blocks[0]["on_start"] = () => {
+        updateState("wm_task_start");
+        updateState("no_resume");
+    };
+    const WM_procedure = WM_instructions.concat(WM_blocks);
 
 
     return {
