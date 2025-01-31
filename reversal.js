@@ -21,7 +21,10 @@ var reversal_blocks = [
         data: {
             trialphase: "reversal_preload"
         },
-        continue_after_error: true
+        continue_after_error: true,
+        on_finish: () => {
+            updateState(`reversal_start_task`)
+        }
     }
 ];
 for (i=0; i<reversal_timeline.length; i++){
@@ -99,7 +102,10 @@ const reversal_instructions = [
             <p>Your goal is to figure out which squirrel has the better coins and collect as many high-value ones as possible.<p>`
         ],
         show_clickable_nav: true,
-        data: {trialphase: "reversal_instruction"}
+        data: {trialphase: "reversal_instruction"},
+        on_start: () => {
+            updateState(`reversal_start_instructions`)
+        }
     },
     {
         type: jsPsychHtmlKeyboardResponse,
