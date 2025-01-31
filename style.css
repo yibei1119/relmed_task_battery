@@ -195,3 +195,22 @@
   from { opacity: 1; stroke-dashoffset: 0; }
   to { opacity: 0; stroke-dashoffset: -1000; }
 }
+
+/* Prediction trial styles */
+
+.destination-button {
+  padding: 10px;
+  margin: 10px;
+  background: white;
+  border-radius: 10px;
+  text-align: center;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.destination-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.ship-display {
+  transition: transform 0.3s ease;
+}

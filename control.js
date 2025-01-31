@@ -317,6 +317,75 @@ const noChoiceWarning = {
   }
 };
 
+// Prediction trial
+function generateCtrlPrediction(ship, near, current, fuel) {
+  const stimulus = `
+        <div class="instruction-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+                <div class="overlap-group">
+                    <div class="choice-left">
+                      <img class="ship-left" src="imgs/ship_${ship}.png" alt="Prediction ship" />
+                    </div>
+                    <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
+                    <div class="choice-right" style="visibility:hidden;">
+                      <img class="ship-right" src="imgs/ship_${ship}.png" alt="Prediction ship" />
+                    </div>
+                    <!-- Current Strength Indicator -->
+                    <div style="position:absolute; top:170px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3;">
+                        <div>Current Strength</div>
+                        <div style="color:#1976D2; font-weight:bold;">Level ${current}</div>
+                    </div>
+                    <!-- Fuel Level Indicator -->
+                    <div style="position:absolute; top:70px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3">
+                        <div>Fuel Level: ${fuel}%</div>
+                        <div style="width:150px; height:20px; background: #ddd; border: 2px solid rgba(255, 255, 255, 0.8); border-radius:10px;">
+                            <div style="width:${fuel}%; height:100%; background:#ffd700; border-radius:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                ${createOceanCurrents(current)}
+            </section>
+        </div>
+    `;
+    return stimulus
+};
+
+const predictTrial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: () => {
+    return generateCtrlPrediction(
+      jsPsych.evaluateTimelineVariable('ship'), 
+      jsPsych.evaluateTimelineVariable('near'), 
+      jsPsych.evaluateTimelineVariable('current'),
+      jsPsych.evaluateTimelineVariable('fuel')
+    );
+  },
+  data: {
+    trialphase: "ctrl_predict"
+  },
+  post_trial_gap: 300,
+  choices: ['coconut', 'orange', 'grape', 'banana'],
+  prompt: "<p>Based on the current strength and fuel level, where will this ship most likely dock?</p>",
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"></div>`
+};
+
+// Create trial variations
+const predictionConditions = [
+  {ship: "blue", near: "orange", current: 1, fuel: 75},
+  {ship: "red", near: "grape", current: 2, fuel: 50},
+  {ship: "yellow", near: "coconut", current: 3, fuel: 25}
+];
+
+// Add trials to timeline
+var predictionTimeline = [];
+predictionConditions.forEach(trial => {
+  predictionTimeline.push({
+    timeline: [predictTrial],
+    timeline_variables: [trial]
+  });
+});
+
 // Create the timeline
 var expTimeline = [];
 ctrlTrials.forEach(trial => {
