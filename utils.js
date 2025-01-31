@@ -99,14 +99,17 @@ function updateState(state) {
 }
 
 // Save data to REDCap
-function saveDataREDCap(retry = 1, callback = () => {}) {
+function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
 
     var jspsych_data = jsPsych.data.get().ignore('stimulus').json();
 
     postToParent(
-        { 
-            data: jspsych_data 
-        },
+        {
+            ...{ 
+                data: jspsych_data 
+            },
+            ...extra_fields
+    },
         () => {
             setTimeout(function () {
                 saveDataREDCap(retry - 1);
@@ -120,24 +123,10 @@ function saveDataREDCap(retry = 1, callback = () => {}) {
 // Function to call at the end of the experiment
 function end_experiment() {
 
-    saveDataREDCap(10, (error) => {
-        if (error) {
-            console.error('Failed to save data:', error);
-            // Handle the error appropriately, maybe notify the user or retry
-        } else {
-            // Allow refresh
-            window.removeEventListener('beforeunload', preventRefresh);
+    window.removeEventListener('beforeunload', preventRefresh);
 
-            // Redirect
-
-            postToParent(
-                { 
-                    message: "endTask"
-                }
-            )
-
-            console.log("endTask")
-        }
+    saveDataREDCap(10, { 
+        message: "endTask"
     });
 }
 
