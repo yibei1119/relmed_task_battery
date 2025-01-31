@@ -374,6 +374,8 @@ vigourTrials.forEach(trial => {
   });
 });
 
+experimentTimeline[0]["on_timeline_start"] = () => {updateState(`vigour_start_task`)}
+
 // Log-normal probability density function
 function logNormalPDF(x, mu, sigma) {
   return Math.exp(-0.5 * Math.pow((Math.log(x) - mu) / sigma, 2)) / (x * sigma * Math.sqrt(2 * Math.PI));

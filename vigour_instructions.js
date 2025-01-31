@@ -138,7 +138,8 @@ const vigourInstructions = {
     } else {
       return false;
     }
-  }
+  },
+  on_timeline_start: () => {updateState(`vigour_start_instructions`)}
 }
 
 // Function to generate stimulus HTML
