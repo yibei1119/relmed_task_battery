@@ -364,6 +364,70 @@ const predictTrial = {
   data: {
     trialphase: "ctrl_predict"
   },
+  on_load: () => {
+    function highlightChoice(event) {
+        // Map arrow keys and letter keys to a data-choice value
+      switch (event.key) {
+        // Arrow keys
+        case "ArrowLeft":
+          choice = 0;
+          break;
+        case "ArrowUp":
+          choice = 1;
+          break;
+        case "ArrowDown":
+          choice = 2;
+          break;
+        case "ArrowRight":
+          choice = 3;
+          break;
+        // Letter keys (assuming lowercase)
+        case "d":
+          choice = 0;
+          break;
+        case "f":
+          choice = 1;
+          break;
+        case "j":
+          choice = 2;
+          break;
+        case "k":
+          choice = 3;
+          break;
+        default:
+          break;
+      }
+
+      // If a valid key was pressed, select the button
+      if (choice !== null) {
+        // Using a CSS attribute selector to find the matching button
+        const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
+
+        if (button) {
+          button.style.borderColor = "#f4ce5c";
+
+          // Trigger the click event programmatically
+          setTimeout(() => {
+            button.click();
+          }, 300)
+        }
+      }
+    };
+    jsPsych.pluginAPI.getKeyboardResponse({
+      callback_function: highlightChoice,
+      valid_responses: [
+        'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight',
+        'd', 'f', 'j', 'k'
+      ],
+      rt_method: 'performance',
+      persist: false,
+      allow_held_key: false,
+      minimum_valid_rt: 0
+    });
+  },
+  on_finish: () => {
+    jsPsych.pluginAPI.cancelAllKeyboardResponses();
+  },
   post_trial_gap: 300,
   choices: ['coconut', 'orange', 'grape', 'banana'],
   prompt: "<p>Based on the current strength and fuel level, where will this ship most likely dock?</p>",

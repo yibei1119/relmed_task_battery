@@ -204,6 +204,7 @@
   padding: 5px;
   margin: 0px 10px;
   background: white;
+  border: 3px solid transparent; /* define a border */
   border-radius: 10px;
   text-align: center;
   transition: all 0.3s;
