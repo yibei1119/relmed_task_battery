@@ -318,53 +318,41 @@ const noChoiceWarning = {
 };
 
 // Prediction trial
+keyList = {
+  "ArrowLeft": 0,
+  "ArrowUp": 1,
+  "ArrowDown": 2,
+  "ArrowRight": 3,
+  "d": 0,
+  "f": 1,
+  "j": 2,
+  "k": 3
+};
+islandKeyList = {
+  'coconut': "d",
+  'orange': "f",
+  'grape': "j",
+  'banana': "k"
+}
+
 function highlightChoice(event) {
   // Map arrow keys and letter keys to a data-choice value
-switch (event.key) {
-  // Arrow keys
-  case "ArrowLeft":
-    choice = 0;
-    break;
-  case "ArrowUp":
-    choice = 1;
-    break;
-  case "ArrowDown":
-    choice = 2;
-    break;
-  case "ArrowRight":
-    choice = 3;
-    break;
-  // Letter keys (assuming lowercase)
-  case "d":
-    choice = 0;
-    break;
-  case "f":
-    choice = 1;
-    break;
-  case "j":
-    choice = 2;
-    break;
-  case "k":
-    choice = 3;
-    break;
-  default:
-    break;
-}
+  const choice = keyList[event.key]
 
-// If a valid key was pressed, select the button
-if (choice !== null) {
-  // Using a CSS attribute selector to find the matching button
-  const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
+  // If a valid key was pressed, select the button
+  if (choice !== null) {
+    // Using a CSS attribute selector to find the matching button
+    const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
 
-  if (button) {
-    button.style.borderColor = "#f4ce5c";
+    if (button) {
+      button.style.borderColor = "#f4ce5c";
 
-    // Trigger the click event programmatically
-    setTimeout(() => {
-      button.click();
-    }, 300)
+      // Trigger the click event programmatically
+      setTimeout(() => {
+        button.click();
+      }, 300)
+    }
   }
-}
 };
 
 function generateCtrlHomeBase(ship) {
@@ -374,13 +362,15 @@ function generateCtrlHomeBase(ship) {
             <section class="scene">
                 <div class="overlap-group">
                     <div class="choice-left">
-                      <img class="ship-left" src="imgs/ship_${ship}.png" alt="Prediction ship" />
+                    <img class="island-near" src="imgs/island_banana.png" style="visibility:hidden;" alt="Nearer island" />
+                    <img class="ship-left" src="imgs/ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
                     </div>
                 </div>
             </section>
-        </div>
+            </div>
+            <p>Which island is the home base of this ship?</p>
     `;
-    return stimulus
+    return stimulus;
 }
 
 function generateCtrlPrediction(ship, near, current, fuel) {
@@ -391,16 +381,8 @@ function generateCtrlPrediction(ship, near, current, fuel) {
             <section class="scene">
                 <div class="overlap-group">
                     <div class="choice-left">
-                      <img class="ship-left" src="imgs/ship_${ship}.png" alt="Prediction ship" />
-                    </div>
                     <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
-                    <div class="choice-right" style="visibility:hidden;">
-                      <img class="ship-right" src="imgs/ship_${ship}.png" alt="Prediction ship" />
-                    </div>
-                    <!-- Current Strength Indicator -->
-                    <div style="position:absolute; top:170px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3;">
-                        <div>Current Strength</div>
-                        <div style="color:#1976D2; font-weight:bold;"> ${level_text[current]}</div>
+                    <img class="ship-left" src="imgs/ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
                     </div>
                     <!-- Fuel Level Indicator -->
                     <div style="position:absolute; top:70px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3">
@@ -409,12 +391,18 @@ function generateCtrlPrediction(ship, near, current, fuel) {
                             <div style="width:${fuel}%; height:100%; background:#ffd700; border-radius:10px;"></div>
                         </div>
                     </div>
+                    <!-- Current Strength Indicator -->
+                    <div style="position:absolute; top:170px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3;">
+                        <div>Current Strength</div>
+                        <div style="color:#1976D2; font-weight:bold;"> ${level_text[current]}</div>
+                    </div>
                 </div>
                 ${createOceanCurrents(current)}
-            </section>
-        </div>
+                </section>
+                </div>
+                <p>Based on the current strength and fuel level, where will this ship most likely dock?</p>
     `;
-    return stimulus
+    return stimulus;
 };
 
 const predictHomeBaseTrial = {
@@ -445,8 +433,7 @@ const predictHomeBaseTrial = {
   },
   post_trial_gap: 100,
   choices: ['coconut', 'orange', 'grape', 'banana'],
-  prompt: "<p>Which island is the home base of this ship?</p>",
-  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"></div>`
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${islandKeyList[choice]}.png" style="width:50px;"></div>`
 };
 
 const predictDestTrial = {
@@ -480,8 +467,7 @@ const predictDestTrial = {
   },
   post_trial_gap: 300,
   choices: ['coconut', 'orange', 'grape', 'banana'],
-  prompt: "<p>Based on the current strength and fuel level, where will this ship most likely dock?</p>",
-  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"></div>`
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${islandKeyList[choice]}.png" style="width:50px;"></div>`
 };
 
 // Create trial variations
