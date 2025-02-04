@@ -126,9 +126,9 @@ const instructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Each of your journey begins at the main island, where you'll find a factory and two ships ready for departure. 
+                <p>Each of your journey begins at the current island, where you'll find a factory and usually two ships ready for departure. 
                 In the distance, you'll spot another island.</p>
-                <p>There are four factory types across the islands: 
+                <p>There are four types of islands: 
                 Coconut, Orange, Grape, and Banana.</p>
             `)}
             ${createProgressBar(2, 6)}
@@ -162,7 +162,7 @@ const instructionPages = [
             </section>
             ${createInstructionDialog(`
                 <p>Your fleet consists of four distinct ships, each marked by unique colors and symbols.
-                Every ship has its intended destination factory. Choose your ship carefully - you cannot change selection once made.</p>
+                Every ship has a home base—its intended destination factory. Choose your ship carefully! You cannot change selection once made.</p>
                 <p>Use the <strong>left</strong> and <strong>right</strong> arrow keys to select your ship.</p>
             `)}
             ${createProgressBar(3, 6)}
