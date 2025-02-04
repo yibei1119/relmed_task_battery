@@ -67,7 +67,7 @@ const exploreTrial = {
   },
   choices: "NO_KEYS",
   response_ends_trial: false,
-  trial_duration: 4000,  // 3 second time limit
+  trial_duration: 10000,  // 3 second time limit
   post_trial_gap: 300,
   save_timeline_variables: true,
   data: {
@@ -318,7 +318,73 @@ const noChoiceWarning = {
 };
 
 // Prediction trial
+function highlightChoice(event) {
+  // Map arrow keys and letter keys to a data-choice value
+switch (event.key) {
+  // Arrow keys
+  case "ArrowLeft":
+    choice = 0;
+    break;
+  case "ArrowUp":
+    choice = 1;
+    break;
+  case "ArrowDown":
+    choice = 2;
+    break;
+  case "ArrowRight":
+    choice = 3;
+    break;
+  // Letter keys (assuming lowercase)
+  case "d":
+    choice = 0;
+    break;
+  case "f":
+    choice = 1;
+    break;
+  case "j":
+    choice = 2;
+    break;
+  case "k":
+    choice = 3;
+    break;
+  default:
+    break;
+}
+
+// If a valid key was pressed, select the button
+if (choice !== null) {
+  // Using a CSS attribute selector to find the matching button
+  const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
+
+  if (button) {
+    button.style.borderColor = "#f4ce5c";
+
+    // Trigger the click event programmatically
+    setTimeout(() => {
+      button.click();
+    }, 300)
+  }
+}
+};
+
+function generateCtrlHomeBase(ship) {
+  const stimulus = `
+  <div class="instruction-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+                <div class="overlap-group">
+                    <div class="choice-left">
+                      <img class="ship-left" src="imgs/ship_${ship}.png" alt="Prediction ship" />
+                    </div>
+                </div>
+            </section>
+        </div>
+    `;
+    return stimulus
+}
+
 function generateCtrlPrediction(ship, near, current, fuel) {
+  const level_text = {"1": "Low", "2": "Mid", "3": "High"};
   const stimulus = `
   <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
@@ -334,11 +400,11 @@ function generateCtrlPrediction(ship, near, current, fuel) {
                     <!-- Current Strength Indicator -->
                     <div style="position:absolute; top:170px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3;">
                         <div>Current Strength</div>
-                        <div style="color:#1976D2; font-weight:bold;">Level ${current}</div>
+                        <div style="color:#1976D2; font-weight:bold;"> ${level_text[current]}</div>
                     </div>
                     <!-- Fuel Level Indicator -->
                     <div style="position:absolute; top:70px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3">
-                        <div>Fuel Level: ${fuel}%</div>
+                        <div>Fuel Level</div>
                         <div style="width:150px; height:20px; background: #ddd; border: 2px solid rgba(255, 255, 255, 0.8); border-radius:10px;">
                             <div style="width:${fuel}%; height:100%; background:#ffd700; border-radius:10px;"></div>
                         </div>
@@ -351,7 +417,39 @@ function generateCtrlPrediction(ship, near, current, fuel) {
     return stimulus
 };
 
-const predictTrial = {
+const predictHomeBaseTrial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: () => {
+    return generateCtrlHomeBase(
+      jsPsych.evaluateTimelineVariable('ship')
+    )
+  },
+  data: {
+    trialphase: "ctrl_predict_homebase"
+  },
+  on_load: () => {
+    jsPsych.pluginAPI.getKeyboardResponse({
+      callback_function: highlightChoice,
+      valid_responses: [
+        'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight',
+        'd', 'f', 'j', 'k'
+      ],
+      rt_method: 'performance',
+      persist: false,
+      allow_held_key: false,
+      minimum_valid_rt: 0
+    });
+  },
+  on_finish: () => {
+    jsPsych.pluginAPI.cancelAllKeyboardResponses();
+  },
+  post_trial_gap: 100,
+  choices: ['coconut', 'orange', 'grape', 'banana'],
+  prompt: "<p>Which island is the home base of this ship?</p>",
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"></div>`
+};
+
+const predictDestTrial = {
   type: jsPsychHtmlButtonResponse,
   stimulus: () => {
     return generateCtrlPrediction(
@@ -362,57 +460,9 @@ const predictTrial = {
     );
   },
   data: {
-    trialphase: "ctrl_predict"
+    trialphase: "ctrl_predict_dest"
   },
   on_load: () => {
-    function highlightChoice(event) {
-        // Map arrow keys and letter keys to a data-choice value
-      switch (event.key) {
-        // Arrow keys
-        case "ArrowLeft":
-          choice = 0;
-          break;
-        case "ArrowUp":
-          choice = 1;
-          break;
-        case "ArrowDown":
-          choice = 2;
-          break;
-        case "ArrowRight":
-          choice = 3;
-          break;
-        // Letter keys (assuming lowercase)
-        case "d":
-          choice = 0;
-          break;
-        case "f":
-          choice = 1;
-          break;
-        case "j":
-          choice = 2;
-          break;
-        case "k":
-          choice = 3;
-          break;
-        default:
-          break;
-      }
-
-      // If a valid key was pressed, select the button
-      if (choice !== null) {
-        // Using a CSS attribute selector to find the matching button
-        const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
-
-        if (button) {
-          button.style.borderColor = "#f4ce5c";
-
-          // Trigger the click event programmatically
-          setTimeout(() => {
-            button.click();
-          }, 300)
-        }
-      }
-    };
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightChoice,
       valid_responses: [
@@ -441,11 +491,67 @@ const predictionConditions = [
   {ship: "yellow", near: "coconut", current: 3, fuel: 25}
 ];
 
+
+// Goal trial
+function generateCtrlGoal(far, current) {
+  const stimulus = `
+  <div class="instruction-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+              <img class="island-far" src="imgs/island_${far}.png" alt="Farther island" />
+                <div class="overlap-group">
+                    <div class="choice-left">
+                      <img class="ship-left" src="imgs/ship_${ship}.png" alt="Prediction ship" />
+                    </div>
+                    <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
+                    <div class="choice-right" style="visibility:hidden;">
+                      <img class="ship-right" src="imgs/ship_${ship}.png" alt="Prediction ship" />
+                    </div>
+                    <!-- Current Strength Indicator -->
+                    <div style="position:absolute; top:170px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3;">
+                        <div>Current Strength</div>
+                        <div style="color:#1976D2; font-weight:bold;">Level ${current}</div>
+                    </div>
+                    <!-- Fuel Level Indicator -->
+                    <div style="position:absolute; top:70px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3">
+                        <div>Fuel Level: ${fuel}%</div>
+                        <div style="width:150px; height:20px; background: #ddd; border: 2px solid rgba(255, 255, 255, 0.8); border-radius:10px;">
+                            <div style="width:${fuel}%; height:100%; background:#ffd700; border-radius:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                ${createOceanCurrents(current)}
+            </section>
+        </div>
+    `;
+    return stimulus
+};
+
+const goalTrial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: () => {
+    return generateCtrlPrediction(
+      jsPsych.evaluateTimelineVariable('ship'), 
+      jsPsych.evaluateTimelineVariable('near'), 
+      jsPsych.evaluateTimelineVariable('current'),
+      jsPsych.evaluateTimelineVariable('fuel')
+    );
+  },
+  data: {
+    trialphase: "ctrl_predict"
+  },
+  post_trial_gap: 300,
+  choices: ['coconut', 'orange', 'grape', 'banana'],
+  prompt: "<p>Based on the current strength and fuel level, where will this ship most likely dock?</p>",
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"></div>`
+};
+
+// Timelines
 // Add trials to timeline
 var predictionTimeline = [];
 predictionConditions.forEach(trial => {
   predictionTimeline.push({
-    timeline: [predictTrial],
+    timeline: [predictHomeBaseTrial, predictDestTrial],
     timeline_variables: [trial]
   });
 });
