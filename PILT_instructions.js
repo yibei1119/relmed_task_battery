@@ -308,7 +308,13 @@ function prepare_PILT_instructions() {
             type: jsPsychHtmlKeyboardResponse,
             css_classes: ['instructions'],
             stimulus: `<p>Great! Let's start playing for real.</p>
+<<<<<<< HEAD
             <p>Place your fingers on the left and right arrow keys, then press either one to start.</p>`,
+=======
+            <p>You will now complete 20 rounds of the card choosing game, taking 15-20 minutes to complete on average.</p>
+            <p>You will be able to take a short break between rounds, if you feel you need it.</p>
+            <p>Place your fingers on the left and right arrow keys, and press either one to start playing.</p>`,
+>>>>>>> b29180e (add task durations before start)
             choices: ['arrowright', 'arrowleft'],
             data: {trialphase: "instruction"}
         }
