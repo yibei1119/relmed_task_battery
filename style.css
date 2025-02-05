@@ -29,6 +29,29 @@
   z-index: 2;
 }
 
+.quest-scroll {
+  position: absolute;
+  width: 50%;
+  height: 40%;
+  top: 1%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.quest-scroll-img {
+  position: absolute;
+  height: 100%;
+  z-index: 2;
+}
+
+.island-target {
+  position: absolute;
+  top: 23%;
+  height: 38%;
+  z-index: 3;
+}
+
 .overlap-group {
   position: absolute;
   width: auto;
@@ -160,7 +183,7 @@
   width: auto;
   height: 20vh;
   top: 100%;
-  animation: moveShipUp 0.5s ease-out forwards;
+  animation: moveShipUp 1s ease-out forwards;
 }
 
 @keyframes moveShipUp {
@@ -183,7 +206,7 @@
 .path-animation {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  animation: fadeInPath 0.5s ease-in forwards;
+  animation: fadeInPath 1s ease-in forwards;
 }
 
 @keyframes fadeIn {
