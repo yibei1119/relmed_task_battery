@@ -84,12 +84,12 @@ const instructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-                <img class="island-far" src="imgs/island_coconut.png" alt="Farther island" />
+                <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
                 <div class="overlap-group">
                     <div class="choice-left">
                         <img class="ship-left" src="imgs/ship_green.png" alt="Left ship" />
                     </div>
-                    <img class="island-near" src="imgs/island_banana.png" alt="Nearer island" />
+                    <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
                     <div class="choice-right">
                         <img class="ship-right" src="imgs/ship_blue.png" alt="Right ship" />
                     </div>
@@ -111,14 +111,14 @@ const instructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-                <img class="island-far" src="imgs/island_coconut.png" alt="Farther island" />
+                <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
                 <div class="island-indicator far-indicator">
                     <span class="selection-dot"></span>
                     <div class="selection-label">Distant Island</div>
                 </div>
                 
                 <div class="overlap-group">
-                    <img class="island-near" src="imgs/island_banana.png" alt="Nearer island" />
+                    <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
                     <div class="island-indicator near-indicator">
                         <span class="selection-dot"></span>
                         <div class="selection-label">Current Island</div>
@@ -126,7 +126,7 @@ const instructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Each of your journey begins at the current island, where you'll find a factory and usually two ships ready for departure. 
+                <p>Each of your journey begins at the current island, where you'll find a fruit sign and usually two ships ready for departure. 
                 In the distance, you'll spot another island.</p>
                 <p>There are four types of islands: 
                 Coconut, Orange, Grape, and Banana.</p>
@@ -162,7 +162,7 @@ const instructionPages = [
             </section>
             ${createInstructionDialog(`
                 <p>Your fleet consists of four distinct ships, each marked by unique colors and symbols.
-                Every ship has a home base—its intended destination factory. Choose your ship carefully! You cannot change selection once made.</p>
+                Every ship has a home base—its intended destination island. Choose your ship carefully! You cannot change selection once made.</p>
                 <p>Use the <strong>left</strong> and <strong>right</strong> arrow keys to select your ship.</p>
             `)}
             ${createProgressBar(3, 6)}

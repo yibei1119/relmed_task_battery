@@ -50,10 +50,10 @@
     images: [
       "ocean.png",
       "ocean_above.png",
-      "island_banana.png",
-      "island_coconut.png",
-      "island_grape.png",
-      "island_orange.png",
+      "simple_island_banana.png",
+      "simple_island_coconut.png",
+      "simple_island_grape.png",
+      "simple_island_orange.png",
       "ship_blue.png",
       "ship_green.png",
       "ship_red.png",
@@ -66,10 +66,11 @@
   };
   const ctrlTimeline = [
     preload,
+    // instructionTrial,
     // ...expTimeline,
-    ...predictionTimeline
+    // ...predictionTimeline,
+    ...rewardTimeline
 ];
-  // addInstructionsToTimeline(ctrlTimeline);
   // Run or simulate the experiment
   // jsPsych.simulate(ctrlTimeline, "visual");
   jsPsych.run(ctrlTimeline);

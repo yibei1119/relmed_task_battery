@@ -25,7 +25,7 @@ function generateCtrlTrial(left, right, near, current) {
     <main class="main-stage">
       <img class="background" src="imgs/ocean.png" alt="Background"/>
       <section class="scene">
-        <img class="island-far" src="imgs/island_${far}.png" alt="Farther island" />
+        <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
         <div class="overlap-group">
           <div class="choice-left">
             <div class="fuel-container-left">
@@ -36,7 +36,7 @@ function generateCtrlTrial(left, right, near, current) {
             <img class="ship-left" src="imgs/ship_${left}.png" alt="Left ship" />
             <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
           </div>
-          <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
+          <img class="island-near" src="imgs/simple_island_${near}.png" alt="Nearer island" />
           <div class="choice-right">
             <div class="fuel-container-right">
               <div class="fuel-indicator-container">
@@ -362,7 +362,7 @@ function generateCtrlHomeBase(ship) {
             <section class="scene">
                 <div class="overlap-group">
                     <div class="choice-left">
-                    <img class="island-near" src="imgs/island_banana.png" style="visibility:hidden;" alt="Nearer island" />
+                    <img class="island-near" src="imgs/simple_island_banana.png" style="visibility:hidden;" alt="Nearer island" />
                     <img class="ship-left" src="imgs/ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
                     </div>
                 </div>
@@ -381,7 +381,7 @@ function generateCtrlPrediction(ship, near, current, fuel) {
             <section class="scene">
                 <div class="overlap-group">
                     <div class="choice-left">
-                    <img class="island-near" src="imgs/island_${near}.png" alt="Nearer island" />
+                    <img class="island-near" src="imgs/simple_island_${near}.png" alt="Nearer island" />
                     <img class="ship-left" src="imgs/ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
                     </div>
                     <!-- Fuel Level Indicator -->
