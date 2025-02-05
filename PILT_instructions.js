@@ -63,9 +63,17 @@ function prepare_PILT_instructions() {
             {
                 type: jsPsychHtmlKeyboardResponse,
                 css_classes: ['instructions'],
+<<<<<<< HEAD
                 stimulus: `<p>Choose a card by pressing the <b>left</b> or <b>right arrow key</b> on your keyboard.</p>
                         <p>Let's practice! On the next screen, flip a card.</p>
                         <p>Place your fingers on the left and right arrow keys, then press either one to continue.</p>`,
+=======
+                stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
+                        <p>Let's try it out now! Flip a card on the next screen.</p>
+                        <p>Place your fingers on the left and right arrow keys as shown below, and press either one to continue.</p>
+                        <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
+                        `,
+>>>>>>> 40ad678 (PILT keyboard image)
                 choices: ['arrowleft', 'arrowright'],
                 data: {trialphase: "instruction"}
             },
