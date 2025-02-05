@@ -63,17 +63,11 @@ function prepare_PILT_instructions() {
             {
                 type: jsPsychHtmlKeyboardResponse,
                 css_classes: ['instructions'],
-<<<<<<< HEAD
-                stimulus: `<p>Choose a card by pressing the <b>left</b> or <b>right arrow key</b> on your keyboard.</p>
-                        <p>Let's practice! On the next screen, flip a card.</p>
-                        <p>Place your fingers on the left and right arrow keys, then press either one to continue.</p>`,
-=======
                 stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
                         <p>Let's try it out now! Flip a card on the next screen.</p>
                         <p>Place your fingers on the left and right arrow keys as shown below, and press either one to continue.</p>
                         <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
                         `,
->>>>>>> 40ad678 (PILT keyboard image)
                 choices: ['arrowleft', 'arrowright'],
                 data: {trialphase: "instruction"}
             },
@@ -127,7 +121,9 @@ function prepare_PILT_instructions() {
         stimulus: `<p>Let's practice collecting coins. \
             On the next screen, choose cards to collect as much money as you can.</p>
             <p>One of the picture cards has mostly high value coins behind it, while the other has mostly pennies behind it.</p>
-            <p>Place your fingers on the left and right arrow keys, and press either one to start practicing.</p>`,
+            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
+            <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
+`,
         choices: ['arrowleft', 'arrowright'],
         data: {trialphase: "instruction"}
     }]);
@@ -183,7 +179,8 @@ function prepare_PILT_instructions() {
             stimulus: `<p>Now, let's practice minimizing your coin losses. 
             On the next screen, choose cards to lose as little money as possible.</p>
             <p>One of the picture cards will often break the high-value coins in your safe, while the other will mostly break only your pennies.</p>
-            <p>Place your fingers on the left and right arrow keys, and press either one to start practicing.</p>`,
+            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
+            <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
             data: {trialphase: "instruction"} 
         }
@@ -321,8 +318,13 @@ function prepare_PILT_instructions() {
 =======
             <p>You will now complete 20 rounds of the card choosing game, taking 15-20 minutes to complete on average.</p>
             <p>You will be able to take a short break between rounds, if you feel you need it.</p>
+<<<<<<< HEAD
             <p>Place your fingers on the left and right arrow keys, and press either one to start playing.</p>`,
 >>>>>>> b29180e (add task durations before start)
+=======
+            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
+            <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
+>>>>>>> 49da0ec (wm key placement image)
             choices: ['arrowright', 'arrowleft'],
             data: {trialphase: "instruction"}
         }
@@ -387,7 +389,8 @@ const WM_instructions = [
         css_classes: ['instructions'],
         stimulus: `<p>Let's get started!</p>
         <p>You will play one round with no breaks, lasting about 10 minutes.</p>
-        <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys, and press the up arrow key.</p>`,
+        <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
+        <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
         data: {trialphase: "WM_instructions"}
     }
