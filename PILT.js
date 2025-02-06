@@ -562,7 +562,7 @@ async function load_squences(session) {
         }
 
         // Fetch WM structure
-        const WM_response = await fetch('pilot6_WM.json');
+        const WM_response = await fetch('pilot7_WM.json');
         const WM_structure = await WM_response.json();
         let WM_sess_structure = WM_structure[session - 1];
 
