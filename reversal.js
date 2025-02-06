@@ -113,7 +113,8 @@ const reversal_instructions = [
         css_classes: ['instructions'],
         stimulus: `
             <p>You will now play the squirrel game for about 5 minutes without breaks.</p>
-            <p>Place your fingers on the left and right arrow keys, and press either one to start.</p>`,
+            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start.</p>
+            <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowleft', 'arrowright'],
         data: {trialphase: "reversal_instruction"}
     },
