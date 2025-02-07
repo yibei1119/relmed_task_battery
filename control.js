@@ -204,10 +204,14 @@ function generateCtrlFeedback() {
   const choice = lastTrial.choice; // 'left' or 'right'
   const chosenColor = lastTrial.timeline_variables[choice]; // Get the color of the chosen side
   const nearIsland = lastTrial.timeline_variables.near; // Get the near island from last trial
+  const currentStrength = lastTrial.timeline_variables.current; // Get the current strength from last trial
+  const fuelLevel = lastTrial.trial_presses; // Get the fuel level from last trial
+  console.log("Fuel Level: ", fuelLevel);
+  console.log("Current Strength: ", currentStrength);
 
   // Determine destination island
   let destinationIsland;
-  let currentRule;
+  let currentRule = chooseControlRule(fuelLevel,currentStrength);
   if (currentRule === 'base') {
     // Use base rule - show opposite of near island
     destinationIsland = ctrlConfig.baseRule[nearIsland];
