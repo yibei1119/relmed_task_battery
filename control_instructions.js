@@ -100,7 +100,7 @@ const instructionPages = [
                 <h2>Welcome to Captain's Quest!</h2>
                 <p>You're about to become a ship captain managing an important fruit trading network. Your mission is to transport valuable cargo between island factories while mastering the challenges of ocean currents.</p>
             `)}
-            ${createProgressBar(1, 6)}
+            ${createProgressBar(1, 7)}
         </div>
     `
     },
@@ -127,11 +127,11 @@ const instructionPages = [
             </section>
             ${createInstructionDialog(`
                 <p>Each of your journey begins at the current island, where you'll find a fruit sign and usually two ships ready for departure. 
-                In the distance, you'll spot another island.</p>
+                In the distance, you'll spot another island, which is the closest one to the current island.</p>
                 <p>There are four types of islands: 
                 Coconut, Orange, Grape, and Banana.</p>
             `)}
-            ${createProgressBar(2, 6)}
+            ${createProgressBar(2, 7)}
         </div>
     `
     }
@@ -165,7 +165,7 @@ const instructionPages = [
                 Every ship has a home base—its intended destination island. Choose your ship carefully! You cannot change selection once made.</p>
                 <p>Use the <strong>left</strong> and <strong>right</strong> arrow keys to select your ship.</p>
             `)}
-            ${createProgressBar(3, 6)}
+            ${createProgressBar(3, 7)}
         </div>
     `
     },
@@ -181,10 +181,24 @@ const instructionPages = [
             </div>
             ${createInstructionDialog(`
                 <p>However, the journey isn't always straightforward...</p>
-                <p>The ocean's natural flow can affect your ship's course. Without sufficient fuel, your ship might drift to the distant island instead of its intended destination.</p>
+                <p>The ocean's natural flow can affect your ship's course. Without sufficient fuel, your ship might drift to the closest island instead of its intended destination.</p>
                 <p>Watch the sea surface carefully - currents come in three different strength levels: 1 (Low), 2 (Mid), and 3 (High).</p>
             `)}
-            ${createProgressBar(4, 6)}
+            ${createProgressBar(4, 7)}
+        </div>
+    `
+    },
+
+    // Page 4.5: Introduction of default closet island
+    {
+        content: `
+        <div class="instruction-stage">
+            <img class="background" src="imgs/default_islands.png" alt="Background"/>
+            ${createInstructionDialog(`
+                <p>Thanks to many former captains, the ocean’s natural flow has been thoroughly investigated and mapped, as shown above.</p>
+                <p>For example, if you start from the Banana Islands without enough fuel, your ship will drift to the Coconut Islands.</p>
+            `)}
+            ${createProgressBar(5, 7)}
         </div>
     `
     },
@@ -210,7 +224,7 @@ const instructionPages = [
                 <p>To ensure your ship reaches its intended destination, add fuel to your chosen ship by pressing keys. Each keypress adds fuel, helping your ship resist the currents.</p>
                 <p>You have three seconds from the start of each journey to add as much fuel as needed.</p>
             `)}
-            ${createProgressBar(5, 6)}
+            ${createProgressBar(6, 7)}
         </div>
     `
     },
@@ -229,7 +243,7 @@ const instructionPages = [
                 <p>Success in these missions depends on your understanding of ship routes and ocean currents.</p>
                 <p>Ready to set sail?</p>
             `)}
-            ${createProgressBar(6, 6)}
+            ${createProgressBar(7, 7)}
         </div>
     `
     }
