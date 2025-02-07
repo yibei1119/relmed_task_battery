@@ -659,7 +659,7 @@ const rewardTrial = {
   },
   choices: "NO_KEYS",
   response_ends_trial: false,
-  trial_duration: 100000000,  // 3 second time limit
+  trial_duration: 5000,  // 3 second time limit
   post_trial_gap: 300,
   save_timeline_variables: true,
   data: {
@@ -771,6 +771,62 @@ const rewardTrial = {
     }
 };
 
+function generateRewardFeedback() {
+  // Get last trial's data
+  const lastTrial = jsPsych.data.getLastTrialData().values()[0];
+  const choice = lastTrial.choice; // 'left' or 'right'
+  const chosenColor = lastTrial.timeline_variables[choice]; // Get the color of the chosen side
+  const nearIsland = lastTrial.timeline_variables.near; // Get the near island from last trial
+  const currentStrength = lastTrial.timeline_variables.current; // Get the current strength from last trial
+  const fuelLevel = lastTrial.trial_presses; // Get the fuel level from last trial
+  const targetIsland = lastTrial.timeline_variables.target; // Get the target island from last trial
+
+  // Determine destination island
+  let destinationIsland;
+  let currentRule = chooseControlRule(fuelLevel,currentStrength);
+  if (currentRule === 'base') {
+    // Use base rule - show opposite of near island
+    destinationIsland = ctrlConfig.baseRule[nearIsland];
+  } else {
+    // Use control rule - based on chosen ship's color
+    destinationIsland = ctrlConfig.controlRule[chosenColor];
+  }
+
+  const correct = targetIsland === destinationIsland;
+  if (correct) {
+    msg = "<p>Congratulations!</p><p>You successfully transport the cargo to the target island.</p>";
+  } else {
+    msg = "<p>Sorry!</p><p>The cargo has been transported to the wrong island. But don't worry, maybe next time.</p>";
+  }
+
+  // Generate HTML for the feedback
+  const html = `
+    <main class="main-stage">
+      <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+      <div class="instruction-dialog" style="bottom:50%;">
+        <div class="instruction-content" style="font-size: 24px;">
+            ${msg}
+        </div>
+      </div>
+    </main>
+  `;
+
+  return html;
+}
+
+const rewardFeedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: () => {
+    return generateRewardFeedback();
+  },
+  choices: "NO_KEYS",
+  trial_duration: 2000,
+  post_trial_gap: 100,
+  data: {
+    trialphase: "ctrl_reward_feedback"
+  }
+};
+
 const rewardConditions = [
   {"target": "grape", "near": "banana", "left": "green", "right": "yellow", "current": 2}, 
   {"target": "coconut", "near": "grape", "left": "blue", "right": "red", "current": 3}
@@ -790,7 +846,7 @@ predictionConditions.forEach(trial => {
 var rewardTimeline = [];
 rewardConditions.forEach(trial => {
   rewardTimeline.push({
-    timeline: [rewardTrial, noChoiceWarning],
+    timeline: [rewardTrial, rewardFeedback],
     timeline_variables: [trial]
   });
 });
