@@ -179,6 +179,25 @@ const exploreTrial = {
     }
 };
 
+// Control rule selection
+
+function sigmoid(x) {
+  return 1 / (1 + Math.exp(-x));
+}
+
+window.effort_threshold = 10;
+window.scale = 0.6;
+function chooseControlRule(effort, current) {
+  const extra_effort = (effort - window.effort_threshold) * window.scale / current;
+  const prob = sigmoid(extra_effort);
+  return Math.random() < prob ? 'control' : 'base';
+}
+
+function probControlRule(effort, current) {
+  const extra_effort = (effort - window.effort_threshold) * window.scale / current;
+  return sigmoid(extra_effort);
+}
+
 function generateCtrlFeedback() {
   // Get last trial's data
   const lastTrial = jsPsych.data.getLastTrialData().values()[0];
