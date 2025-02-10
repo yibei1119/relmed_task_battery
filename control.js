@@ -12,6 +12,22 @@ const ctrlConfig = {
     red: "orange",
     yellow: "banana",
   },
+  keyList: {
+    "ArrowLeft": 0,
+    "ArrowUp": 1,
+    "ArrowDown": 2,
+    "ArrowRight": 3,
+    "d": 0,
+    "f": 1,
+    "j": 2,
+    "k": 3
+  },
+  islandKeyList: {
+    'coconut': "d",
+    'orange': "f",
+    'grape': "j",
+    'banana': "k"
+  },
   effort_threshold: 10,
   scale: 0.6,
   explore_decision: 2000,
@@ -364,22 +380,6 @@ const noChoiceWarning = {
 };
 
 // Prediction trial
-keyList = {
-  "ArrowLeft": 0,
-  "ArrowUp": 1,
-  "ArrowDown": 2,
-  "ArrowRight": 3,
-  "d": 0,
-  "f": 1,
-  "j": 2,
-  "k": 3
-};
-islandKeyList = {
-  'coconut': "d",
-  'orange': "f",
-  'grape': "j",
-  'banana': "k"
-}
 
 function highlightHomeBaseChoice(event) {
   // Map arrow keys and letter keys to a data-choice value
