@@ -14,12 +14,12 @@ const ctrlConfig = {
   }
 };
 
-const ctrlTrials = [
+const exploreConditions = [
   {"left": "green", "right": "blue", "near": "coconut", "current": 3}, 
   {"left": "red", "right": "yellow", "near": "orange", "current": 1}
 ];
 
-function generateCtrlTrial(left, right, near, current) {
+function generateExploreTrial(left, right, near, current) {
   const far = ctrlConfig.baseRule[near];
   const stimulus = `
     <main class="main-stage">
@@ -58,7 +58,7 @@ function generateCtrlTrial(left, right, near, current) {
 const exploreTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
-    return generateCtrlTrial(
+    return generateExploreTrial(
       jsPsych.evaluateTimelineVariable('left'), 
       jsPsych.evaluateTimelineVariable('right'), 
       jsPsych.evaluateTimelineVariable('near'),
@@ -198,7 +198,7 @@ function probControlRule(effort, current) {
   return sigmoid(extra_effort);
 }
 
-function generateCtrlFeedback() {
+function generateExploreFeedback() {
   // Get last trial's data
   const lastTrial = jsPsych.data.getLastTrialData().values()[0];
   const choice = lastTrial.choice; // 'left' or 'right'
@@ -250,7 +250,7 @@ const exploreFeedback = {
   timeline: [{
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
-    return generateCtrlFeedback()
+    return generateExploreFeedback()
   },
   choices: "NO_KEYS",
   trial_duration: 2000,
@@ -370,28 +370,29 @@ function highlightHomeBaseChoice(event) {
     if (button) {
       const ship = jsPsych.evaluateTimelineVariable('ship');
       const correct = ctrlConfig.controlRule[ship] === Object.keys(islandKeyList)[choice];
-      if (correct) {
-        button.style.borderColor = '#00ff00';
-        msg = "Correct! You successfully found the home base of the ship.";
-      } else {
-        button.style.borderColor = '#ff0000';
-        msg = "This seems to be the wrong island. But don't worry, maybe next time!";
-      }
+      // // Enable for feedback
+      // if (correct) {
+      //   button.style.borderColor = '#00ff00';
+      //   msg = "Correct! You successfully found the home base of the ship.";
+      // } else {
+      //   button.style.borderColor = '#ff0000';
+      //   msg = "This seems to be the wrong island. But don't worry, maybe next time!";
+      // }
 
-      // Show feedback message
-      const instructionDialog = document.createElement('div');
-      instructionDialog.className = 'instruction-dialog';
-      instructionDialog.style.bottom = 'unset';
+      // // Show feedback message
+      // const instructionDialog = document.createElement('div');
+      // instructionDialog.className = 'instruction-dialog';
+      // instructionDialog.style.bottom = 'unset';
 
-      const instructionContent = document.createElement('div');
-      instructionContent.className = 'instruction-content';
-      instructionContent.innerHTML = msg;
-      instructionContent.style.fontSize = '24px';
+      // const instructionContent = document.createElement('div');
+      // instructionContent.className = 'instruction-content';
+      // instructionContent.innerHTML = msg;
+      // instructionContent.style.fontSize = '24px';
 
-      instructionDialog.appendChild(instructionContent);
-      document.querySelector('.scene').appendChild(instructionDialog);
+      // instructionDialog.appendChild(instructionContent);
+      // document.querySelector('.scene').appendChild(instructionDialog);
 
-
+      button.style.borderColor = "#f4ce5c";
       // Trigger the click event programmatically
       setTimeout(() => {
         button.click();
@@ -416,28 +417,30 @@ function highlightDestChoice(event) {
       const fuel_level = jsPsych.evaluateTimelineVariable('fuel_lvl');
       const next_state = probControlRule(fuel_level/100*40, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
       const correct = Object.keys(islandKeyList)[choice] === next_state;
-      if (correct) {
-        button.style.borderColor = '#00ff00';
-        msg = "Correct! You successfully predicted the most likely destination to dock the ship.";
-      } else {
-        button.style.borderColor = '#ff0000';
-        msg = "Sorry! The ship has docked at another island. But don't worry, maybe next time!";
-      }
+      
+      // // Enable for feedback
+      // if (correct) {
+      //   button.style.borderColor = '#00ff00';
+      //   msg = "Correct! You successfully predicted the most likely destination to dock the ship.";
+      // } else {
+      //   button.style.borderColor = '#ff0000';
+      //   msg = "Sorry! The ship has docked at another island. But don't worry, maybe next time!";
+      // }
 
-      // Show feedback message
-      const instructionDialog = document.createElement('div');
-      instructionDialog.className = 'instruction-dialog';
-      instructionDialog.style.bottom = 'unset';
+      // // Show feedback message
+      // const instructionDialog = document.createElement('div');
+      // instructionDialog.className = 'instruction-dialog';
+      // instructionDialog.style.bottom = 'unset';
 
-      const instructionContent = document.createElement('div');
-      instructionContent.className = 'instruction-content';
-      instructionContent.innerHTML = msg;
-      instructionContent.style.fontSize = '24px';
+      // const instructionContent = document.createElement('div');
+      // instructionContent.className = 'instruction-content';
+      // instructionContent.innerHTML = msg;
+      // instructionContent.style.fontSize = '24px';
 
-      instructionDialog.appendChild(instructionContent);
-      document.querySelector('.scene').appendChild(instructionDialog);
+      // instructionDialog.appendChild(instructionContent);
+      // document.querySelector('.scene').appendChild(instructionDialog);
 
-
+      button.style.borderColor = "#f4ce5c";
       // Trigger the click event programmatically
       setTimeout(() => {
         button.click();
@@ -607,7 +610,7 @@ const predictionConditions = [
 
 
 // Reward trial
-function generateCtrlReward(target, near, left, right, current) {
+function generateRewardTrial(target, near, left, right, current) {
   const stimulus = `
     <main class="main-stage">
       <img class="background" src="imgs/ocean.png" alt="Background"/>
@@ -649,7 +652,7 @@ function generateCtrlReward(target, near, left, right, current) {
 const rewardTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
-    return generateCtrlReward(
+    return generateRewardTrial(
       jsPsych.evaluateTimelineVariable('target'),
       jsPsych.evaluateTimelineVariable('near'),
       jsPsych.evaluateTimelineVariable('left'), 
@@ -852,7 +855,7 @@ rewardConditions.forEach(trial => {
 });
 
 var expTimeline = [];
-ctrlTrials.forEach(trial => {
+exploreConditions.forEach(trial => {
   expTimeline.push({
     timeline: [exploreTrial, exploreFeedback, noChoiceWarning],
     timeline_variables: [trial]
