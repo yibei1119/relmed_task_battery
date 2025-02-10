@@ -11,7 +11,18 @@ const ctrlConfig = {
     blue: "grape",
     red: "orange",
     yellow: "banana",
-  }
+  },
+  effort_threshold: 10,
+  scale: 0.6,
+  explore_decision: 2000,
+  explore_effort: 3000,
+  explore_feedback: 2000,
+  predict_decision: 2000,
+  predict_choice: 500,
+  reward_decision: 2000,
+  reward_effort: 3000,
+  reward_feedback: 2000,
+  post_trial_gap: 300
 };
 
 const exploreConditions = [
@@ -67,8 +78,8 @@ const exploreTrial = {
   },
   choices: "NO_KEYS",
   response_ends_trial: false,
-  trial_duration: 10000,  // 3 second time limit
-  post_trial_gap: 300,
+  // trial_duration: () => {return ctrlConfig.explore_decision + ctrlConfig.explore_effort},  // Total duration of 5000ms
+  post_trial_gap: ctrlConfig.post_trial_gap,
   save_timeline_variables: true,
   data: {
     trialphase: "ctrl_explore",
@@ -123,6 +134,11 @@ const exploreTrial = {
         window.choice = selectedKey;
         window.choice_rt = info.rt;
         jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
+
+        // Start the second timer for 3000ms
+        jsPsych.pluginAPI.setTimeout(() => {
+          jsPsych.finishTrial();
+        }, ctrlConfig.explore_effort);
       }
     }
 
@@ -172,11 +188,18 @@ const exploreTrial = {
         allow_held_key: false,
         minimum_valid_rt: 100
       });
-    },
-    on_finish: () => {
-      jsPsych.pluginAPI.cancelAllKeyboardResponses();
-      console.log(jsPsych.data.getLastTrialData().values()[0]);
-    }
+
+    // Start the first timer for 2000ms
+    jsPsych.pluginAPI.setTimeout(() => {
+      if (!selectedKey) {
+        jsPsych.finishTrial();
+      }
+    }, ctrlConfig.explore_decision);
+  },
+  on_finish: () => {
+    jsPsych.pluginAPI.cancelAllKeyboardResponses();
+    console.log(jsPsych.data.getLastTrialData().values()[0]);
+  }
 };
 
 // Control rule selection
@@ -185,16 +208,16 @@ function sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
 }
 
-window.effort_threshold = 10;
-window.scale = 0.6;
+ctrlConfig.effort_threshold = 10;
+ctrlConfig.scale = 0.6;
 function chooseControlRule(effort, current) {
-  const extra_effort = (effort - window.effort_threshold) * window.scale / current;
+  const extra_effort = (effort - ctrlConfig.effort_threshold) * ctrlConfig.scale / current;
   const prob = sigmoid(extra_effort);
   return Math.random() < prob ? 'control' : 'base';
 }
 
 function probControlRule(effort, current) {
-  const extra_effort = (effort - window.effort_threshold) * window.scale / current;
+  const extra_effort = (effort - ctrlConfig.effort_threshold) * ctrlConfig.scale / current;
   return sigmoid(extra_effort);
 }
 
@@ -253,8 +276,8 @@ const exploreFeedback = {
     return generateExploreFeedback()
   },
   choices: "NO_KEYS",
-  trial_duration: 2000,
-  post_trial_gap: 500,
+  trial_duration: ctrlConfig.explore_feedback,
+  post_trial_gap: ctrlConfig.post_trial_gap,
   data: {
     trialphase: "ctrl_explore_feedback"
   },
@@ -396,7 +419,7 @@ function highlightHomeBaseChoice(event) {
       // Trigger the click event programmatically
       setTimeout(() => {
         button.click();
-      }, 1500)
+      }, ctrlConfig.predict_choice)
     }
   }
 };
@@ -444,7 +467,7 @@ function highlightDestChoice(event) {
       // Trigger the click event programmatically
       setTimeout(() => {
         button.click();
-      }, 1500)
+      }, ctrlConfig.predict_choice)
     }
   }
 };
@@ -502,6 +525,7 @@ function generatePredDest(ship, near, current, fuel) {
 const predictHomeBaseTrial = {
   type: jsPsychHtmlButtonResponse,
   save_timeline_variables: true,
+  trial_duration: ctrlConfig.predict_decision,
   stimulus: () => {
     return generatePredHomeBase(
       jsPsych.evaluateTimelineVariable('ship')
@@ -568,6 +592,7 @@ const predictHomeBaseTrial = {
 
 const predictDestTrial = {
   type: jsPsychHtmlButtonResponse,
+  trial_duration: ctrlConfig.predict_decision,
   stimulus: () => {
     return generatePredDest(
       jsPsych.evaluateTimelineVariable('ship'), 
@@ -596,7 +621,7 @@ const predictDestTrial = {
   on_finish: () => {
     jsPsych.pluginAPI.cancelAllKeyboardResponses();
   },
-  post_trial_gap: 300,
+  post_trial_gap: ctrlConfig.post_trial_gap,
   choices: ['coconut', 'orange', 'grape', 'banana'],
   button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${islandKeyList[choice]}.png" style="width:50px;"></div>`
 };
@@ -662,11 +687,10 @@ const rewardTrial = {
   },
   choices: "NO_KEYS",
   response_ends_trial: false,
-  trial_duration: 5000,  // 3 second time limit
-  post_trial_gap: 300,
+  post_trial_gap: ctrlConfig.post_trial_gap,
   save_timeline_variables: true,
   data: {
-    trialphase: "ctrl_explore",
+    trialphase: "ctrl_reward",
     responseTime: () => {return window.responseTime},
     choice: () => {return window.choice},
     choice_rt: () => {return window.choice_rt},
@@ -718,6 +742,11 @@ const rewardTrial = {
         window.choice = selectedKey;
         window.choice_rt = info.rt;
         jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
+
+        // Start the second timer for 3000ms
+        jsPsych.pluginAPI.setTimeout(() => {
+          jsPsych.finishTrial();
+        }, ctrlConfig.reward_effort);
       }
     }
 
@@ -767,6 +796,13 @@ const rewardTrial = {
         allow_held_key: false,
         minimum_valid_rt: 100
       });
+
+      // Start the first timer for 2000ms
+    jsPsych.pluginAPI.setTimeout(() => {
+      if (!selectedKey) {
+        jsPsych.finishTrial();
+      }
+    }, ctrlConfig.reward_decision);
     },
     on_finish: () => {
       jsPsych.pluginAPI.cancelAllKeyboardResponses();
@@ -823,8 +859,8 @@ const rewardFeedback = {
     return generateRewardFeedback();
   },
   choices: "NO_KEYS",
-  trial_duration: 2000,
-  post_trial_gap: 100,
+  trial_duration: ctrlConfig.reward_feedback,
+  post_trial_gap: ctrlConfig.post_trial_gap,
   data: {
     trialphase: "ctrl_reward_feedback"
   }
