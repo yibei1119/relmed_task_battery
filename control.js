@@ -383,16 +383,17 @@ const noChoiceWarning = {
 
 function highlightHomeBaseChoice(event) {
   // Map arrow keys and letter keys to a data-choice value
-  const choice = keyList[event.key]
+  window.choice = ctrlConfig.keyList[event.key]
+  window.choice_rt = event.rt;
 
   // If a valid key was pressed, select the button
-  if (choice !== null) {
+  if (window.choice !== null) {
     // Using a CSS attribute selector to find the matching button
-    const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
+    const button = document.querySelector(`.destination-button[data-choice="${window.choice}"]`);
 
     if (button) {
       const ship = jsPsych.evaluateTimelineVariable('ship');
-      const correct = ctrlConfig.controlRule[ship] === Object.keys(islandKeyList)[choice];
+      const correct = ctrlConfig.controlRule[ship] === Object.keys(ctrlConfig.islandKeyList)[window.choice];
       // // Enable for feedback
       // if (correct) {
       //   button.style.borderColor = '#00ff00';
@@ -426,12 +427,13 @@ function highlightHomeBaseChoice(event) {
 
 function highlightDestChoice(event) {
   // Map arrow keys and letter keys to a data-choice value
-  const choice = keyList[event.key]
+  window.choice = ctrlConfig.keyList[event.key]
+  window.choice_rt = event.rt;
 
   // If a valid key was pressed, select the button
-  if (choice !== null) {
+  if (window.choice !== null) {
     // Using a CSS attribute selector to find the matching button
-    const button = document.querySelector(`.destination-button[data-choice="${choice}"]`);
+    const button = document.querySelector(`.destination-button[data-choice="${window.choice}"]`);
 
     if (button) {
       const ship = jsPsych.evaluateTimelineVariable('ship');
@@ -439,7 +441,7 @@ function highlightDestChoice(event) {
       const current_strength = jsPsych.evaluateTimelineVariable('current');
       const fuel_level = jsPsych.evaluateTimelineVariable('fuel_lvl');
       const next_state = probControlRule(fuel_level/100*40, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
-      const correct = Object.keys(islandKeyList)[choice] === next_state;
+      const correct = Object.keys(ctrlConfig.islandKeyList)[window.choice] === next_state;
       
       // // Enable for feedback
       // if (correct) {
@@ -532,9 +534,12 @@ const predictHomeBaseTrial = {
     )
   },
   data: {
-    trialphase: "ctrl_predict_homebase"
+    trialphase: "ctrl_predict_homebase",
+    choice: () => {return window.choice},
+    choice_rt: () => {return window.choice_rt}
   },
   on_load: () => {
+    window.choice = null;
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightHomeBaseChoice,
       valid_responses: [
@@ -551,7 +556,7 @@ const predictHomeBaseTrial = {
     jsPsych.pluginAPI.cancelAllKeyboardResponses();
   },
   choices: ['coconut', 'orange', 'grape', 'banana'],
-  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${islandKeyList[choice]}.png" style="width:50px;"></div>`
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${ctrlConfig.islandKeyList[choice]}.png" style="width:50px;"></div>`
 };
 
 // function generateCtrlHomeBaseFeedback() {
@@ -559,7 +564,7 @@ const predictHomeBaseTrial = {
 //   const lastTrial = jsPsych.data.getLastTrialData().values()[0];
 //   console.log(lastTrial);
 //   const ship = lastTrial.timeline_variables["ship"];
-//   const correct = ctrlConfig.controlRule[ship] === Object.keys(islandKeyList)[lastTrial.response];
+//   const correct = ctrlConfig.controlRule[ship] === Object.keys(ctrlConfig.islandKeyList)[lastTrial.response];
 //   console.log("Correct: ", correct);
 //   if (correct) {
 //     msg = "Correct! You found the home base of the ship.";
@@ -602,10 +607,13 @@ const predictDestTrial = {
     );
   },
   data: {
-    trialphase: "ctrl_predict_dest"
+    trialphase: "ctrl_predict_dest",
+    choice: () => {return window.choice},
+    choice_rt: () => {return window.choice_rt}
   },
   save_timeline_variables: true,
   on_load: () => {
+    window.choice = null;
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightDestChoice,
       valid_responses: [
@@ -623,7 +631,7 @@ const predictDestTrial = {
   },
   post_trial_gap: ctrlConfig.post_trial_gap,
   choices: ['coconut', 'orange', 'grape', 'banana'],
-  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${islandKeyList[choice]}.png" style="width:50px;"></div>`
+  button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${ctrlConfig.islandKeyList[choice]}.png" style="width:50px;"></div>`
 };
 
 // Create trial variations
@@ -854,15 +862,20 @@ function generateRewardFeedback() {
 }
 
 const rewardFeedback = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: () => {
-    return generateRewardFeedback();
-  },
-  choices: "NO_KEYS",
-  trial_duration: ctrlConfig.reward_feedback,
-  post_trial_gap: ctrlConfig.post_trial_gap,
-  data: {
-    trialphase: "ctrl_reward_feedback"
+  timeline: [{
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: () => {
+      return generateRewardFeedback();
+    },
+    choices: "NO_KEYS",
+    trial_duration: ctrlConfig.reward_feedback,
+    post_trial_gap: ctrlConfig.post_trial_gap,
+    data: {
+      trialphase: "ctrl_reward_feedback"
+    }}],
+  conditional_function: function () {
+    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    return last_trial_choice !== null;
   }
 };
 
@@ -877,7 +890,7 @@ const rewardConditions = [
 var predictionTimeline = [];
 predictionConditions.forEach(trial => {
   predictionTimeline.push({
-    timeline: [predictHomeBaseTrial, predictDestTrial],
+    timeline: [predictHomeBaseTrial, noChoiceWarning, predictDestTrial, noChoiceWarning],
     timeline_variables: [trial]
   });
 });
@@ -885,7 +898,7 @@ predictionConditions.forEach(trial => {
 var rewardTimeline = [];
 rewardConditions.forEach(trial => {
   rewardTimeline.push({
-    timeline: [rewardTrial, rewardFeedback],
+    timeline: [rewardTrial, rewardFeedback, noChoiceWarning],
     timeline_variables: [trial]
   });
 });
