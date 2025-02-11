@@ -540,6 +540,7 @@ const predictHomeBaseTrial = {
   },
   on_load: () => {
     window.choice = null;
+    window.choice_rt = null;
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightHomeBaseChoice,
       valid_responses: [
@@ -614,6 +615,7 @@ const predictDestTrial = {
   save_timeline_variables: true,
   on_load: () => {
     window.choice = null;
+    window.choice_rt = null;
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightDestChoice,
       valid_responses: [
