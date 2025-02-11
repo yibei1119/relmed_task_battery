@@ -60,7 +60,7 @@ function generateExploreTrial(left, right, near, current) {
                 <div class="fuel-indicator-bar"></div>
               </div>
             </div>
-            <img class="ship-left" src="imgs/ship_${left}.png" alt="Left ship" />
+            <img class="ship-left" src="imgs/simple_ship_${left}.png" alt="Left ship" />
             <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
           </div>
           <img class="island-near" src="imgs/simple_island_${near}.png" alt="Nearer island" />
@@ -70,7 +70,7 @@ function generateExploreTrial(left, right, near, current) {
                 <div class="fuel-indicator-bar"></div>
               </div>
             </div>
-            <img class="ship-right" src="imgs/ship_${right}.png" alt="Right ship" />
+            <img class="ship-right" src="imgs/simple_ship_${right}.png" alt="Right ship" />
             <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
           </div>
         </div>
@@ -275,7 +275,7 @@ function generateExploreFeedback() {
             alt="Destination island" />
       <div class="ship-container">
         <img class="ship-feedback" 
-              src="imgs/ship_icon_${chosenColor}.png" 
+              src="imgs/simple_ship_icon_${chosenColor}.png" 
               alt="Chosen ship" />
         </div>
       </section>
@@ -482,7 +482,7 @@ function generatePredHomeBase(ship) {
                 <div class="overlap-group">
                     <div class="choice-left">
                     <img class="island-near" src="imgs/simple_island_banana.png" style="visibility:hidden;" alt="Nearer island" />
-                    <img class="ship-left" src="imgs/ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
                     </div>
                 </div>
             </section>
@@ -501,7 +501,7 @@ function generatePredDest(ship, near, current, fuel) {
                 <div class="overlap-group">
                     <div class="choice-left">
                     <img class="island-near" src="imgs/simple_island_${near}.png" alt="Nearer island" />
-                    <img class="ship-left" src="imgs/ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${ship}.png" style="top:-10%" alt="Prediction ship" />
                     </div>
                     <!-- Fuel Level Indicator -->
                     <div style="position:absolute; top:70px; right:60px; width: 150px; height: 60px; background:white; padding:10px; border-radius:5px; z-index: 3">
@@ -661,7 +661,7 @@ function generateRewardTrial(target, near, left, right, current) {
                 <div class="fuel-indicator-bar"></div>
               </div>
             </div>
-            <img class="ship-left" src="imgs/ship_${left}.png" alt="Left ship" />
+            <img class="ship-left" src="imgs/simple_ship_${left}.png" alt="Left ship" />
             <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
           </div>
           <img class="island-near" src="imgs/simple_island_${near}.png" alt="Nearer island" />
@@ -671,7 +671,7 @@ function generateRewardTrial(target, near, left, right, current) {
                 <div class="fuel-indicator-bar"></div>
               </div>
             </div>
-            <img class="ship-right" src="imgs/ship_${right}.png" alt="Right ship" />
+            <img class="ship-right" src="imgs/simple_ship_${right}.png" alt="Right ship" />
             <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
           </div>
         </div>

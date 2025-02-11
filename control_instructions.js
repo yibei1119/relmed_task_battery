@@ -87,11 +87,11 @@ const instructionPages = [
                 <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
                 <div class="overlap-group">
                     <div class="choice-left">
-                        <img class="ship-left" src="imgs/ship_green.png" alt="Left ship" />
+                        <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
                     </div>
                     <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
                     <div class="choice-right">
-                        <img class="ship-right" src="imgs/ship_blue.png" alt="Right ship" />
+                        <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
                     </div>
                 </div>
                 ${createOceanCurrents(3)}
@@ -149,14 +149,14 @@ const instructionPages = [
                         <div class="selection-label">Press ← to select</div>
                         <span class="selection-dot"></span>
                         </div>
-                        <img class="ship-left" src="imgs/ship_green.png" alt="Left ship" />
+                        <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
                     </div>
                     <div class="choice-right">
                         <div class="selection-indicator">
                         <div class="selection-label">Press → to select</div>
                         <span class="selection-dot"></span>
                         </div>
-                        <img class="ship-right" src="imgs/ship_blue.png" alt="Right ship" />
+                        <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
                     </div>
                 </div>
             </section>
@@ -215,7 +215,7 @@ const instructionPages = [
                             <img class="fuel-icon fuel-animation repeating" src="imgs/fuel.png" alt="Fuel" />
                         </div>
                         ${createKeyAnimation('left')}
-                        <img class="ship-left" src="imgs/ship_green.png" alt="Left ship" />
+                        <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
                         <div class="label fuel-label">Added Fuel</div>
                     </div>
                 </div>
