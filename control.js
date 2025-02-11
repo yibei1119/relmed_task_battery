@@ -42,8 +42,8 @@ const ctrlConfig = {
 };
 
 const exploreConditions = [
-  {"left": "green", "right": "blue", "near": "coconut", "current": 3}, 
-  {"left": "red", "right": "yellow", "near": "orange", "current": 1}
+  { "left": "green", "right": "blue", "near": "coconut", "current": 3 },
+  { "left": "red", "right": "yellow", "near": "orange", "current": 1 }
 ];
 
 function generateExploreTrial(left, right, near, current) {
@@ -86,8 +86,8 @@ const exploreTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: () => {
     return generateExploreTrial(
-      jsPsych.evaluateTimelineVariable('left'), 
-      jsPsych.evaluateTimelineVariable('right'), 
+      jsPsych.evaluateTimelineVariable('left'),
+      jsPsych.evaluateTimelineVariable('right'),
       jsPsych.evaluateTimelineVariable('near'),
       jsPsych.evaluateTimelineVariable('current')
     );
@@ -99,10 +99,10 @@ const exploreTrial = {
   save_timeline_variables: true,
   data: {
     trialphase: "ctrl_explore",
-    responseTime: () => {return window.responseTime},
-    choice: () => {return window.choice},
-    choice_rt: () => {return window.choice_rt},
-    trial_presses: () => { return window.responseTime.length},
+    responseTime: () => { return window.responseTime },
+    choice: () => { return window.choice },
+    choice_rt: () => { return window.choice_rt },
+    trial_presses: () => { return window.responseTime.length },
   },
   on_load: () => {
     let selectedKey = null;
@@ -163,20 +163,20 @@ const exploreTrial = {
       trial_presses++;
       window.responseTime.push(info.rt - lastPressTime);
       lastPressTime = info.rt;
-      
+
       // Create and animate fuel icon
       createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
-      
+
       // Update fuel indicator bar
-      const container = selectedKey === 'left' ? 
-        document.querySelector('.fuel-container-left') : 
+      const container = selectedKey === 'left' ?
+        document.querySelector('.fuel-container-left') :
         document.querySelector('.fuel-container-right');
       const fuelBar = container.querySelector('.fuel-indicator-bar');
-      
+
       // Calculate progress (40 presses = 100%)
       const progress = Math.min((trial_presses / 40) * 100, 100);
       fuelBar.style.width = `${progress}%`;
-      
+
       // Optional: Change color when full
       if (progress === 100) {
         fuelBar.style.backgroundColor = '#00ff00';
@@ -197,13 +197,13 @@ const exploreTrial = {
 
     // Initial keyboard listener for the first choice
     var firstKey_listener = jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: handleKeypress,
-        valid_responses: ['ArrowLeft', 'ArrowRight'],
-        rt_method: 'performance',
-        persist: false,
-        allow_held_key: false,
-        minimum_valid_rt: 100
-      });
+      callback_function: handleKeypress,
+      valid_responses: ['ArrowLeft', 'ArrowRight'],
+      rt_method: 'performance',
+      persist: false,
+      allow_held_key: false,
+      minimum_valid_rt: 100
+    });
 
     // Start the first timer for 2000ms
     jsPsych.pluginAPI.setTimeout(() => {
@@ -250,7 +250,7 @@ function generateExploreFeedback() {
 
   // Determine destination island
   let destinationIsland;
-  let currentRule = chooseControlRule(fuelLevel,currentStrength);
+  let currentRule = chooseControlRule(fuelLevel, currentStrength);
   if (currentRule === 'base') {
     // Use base rule - show opposite of near island
     destinationIsland = ctrlConfig.baseRule[nearIsland];
@@ -287,28 +287,28 @@ function generateExploreFeedback() {
 
 const exploreFeedback = {
   timeline: [{
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: () => {
-    return generateExploreFeedback()
-  },
-  choices: "NO_KEYS",
-  trial_duration: ctrlConfig.explore_feedback,
-  post_trial_gap: ctrlConfig.post_trial_gap,
-  data: {
-    trialphase: "ctrl_explore_feedback"
-  },
-  on_load: () => {
-    // Clean up any leftover style elements from previous trials
-    const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
-    oldStyles.forEach(style => style.remove());
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: () => {
+      return generateExploreFeedback()
+    },
+    choices: "NO_KEYS",
+    trial_duration: ctrlConfig.explore_feedback,
+    post_trial_gap: ctrlConfig.post_trial_gap,
+    data: {
+      trialphase: "ctrl_explore_feedback"
+    },
+    on_load: () => {
+      // Clean up any leftover style elements from previous trials
+      const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
+      oldStyles.forEach(style => style.remove());
 
-    // Ensure the ship starts at the correct position
-    const shipContainer = document.querySelector('.ship-container');
-    if (shipContainer) {
-      shipContainer.style.visibility = 'visible';
+      // Ensure the ship starts at the correct position
+      const shipContainer = document.querySelector('.ship-container');
+      if (shipContainer) {
+        shipContainer.style.visibility = 'visible';
+      }
     }
-  }
-}],
+  }],
   conditional_function: function () {
     const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
     return last_trial_choice !== null;
@@ -440,9 +440,9 @@ function highlightDestChoice(event) {
       const state = jsPsych.evaluateTimelineVariable('near');
       const current_strength = jsPsych.evaluateTimelineVariable('current');
       const fuel_level = jsPsych.evaluateTimelineVariable('fuel_lvl');
-      const next_state = probControlRule(fuel_level/100*40, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
+      const next_state = probControlRule(fuel_level / 100 * 40, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
       const correct = Object.keys(ctrlConfig.islandKeyList)[window.choice] === next_state;
-      
+
       // // Enable for feedback
       // if (correct) {
       //   button.style.borderColor = '#00ff00';
@@ -489,11 +489,11 @@ function generatePredHomeBase(ship) {
             </div>
             <p>Which island is the home base of this ship?</p>
     `;
-    return stimulus;
+  return stimulus;
 }
 
 function generatePredDest(ship, near, current, fuel) {
-  const level_text = {"1": "Low", "2": "Mid", "3": "High"};
+  const level_text = { "1": "Low", "2": "Mid", "3": "High" };
   const stimulus = `
   <div class="instruction-stage" style="transform: unset;">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
@@ -521,7 +521,7 @@ function generatePredDest(ship, near, current, fuel) {
                 </div>
                 <p>Based on the current strength and fuel level, where will this ship most likely dock?</p>
     `;
-    return stimulus;
+  return stimulus;
 };
 
 const predictHomeBaseTrial = {
@@ -535,8 +535,8 @@ const predictHomeBaseTrial = {
   },
   data: {
     trialphase: "ctrl_predict_homebase",
-    choice: () => {return window.choice},
-    choice_rt: () => {return window.choice_rt}
+    choice: () => { return window.choice },
+    choice_rt: () => { return window.choice_rt }
   },
   on_load: () => {
     window.choice = null;
@@ -600,16 +600,16 @@ const predictDestTrial = {
   trial_duration: ctrlConfig.predict_decision,
   stimulus: () => {
     return generatePredDest(
-      jsPsych.evaluateTimelineVariable('ship'), 
-      jsPsych.evaluateTimelineVariable('near'), 
+      jsPsych.evaluateTimelineVariable('ship'),
+      jsPsych.evaluateTimelineVariable('near'),
       jsPsych.evaluateTimelineVariable('current'),
       jsPsych.evaluateTimelineVariable('fuel_lvl')
     );
   },
   data: {
     trialphase: "ctrl_predict_dest",
-    choice: () => {return window.choice},
-    choice_rt: () => {return window.choice_rt}
+    choice: () => { return window.choice },
+    choice_rt: () => { return window.choice_rt }
   },
   save_timeline_variables: true,
   on_load: () => {
@@ -636,9 +636,9 @@ const predictDestTrial = {
 
 // Create trial variations
 const predictionConditions = [
-  {ship: "blue", near: "orange", current: 1, fuel_lvl: 75},
-  {ship: "red", near: "grape", current: 2, fuel_lvl: 50},
-  {ship: "yellow", near: "coconut", current: 3, fuel_lvl: 15}
+  { ship: "blue", near: "orange", current: 1, fuel_lvl: 75 },
+  { ship: "red", near: "grape", current: 2, fuel_lvl: 50 },
+  { ship: "yellow", near: "coconut", current: 3, fuel_lvl: 15 }
 ];
 
 
@@ -688,8 +688,8 @@ const rewardTrial = {
     return generateRewardTrial(
       jsPsych.evaluateTimelineVariable('target'),
       jsPsych.evaluateTimelineVariable('near'),
-      jsPsych.evaluateTimelineVariable('left'), 
-      jsPsych.evaluateTimelineVariable('right'), 
+      jsPsych.evaluateTimelineVariable('left'),
+      jsPsych.evaluateTimelineVariable('right'),
       jsPsych.evaluateTimelineVariable('current')
     );
   },
@@ -699,10 +699,10 @@ const rewardTrial = {
   save_timeline_variables: true,
   data: {
     trialphase: "ctrl_reward",
-    responseTime: () => {return window.responseTime},
-    choice: () => {return window.choice},
-    choice_rt: () => {return window.choice_rt},
-    trial_presses: () => { return window.responseTime.length},
+    responseTime: () => { return window.responseTime },
+    choice: () => { return window.choice },
+    choice_rt: () => { return window.choice_rt },
+    trial_presses: () => { return window.responseTime.length },
   },
   on_load: () => {
     let selectedKey = null;
@@ -763,20 +763,20 @@ const rewardTrial = {
       trial_presses++;
       window.responseTime.push(info.rt - lastPressTime);
       lastPressTime = info.rt;
-      
+
       // Create and animate fuel icon
       createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
-      
+
       // Update fuel indicator bar
-      const container = selectedKey === 'left' ? 
-        document.querySelector('.fuel-container-left') : 
+      const container = selectedKey === 'left' ?
+        document.querySelector('.fuel-container-left') :
         document.querySelector('.fuel-container-right');
       const fuelBar = container.querySelector('.fuel-indicator-bar');
-      
+
       // Calculate progress (40 presses = 100%)
       const progress = Math.min((trial_presses / 40) * 100, 100);
       fuelBar.style.width = `${progress}%`;
-      
+
       // Optional: Change color when full
       if (progress === 100) {
         fuelBar.style.backgroundColor = '#00ff00';
@@ -797,25 +797,25 @@ const rewardTrial = {
 
     // Initial keyboard listener for the first choice
     var firstKey_listener = jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: handleKeypress,
-        valid_responses: ['ArrowLeft', 'ArrowRight'],
-        rt_method: 'performance',
-        persist: false,
-        allow_held_key: false,
-        minimum_valid_rt: 100
-      });
+      callback_function: handleKeypress,
+      valid_responses: ['ArrowLeft', 'ArrowRight'],
+      rt_method: 'performance',
+      persist: false,
+      allow_held_key: false,
+      minimum_valid_rt: 100
+    });
 
-      // Start the first timer for 2000ms
+    // Start the first timer for 2000ms
     jsPsych.pluginAPI.setTimeout(() => {
       if (!selectedKey) {
         jsPsych.finishTrial();
       }
     }, ctrlConfig.reward_decision);
-    },
-    on_finish: () => {
-      jsPsych.pluginAPI.cancelAllKeyboardResponses();
-      console.log(jsPsych.data.getLastTrialData().values()[0]);
-    }
+  },
+  on_finish: () => {
+    jsPsych.pluginAPI.cancelAllKeyboardResponses();
+    console.log(jsPsych.data.getLastTrialData().values()[0]);
+  }
 };
 
 function generateRewardFeedback() {
@@ -830,7 +830,7 @@ function generateRewardFeedback() {
 
   // Determine destination island
   let destinationIsland;
-  let currentRule = chooseControlRule(fuelLevel,currentStrength);
+  let currentRule = chooseControlRule(fuelLevel, currentStrength);
   if (currentRule === 'base') {
     // Use base rule - show opposite of near island
     destinationIsland = ctrlConfig.baseRule[nearIsland];
@@ -872,7 +872,8 @@ const rewardFeedback = {
     post_trial_gap: ctrlConfig.post_trial_gap,
     data: {
       trialphase: "ctrl_reward_feedback"
-    }}],
+    }
+  }],
   conditional_function: function () {
     const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
     return last_trial_choice !== null;
@@ -880,9 +881,38 @@ const rewardFeedback = {
 };
 
 const rewardConditions = [
-  {"target": "grape", "near": "banana", "left": "green", "right": "yellow", "current": 2}, 
-  {"target": "coconut", "near": "grape", "left": "blue", "right": "red", "current": 3}
+  { "target": "grape", "near": "banana", "left": "green", "right": "yellow", "current": 2 },
+  { "target": "coconut", "near": "grape", "left": "blue", "right": "red", "current": 3 }
 ];
+
+// Self-report ratings
+const controlRating = {
+  timeline: [{
+    type: jsPsychHtmlVasResponse,
+    stimulus: "<p>How in control do you feel at this moment?</p>",
+    scale_width: 600,
+    labels: ["Not at all in control", "I don't know", "Completely in control"],
+    required: true
+  }],
+  conditional_function: function () {
+    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    return last_trial_choice !== null;
+  }
+};
+
+const confidenceRating = {
+  timeline: [{
+    type: jsPsychHtmlVasResponse,
+    stimulus: "<p>How confident are you that your last choice was correct?</p>",
+    scale_width: 600,
+    labels: ["Not at all", "Very confident"],
+    required: true
+  }],
+  conditional_function: function () {
+    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    return last_trial_choice !== null;
+  }
+};
 
 // Create trial variations
 
@@ -890,7 +920,7 @@ const rewardConditions = [
 var predictionTimeline = [];
 predictionConditions.forEach(trial => {
   predictionTimeline.push({
-    timeline: [predictHomeBaseTrial, noChoiceWarning, predictDestTrial, noChoiceWarning],
+    timeline: [predictHomeBaseTrial, noChoiceWarning, confidenceRating, predictDestTrial, noChoiceWarning, confidenceRating],
     timeline_variables: [trial]
   });
 });
@@ -898,7 +928,7 @@ predictionConditions.forEach(trial => {
 var rewardTimeline = [];
 rewardConditions.forEach(trial => {
   rewardTimeline.push({
-    timeline: [rewardTrial, rewardFeedback, noChoiceWarning],
+    timeline: [rewardTrial, rewardFeedback, noChoiceWarning, controlRating],
     timeline_variables: [trial]
   });
 });
@@ -906,7 +936,8 @@ rewardConditions.forEach(trial => {
 var expTimeline = [];
 exploreConditions.forEach(trial => {
   expTimeline.push({
-    timeline: [exploreTrial, exploreFeedback, noChoiceWarning],
+    timeline: [exploreTrial, exploreFeedback, noChoiceWarning, controlRating],
     timeline_variables: [trial]
   });
 });
+
