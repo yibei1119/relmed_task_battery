@@ -13,10 +13,10 @@ const ctrlConfig = {
     yellow: "banana",
   },
   keyList: {
-    "ArrowLeft": 0,
-    "ArrowUp": 1,
-    "ArrowDown": 2,
-    "ArrowRight": 3,
+    // "ArrowLeft": 0,
+    // "ArrowUp": 1,
+    // "ArrowDown": 2,
+    // "ArrowRight": 3,
     "d": 0,
     "f": 1,
     "j": 2,
@@ -30,12 +30,12 @@ const ctrlConfig = {
   },
   effort_threshold: 10,
   scale: 0.6,
-  explore_decision: 2000,
+  explore_decision: 4000,
   explore_effort: 3000,
   explore_feedback: 2000,
-  predict_decision: 2000,
+  predict_decision: 4000,
   predict_choice: 500,
-  reward_decision: 2000,
+  reward_decision: 4000,
   reward_effort: 3000,
   reward_feedback: 2000,
   post_trial_gap: 300
@@ -100,8 +100,8 @@ const exploreTrial = {
   data: {
     trialphase: "ctrl_explore",
     responseTime: () => { return window.responseTime },
-    choice: () => { return window.choice },
-    choice_rt: () => { return window.choice_rt },
+    response: () => { return window.choice },
+    rt: () => { return window.choice_rt },
     trial_presses: () => { return window.responseTime.length },
   },
   on_load: () => {
@@ -240,7 +240,7 @@ function probControlRule(effort, current) {
 function generateExploreFeedback() {
   // Get last trial's data
   const lastTrial = jsPsych.data.getLastTrialData().values()[0];
-  const choice = lastTrial.choice; // 'left' or 'right'
+  const choice = lastTrial.response; // 'left' or 'right'
   const chosenColor = lastTrial.timeline_variables[choice]; // Get the color of the chosen side
   const nearIsland = lastTrial.timeline_variables.near; // Get the near island from last trial
   const currentStrength = lastTrial.timeline_variables.current; // Get the current strength from last trial
@@ -310,7 +310,7 @@ const exploreFeedback = {
     }
   }],
   conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice !== null;
   }
 };
@@ -374,7 +374,7 @@ const noChoiceWarning = {
     }
   }],
   conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice === null;
   }
 };
@@ -535,8 +535,8 @@ const predictHomeBaseTrial = {
   },
   data: {
     trialphase: "ctrl_predict_homebase",
-    choice: () => { return window.choice },
-    choice_rt: () => { return window.choice_rt }
+    response: () => { return window.choice },
+    rt: () => { return window.choice_rt }
   },
   on_load: () => {
     window.choice = null;
@@ -544,7 +544,7 @@ const predictHomeBaseTrial = {
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightHomeBaseChoice,
       valid_responses: [
-        'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight',
+        // 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight',
         'd', 'f', 'j', 'k'
       ],
       rt_method: 'performance',
@@ -609,8 +609,8 @@ const predictDestTrial = {
   },
   data: {
     trialphase: "ctrl_predict_dest",
-    choice: () => { return window.choice },
-    choice_rt: () => { return window.choice_rt }
+    response: () => { return window.choice },
+    rt: () => { return window.choice_rt }
   },
   save_timeline_variables: true,
   on_load: () => {
@@ -619,7 +619,7 @@ const predictDestTrial = {
     jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: highlightDestChoice,
       valid_responses: [
-        'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight',
+        // 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight',
         'd', 'f', 'j', 'k'
       ],
       rt_method: 'performance',
@@ -639,7 +639,7 @@ const predictDestTrial = {
 // Create trial variations
 const predictionConditions = [
   { ship: "blue", near: "orange", current: 1, fuel_lvl: 75 },
-  { ship: "red", near: "grape", current: 2, fuel_lvl: 50 },
+  // { ship: "red", near: "grape", current: 2, fuel_lvl: 50 },
   { ship: "yellow", near: "coconut", current: 3, fuel_lvl: 15 }
 ];
 
@@ -702,8 +702,8 @@ const rewardTrial = {
   data: {
     trialphase: "ctrl_reward",
     responseTime: () => { return window.responseTime },
-    choice: () => { return window.choice },
-    choice_rt: () => { return window.choice_rt },
+    response: () => { return window.choice },
+    rt: () => { return window.choice_rt },
     trial_presses: () => { return window.responseTime.length },
   },
   on_load: () => {
@@ -823,7 +823,7 @@ const rewardTrial = {
 function generateRewardFeedback() {
   // Get last trial's data
   const lastTrial = jsPsych.data.getLastTrialData().values()[0];
-  const choice = lastTrial.choice; // 'left' or 'right'
+  const choice = lastTrial.response; // 'left' or 'right'
   const chosenColor = lastTrial.timeline_variables[choice]; // Get the color of the chosen side
   const nearIsland = lastTrial.timeline_variables.near; // Get the near island from last trial
   const currentStrength = lastTrial.timeline_variables.current; // Get the current strength from last trial
@@ -877,7 +877,7 @@ const rewardFeedback = {
     }
   }],
   conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice !== null;
   }
 };
@@ -892,12 +892,13 @@ const controlRating = {
   timeline: [{
     type: jsPsychHtmlVasResponse,
     stimulus: "<p>How in control do you feel at this moment?</p>",
+    prompt: "<p>Click on the slider to indicate your response.</p>",
     scale_width: 600,
     labels: ["Not at all in control", "I don't know", "Completely in control"],
     required: true
   }],
   conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice !== null;
   }
 };
@@ -906,12 +907,13 @@ const confidenceRating = {
   timeline: [{
     type: jsPsychHtmlVasResponse,
     stimulus: "<p>How confident are you that your last choice was correct?</p>",
+    prompt: "<p>Click on the slider to indicate your response.</p>",
     scale_width: 600,
     labels: ["Not at all", "Very confident"],
     required: true
   }],
   conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('choice').values[0];
+    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice !== null;
   }
 };
