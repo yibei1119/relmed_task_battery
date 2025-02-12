@@ -220,6 +220,12 @@
 }
 
 /* Prediction trial styles */
+.island-choices {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: center;
+  /* gap: 5px; */
+}
 
 .destination-button {
   height: 100px;
