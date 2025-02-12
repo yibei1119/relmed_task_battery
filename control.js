@@ -41,11 +41,6 @@ const ctrlConfig = {
   post_trial_gap: 300
 };
 
-const exploreConditions = [
-  { "left": "green", "right": "blue", "near": "coconut", "current": 3 },
-  { "left": "red", "right": "yellow", "near": "orange", "current": 1 }
-];
-
 function generateExploreTrial(left, right, near, current) {
   const far = ctrlConfig.baseRule[near];
   const stimulus = `
@@ -636,14 +631,6 @@ const predictDestTrial = {
   button_html: (choice) => `<div class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"><img src="imgs/letter-${ctrlConfig.islandKeyList[choice]}.png" style="width:50px;"></div>`
 };
 
-// Create trial variations
-const predictionConditions = [
-  { ship: "blue", near: "orange", current: 1, fuel_lvl: 75 },
-  // { ship: "red", near: "grape", current: 2, fuel_lvl: 50 },
-  { ship: "yellow", near: "coconut", current: 3, fuel_lvl: 15 }
-];
-
-
 // Reward trial
 function generateRewardTrial(target, near, left, right, current) {
   const stimulus = `
@@ -882,10 +869,7 @@ const rewardFeedback = {
   }
 };
 
-const rewardConditions = [
-  { "target": "grape", "near": "banana", "left": "green", "right": "yellow", "current": 2 },
-  { "target": "coconut", "near": "grape", "left": "blue", "right": "red", "current": 3 }
-];
+
 
 // Self-report ratings
 const controlRating = {
@@ -919,8 +903,31 @@ const confidenceRating = {
 };
 
 // Create trial variations
+const exploreConditions = [
+  { "left": "green", "right": "blue", "near": "coconut", "current": 3 },
+  { "left": "red", "right": "yellow", "near": "orange", "current": 1 }
+];
+
+const predictionConditions = [
+  { ship: "blue", near: "orange", current: 1, fuel_lvl: 75 },
+  // { ship: "red", near: "grape", current: 2, fuel_lvl: 50 },
+  { ship: "yellow", near: "coconut", current: 3, fuel_lvl: 15 }
+];
+
+const rewardConditions = [
+  { "target": "grape", "near": "banana", "left": "green", "right": "yellow", "current": 2 },
+  { "target": "coconut", "near": "grape", "left": "blue", "right": "red", "current": 3 }
+];
 
 // Timelines
+var expTimeline = [];
+exploreConditions.forEach(trial => {
+  expTimeline.push({
+    timeline: [exploreTrial, exploreFeedback, noChoiceWarning, controlRating],
+    timeline_variables: [trial]
+  });
+});
+
 var predictionTimeline = [];
 predictionConditions.forEach(trial => {
   predictionTimeline.push({
@@ -936,12 +943,3 @@ rewardConditions.forEach(trial => {
     timeline_variables: [trial]
   });
 });
-
-var expTimeline = [];
-exploreConditions.forEach(trial => {
-  expTimeline.push({
-    timeline: [exploreTrial, exploreFeedback, noChoiceWarning, controlRating],
-    timeline_variables: [trial]
-  });
-});
-
