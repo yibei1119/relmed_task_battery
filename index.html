@@ -1,35 +1,254 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Island Scene</title>
-    <link rel="stylesheet" href="globals.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main class="main-stage">
-      <img class="background" src="imgs/ocean.png" alt="Background"/>
-      <section class="scene">
-        <img class="island-far" src="imgs/simple_island_orange.png" alt="Farther island" />
-        <div class="overlap-group">
-          <div class="choice-left">
-            <div class="fuel-container-left">
-              <img class="fuel" src="imgs/fuel.png" alt="Fuel" style="width: 50%;"/>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Experiment Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .option {
+            margin: 20px;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .option:hover {
+            background-color: #45a049;
+        }
+
+        #custom-selection {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .trial-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: move;
+        }
+
+        .trial-item.dragging {
+            opacity: 0.5;
+            background-color: #e0e0e0;
+        }
+
+        .trial-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .drag-handle {
+            margin-right: 10px;
+            color: #666;
+            cursor: move;
+        }
+
+        #trial-list {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .checkbox-label {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Experiment Trial Selection</h1>
+        
+        <button class="option" onclick="window.location.href='test.html?mode=all'">
+            Run All Trials
+        </button>
+        
+        <button class="option" onclick="window.location.href='test.html?mode=explore'">
+            Run Only Explore Trials
+        </button>
+        
+        <button class="option" onclick="window.location.href='test.html?mode=predict'">
+            Run Only Prediction Trials
+        </button>
+        
+        <button class="option" onclick="window.location.href='test.html?mode=reward'">
+            Run Only Reward Trials
+        </button>
+
+        <div id="custom-selection">
+            <h3>Custom Selection</h3>
+
+            <!-- Add Time Settings Section -->
+            <div id="time-settings" style="margin: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px;">
+                <h4>Decision Time Settings (milliseconds)</h4>
+                <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+                    <div class="time-setting">
+                        <label for="explore-time">Explore Decision Time:</label>
+                        <input type="number" id="explore-time" value="4000" min="500" step="500">
+                    </div>
+                    <div class="time-setting">
+                        <label for="predict-decision">Predict Decision Time:</label>
+                        <input type="number" id="predict-decision" value="4000" min="500" step="500">
+                    </div>
+                    <div class="time-setting">
+                        <label for="reward-time">Reward Decision Time:</label>
+                        <input type="number" id="reward-time" value="4000" min="500" step="500">
+                    </div>
+                </div>
             </div>
-            <img class="ship-left" src="imgs/simple_ship_blue.png" alt="Left ship" />
-            <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
-          </div>
-          <img class="island-near" src="imgs/simple_island_coconut.png" alt="Nearer island" />
-          <div class="choice-right">
-            <div class="fuel-container-right">
-              <img class="gas" src="imgs/gas.png" alt="Gas" style="width: 50%;"/>
+
+            <p>Select trials and drag to reorder them:</p>
+            <div id="trial-list">
+                <div class="trial-item" draggable="true" data-trial="explore">
+                    <span class="drag-handle">↕</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="trial-type" value="explore">
+                        Explore Trials
+                    </label>
+                </div>
+                <div class="trial-item" draggable="true" data-trial="predict">
+                    <span class="drag-handle">↕</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="trial-type" value="predict">
+                        Prediction Trials
+                    </label>
+                </div>
+                <div class="trial-item" draggable="true" data-trial="reward">
+                    <span class="drag-handle">↕</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="trial-type" value="reward">
+                        Reward Trials
+                    </label>
+                </div>
+                <div class="trial-item" draggable="true" data-trial="control">
+                    <span class="drag-handle">↕</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="trial-type" value="control">
+                        Control Rating
+                    </label>
+                </div>
+                <div class="trial-item" draggable="true" data-trial="confidence">
+                    <span class="drag-handle">↕</span>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="trial-type" value="confidence">
+                        Confidence Rating
+                    </label>
+                </div>
             </div>
-            <img class="ship-right" src="imgs/simple_ship_yellow.png" alt="Right ship" />
-            <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
-          </div>
+            <button class="option" id="run-custom" onclick="runCustomSelection()">
+                Run Selected Trials
+            </button>
         </div>
-      </section>
-    </main>
-  </body>
+    </div>
+
+    <style>
+        .time-setting {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-setting input {
+            width: 100px;
+            padding: 5px;
+            margin-left: 10px;
+        }
+    </style>
+
+
+    <script>
+        // Drag and drop functionality
+        const trialList = document.getElementById('trial-list');
+        let draggingElement = null;
+
+        document.querySelectorAll('.trial-item').forEach(item => {
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragend', handleDragEnd);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('drop', handleDrop);
+        });
+
+        function handleDragStart(e) {
+            draggingElement = this;
+            this.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            draggingElement = null;
+            this.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (this === draggingElement) return;
+
+            const allItems = [...trialList.querySelectorAll('.trial-item')];
+            const draggingIndex = allItems.indexOf(draggingElement);
+            const droppedIndex = allItems.indexOf(this);
+
+            if (draggingIndex < droppedIndex) {
+                this.parentNode.insertBefore(draggingElement, this.nextSibling);
+            } else {
+                this.parentNode.insertBefore(draggingElement, this);
+            }
+        }
+
+        function runCustomSelection() {
+            const selectedTrials = [];
+            document.querySelectorAll('.trial-item').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox.checked) {
+                    selectedTrials.push(checkbox.value);
+                }
+            });
+
+            if (selectedTrials.length > 0) {
+                // Collect time settings
+                const timeSettings = {
+                    explore_decision: document.getElementById('explore-time').value,
+                    predict_decision: document.getElementById('predict-decision').value,
+                    reward_decision: document.getElementById('reward-time').value
+                };
+
+                // Add time settings to URL
+                const params = new URLSearchParams({
+                    mode: 'custom',
+                    trials: selectedTrials.join(','),
+                    times: JSON.stringify(timeSettings)
+                });
+
+                window.location.href = `test.html?${params.toString()}`;
+            } else {
+                alert('Please select at least one trial type');
+            }
+        }
+    </script>
+</body>
+
 </html>

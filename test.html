@@ -47,6 +47,69 @@
   <div id='display_element' class='jsPsychDE'></div>
 </body>
 <script>
+  // Get URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const mode = urlParams.get('mode');
+const selectedTrials = urlParams.get('trials')?.split(',') || [];
+const timeSettings = JSON.parse(urlParams.get('times') || '{}');
+
+// Default time settings
+const defaultTimes = {
+  explore_decision: 4000,
+  predict_decision: 4000,
+  reward_decision: 4000
+};
+
+// Merge default times with provided times
+const times = { ...defaultTimes, ...timeSettings };
+console.log(times);
+
+// Function to build timeline based on selection
+function buildTimeline() {
+    const timeline = [preload];
+    
+    if (mode === 'all') {
+        return [preload, instructionTrial, exploreTrials, controlRating, predictionTrials, confidenceRating, rewardTrials];
+    }
+    
+    if (mode === 'explore') {
+        return [preload, instructionTrial, exploreTrials, controlRating];
+    }
+    
+    if (mode === 'predict') {
+        return [preload, instructionTrial, predictionTrials, confidenceRating];
+    }
+    
+    if (mode === 'reward') {
+        return [preload, instructionTrial, rewardTrials];
+    }
+    
+    if (mode === 'custom') {
+        timeline.push(instructionTrial);
+        selectedTrials.forEach(trial => {
+            switch(trial) {
+                case 'explore':
+                    timeline.push(exploreTrials);
+                    break;
+                case 'predict':
+                    timeline.push(predictionTrials);
+                    break;
+                case 'reward':
+                    timeline.push(rewardTrials);
+                    break;
+                case 'control':
+                    timeline.push(controlRating);
+                    break;
+                case 'confidence':
+                    timeline.push(confidenceRating);
+                    break;
+            }
+        });
+    }
+    
+    return timeline;
+}
+
   const preload = {
     type: jsPsychPreload,
     images: [
@@ -116,6 +179,7 @@
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
+        explore_decision: parseInt(times.explore_decision),
         save_timeline_variables: true
       },
       {
@@ -170,7 +234,7 @@
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 4000,
+        predict_decision: parseInt(times.predict_decision),
         predict_choice: 500
       },
       {
@@ -179,7 +243,7 @@
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
         fuel_lvl: jsPsych.timelineVariable('fuel_lvl'),
-        predict_decision: 4000,
+        predict_decision: parseInt(times.predict_decision),
         predict_choice: 500
       }
     ],
@@ -208,7 +272,8 @@
         left: jsPsych.timelineVariable('left'),
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
-        reward_amount: jsPsych.timelineVariable('reward')
+        reward_amount: jsPsych.timelineVariable('reward'),
+        reward_decision: parseInt(times.reward_decision)
       },
       {
         timeline: [{
@@ -243,15 +308,16 @@
       }
     ]
   };
-  jsPsych.run([
-    preload,
-    instructionTrial,
-    exploreTrials, 
-    controlRating,
-    predictionTrials,
-    confidenceRating,
-    rewardTrials
-  ]);
+  // jsPsych.run([
+  //   preload,
+  //   instructionTrial,
+  //   exploreTrials, 
+  //   controlRating,
+  //   predictionTrials,
+  //   confidenceRating,
+  //   rewardTrials
+  // ]);
+  jsPsych.run(buildTimeline());
 </script>
 
 </html>
