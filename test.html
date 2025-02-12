@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Plugin Test</title>
+  <script src="jspsych/jspsych.js"></script>
+  <script>
+    // Initialize jsPsych object
+    let jsPsych = initJsPsych({
+      display_element: 'display_element',
+      on_finish: function () {
+        jsPsych.data.displayData('json');
+      }
+    });
+    // window.sessionNum = jsPsych.data.getURLVariable('session_num');
+    // window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    // window.debug = prolificPID.includes("debug");
+  </script>
+  <script src="jspsych/plugin-html-keyboard-response.js"></script>
+  <script src="jspsych/plugin-html-button-response.js"></script>
+  <script src="jspsych/plugin-instructions.js"></script>
+  <script src="jspsych/plugin-preload.js"></script>
+  <script src="jspsych/plugin-fullscreen.js"></script>
+  <script src="plugin-html-vas-response.js"></script>
+  <script src="control_instructions.js"></script>
+  <script src="utils.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-explore-trial.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-predict-trial.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
+  <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+  <link href="instruction_style.css" rel="stylesheet" type="text/css" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<style>
+  .jsPsychDE {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+</style>
+
+<body>
+  <div id='display_element' class='jsPsychDE'></div>
+</body>
+<script>
+  const preload = {
+    type: jsPsychPreload,
+    images: [
+      "ocean.png",
+      "ocean_above.png",
+      "simple_island_banana.png",
+      "simple_island_coconut.png",
+      "simple_island_grape.png",
+      "simple_island_orange.png",
+      "simple_ship_blue.png",
+      "simple_ship_green.png",
+      "simple_ship_red.png",
+      "simple_ship_yellow.png",
+      "island_icon_banana.png",
+      "island_icon_coconut.png",
+      "island_icon_grape.png",
+      "island_icon_orange.png",
+      "simple_ship_icon_blue.png",
+      "simple_ship_icon_green.png",
+      "simple_ship_icon_red.png",
+      "simple_ship_icon_yellow.png",
+      "left.png",
+
+    ].map(s => "imgs/" + s),
+    post_trial_gap: 800,
+    continue_after_error: true
+  };
+
+  // Self-report ratings
+  const controlRating = {
+    timeline: [{
+      type: jsPsychHtmlVasResponse,
+      stimulus: "<p>How in control do you feel at this moment?</p>",
+      prompt: "<p>Click on the slider to indicate your response.</p>",
+      scale_width: 600,
+      labels: ["Not at all in control", "I don't know", "Completely in control"],
+      required: true
+    }],
+    conditional_function: function () {
+      const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
+      return last_trial_choice !== null;
+    }
+  };
+
+  const confidenceRating = {
+    timeline: [{
+      type: jsPsychHtmlVasResponse,
+      stimulus: "<p>How confident are you that your last choice was correct?</p>",
+      prompt: "<p>Click on the slider to indicate your response.</p>",
+      scale_width: 600,
+      labels: ["Not at all", "Very confident"],
+      required: true
+    }],
+    conditional_function: function () {
+      const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
+      return last_trial_choice !== null;
+    }
+  };
+
+  const warningTrial = noChoiceWarning("response");
+
+  const exploreTrials = {
+    timeline: [
+      {
+        type: jsPsychExploreShip,
+        left: jsPsych.timelineVariable('left'),
+        right: jsPsych.timelineVariable('right'),
+        near: jsPsych.timelineVariable('near'),
+        current: jsPsych.timelineVariable('current'),
+        save_timeline_variables: true
+      },
+      {
+        timeline: [{
+          type: jsPsychExploreShipFeedback,
+          effort_threshold: 10,
+          scale: 0.6,
+          feedback_duration: 2000
+        }],
+        conditional_function: function () {
+          const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
+          return lastTrialChoice !== null;
+        }
+      },
+      {
+        timeline: [{
+          type: jsPsychHtmlKeyboardResponse,
+          choices: "NO_KEYS",
+          stimulus: "",
+          data: {
+            trialphase: "no_choice_warning"
+          },
+          trial_duration: 1000,
+          on_load: function () {
+            showTemporaryWarning("Don't forget to participate!", 800);
+          }
+        }],
+        conditional_function: function () {
+          const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
+          return last_trial_choice === null;
+        }
+      }
+    ],
+    timeline_variables: [
+      {
+        left: "green",
+        right: "blue",
+        near: "coconut",
+        current: 3
+      },
+      {
+        left: "red",
+        right: "yellow",
+        near: "orange",
+        current: 1
+      }
+    ]
+  };
+
+  const predictionTrials = {
+    timeline: [
+      {
+        type: jsPsychPredictHomeBase,
+        ship: jsPsych.timelineVariable('ship'),
+        predict_decision: 4000,
+        predict_choice: 500
+      },
+      {
+        type: jsPsychPredictDest,
+        ship: jsPsych.timelineVariable('ship'),
+        near: jsPsych.timelineVariable('near'),
+        current: jsPsych.timelineVariable('current'),
+        fuel_lvl: jsPsych.timelineVariable('fuel_lvl'),
+        predict_decision: 4000,
+        predict_choice: 500
+      }
+    ],
+    timeline_variables: [
+      {
+        ship: "blue",
+        near: "orange",
+        current: 1,
+        fuel_lvl: 75
+      },
+      {
+        ship: "yellow",
+        near: "coconut",
+        current: 3,
+        fuel_lvl: 15
+      }
+    ]
+  };
+
+  const rewardTrials = {
+    timeline: [
+      {
+        type: jsPsychRewardShip,
+        target: jsPsych.timelineVariable('target'),
+        near: jsPsych.timelineVariable('near'),
+        left: jsPsych.timelineVariable('left'),
+        right: jsPsych.timelineVariable('right'),
+        current: jsPsych.timelineVariable('current'),
+        reward_amount: jsPsych.timelineVariable('reward')
+      },
+      {
+        timeline: [{
+          type: jsPsychRewardShipFeedback,
+          target_island: jsPsych.timelineVariable('target'),
+          effort_threshold: 10,
+          scale: 0.6,
+          feedback_duration: 2000
+        }],
+        conditional_function: function () {
+          const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
+          return lastTrialChoice !== null;
+        }
+      }
+    ],
+    timeline_variables: [
+      {
+        target: "grape",
+        near: "banana",
+        left: "green",
+        right: "yellow",
+        current: 2,
+        reward: "50p"
+      },
+      {
+        target: "coconut",
+        near: "grape",
+        left: "blue",
+        right: "red",
+        current: 3,
+        reward: "100p"
+      }
+    ]
+  };
+  jsPsych.run([
+    preload,
+    instructionTrial,
+    exploreTrials, 
+    controlRating,
+    predictionTrials,
+    confidenceRating,
+    rewardTrials
+  ]);
+</script>
+
+</html>
