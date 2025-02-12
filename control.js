@@ -310,70 +310,6 @@ const exploreFeedback = {
   }
 };
 
-// Warnings for unresponsive trials
-// Function to create and show warning
-function showTemporaryWarning(message, duration = 800) {
-  // Create warning element
-  const warningElement = document.createElement('div');
-  warningElement.id = 'vigour-warning-temp';
-  warningElement.innerText = message;
-
-  // Style the warning
-  warningElement.style.cssText = `
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    background-color: rgba(244, 206, 92, 0.9);
-    padding: 15px 25px;
-    border-radius: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 24px;
-    font-weight: 500;
-    color: #182b4b;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    text-align: center;
-    letter-spacing: 0.0px;
-  `;
-
-  // Add to document body
-  document.body.appendChild(warningElement);
-
-  // Force reflow to ensure transition works
-  warningElement.offsetHeight;
-
-  // Show warning
-  warningElement.style.opacity = '1';
-
-  // Remove after duration
-  setTimeout(() => {
-    warningElement.style.opacity = '0';
-    setTimeout(() => {
-      warningElement.remove();
-    }, 200); // Wait for fade out transition
-  }, duration);
-}
-const noChoiceWarning = {
-  timeline: [{
-    type: jsPsychHtmlKeyboardResponse,
-    choices: "NO_KEYS",
-    stimulus: "",
-    data: {
-      trialphase: "no_choice_warning"
-    },
-    trial_duration: 1000,
-    on_load: function () {
-      showTemporaryWarning("Don't forget to participate!", 800);
-    }
-  }],
-  conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
-    return last_trial_choice === null;
-  }
-};
-
 // Prediction trial
 
 function highlightHomeBaseChoice(event) {
@@ -740,7 +676,6 @@ const rewardTrial = {
         window.choice_rt = info.rt;
         jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
 
-        // Start the second timer for 3000ms
         jsPsych.pluginAPI.setTimeout(() => {
           jsPsych.finishTrial();
         }, ctrlConfig.reward_effort);
@@ -794,7 +729,6 @@ const rewardTrial = {
       minimum_valid_rt: 100
     });
 
-    // Start the first timer for 2000ms
     jsPsych.pluginAPI.setTimeout(() => {
       if (!selectedKey) {
         jsPsych.finishTrial();
@@ -920,10 +854,12 @@ const rewardConditions = [
 ];
 
 // Timelines
+const warningTrial = noChoiceWarning("response");
+
 var expTimeline = [];
 exploreConditions.forEach(trial => {
   expTimeline.push({
-    timeline: [exploreTrial, exploreFeedback, noChoiceWarning, controlRating],
+    timeline: [exploreTrial, exploreFeedback, warningTrial, controlRating],
     timeline_variables: [trial]
   });
 });
@@ -931,7 +867,7 @@ exploreConditions.forEach(trial => {
 var predictionTimeline = [];
 predictionConditions.forEach(trial => {
   predictionTimeline.push({
-    timeline: [predictHomeBaseTrial, noChoiceWarning, confidenceRating, predictDestTrial, noChoiceWarning, confidenceRating],
+    timeline: [predictHomeBaseTrial, warningTrial, confidenceRating, predictDestTrial, warningTrial, confidenceRating],
     timeline_variables: [trial]
   });
 });
@@ -939,7 +875,7 @@ predictionConditions.forEach(trial => {
 var rewardTimeline = [];
 rewardConditions.forEach(trial => {
   rewardTimeline.push({
-    timeline: [rewardTrial, rewardFeedback, noChoiceWarning, controlRating],
+    timeline: [rewardTrial, rewardFeedback, warningTrial, controlRating],
     timeline_variables: [trial]
   });
 });
