@@ -383,13 +383,17 @@
 /* Mobile responsiveness */
 @media (max-width: 900px) {
   .instruction-stage {
-      width: 100%;
-      height: 100vh;
+      width: 100vw;
+      height: 85vh;
   }
 
   .instruction-dialog {
-      width: 90%;
+      width: 100vw;
       padding: 15px;
+  }
+
+  .instruction-content {
+      font-size: 14px;
   }
 
   .label {
