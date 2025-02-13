@@ -119,7 +119,12 @@ const maxPressInstructions = {
     stimulus: `
     <div id="instruction-container">
         <div id="instruction-text" style="text-align: left;">
-            <p>Before we start the first game, we need to complete a short test of your keyboard. On the next screen, you will need to <span class="highlight">press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can.</span></p>
+            <p>Before we start the first game, we need to complete a short test of your keyboard: Please <span class="highlight">P
+            press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can.</span></p>
+            <ol>
+                <li>Please start pressing repeatedly when you are ready.</li>
+                <li>Keep pressing <span class="spacebar-icon">J</span> as fast as you can until timer runs out</li>
+            </ol>
         </div>
     </div>
     `,
@@ -134,7 +139,7 @@ const maxPressFeedback = {
         <div id="instruction-container">
             <div id="instruction-text" style="text-align: center;">
                 <h2><span class="highlight">Well done!</span></h2>
-                <p>On average, you pressed <strong>${data.avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
+                <p>On average, you pressed <strong>${data.avgSpeed.toFixed(2)} times per second</strong> during the test.</p>
                 <p>Press <strong>Continue</strong> to proceed to the first game.</p>
             </div>
         </div>
