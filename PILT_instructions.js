@@ -17,12 +17,6 @@ function prepare_PILT_instructions() {
         pages: () => {
 
             let pages = [
-                `<p><b>Thank you for taking part in this study!</b></p>
-                <p>The purpose of this study is to examine how people learn from positive and negative feedback while playing games.
-                <p>In this study, you'll play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
-                <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
-                <p>Let's start with the first game!</p>
-                `
             ];
 
             pages = pages.concat([
@@ -354,7 +348,7 @@ const test_instructions = {
     css_classes: ['instructions'],
     pages: [
         '<p>You will now continue to another round of the card choosing game.</p>\
-            <p>The game proceeds the same as before, except you won\'t be able to see the coins you discover and collect.</p>\
+            <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
             <p>You will be presented with cards you already know. Do you best to choose the best card possible on each turn.</p>'
     ],
     show_clickable_nav: true,
@@ -368,9 +362,10 @@ const WM_instructions = [
         css_classes: ['instructions'],
         pages: [
             '<p>Next, you will return to the card choosing game.</p>\
-                <p>Your goal remains to collect and keep from breaking as many high-value coins as you can.</p>',
+                <p>Your goal remains to add as much money as you can to your safe.</p>',
             `<p>This time, you will choose between three cards on every turn.<p>
-            <p>In every triplet, one picture card will have only high-value coins behind it, while the other two cards will have only pennies.<p>`,
+            <p>In every triplet, one picture card will have only one pound and fifty pence coins behind it, while the other two cards will have only pennies.<p>
+            <p>You can earn more by learning which is the better picture card in each triplet and choosing that card when you next see same triplet.</p>`,
             `<p>Use the right arrow key to choose the card on the right, the left arrow key to choose the card on the left, 
             and <b>use the upwards arrow key to choose the card in the middle.</b>
             `
