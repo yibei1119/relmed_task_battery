@@ -362,10 +362,9 @@ const WM_instructions = [
         css_classes: ['instructions'],
         pages: [
             '<p>Next, you will return to the card choosing game.</p>\
-                <p>Your goal remains to add as much money as you can to your safe.</p>',
+                <p>Your goal remains to collect as many high-value coins as you can.</p>',
             `<p>This time, you will choose between three cards on every turn.<p>
-            <p>In every triplet, one picture card will have only one pound and fifty pence coins behind it, while the other two cards will have only pennies.<p>
-            <p>You can earn more by learning which is the better picture card in each triplet and choosing that card when you next see same triplet.</p>`,
+            <p>In every triplet, one picture card will have only one pound and fifty pence coins behind it, while the other two cards will have only pennies.<p>`,
             `<p>Use the right arrow key to choose the card on the right, the left arrow key to choose the card on the left, 
             and <b>use the upwards arrow key to choose the card in the middle.</b>
             `
