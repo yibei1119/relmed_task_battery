@@ -127,8 +127,6 @@ function build_post_PILT_test(structure) {
         });
     }
 
-    console.log(test)
-
     return test
 }
 
