@@ -239,7 +239,10 @@ const instructionPages = [
                     alt="Chosen ship" />
                 </div>
             </section>
-            ${createInstructionDialog(`<p>Great, the boat had enough fuel this time! When boats have enough fuel, they will return to their homebase. This <span class="highlight-txt">blue boat</span> has the <strong>grape island</strong> as a homebase.</p>`)}
+            ${createInstructionDialog(`
+                <p>Great, the boat had enough fuel this time! When boats have enough fuel, they will return to their homebase. This <span class="highlight-txt">blue boat</span> has the <strong>grape island</strong> as a homebase.</p>
+                <p>Note that the boats can also start from and sail back to their home bases.</p>
+            `)}
             ${createProgressBar(6, nPages)}
         </div>
         `
