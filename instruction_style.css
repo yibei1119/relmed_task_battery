@@ -248,6 +248,8 @@
 
 .instruction-stage .destination-island {
   height: 17.5vh;
+  bottom: 55%;
+  top: auto;
 }
 
 .instruction-stage .ship-feedback {
