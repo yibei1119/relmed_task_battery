@@ -77,6 +77,92 @@ const createKeyAnimation = (direction) => {
 `;
 };
 
+// New helper to abstract the fuel trial common behavior
+function setupFuelTrial(config) {
+    let selectedKey = null;
+    let trialPresses = 0;
+    const leftArrow = document.querySelector('.arrow-left');
+    const rightArrow = document.querySelector('.arrow-right');
+    const leftContainer = document.querySelector('.fuel-container-left');
+    const rightContainer = document.querySelector('.fuel-container-right');
+
+    // Listener for the first key press
+    const firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: handleFirstKey,
+        valid_responses: ['ArrowLeft', 'ArrowRight'],
+        rt_method: 'performance',
+        persist: false,
+        allow_held_key: false,
+        minimum_valid_rt: 100
+    });
+    
+    function createFuelIcon(container) {
+        const fuelIcon = document.createElement('img');
+        fuelIcon.src = 'imgs/fuel.png';
+        fuelIcon.className = 'fuel-icon fuel-animation';
+        container.appendChild(fuelIcon);
+        fuelIcon.addEventListener('animationend', () => {
+            container.removeChild(fuelIcon);
+        });
+    }
+    
+    function handleFirstKey(info) {
+        jsPsych.pluginAPI.cancelKeyboardResponse(firstKeyListener);
+        const selectionIndicator = document.querySelector('.selection-indicator');
+        if (selectionIndicator) { selectionIndicator.remove(); }
+        if (info.key === 'ArrowLeft') {
+            selectedKey = 'left';
+            leftArrow.classList.add('highlight');
+            document.querySelector('.choice-right').style.visibility = 'hidden';
+            document.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
+        } else if (info.key === 'ArrowRight') {
+            selectedKey = 'right';
+            rightArrow.classList.add('highlight');
+            document.querySelector('.choice-left').style.visibility = 'hidden';
+            document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
+        }
+        document.querySelector('.instruction-content').innerHTML = config.initialMessage;
+        setupRepeatedKeyListener();
+    }
+    
+    let repeatedKeyListener;
+    function setupRepeatedKeyListener() {
+        repeatedKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
+            callback_function: handleRepeatedKeypress,
+            valid_responses: selectedKey === 'left' ? ['ArrowLeft'] : ['ArrowRight'],
+            rt_method: 'performance',
+            persist: true,
+            allow_held_key: false,
+            minimum_valid_rt: 0
+        });
+    }
+    
+    function handleRepeatedKeypress(info) {
+        trialPresses++;
+        const container = selectedKey === 'left' ?
+            document.querySelector('.fuel-container-left') :
+            document.querySelector('.fuel-container-right');
+        const fuelBar = container.querySelector('.fuel-indicator-bar');
+        // Update progress via a progressCalculation function
+        const progress = Math.min(config.progressCalculation(trialPresses), 100);
+        fuelBar.style.width = `${progress}%`;
+
+        if (progress === 100) {
+            fuelBar.style.backgroundColor = '#00ff00';
+        }
+
+        createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
+        // When finishCondition returns true, finish the trial.
+        if (config.finishCondition(trialPresses, progress)) {
+            jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
+            document.querySelector('.instruction-content').innerHTML = config.finishMessage;
+            jsPsych.pluginAPI.setTimeout(() => {
+                jsPsych.finishTrial();
+            }, config.finishDelay || 2000);
+        }
+    }
+}
+
 // Main instruction pages configuration
 const nPages = 7;
 const instructionPages = [
@@ -282,7 +368,7 @@ var instructionTrial = instructionPages.map((page, i) => {
     };
 });
 
-
+// Refactored trial 1 using setupFuelTrial
 instructionTrial[1] = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: instructionPages[1].content,
@@ -290,122 +376,22 @@ instructionTrial[1] = {
     trial_duration: null,
     on_load: () => {
         document.querySelector('#keypress-prompt').style.visibility = 'hidden';
-
-        // Initial keyboard listener for the first choice
-        var selectedKey = null;
-        var trial_presses = 0;
-
-        const leftArrow = document.querySelector('.arrow-left');
-        const rightArrow = document.querySelector('.arrow-right');
-        const leftContainer = document.querySelector('.fuel-container-left');
-        const rightContainer = document.querySelector('.fuel-container-right');
-
-        // Function to create and animate a fuel icon
-        function createFuelIcon(container) {
-            const fuelIcon = document.createElement('img');
-            fuelIcon.src = 'imgs/fuel.png';
-            fuelIcon.className = 'fuel-icon fuel-animation';
-            container.appendChild(fuelIcon);
-
-            // Remove the fuel icon after animation completes
-            fuelIcon.addEventListener('animationend', () => {
-                container.removeChild(fuelIcon);
-            });
-        }
-
-        // Function to handle keyboard responses
-        function handleKeypress(info) {
-            if (!selectedKey) {  // First key press - only select the ship
-                jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
-
-                const selectionIndicator = document.querySelector('.selection-indicator');
-                if (selectionIndicator) {
-                    selectionIndicator.remove();
-                }
-                if (info.key === 'ArrowLeft') {
-                    selectedKey = 'left';
-                    leftArrow.classList.add('highlight');
-                    document.querySelector('.choice-right').style.visibility = 'hidden';
-                    // Show the progress bar
-                    document.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
-                    repeatedKey_listener = setupRepeatedKeypress('ArrowLeft');
-                } else if (info.key === 'ArrowRight') {
-                    selectedKey = 'right';
-                    rightArrow.classList.add('highlight');
-                    document.querySelector('.choice-left').style.visibility = 'hidden';
-                    // Show the progress bar
-                    document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
-                    repeatedKey_listener = setupRepeatedKeypress('ArrowRight');
-                }
-                // Update instruction text
-                document.querySelector('.instruction-content').innerHTML =
-                    `<p>You can now load up fuel by pressing the same key again and again.</p>
-                    <p><strong>Give it a try!</strong></p>`;
-            }
-        }
-
-        // Function to handle repeated keypresses
-        function handleRepeatedKeypress(info) {
-            trial_presses++;
-            lastPressTime = info.rt;
-
-            // Create and animate fuel icon
-            createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
-
-            // Update fuel indicator bar
-            const container = selectedKey === 'left' ?
-                document.querySelector('.fuel-container-left') :
-                document.querySelector('.fuel-container-right');
-            const fuelBar = container.querySelector('.fuel-indicator-bar');
-
-            // Calculate progress (40 presses = 100%)
-            const progress = Math.min((trial_presses / 40) * 100, 100);
-            fuelBar.style.width = `${progress}%`;
-
-            // Optional: Change color when full
-            if (progress === 100) {
-                fuelBar.style.backgroundColor = '#00ff00';
-            }
-
-            if (trial_presses >= 6) {
-                jsPsych.pluginAPI.cancelKeyboardResponse(this.repeatedKey_listener);
-                document.querySelector('.instruction-content').innerHTML =
-                    `<p>Fueling time is limited. The boat has to leave now!</p>`;
-                jsPsych.pluginAPI.setTimeout(() => {
-                    jsPsych.finishTrial();
-                }, 2000);
-            }
-        }
-
-        // Function to set up listener for repeated keypresses
-        function setupRepeatedKeypress(key) {
-            var listener = jsPsych.pluginAPI.getKeyboardResponse({
-                callback_function: handleRepeatedKeypress,
-                valid_responses: [key],
-                rt_method: 'performance',
-                persist: true,
-                allow_held_key: false,
-                minimum_valid_rt: 0
-            });
-            return listener;
-        }
-
-        // Initial keyboard listener for the first choice
-        const firstKey_listener = jsPsych.pluginAPI.getKeyboardResponse({
-            callback_function: handleKeypress,
-            valid_responses: ['ArrowRight'],
-            rt_method: 'performance',
-            persist: false,
-            allow_held_key: false,
-            minimum_valid_rt: 100
+        setupFuelTrial({
+            initialMessage: `<p>You can now load up fuel by pressing the same key again and again.</p>
+            <p><strong>Give it a try!</strong></p>`,
+            progressCalculation: (trialPresses) => (trialPresses / 40) * 100,
+            // Finish trial when 6 fuel presses have been recorded.
+            finishCondition: (trialPresses, progress) => trialPresses >= 6,
+            finishMessage: `<p>Fueling time is limited. The boat has to leave now!</p>`
         });
     },
     on_finish: () => {
-        jsPsych.pluginAPI.clearAllTimeouts()
+        jsPsych.pluginAPI.clearAllTimeouts();
         jsPsych.pluginAPI.cancelAllKeyboardResponses();
     }
 };
 
+// Refactored trial 4 using setupFuelTrial
 instructionTrial[4] = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: instructionPages[4].content,
@@ -413,114 +399,17 @@ instructionTrial[4] = {
     trial_duration: null,
     on_load: () => {
         document.querySelector('#keypress-prompt').style.visibility = 'hidden';
-
-        // Initial keyboard listener for the first choice
-        var selectedKey = null;
-        var trial_presses = 0;
-
-        const leftArrow = document.querySelector('.arrow-left');
-        const rightArrow = document.querySelector('.arrow-right');
-        const leftContainer = document.querySelector('.fuel-container-left');
-        const rightContainer = document.querySelector('.fuel-container-right');
-
-        // Function to create and animate a fuel icon
-        function createFuelIcon(container) {
-            const fuelIcon = document.createElement('img');
-            fuelIcon.src = 'imgs/fuel.png';
-            fuelIcon.className = 'fuel-icon fuel-animation';
-            container.appendChild(fuelIcon);
-
-            // Remove the fuel icon after animation completes
-            fuelIcon.addEventListener('animationend', () => {
-                container.removeChild(fuelIcon);
-            });
-        }
-
-        // Function to handle keyboard responses
-        function handleKeypress(info) {
-            if (!selectedKey) {  // First key press - only select the ship
-                jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
-
-                const selectionIndicator = document.querySelector('.selection-indicator');
-                if (selectionIndicator) {
-                    selectionIndicator.remove();
-                }
-                if (info.key === 'ArrowLeft') {
-                    selectedKey = 'left';
-                    leftArrow.classList.add('highlight');
-                    document.querySelector('.choice-right').style.visibility = 'hidden';
-                    // Show the progress bar
-                    document.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
-                    repeatedKey_listener = setupRepeatedKeypress('ArrowLeft');
-                } else if (info.key === 'ArrowRight') {
-                    selectedKey = 'right';
-                    rightArrow.classList.add('highlight');
-                    document.querySelector('.choice-left').style.visibility = 'hidden';
-                    // Show the progress bar
-                    document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
-                    repeatedKey_listener = setupRepeatedKeypress('ArrowRight');
-                }
-                // Update instruction text
-                document.querySelector('.instruction-content').innerHTML =
-                    `<p>Keep adding fuel to the boat until it's full!</p>`;
-            }
-        }
-
-        // Function to handle repeated keypresses
-        function handleRepeatedKeypress(info) {
-            trial_presses++;
-            lastPressTime = info.rt;
-
-            // Create and animate fuel icon
-            createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
-
-            // Update fuel indicator bar
-            const container = selectedKey === 'left' ?
-                document.querySelector('.fuel-container-left') :
-                document.querySelector('.fuel-container-right');
-            const fuelBar = container.querySelector('.fuel-indicator-bar');
-
-            // Calculate progress (40 presses = 100%)
-            const progress = Math.min((trial_presses / 40) * 100, 100);
-            fuelBar.style.width = `${progress}%`;
-
-            // Optional: Change color when full
-            if (progress === 100) {
-                fuelBar.style.backgroundColor = '#00ff00';
-                jsPsych.pluginAPI.cancelKeyboardResponse(this.repeatedKey_listener);
-                document.querySelector('.instruction-content').innerHTML =
-                    `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`;
-                jsPsych.pluginAPI.setTimeout(() => {
-                    jsPsych.finishTrial();
-                }, 2000);
-            }
-        }
-
-        // Function to set up listener for repeated keypresses
-        function setupRepeatedKeypress(key) {
-            var listener = jsPsych.pluginAPI.getKeyboardResponse({
-                callback_function: handleRepeatedKeypress,
-                valid_responses: [key],
-                rt_method: 'performance',
-                persist: true,
-                allow_held_key: false,
-                minimum_valid_rt: 0
-            });
-            return listener;
-        }
-
-        // Initial keyboard listener for the first choice
-        const firstKey_listener = jsPsych.pluginAPI.getKeyboardResponse({
-            callback_function: handleKeypress,
-            valid_responses: ['ArrowRight'],
-            rt_method: 'performance',
-            persist: false,
-            allow_held_key: false,
-            minimum_valid_rt: 100
+        setupFuelTrial({
+            initialMessage: `<p>Keep adding fuel to the boat until it's full!</p>`,
+            // Update progress based on 40 presses (i.e. progress runs from 0 to 100%).
+            progressCalculation: (trialPresses) => (trialPresses / 40) * 100,
+            // Finish trial when the fuel bar reaches 100% width.
+            finishCondition: (trialPresses, progress) => progress >= 100,
+            finishMessage: `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`
         });
     },
     on_finish: () => {
-        jsPsych.pluginAPI.clearAllTimeouts()
+        jsPsych.pluginAPI.clearAllTimeouts();
         jsPsych.pluginAPI.cancelAllKeyboardResponses();
     }
 };
