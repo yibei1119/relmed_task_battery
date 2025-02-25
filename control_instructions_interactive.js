@@ -178,8 +178,8 @@ const instructionPages = [
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
-                <h2>Welcome to Your New Job!</h2>
-                <p>You have just started as the manager of a shipping network trading different types of fruits.</p>
+                <h2>Welcome to Your New Position!</h2>
+                <p>You have just started as the manager of a shipping network, trading different types of fruits.</p>
                 <p>Your role is to oversee the transportation of valuable cargo between islands.</p>
                 `)}
             ${createProgressBar(1, nPages)}
@@ -217,7 +217,7 @@ const instructionPages = [
             ${createInstructionDialog(`
                 <p>As a manager, you will need to choose the right boat, and decide how much fuel to load it up with.</p>
                 <p>Choose one of the boats by pressing the left or right arrow key.</p>
-                <p><strong>Let's try it out by pressing the right arrow key to select the blue boat.</strong></p>
+                <p>Let's try it out to <strong>select the blue boat by pressing the right arrow key.</strong></p>
             `)}
             ${createProgressBar(2, nPages)}
         </div>
@@ -245,7 +245,9 @@ const instructionPages = [
                     alt="Chosen ship" />
                 </div>
             </section>
-            ${createInstructionDialog(`<p>The boat ran out of fuel midway. Luckily, the ocean currents tend to carry boats with insufficient fuel to the next island in the chain...</p>`)}
+            ${createInstructionDialog(`
+                <p>The boat didn't have enough fuel and ran out of fuel midway. Luckily, the ocean currents tend to carry boats with insufficient fuel to the next island in the chain.</p>
+                <p>So the boat just drifted from the <span style="color: gold">banana island</span>🍌 to the <span style="color: brown">coconut island</span>🥥, which is the next island in the chain.</p>`)}
             ${createProgressBar(3, nPages)}
         </div>
         `
@@ -258,8 +260,8 @@ const instructionPages = [
             <img class="background" src="imgs/default_islands.png" alt="Background"/>
             ${createInstructionDialog(`
                 <p>Thanks to many former managers, this is a map of the four islands in the network. The arrows show how the ocean currents work.</p>
-                <p>When a ship does not have sufficient fuel, the current carries it to the next island along the arrows.</p>
-                <p>For example, without fuel, a boat leaving the banana island will end up on the coconut island.</p>
+                <p><strong>When a boat does not have sufficient fuel, the current carries it to the next island along the arrows.</strong></p>
+                <p>For example, without fuel, a boat leaving the <span style="color: orange">orange island</span>🍊 will end up on the <span style="color: gold">banana island</span>🍌.</p>
             `)}
             ${createProgressBar(4, nPages)}
         </div>
@@ -295,8 +297,9 @@ const instructionPages = [
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
-                <p>Let's try it again. In the distance, you can see the next island in the chain. This is where you'll end up if you don't fuel up enough.</p>
-                <p>Try to fuel up fully now. We'll give you some extra time.</p>
+                <p>Let's try it again. <strong>Now in the distance, you can see the next island in the chain.</strong> This is where you'll end up if you don't fuel up enough.</p>
+                <p>Try to fuel up fully this time by rapidly pressing the arrow key repeatedly.</p>
+                <p>Don't worry! We'll give you some extra time.</p>
             `)}
             ${createProgressBar(5, nPages)}
         </div>
@@ -326,8 +329,9 @@ const instructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, the boat had enough fuel this time! When boats have enough fuel, they will return to their homebase. This <span class="highlight-txt">blue boat</span> has the <strong>grape island</strong> as a homebase.</p>
-                <p>Note that the boats can also start from and sail back to their home bases.</p>
+                <p>Great, the boat had enough fuel this time! When a boat have enough fuel, it will try to return to its homebase.</p>
+                <p>This <span style="color: royalblue">blue boat</span> has a <span style="color: purple">grape island</span>🍇 as the homebase. Because it's fueled up this time, it went to its homebase island instead of drifting with the current to the next island.</p>
+                <p><strong>Note that the boats can also start from and sail back to their home bases.</strong></p>
             `)}
             ${createProgressBar(6, nPages)}
         </div>
@@ -341,11 +345,11 @@ const instructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(2)}
             <div class="current-indicator">
-                <div class="label">Ocean Current level: Mid</div>
+                <div class="label">Ocean Current level: 2 = Mid</div>
             </div>
             ${createInstructionDialog(`
-                <p>So now, please keep trying this out. We will always give you information on how strong the ocean currents are that day (Low, Mid, and High).</p>
-                <p>The stronger the current, the more you'll have to fuel the boat if you want it to go to its homebase.</p>
+                <p>So now, please keep trying these out. We will always give you information on how strong the ocean currents are that day (<span style="color: darkgray">1 = Low</span>, <span style="color: dimgray">2 = Mid</span>, and <span style="color: black">3 = High</span>).</p>
+                <p>The stronger the current, the more you'll have to fuel the boat <strong>if you want it to go to its homebase.</strong></p>
                 <p>Your first job as a new manager is to get a sense of all of this. When you're ready, press the button to start.</p>
             `)}
             ${createProgressBar(7, nPages)}
@@ -377,8 +381,8 @@ instructionTrial[1] = {
     on_load: () => {
         document.querySelector('#keypress-prompt').style.visibility = 'hidden';
         setupFuelTrial({
-            initialMessage: `<p>You can now load up fuel by pressing the same key again and again.</p>
-            <p><strong>Give it a try!</strong></p>`,
+            initialMessage: `<p>You can now load up fuel by <strong>pressing the same arrow key again and again.</strong> The fuel gauge will fill up as you press the key.</p>
+            <p>Give it a try!</p>`,
             progressCalculation: (trialPresses) => (trialPresses / 40) * 100,
             // Finish trial when 6 fuel presses have been recorded.
             finishCondition: (trialPresses, progress) => trialPresses >= 6,
