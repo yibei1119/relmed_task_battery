@@ -14,16 +14,16 @@
         });
         
         // Get condition from URL, all caps are prolific, lowercase are ours
-        window.relmedPID = jsPsych.data.getURLVariable('RELMED_PID');
-        window.debug = window.relmedPID.includes("debug");
-        window.demo = window.relmedPID.includes("DEMO") | window.relmedPID.includes("STAF");
+        window.participantID = jsPsych.data.getURLVariable('RELMED_PID');
+        window.debug = window.participantID.includes("debug");
+        window.demo = window.participantID.includes("DEMO") | window.participantID.includes("STAF");
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.sessionNum = jsPsych.data.getURLVariable('session_num');
         window.task = jsPsych.data.getURLVariable('task');
 
         // Save participant variables to data
         jsPsych.data.addProperties({
-            relmed_pid: window.relmedPID,
+            participant_id: window.participantID,
             session: window.sessionNum,
             n_warnings: 0,
             version: "0.2",
@@ -248,7 +248,7 @@
         }
 
         // Run
-        if (window.relmedPID.includes("simulate")) {
+        if (window.participantID.includes("simulate")) {
             const simulation_options = {
                 default: {
                     data: {
