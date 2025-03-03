@@ -72,8 +72,8 @@ function prepare_PILT_instructions() {
                 timeline: build_PILT_task(
                     [[
                         {
-                            stimulus_left: "ukulele1.jpg",
-                            stimulus_right: "envelope1.jpg",
+                            stimulus_left: "ukulele_1.jpg",
+                            stimulus_right: "envelope_1.jpg",
                             stimulus_middle: "",
                             feedback_middle: "",
                             n_stimuli: 2,
@@ -92,7 +92,8 @@ function prepare_PILT_instructions() {
                             n_groups: 1,
                             rest_1pound: 0,
                             rest_50pence: 0,
-                            rest_1penny: 0
+                            rest_1penny: 0,
+                            early_stop: false
                         }
                     ]],
                     false
@@ -139,8 +140,8 @@ function prepare_PILT_instructions() {
                 [
                     dumbbell_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "strainer1.jpg" : "can2.jpg",
-                            stimulus_right: e ? "can2.jpg" : "strainer1.jpg",
+                            stimulus_left: e ? "strainer_1.jpg" : "can_2.jpg",
+                            stimulus_right: e ? "can_2.jpg" : "strainer_1.jpg",
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: true,
@@ -158,7 +159,8 @@ function prepare_PILT_instructions() {
                             n_groups: 1,
                             rest_1pound: 0,
                             rest_50pence: 0,
-                            rest_1penny: 0
+                            rest_1penny: 0,
+                            early_stop: false
                         })
                     )
                 ],
@@ -198,8 +200,8 @@ function prepare_PILT_instructions() {
                 [
                     hammer_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "harp1.jpg" : "cantaloupe1.jpg",
-                            stimulus_right: e ? "cantaloupe1.jpg" : "harp1.jpg",
+                            stimulus_left: e ? "harp_1.jpg" : "cantaloupe_1.jpg",
+                            stimulus_right: e ? "cantaloupe_1.jpg" : "harp_1.jpg",
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: true,
@@ -217,7 +219,8 @@ function prepare_PILT_instructions() {
                             n_groups: 1,
                             rest_1pound: 0,
                             rest_50pence: 0,
-                            rest_1penny: 0
+                            rest_1penny: 0,
+                            early_stop: false
                         })
                     )
                 ],
@@ -262,6 +265,7 @@ function prepare_PILT_instructions() {
         {
             type: jsPsychSurveyMultiChoice,
             questions: quiz_questions,
+            css_classes: ["instructions"],
             preamble: `<div class=instructions><p>For each statement, please indicate whether it is true or false:</p></div>`,
             data: {
                 trialphase: "instruction_quiz"
@@ -348,7 +352,7 @@ const test_instructions = {
     css_classes: ['instructions'],
     pages: [
         '<p>You will now continue to another round of the card choosing game.</p>\
-            <p>The game proceeds the same as before, except you won\'t be able to see the coins you discover and collect.</p>\
+            <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
             <p>You will be presented with cards you already know. Do you best to choose the best card possible on each turn.</p>'
     ],
     show_clickable_nav: true,
@@ -361,12 +365,11 @@ const WM_instructions = [
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `<p>Welcome back!</p>
-            <p>Next, you will return to the card choosing game.</p>\
-                <p>Your goal remains to collect and keep from breaking as many high-value coins as you can.</p>
-                <p>As before, this game is a little fast-paced, and everyone is expected to make more than a few mistakes.</p>`,
+            '<p>Next, you will return to the card choosing game.</p>\
+                <p>Your goal remains to add as much money as you can to your safe.</p>',
             `<p>This time, you will choose between three cards on every turn.<p>
-            <p>In every triplet, one picture card will have only high-value coins behind it, while the other two cards will have only pennies.<p>`,
+            <p>In every triplet, one picture card will have only one pound and fifty pence coins behind it, while the other two cards will have only pennies.<p>
+            <p>You can earn more by learning which is the better picture card in each triplet and choosing that card when you next see same triplet.</p>`,
             `<p>Use the right arrow key to choose the card on the right, the left arrow key to choose the card on the left, 
             and <b>use the upwards arrow key to choose the card in the middle.</b>
             `

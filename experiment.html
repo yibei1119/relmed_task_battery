@@ -5,7 +5,8 @@
     <title>RELMED</title>
     <script src="jspsych/jspsych.js"></script>
     <script>
-        window.maxWarnings = 8;
+        window.maxWarnings = 15;
+        window.interimWarning = 5;
 
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
@@ -25,9 +26,10 @@
             relmed_pid: window.relmedPID,
             session: window.sessionNum,
             n_warnings: 0,
-            version: "0.1",
+            version: "0.2",
             task: window.task,
-            module_start_time: jsPsych.getStartTime()
+            module_start_time: jsPsych.getStartTime(),
+            pre_kick_out_warned: false,
         })
     </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
@@ -46,6 +48,7 @@
     <script src="plugin-reversal.js"></script>
     <script src="reversal.js"></script>
     <script src="plugin-coin-lottery.js"></script>
+    <script src="press_test.js"></script>
     <script src="PILT.js"></script>
     <script src="PILT_instructions.js"></script>
     <script src="vigour.js"></script>
@@ -107,6 +110,20 @@
             message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
         }
     ]
+
+    const welcome_msgs = {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+        `<p><b>Thank you for taking part in this study!</b></p>
+                <p>The purpose of this study is to examine how people learn from positive and negative feedback while playing games.
+                <p>In this study, you'll play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
+                <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
+                `
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: "instruction"}
+    }
     
     // End of experiment message
     const end_experiment_msgs = [
@@ -131,16 +148,21 @@
         }
     ]
 
-    function run_full_experiment(PILT_structure, test_structure, WM_procedure){
+    function run_full_experiment(PILT_structure, test_structure, WM_procedure, WM_test_procedure){
 
         let procedure = [];
 
         // Preliminary screen checks and load images
         procedure = procedure.concat(preliminary_checks);
 
-        // Add PILT timeline
-        PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure);
+        // Welcome message
+        procedure.push(welcome_msgs);
 
+        // Add max press rate test
+        procedure = procedure.concat(maxPressTimeline);
+
+        // Add PILT timeline
+        PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure);
 
         if (window.task === "pilt-to-test") {
             procedure = procedure.concat(PILT_tasks.PILT_procedure);
