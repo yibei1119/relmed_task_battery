@@ -35,7 +35,7 @@ const maxPressRateTrial = {
         simulate: false
     },
     on_start: function (trial) {
-        if (window.prolificPID.includes("simulate")) {
+        if (window.participantID.includes("simulate")) {
             trial.trial_duration = 1000;
         }
         // Create a shared state object
@@ -133,7 +133,7 @@ const maxPressInstructions = {
 const maxPressFeedback = {
     type: jsPsychHtmlButtonResponse,
     stimulus: function() {
-        const data = window.prolificPID.includes("simulate") ? {avgSpeed: 0} : jsPsych.data.get().last(1).values()[0];
+        const data = window.participantID.includes("simulate") ? {avgSpeed: 0} : jsPsych.data.get().last(1).values()[0];
         return `
         <div id="instruction-container">
             <div id="instruction-text" style="text-align: center;">

@@ -75,7 +75,7 @@ const PITtrial = {
     total_reward: () => { return window.totalReward }
   },
   on_start: function (trial) {
-    if (window.relmedPID.includes("simulate")) {
+    if (window.participantID.includes("simulate")) {
       trial.trial_duration = 1000;
     }
     // Create a shared state object
