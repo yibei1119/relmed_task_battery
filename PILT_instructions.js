@@ -16,11 +16,7 @@ function prepare_PILT_instructions() {
             css_classes: ['instructions'],
             pages: () => {
 
-            let pages = [
-                `<p>Welcome back!</p>
-                <p>You will now play another game of trial and error learning.</p>
-                <p>Like before, this is a fast game, in which everyone is expected to make more than a few mistakes.</p>`,
-                ];
+            let pages = [];
 
             pages = pages.concat([
             `<p><b>THE CARD CHOOSING GAME</b></p>
