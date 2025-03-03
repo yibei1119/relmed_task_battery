@@ -155,16 +155,26 @@
         // Preliminary screen checks and load images
         procedure = procedure.concat(preliminary_checks);
 
-        // Welcome message
-        procedure.push(welcome_msgs);
-
-        // Add max press rate test
-        procedure = procedure.concat(maxPressTimeline);
-
         // Add PILT timeline
         PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure);
 
         if (window.task === "pilt-to-test") {
+
+            procedure.push({
+                type: jsPsychInstructions,
+                css_classes: ['instructions'],
+                pages:  [
+                `<p>Welcome back!</p>
+                <p>You will now play more games of trial and error learning.</p>
+                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
+                ],
+                show_clickable_nav: true,
+                data: {trialphase: "instruction"}
+            });
+
+            // Add max press rate test
+            procedure = procedure.concat(maxPressTimeline);
+
             procedure = procedure.concat(PILT_tasks.PILT_procedure);
             procedure = procedure.concat([
                 acceptability_intro,
@@ -218,6 +228,9 @@
         }
 
         if (window.task === "reversal") {
+            // Welcome message
+            procedure.push(welcome_msgs);
+
             // Add reversal timeline
             procedure = procedure.concat(reversal_instructions);
             procedure = procedure.concat(reversal_blocks);

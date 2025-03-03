@@ -92,12 +92,8 @@ const reversal_instructions = [
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `<p><b>Thank you for taking part in this study!</b></p>
-            <p>The purpose of this study is to examine how people learn from positive and negative feedback while playing games.
-            <p>In this study, you'll play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
-            <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
-            <p>Let's start with the first game!</p>`,
-            `<p>Next, you will meet two friendly squirrels, each with a bag of coins to share. 
+            `<p>Let's start with the first game!</p>
+            <p>Next, you will meet two friendly squirrels, each with a bag of coins to share. 
             Use the arrow keys to choose either the left or right squirrel. 
             The squirrel you pick will give you a coin to add to your safe.</p>`,
             `<p>One squirrel has higher-value coins, and the other has lower-value coins. 
