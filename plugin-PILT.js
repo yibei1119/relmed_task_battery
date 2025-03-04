@@ -290,9 +290,13 @@ jsPsychPILT = (function (jspsych) {
                         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
                     }
 
+                    // Identify image to be changed
+                    const selImg = document.getElementById("PILT" + capitalizeWord(trial.n_stimuli === 1 ? "middle" : this.data.response) + 'Img')
+
                     // Draw selection box:
-                    const selImg = document.getElementById("PILT" + capitalizeWord(this.data.response) + 'Img')
-                    selImg.style.border = '20px solid darkgrey'
+                    if (trial.n_stimuli !== 1) {
+                        selImg.style.border = '20px solid darkgrey'    
+                    }
 
                     if (trial.n_stimuli === 2) {
                         document.getElementById('centerTxt').innerText = '';
@@ -319,7 +323,7 @@ jsPsychPILT = (function (jspsych) {
                             document.getElementById(this.data.response).appendChild(coinBackground)
                             document.getElementById(this.data.response).appendChild(coinCircle)
                         }
-                        document.getElementById(this.data.response).appendChild(coin)
+                        document.getElementById(trial.n_stimuli === 1 ? "middle" : this.data.response).appendChild(coin)
 
                         // Set timer post response feedback
                     
@@ -494,9 +498,12 @@ jsPsychPILT = (function (jspsych) {
                 `
             }
 
+            html += `
+                    <div id="PILTOptionBox" class="PILTOptionBox">
+                    `
+
             if (num_stim !== 1){
                 html += `
-                    <div id="PILTOptionBox" class="PILTOptionBox">
                         <div id='left' class="PILTOptionSide">
                             <img id='PILTLeftImg' src=${this.contingency.img[0]}></img> 
                         </div>
@@ -522,9 +529,10 @@ jsPsychPILT = (function (jspsych) {
                         <div id='right' class="PILTOptionSide">
                             <img id='PILTRightImg' src=${this.contingency.img[1]}></img>
                         </div>
-                    </div>
             `;
             }
+
+            html += `</div>`
 
             if (num_stim === 3) {
                 html += `<div class="PILTHelperTxt3">

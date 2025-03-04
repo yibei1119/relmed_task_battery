@@ -410,12 +410,21 @@ async function load_squences(session) {
         }
 
         // Fetch WM structure
-        const WM_response = await fetch('pilot7_WM.json');
+        const WM_response = await fetch('pilot8_WM.json');
         const WM_structure = await WM_response.json();
         let WM_sess_structure = WM_structure[session - 1];
 
         if (window.demo){
             WM_sess_structure = WM_sess_structure.slice(0,3);
+        }
+
+        // Fetch LTM structure
+        const LTM_response = await fetch('pilot8_LTM.json');
+        const LTM_structure = await LTM_response.json();
+        let LTM_sess_structure = LTM_structure[session - 1];
+
+        if (window.demo){
+            LTM_sess_structure = LTM_sess_structure.slice(0,3);
         }
 
         // Fetch WM test structure
@@ -431,16 +440,17 @@ async function load_squences(session) {
             }
         }
         
-        run_full_experiment(sess_structure, test_sess_structure, WM_sess_structure, WM_test_sess_structure);
+        run_full_experiment(sess_structure, test_sess_structure, WM_sess_structure, WM_test_sess_structure, LTM_sess_structure);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
 }
 
-function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_test_structure) {
+function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_test_structure, LTM_structure) {
     // Compute best-rest
     computeBestRest(structure);
     computeBestRest(WM_structure);
+    computeBestRest(LTM_structure);
 
     let PILT_procedure = [];
 
@@ -470,6 +480,15 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_t
     };
     const WM_procedure = WM_instructions.concat(WM_blocks);
 
+    // LTM block
+    let LTM_blocks = build_PILT_task(LTM_structure, true, "ltm");
+    LTM_blocks[0]["on_start"] = () => {
+        updateState("ltm_task_start");
+        updateState("no_resume_10_minutes");
+    };
+    const LTM_procedure = WM_instructions.concat(LTM_blocks);
+    
+
     // WM test block
     let WM_test_procedure = [];
     WM_test_procedure.push(test_instructions);
@@ -481,6 +500,7 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_t
         PILT_procedure: PILT_procedure,
         PILT_test_procedure: PILT_test_procedure,
         WM_procedure: WM_procedure,
-        WM_test_procedure: WM_test_procedure
+        WM_test_procedure: WM_test_procedure,
+        LTM_procedure: LTM_procedure
     }
 }
