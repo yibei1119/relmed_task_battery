@@ -107,7 +107,7 @@ const acceptability_PIT = {
     }
 };
 
-const acceptability_wm = {
+const acceptability_ltm = {
     type: jsPsychSurveyLikert,
     preamble: `<p>Please answer these questions regarding the card choosing game with 3 cards:<p>`,
     questions: [
@@ -115,16 +115,47 @@ const acceptability_wm = {
             prompt: "How difficult was the card choosing game with 3 cards?",
             labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very difficult"],
             required: true,
-            name: "wm_difficulty"
+            name: "ltm_difficulty"
         },
         {
             prompt: "How enjoyable was the card choosing game with 3 cards?",
             labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very enjoyable"],
             required: true,
-            name: "wm_enjoy"
+            name: "ltm_enjoy"
         },
         {
             prompt: "Was it clear to you what you needed to do in the card choosing game with 3 cards?",
+            labels: ["1<br>Not clear at all", "2", "3", "4", "5<br>Extremely clear"],
+            required: true,
+            name: "ltm_clear"
+        }
+    ],
+    data: {
+        trialphase: "acceptability_ltm"
+    },
+    simulation_options: {
+        simulate: false
+    }
+};
+
+const acceptability_wm = {
+    type: jsPsychSurveyLikert,
+    preamble: `<p>Please answer these questions regarding the one-card game you just completed:<p>`,
+    questions: [
+        {
+            prompt: "How difficult was this game with one card?",
+            labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very difficult"],
+            required: true,
+            name: "wm_difficulty"
+        },
+        {
+            prompt: "How enjoyable was this game with one card?",
+            labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very enjoyable"],
+            required: true,
+            name: "wm_enjoy"
+        },
+        {
+            prompt: "Was it clear to you what you needed to do in this game with one card?",
             labels: ["1<br>Not clear at all", "2", "3", "4", "5<br>Extremely clear"],
             required: true,
             name: "wm_clear"
@@ -137,6 +168,7 @@ const acceptability_wm = {
         simulate: false
     }
 };
+
 
 const acceptability_reversal = {
     type: jsPsychSurveyLikert,
