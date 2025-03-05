@@ -325,7 +325,13 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
         block.push(
             {
                 timeline: [
-                    PILT_trial
+                    { 
+                        ...PILT_trial, 
+                        data: { 
+                            ...PILT_trial.data, 
+                            trialphase: task_name 
+                        } 
+                    }
                 ],
                 timeline_variables: structure[i],
                 on_start: () => {
