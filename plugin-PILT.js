@@ -5,7 +5,9 @@
  *
  * Version 0.2 - adding Pavlovian stimuli learning - Haoyang
  * 
- * Version 1.0 - modified by Yaniv
+ * Version 1.0 - modified by Yaniv to allow for three stimuli
+ * 
+ * Version 1.1 - modified by Yaniv to allow for one stimulus
  */
 
 jsPsychPILT = (function (jspsych) {
@@ -13,7 +15,7 @@ jsPsychPILT = (function (jspsych) {
     const info = {
         name: 'PILT',
         description: '',
-        version: "1.0",
+        version: "1.1",
         parameters: {
             stimulus_left: {
                 type: jspsych.ParameterType.STRING,
@@ -227,13 +229,13 @@ jsPsychPILT = (function (jspsych) {
             this.data.feedback_right = this.contingency.outcome[1];
             if (trial.n_stimuli === 2) {
                 this.data.optimal_right = trial.optimal_right;
-            } else if (trial.n_stimuli === 3) {
+            } else {
                 this.data.optimal_side = trial.optimal_side;
             }
 
             this.data.n_stimuli = trial.n_stimuli;
 
-            if (trial.n_stimuli === 3) {
+            if (trial.n_stimuli != 2) {
                 this.data.stimulus_middle = trial.stimulus_middle;
                 this.data.feedback_middle = trial.feedback_middle;
             }
@@ -265,9 +267,10 @@ jsPsychPILT = (function (jspsych) {
                     // if there is a response:
                     this.data.key = e.key.toLowerCase()
                     this.data.response = this.keys[e.key.toLowerCase()]
-                    const possible_responses = trial.n_stimuli === 3 ? ["right", "left", "middle"] : ["right", "left"]
+                    const possible_responses = trial.n_stimuli === 2 ? ["right", "left"] : ["right", "left", "middle"]
                     const inverse_response = possible_responses.filter(element => element !== this.data.response)
                     this.data.rt = e.rt
+                    this.n_stimuli = trial.n_stimuli
 
                     if (this.data.response === 'left') {
                         this.data.chosen_stimulus = this.contingency.img[0]
@@ -288,9 +291,23 @@ jsPsychPILT = (function (jspsych) {
                         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
                     }
 
+                    // Identify image to be changed
+                    const selImg = document.getElementById("PILT" + capitalizeWord(trial.n_stimuli === 1 ? "middle" : this.data.response) + 'Img')
+
                     // Draw selection box:
-                    const selImg = document.getElementById("PILT" + capitalizeWord(this.data.response) + 'Img')
-                    selImg.style.border = '20px solid darkgrey'
+                    if (trial.n_stimuli !== 1) {
+                        selImg.style.border = '20px solid darkgrey'    
+                    } else {
+                        // Press selected key
+                        const selKey = document.getElementById(`${this.data.response}_key`)
+                        selKey.className = "spacebar-icon-pressed"
+
+                        // Remove other keys
+                        inverse_response.forEach(response => {
+                            document.getElementById(`${response}_key`).style.opacity = '0';
+                        });
+
+                    }
 
                     if (trial.n_stimuli === 2) {
                         document.getElementById('centerTxt').innerText = '';
@@ -317,15 +334,18 @@ jsPsychPILT = (function (jspsych) {
                             document.getElementById(this.data.response).appendChild(coinBackground)
                             document.getElementById(this.data.response).appendChild(coinCircle)
                         }
-                        document.getElementById(this.data.response).appendChild(coin)
+                        document.getElementById(trial.n_stimuli === 1 ? "middle" : this.data.response).appendChild(coin)
 
                         // Set timer post response feedback
                     
                         this.jsPsych.pluginAPI.setTimeout(() => {
 
-                            inverse_response.forEach(response => {
-                                document.getElementById("PILT" + capitalizeWord(response) + 'Img').style.opacity = '0';
-                            });
+                            if (trial.n_stimuli !== 1){
+                                inverse_response.forEach(response => {
+                                    document.getElementById("PILT" + capitalizeWord(response) + 'Img').style.opacity = '0';
+                                });
+                            }
+                            
                             const ani1 = selImg.animate([
                                 { transform: "rotateY(0)", visibility: "visible" },
                                 { transform: "rotateY(90deg)", visibility: "hidden" },
@@ -438,11 +458,11 @@ jsPsychPILT = (function (jspsych) {
                 n_stimuli: trial.n_stimuli
             };
 
-            if (trial.n_stimuli === 3) {
+            if (trial.n_stimuli !== 2) {
                 default_data.stimulus_middle = trial.stimulus_middle;
                 default_data.feedback_middle = trial.feedback_middle;
                 default_data.optimal_side = trial.optimal_side;
-            } else if (trial.n_stimuli === 2) {
+            } else {
                 default_data.optimal_right = trial.optimal_right;
             }
 
@@ -482,7 +502,7 @@ jsPsychPILT = (function (jspsych) {
         create_stimuli(num_stim) {
             let html = ''
 
-            if (num_stim === 3) {
+            if (num_stim !== 2) {
                 html += `<div class="PILTHelperTxt3">
                             <p id="centerTxt">&zwnj;</p>
                 </div>
@@ -491,18 +511,21 @@ jsPsychPILT = (function (jspsych) {
 
             html += `
                     <div id="PILTOptionBox" class="PILTOptionBox">
-                        <div id='left' class="PILTOptionSide">
-                            <img id='PILTLeftImg' src=${this.contingency.img[0]}></img> 
-                        </div>
+                    `
 
-                        `;
+            html += `
+                    <div id='left' class="PILTOptionSide">
+                        <img id='PILTLeftImg' ${num_stim === 1 ? `style='visibility: hidden'` : ``} src=${this.contingency.img[0]}></img> 
+                    </div>
+
+                    `;
 
             if (num_stim === 2) {
                 html += `<div class="PILTHelperTxt2">
                             <p id="centerTxt">?</p>
                         </div>
                         `;
-            } else if (num_stim == 3) {
+            } else{
 
                 html += `<div id='middle' class="PILTOptionSide">
                             <img id='PILTMiddleImg' src=${this.contingency.img[2]}></img>
@@ -511,15 +534,16 @@ jsPsychPILT = (function (jspsych) {
             }
 
             html += `
-                        <div id='right' class="PILTOptionSide">
-                            <img id='PILTRightImg' src=${this.contingency.img[1]}></img>
-                        </div>
+                    <div id='right' class="PILTOptionSide">
+                        <img id='PILTRightImg' ${num_stim === 1 ? `style='visibility: hidden'` : ``} src=${this.contingency.img[1]}></img>
                     </div>
             `;
 
-            if (num_stim === 3) {
+            html += `</div>`
+
+            if (num_stim !== 2) {
                 html += `<div class="PILTHelperTxt3">
-                            <p id="empty">&zwnj;</p>
+                            <p id="below">${num_stim === 1 ? `<span class="spacebar-icon" id="left_key">&nbsp;←&nbsp;</span>&nbsp;&nbsp;&nbsp;<span class="spacebar-icon" id="middle_key">&nbsp;↑&nbsp;</span>&nbsp;&nbsp;&nbsp;<span class="spacebar-icon" id="right_key">&nbsp;→&nbsp;</span>` : "&zwnj;"}</p>
                 </div>
                 `
             }

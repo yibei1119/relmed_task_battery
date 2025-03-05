@@ -148,7 +148,7 @@
         }
     ]
 
-    function run_full_experiment(PILT_structure, test_structure, WM_procedure, WM_test_procedure){
+    function run_full_experiment(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure){
 
         let procedure = [];
 
@@ -156,7 +156,7 @@
         procedure = procedure.concat(preliminary_checks);
 
         // Add PILT timeline
-        PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure);
+        PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure);
 
         if (window.task === "pilt-to-test") {
 
@@ -219,6 +219,13 @@
         }
         
         if (window.task === "wm") {
+            // Add LTM block
+            procedure.push(PILT_tasks.LTM_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_ltm
+            ]);
+
             // Add WM block
             procedure.push(PILT_tasks.WM_procedure);
             procedure = procedure.concat([
