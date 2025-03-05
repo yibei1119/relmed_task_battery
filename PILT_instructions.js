@@ -349,7 +349,7 @@ const test_instructions = {
     pages: [
         '<p>You will now continue to another round of the card choosing game.</p>\
             <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
-            <p>You will be presented with cards you already know. Do you best to choose the best card possible on each turn.</p>'
+            <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
     ],
     show_clickable_nav: true,
     data: {trialphase: "post-PILT_test_instructions"}
