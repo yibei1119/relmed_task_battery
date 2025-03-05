@@ -355,20 +355,48 @@ const test_instructions = {
     data: {trialphase: "post-PILT_test_instructions"}
 }
 
+// LTM instructions
+const LTM_instructions = [
+    {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+            '<p>You will now play another round of the card choosing game.</p>\
+                <p>Your goal remains to add as much money as you can to your safe.</p>',
+            `<p>This time, you will choose between three cards on every turn.<p>
+            <p>In every triplet, one picture card will always have £1 and 50-pence coins behind it, while the other two cards will have only pennies.<p>
+            <p>You can earn more by learning which is the better picture card in each triplet and choosing that card when you next see same triplet.</p>`,
+            `<p>Use the right arrow key to choose the card on the right, the left arrow key to choose the card on the left, 
+            and <b>use the upwards arrow key to choose the card in the middle.</b>
+            `
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: "LTM_instructions"}
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        css_classes: ['instructions'],
+        stimulus: `<p>Let's get started!</p>
+        <p>You will play one round with no breaks, lasting about 8 minutes.</p>
+        <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
+        <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
+        choices: ['arrowup'],
+        data: {trialphase: "LTM_instructions"}
+    }
+]
+
 // WM instructions
 const WM_instructions = [
     {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            '<p>Next, you will return to the card choosing game.</p>\
+            '<p>You will now play another round of the card choosing game.</p>\
                 <p>Your goal remains to add as much money as you can to your safe.</p>',
-            `<p>This time, you will choose between three cards on every turn.<p>
-            <p>In every triplet, one picture card will have only one pound and fifty pence coins behind it, while the other two cards will have only pennies.<p>
-            <p>You can earn more by learning which is the better picture card in each triplet and choosing that card when you next see same triplet.</p>`,
-            `<p>Use the right arrow key to choose the card on the right, the left arrow key to choose the card on the left, 
-            and <b>use the upwards arrow key to choose the card in the middle.</b>
-            `
+            `<p>This time, you will see only one card on each turn.<p>
+            <p>You can flip this card by pressing either the left <span class="spacebar-icon">&nbsp;←&nbsp;</span>, up <span class="spacebar-icon">&nbsp;↑&nbsp;</span>, or right <span class="spacebar-icon">&nbsp;→&nbsp;</span> arrow keys on your keyboard.</p>
+            <p>For each card, pressing one of the keys will always reveal £1 and 50-pence coins, while the other two keys will reveal only pennies.<p>
+            <p>You can earn more by learning which is the better key to press for each card and pressing that key when you next see same card.</p>`
         ],
         show_clickable_nav: true,
         data: {trialphase: "WM_instructions"}
@@ -377,11 +405,12 @@ const WM_instructions = [
         type: jsPsychHtmlKeyboardResponse,
         css_classes: ['instructions'],
         stimulus: `<p>Let's get started!</p>
-        <p>You will play one round with no breaks, lasting about 10 minutes.</p>
+        <p>You will play one round with no breaks, lasting about 8 minutes.</p>
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
         data: {trialphase: "WM_instructions"}
     }
 ]
+
 

@@ -492,7 +492,7 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_t
         updateState("ltm_task_start");
         updateState("no_resume_10_minutes");
     };
-    const LTM_procedure = WM_instructions.concat(LTM_blocks);
+    const LTM_procedure = LTM_instructions.concat(LTM_blocks);
     
 
     // WM test block
