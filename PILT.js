@@ -83,13 +83,9 @@ const test_trial = {
                 }
             ],
             conditional_function: () => {
-                let missed = jsPsych.data.get().filter({
-                    trialphase: "PILT_test"
-                }).last(1).select("response").values[0] == null
+                let missed = jsPsych.data.get().last(1).select("response").values[0] == null
 
-                let n_trials = jsPsych.data.get().filter({
-                    trialphase: "PILT_test"
-                }).count()
+                let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
 
                 return !missed && ((n_trials % window.pilt_test_confidence_every) === (window.pilt_test_confidence_every - 1))
             },
@@ -101,7 +97,7 @@ const test_trial = {
 // Post-PILT test confidence trial
 
 // Build post_PILT test block
-function build_post_PILT_test(structure) {
+function build_post_PILT_test(structure, task_name = "pilt") {
 
     // Preload images
     let test = [
@@ -121,7 +117,13 @@ function build_post_PILT_test(structure) {
         // Push block                
         test.push({
             timeline: [
-                test_trial
+                { 
+                    ...test_trial, 
+                    data: { 
+                        ...test_trial.data, 
+                        trialphase: `${task_name}_test`
+                    } 
+                }
             ],
             timeline_variables: structure[i]
         });
@@ -271,7 +273,7 @@ const coin_lottery = {
 
 // Build PILT task block
 function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
-    console.log(task_name)
+
     let PILT_task = [];
     for (let i = 0; i < structure.length; i++) {
 
@@ -434,7 +436,7 @@ async function load_squences(session) {
         }
 
         // Fetch WM test structure
-        const WM_test_response = await fetch('pilot7_WM_test.json');
+        const WM_test_response = await fetch('pilot8_WM_test.json');
         const WM_test_structure = await WM_test_response.json();
         let WM_test_sess_structure = WM_test_structure[session - 1];
 
@@ -445,14 +447,28 @@ async function load_squences(session) {
                 WM_test_sess_structure[i][j].stimulus_right = `imgs/PILT_stims/${WM_test_sess_structure[i][j].stimulus_right}`    
             }
         }
+
+        // Fetch LTM test structure
+        const LTM_test_response = await fetch('pilot8_LTM_test.json');
+        const LTM_test_structure = await LTM_test_response.json();
+        let LTM_test_sess_structure = LTM_test_structure[session - 1];
+
+        // Add folder to stimuli
+        for (i=0; i<LTM_test_sess_structure.length; i++){
+            for(j=0; j<LTM_test_sess_structure[i].length; j++) {
+                LTM_test_sess_structure[i][j].stimulus_left = `imgs/PILT_stims/${LTM_test_sess_structure[i][j].stimulus_left}`
+                LTM_test_sess_structure[i][j].stimulus_right = `imgs/PILT_stims/${LTM_test_sess_structure[i][j].stimulus_right}`    
+            }
+        }
         
-        run_full_experiment(sess_structure, test_sess_structure, WM_sess_structure, WM_test_sess_structure, LTM_sess_structure);
+        
+        run_full_experiment(sess_structure, test_sess_structure, WM_sess_structure, WM_test_sess_structure, LTM_sess_structure, LTM_test_sess_structure);
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
     }
 }
 
-function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_test_structure, LTM_structure) {
+function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_test_structure, LTM_structure, LTM_test_structure) {
     // Compute best-rest
     computeBestRest(structure);
     computeBestRest(WM_structure);
@@ -498,8 +514,13 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_t
     // WM test block
     let WM_test_procedure = [];
     WM_test_procedure.push(test_instructions);
-    WM_test_procedure = WM_test_procedure.concat(build_post_PILT_test(WM_test_structure));
+    WM_test_procedure = WM_test_procedure.concat(build_post_PILT_test(WM_test_structure, "wm"));
 
+    // LTM test block
+    let LTM_test_procedure = [];
+    LTM_test_procedure.push(test_instructions);
+    LTM_test_procedure = LTM_test_procedure.concat(build_post_PILT_test(LTM_test_structure, "ltm"));
+    
 
 
     return {
@@ -507,6 +528,7 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_t
         PILT_test_procedure: PILT_test_procedure,
         WM_procedure: WM_procedure,
         WM_test_procedure: WM_test_procedure,
-        LTM_procedure: LTM_procedure
+        LTM_procedure: LTM_procedure,
+        LTM_test_procedure: LTM_test_procedure
     }
 }
