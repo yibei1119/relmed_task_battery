@@ -352,7 +352,7 @@ const test_instructions = {
             <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
     ],
     show_clickable_nav: true,
-    data: {trialphase: "post-PILT_test_instructions"}
+    data: {trialphase: "post-task_test_instructions"}
 }
 
 // LTM instructions
