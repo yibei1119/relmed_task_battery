@@ -305,7 +305,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
             }
         ];
 
-        if (isValidNumber(block_number)){
+        if (isValidNumber(block_number) & task_name === "pilt"){
             block.push(
                 {
                     type: jsPsychHtmlKeyboardResponse,
