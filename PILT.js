@@ -83,13 +83,9 @@ const test_trial = {
                 }
             ],
             conditional_function: () => {
-                let missed = jsPsych.data.get().filter({
-                    trialphase: "PILT_test"
-                }).last(1).select("response").values[0] == null
+                let missed = jsPsych.data.get().last(1).select("response").values[0] == null
 
-                let n_trials = jsPsych.data.get().filter({
-                    trialphase: "PILT_test"
-                }).count()
+                let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
 
                 return !missed && ((n_trials % window.pilt_test_confidence_every) === (window.pilt_test_confidence_every - 1))
             },
@@ -101,7 +97,7 @@ const test_trial = {
 // Post-PILT test confidence trial
 
 // Build post_PILT test block
-function build_post_PILT_test(structure, task_name = "PILT") {
+function build_post_PILT_test(structure, task_name = "pilt") {
 
     // Preload images
     let test = [
@@ -276,7 +272,7 @@ const coin_lottery = {
 }
 
 // Build PILT task block
-function build_PILT_task(structure, insert_msg = true, task_name = "PILT") {
+function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
 
     let PILT_task = [];
     for (let i = 0; i < structure.length; i++) {
@@ -311,7 +307,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "PILT") {
             }
         ];
 
-        if (isValidNumber(block_number) & task_name === "PILT"){
+        if (isValidNumber(block_number) & task_name === "pilt"){
             block.push(
                 {
                     type: jsPsychHtmlKeyboardResponse,
