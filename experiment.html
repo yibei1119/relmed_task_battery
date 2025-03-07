@@ -217,8 +217,8 @@
             procedure.push(lottery_instructions);
             procedure.push(coin_lottery);
         }
-        
-        if (window.task === "wm") {
+
+        if (window.task == "ltm") {
             // Add LTM block
             procedure.push(PILT_tasks.LTM_procedure);
             procedure = procedure.concat([
@@ -228,7 +228,9 @@
 
             // Add post-LTM test
             procedure.push(PILT_tasks.LTM_test_procedure);
-
+        }
+        
+        if (window.task === "wm") {
             // Add WM block
             procedure.push(PILT_tasks.WM_procedure);
             procedure = procedure.concat([
