@@ -311,6 +311,33 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         default: 300,
         description: "Gap between trials (ms)"
       }
+    },
+    data: {
+      trialphase: {
+        type: jspsych.ParameterType.STRING,
+        default: "explore_feedback"
+      },
+      destination_island: {
+        type: jspsych.ParameterType.STRING
+      },
+      control_rule_used: {
+        type: jspsych.ParameterType.STRING
+      },
+      effort_level: {
+        type: jspsych.ParameterType.INT
+      },
+      current_strength: {
+        type: jspsych.ParameterType.INT
+      },
+      ship_color: {
+        type: jspsych.ParameterType.STRING
+      },
+      near_island: {
+        type: jspsych.ParameterType.STRING
+      },
+      probability_control: {
+        type: jspsych.ParameterType.FLOAT
+      }
     }
   };
 
