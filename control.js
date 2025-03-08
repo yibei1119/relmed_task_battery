@@ -28,8 +28,8 @@ const ctrlConfig = {
     'grape': "j",
     'banana': "k"
   },
-  effort_threshold: 10,
-  scale: 0.6,
+  effort_threshold: [6, 12, 18],
+  scale: 2,
   explore_decision: 4000,
   explore_effort: 3000,
   explore_feedback: 2000,
@@ -168,8 +168,8 @@ const exploreTrial = {
         document.querySelector('.fuel-container-right');
       const fuelBar = container.querySelector('.fuel-indicator-bar');
 
-      // Calculate progress (40 presses = 100%)
-      const progress = Math.min((trial_presses / 40) * 100, 100);
+      // Calculate progress (30 presses = 100%)
+      const progress = Math.min((trial_presses / 30) * 100, 100);
       fuelBar.style.width = `${progress}%`;
 
       // Optional: Change color when full
@@ -219,16 +219,14 @@ function sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
 }
 
-ctrlConfig.effort_threshold = 10;
-ctrlConfig.scale = 0.6;
 function chooseControlRule(effort, current) {
-  const extra_effort = (effort - ctrlConfig.effort_threshold) * ctrlConfig.scale / current;
+  const extra_effort = (effort - ctrlConfig.effort_threshold[current - 1]) * ctrlConfig.scale;
   const prob = sigmoid(extra_effort);
   return Math.random() < prob ? 'control' : 'base';
 }
 
 function probControlRule(effort, current) {
-  const extra_effort = (effort - ctrlConfig.effort_threshold) * ctrlConfig.scale / current;
+  const extra_effort = (effort - ctrlConfig.effort_threshold[current - 1]) * ctrlConfig.scale;
   return sigmoid(extra_effort);
 }
 
@@ -371,7 +369,7 @@ function highlightDestChoice(event) {
       const state = jsPsych.evaluateTimelineVariable('near');
       const current_strength = jsPsych.evaluateTimelineVariable('current');
       const fuel_level = jsPsych.evaluateTimelineVariable('fuel_lvl');
-      const next_state = probControlRule(fuel_level / 100 * 40, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
+      const next_state = probControlRule(fuel_level / 100 * 30, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
       const correct = Object.keys(ctrlConfig.islandKeyList)[window.choice] === next_state;
 
       // // Enable for feedback
@@ -697,8 +695,8 @@ const rewardTrial = {
         document.querySelector('.fuel-container-right');
       const fuelBar = container.querySelector('.fuel-indicator-bar');
 
-      // Calculate progress (40 presses = 100%)
-      const progress = Math.min((trial_presses / 40) * 100, 100);
+      // Calculate progress (30 presses = 100%)
+      const progress = Math.min((trial_presses / 30) * 100, 100);
       fuelBar.style.width = `${progress}%`;
 
       // Optional: Change color when full

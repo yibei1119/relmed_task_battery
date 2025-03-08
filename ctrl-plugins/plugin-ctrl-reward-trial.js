@@ -50,6 +50,28 @@ var jsPsychRewardShip = (function (jspsych) {
         default: 300,
         description: "Gap between trials (ms)"
       }
+    },
+    data: {
+      trialphase: {
+        type: jspsych.ParameterType.STRING,
+        default: "reward"
+      },
+      response: {
+        type: jspsych.ParameterType.STRING
+      },
+      rt: {
+        type: jspsych.ParameterType.INT
+      },
+      responseTime: {
+        type: jspsych.ParameterType.INT,
+        array: true
+      },
+      trial_presses: {
+        type: jspsych.ParameterType.INT
+      },
+      target: {
+        type: jspsych.ParameterType.STRING
+      }
     }
   };
 
@@ -158,7 +180,7 @@ var jsPsychRewardShip = (function (jspsych) {
         createFuelIcon(container);
 
         const fuelBar = container.querySelector('.fuel-indicator-bar');
-        const progress = Math.min((trial_presses / 40) * 100, 100);
+        const progress = Math.min((trial_presses / 30) * 100, 100);
         fuelBar.style.width = `${progress}%`;
 
         if (progress === 100) {
@@ -281,16 +303,6 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         default: undefined,
         description: "Target island for delivery"
       },
-      effort_threshold: {
-        type: jspsych.ParameterType.INT,
-        default: 10,
-        description: "Threshold for effort to influence control rule"
-      },
-      scale: {
-        type: jspsych.ParameterType.FLOAT,
-        default: 0.6,
-        description: "Scaling factor for effort influence"
-      },
       feedback_duration: {
         type: jspsych.ParameterType.INT,
         default: 2000,
@@ -300,6 +312,36 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         type: jspsych.ParameterType.INT,
         default: 300,
         description: "Gap between trials (ms)"
+      }
+    },
+    data: {
+      trialphase: {
+        type: jspsych.ParameterType.STRING,
+        default: "reward_feedback"
+      },
+      destination_island: {
+        type: jspsych.ParameterType.STRING
+      },
+      control_rule_used: {
+        type: jspsych.ParameterType.STRING
+      },
+      effort_level: {
+        type: jspsych.ParameterType.INT
+      },
+      current_strength: {
+        type: jspsych.ParameterType.INT
+      },
+      ship_color: {
+        type: jspsych.ParameterType.STRING
+      },
+      near_island: {
+        type: jspsych.ParameterType.STRING
+      },
+      target_island: {
+        type: jspsych.ParameterType.STRING
+      },
+      correct: {
+        type: jspsych.ParameterType.BOOL
       }
     }
   };
@@ -321,14 +363,17 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         red: "orange",
         yellow: "banana"
       };
+
+      this.effort_threshold = [6, 12, 18];
+      this.scale = 2;
     }
 
     sigmoid(x) {
       return 1 / (1 + Math.exp(-x));
     }
 
-    chooseControlRule(effort, current, threshold, scale) {
-      const extra_effort = (effort - threshold) * scale / current;
+    chooseControlRule(effort, current) {
+      const extra_effort = (effort - this.effort_threshold[current - 1]) * this.scale;
       const prob = this.sigmoid(extra_effort);
       return Math.random() < prob ? 'control' : 'base';
     }
@@ -345,9 +390,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       // Determine destination island based on control rule
       const currentRule = this.chooseControlRule(
         effortLevel, 
-        currentStrength,
-        trial.effort_threshold,
-        trial.scale
+        currentStrength
       );
 
       const destinationIsland = currentRule === 'base' 

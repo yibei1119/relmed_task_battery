@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Plugin Test</title>
+  <script src="jspsych/jspsych.js"></script>
+  <script>
+    // Initialize jsPsych object
+    let jsPsych = initJsPsych({
+      display_element: 'display_element',
+      on_finish: function () {
+        jsPsych.data.displayData('json');
+      }
+    });
+    // window.sessionNum = jsPsych.data.getURLVariable('session_num');
+    // window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    // window.debug = prolificPID.includes("debug");
+  </script>
+  <script src="jspsych/plugin-html-keyboard-response.js"></script>
+  <script src="jspsych/plugin-html-button-response.js"></script>
+  <script src="jspsych/plugin-instructions.js"></script>
+  <script src="jspsych/plugin-preload.js"></script>
+  <script src="jspsych/plugin-fullscreen.js"></script>
+  <script src="jspsych/plugin-survey-likert.js"></script>
+  <script src="jspsych/plugin-survey-text.js"></script>
+  <script src="jspsych/plugin-fullscreen.js"></script>
+  <script src="control_instructions_interactive.js"></script>
+  <script src="utils.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-explore-trial.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-predict-trial.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
+  <script src="self_report.js"></script>
+  <script src="control_sequences.js"></script>
+  <script src="build_control_timeline.js"></script>
+  <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
+  <link href="instruction_style.css" rel="stylesheet" type="text/css" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<style>
+  .jsPsychDE {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+</style>
+
+<body>
+  <div id='display_element' class='jsPsychDE'></div>
+</body>
+<script>
+
+  let control_timeline = [];
+  const preload = {
+    type: jsPsychPreload,
+    images: [
+      "ocean.png",
+      "ocean_above.png",
+      "simple_island_banana.png",
+      "simple_island_coconut.png",
+      "simple_island_grape.png",
+      "simple_island_orange.png",
+      "simple_ship_blue.png",
+      "simple_ship_green.png",
+      "simple_ship_red.png",
+      "simple_ship_yellow.png",
+      "island_icon_banana.png",
+      "island_icon_coconut.png",
+      "island_icon_grape.png",
+      "island_icon_orange.png",
+      "simple_ship_icon_blue.png",
+      "simple_ship_icon_green.png",
+      "simple_ship_icon_red.png",
+      "simple_ship_icon_yellow.png",
+      "left.png",
+
+    ].map(s => "imgs/" + s),
+    post_trial_gap: 800,
+    continue_after_error: true
+  };
+  control_timeline.push(preload);
+
+  // control_timeline.push(instructionTrial);
+  
+  // control_timeline.push(controlExploreTimeline);
+
+  // control_timeline.push(controlPredTimeline);
+
+  // control_timeline.push(controlRewardTimeline);
+
+  console.log(controlTimeline);
+  control_timeline.push(controlTimeline);
+
+  jsPsych.run(control_timeline);
+</script>
+
+</html>
