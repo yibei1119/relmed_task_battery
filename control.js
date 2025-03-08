@@ -168,8 +168,8 @@ const exploreTrial = {
         document.querySelector('.fuel-container-right');
       const fuelBar = container.querySelector('.fuel-indicator-bar');
 
-      // Calculate progress (40 presses = 100%)
-      const progress = Math.min((trial_presses / 40) * 100, 100);
+      // Calculate progress (30 presses = 100%)
+      const progress = Math.min((trial_presses / 30) * 100, 100);
       fuelBar.style.width = `${progress}%`;
 
       // Optional: Change color when full
@@ -369,7 +369,7 @@ function highlightDestChoice(event) {
       const state = jsPsych.evaluateTimelineVariable('near');
       const current_strength = jsPsych.evaluateTimelineVariable('current');
       const fuel_level = jsPsych.evaluateTimelineVariable('fuel_lvl');
-      const next_state = probControlRule(fuel_level / 100 * 40, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
+      const next_state = probControlRule(fuel_level / 100 * 30, current_strength) > 0.5 ? ctrlConfig.controlRule[ship] : ctrlConfig.baseRule[state];
       const correct = Object.keys(ctrlConfig.islandKeyList)[window.choice] === next_state;
 
       // // Enable for feedback
@@ -695,8 +695,8 @@ const rewardTrial = {
         document.querySelector('.fuel-container-right');
       const fuelBar = container.querySelector('.fuel-indicator-bar');
 
-      // Calculate progress (40 presses = 100%)
-      const progress = Math.min((trial_presses / 40) * 100, 100);
+      // Calculate progress (30 presses = 100%)
+      const progress = Math.min((trial_presses / 30) * 100, 100);
       fuelBar.style.width = `${progress}%`;
 
       // Optional: Change color when full
