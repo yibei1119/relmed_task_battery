@@ -25,6 +25,21 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         default: 300,
         description: "Gap between trials (ms)"
       }
+    },
+    data: {
+      trialphase: {
+        type: jspsych.ParameterType.STRING,
+        default: "predict_homebase"
+      },
+      response: {
+        type: jspsych.ParameterType.STRING
+      },
+      rt: {
+        type: jspsych.ParameterType.INT
+      },
+      ship: {
+        type: jspsych.ParameterType.STRING
+      }
     }
   };
 
@@ -183,6 +198,30 @@ var jsPsychPredictDest = (function (jspsych) {
         type: jspsych.ParameterType.INT,
         default: 300,
         description: "Gap between trials (ms)"
+      }
+    },
+    data: {
+      trialphase: {
+        type: jspsych.ParameterType.STRING,
+        default: "predict_dest"
+      },
+      response: {
+        type: jspsych.ParameterType.INT
+      },
+      rt: {
+        type: jspsych.ParameterType.INT
+      },
+      ship: {
+        type: jspsych.ParameterType.STRING
+      },
+      near: {
+        type: jspsych.ParameterType.STRING
+      },
+      current: {
+        type: jspsych.ParameterType.INT
+      },
+      fuel_lvl: {
+        type: jspsych.ParameterType.INT
       }
     }
   };
