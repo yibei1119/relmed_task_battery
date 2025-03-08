@@ -23,10 +23,6 @@ const controlRating = {
       trialphase: "ctrl_controllability"
     }
   }],
-  conditional_function: function () {
-    const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
-    return last_trial_choice !== null;
-  },
   post_trial_gap: 300
 };
 
