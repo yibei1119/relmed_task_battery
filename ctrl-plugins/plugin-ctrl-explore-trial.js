@@ -53,7 +53,8 @@ var jsPsychExploreShip = (function (jspsych) {
         type: jspsych.ParameterType.INT
       },
       responseTime: {
-        type: jspsych.ParameterType.ARRAY
+        type: jspsych.ParameterType.INT,
+        array: true
       },
       trial_presses: {
         type: jspsych.ParameterType.INT
