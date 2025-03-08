@@ -223,7 +223,7 @@ var jsPsychExploreShip = (function (jspsych) {
         createFuelIcon(container);
 
         const fuelBar = container.querySelector('.fuel-indicator-bar');
-        const progress = Math.min((trial_presses / 40) * 100, 100);
+        const progress = Math.min((trial_presses / 30) * 100, 100);
         fuelBar.style.width = `${progress}%`;
 
         if (progress === 100) {
