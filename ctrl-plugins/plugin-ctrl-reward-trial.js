@@ -50,6 +50,28 @@ var jsPsychRewardShip = (function (jspsych) {
         default: 300,
         description: "Gap between trials (ms)"
       }
+    },
+    data: {
+      trialphase: {
+        type: jspsych.ParameterType.STRING,
+        default: "reward"
+      },
+      response: {
+        type: jspsych.ParameterType.STRING
+      },
+      rt: {
+        type: jspsych.ParameterType.INT
+      },
+      responseTime: {
+        type: jspsych.ParameterType.INT,
+        array: true
+      },
+      trial_presses: {
+        type: jspsych.ParameterType.INT
+      },
+      target: {
+        type: jspsych.ParameterType.STRING
+      }
     }
   };
 
