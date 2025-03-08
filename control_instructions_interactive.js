@@ -383,7 +383,7 @@ instructionTrial[1] = {
         setupFuelTrial({
             initialMessage: `<p>You can now load up fuel by <strong>pressing the same arrow key again and again.</strong> The fuel gauge will fill up as you press the key.</p>
             <p>Give it a try!</p>`,
-            progressCalculation: (trialPresses) => (trialPresses / 40) * 100,
+            progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
             // Finish trial when 6 fuel presses have been recorded.
             finishCondition: (trialPresses, progress) => trialPresses >= 6,
             finishMessage: `<p>Fueling time is limited. The boat has to leave now!</p>`
@@ -405,8 +405,8 @@ instructionTrial[4] = {
         document.querySelector('#keypress-prompt').style.visibility = 'hidden';
         setupFuelTrial({
             initialMessage: `<p>Keep adding fuel to the boat until it's full!</p>`,
-            // Update progress based on 40 presses (i.e. progress runs from 0 to 100%).
-            progressCalculation: (trialPresses) => (trialPresses / 40) * 100,
+            // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
+            progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
             // Finish trial when the fuel bar reaches 100% width.
             finishCondition: (trialPresses, progress) => progress >= 100,
             finishMessage: `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`
