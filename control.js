@@ -28,8 +28,8 @@ const ctrlConfig = {
     'grape': "j",
     'banana': "k"
   },
-  effort_threshold: 10,
-  scale: 0.6,
+  effort_threshold: [6, 12, 18],
+  scale: 2,
   explore_decision: 4000,
   explore_effort: 3000,
   explore_feedback: 2000,
@@ -219,16 +219,14 @@ function sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
 }
 
-ctrlConfig.effort_threshold = 10;
-ctrlConfig.scale = 0.6;
 function chooseControlRule(effort, current) {
-  const extra_effort = (effort - ctrlConfig.effort_threshold) * ctrlConfig.scale / current;
+  const extra_effort = (effort - ctrlConfig.effort_threshold[current - 1]) * ctrlConfig.scale;
   const prob = sigmoid(extra_effort);
   return Math.random() < prob ? 'control' : 'base';
 }
 
 function probControlRule(effort, current) {
-  const extra_effort = (effort - ctrlConfig.effort_threshold) * ctrlConfig.scale / current;
+  const extra_effort = (effort - ctrlConfig.effort_threshold[current - 1]) * ctrlConfig.scale;
   return sigmoid(extra_effort);
 }
 
