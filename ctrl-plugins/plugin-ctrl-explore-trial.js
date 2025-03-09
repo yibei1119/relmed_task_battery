@@ -125,6 +125,7 @@ var jsPsychExploreShip = (function (jspsych) {
       let responseTime = [];
       let choice = null;
       let choice_rt = 0;
+      let repeated_listener = null;
 
       // Generate HTML for the trial
       const generateHTML = () => {
@@ -234,7 +235,7 @@ var jsPsychExploreShip = (function (jspsych) {
 
       // Setup repeated keypress listener
       const setupRepeatedKeypress = (key) => {
-        this.jsPsych.pluginAPI.getKeyboardResponse({
+        repeated_listener = this.jsPsych.pluginAPI.getKeyboardResponse({
           callback_function: handleRepeatedKeypress,
           valid_responses: [key],
           rt_method: 'performance',
@@ -263,7 +264,11 @@ var jsPsychExploreShip = (function (jspsych) {
 
       // Function to end trial
       const endTrial = () => {
-        this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        if (typeof repeated_listener !== 'undefined') {
+          this.jsPsych.pluginAPI.cancelKeyboardResponse(repeated_listener);
+        } else {
+          this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        }
         display_element.innerHTML = '';
 
         // Save data
