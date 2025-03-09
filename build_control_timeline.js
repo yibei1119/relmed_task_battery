@@ -14,7 +14,7 @@ explore_sequence.forEach(trial => {
         timeline: [{
           type: jsPsychExploreShipFeedback,
           on_finish: function (data) {
-            console.log(data);
+            // console.log(data);
           }
         }],
         conditional_function: function () {
