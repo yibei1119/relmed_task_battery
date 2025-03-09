@@ -81,6 +81,7 @@ for (let i = 0; i < explore_sequence.length; i++) {
       indx = [0, 2].map(num => num + num_miniblock);
       controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
     } else {
+      controlTimeline.push(controlRating);
       indx = [0, 2].map(num => num + num_miniblock - 1);
       controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
     }
