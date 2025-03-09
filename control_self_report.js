@@ -11,7 +11,7 @@ const confidenceRating = {
     const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice !== null;
   },
-  post_trial_gap: 300
+  post_trial_gap: 800
 };
 
 const controlRating = {
@@ -23,7 +23,7 @@ const controlRating = {
       trialphase: "ctrl_controllability"
     }
   }],
-  post_trial_gap: 300
+  post_trial_gap: 800
 };
 
 // Acceptability questions

@@ -310,7 +310,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
-        default: 300,
+        default: 800,
         description: "Gap between trials (ms)"
       }
     },
