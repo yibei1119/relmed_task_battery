@@ -309,7 +309,7 @@ var jsPsychExploreShip = (function (jspsych) {
         responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(125, 15, 0.5, true))),
         trial_presses: trial_presses
       };
-      
+
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
       this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
       return data;
@@ -324,8 +324,10 @@ var jsPsychExploreShip = (function (jspsych) {
       const choiceToKey = {"left": "ArrowLeft", "right": "ArrowRight"};
       const data = this.create_simulation_data(trial, simulation_options);
       const display_element = this.jsPsych.getDisplayElement();
+
       this.trial(display_element, trial);
       load_callback();
+
       if (data.rt!== null) {
         let t = data.rt;
         this.jsPsych.pluginAPI.pressKey(choiceToKey[data.response], t);
@@ -492,6 +494,64 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         display_element.innerHTML = '';
         this.jsPsych.finishTrial(trial_data);
       }, trial.feedback_duration);
+    }
+
+    // Simulation function
+    simulate(trial, simulation_mode, simulation_options, load_callback) {
+      if (simulation_mode == "data-only") {
+        load_callback();
+        this.simulate_data_only(trial, simulation_options);
+      }
+      if (simulation_mode == "visual") {
+        this.simulate_visual(trial, simulation_options, load_callback);
+      }
+    }
+
+    create_simulation_data(trial, simulation_options) {
+      // Get data from previous trial
+      const lastTrial = this.jsPsych.data.getLastTrialData().values()[0];
+      const choice = lastTrial.response; // 'left' or 'right'
+      const chosenColor = this.jsPsych.evaluateTimelineVariable(choice);
+      const nearIsland = this.jsPsych.evaluateTimelineVariable('near');
+      const currentStrength = this.jsPsych.evaluateTimelineVariable('current');
+      const effortLevel = lastTrial.trial_presses;
+
+      // Determine destination island based on control rule
+      const currentRule = this.chooseControlRule(
+        effortLevel, 
+        currentStrength
+      );
+
+      const destinationIsland = currentRule === 'base' 
+        ? this.baseRule[nearIsland]
+        : this.controlRule[chosenColor];
+
+      const default_data = {
+        trialphase: "explore_feedback",
+        destination_island: destinationIsland,
+        control_rule_used: currentRule,
+        effort_level: effortLevel,
+        current_strength: currentStrength,
+        ship_color: chosenColor,
+        near_island: nearIsland,
+        probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
+      };
+      
+      const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+      this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+      return data;
+    }
+
+    simulate_data_only(trial, simulation_options) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      this.jsPsych.finishTrial(data);
+    }
+
+    simulate_visual(trial, simulation_options, load_callback) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      const display_element = this.jsPsych.getDisplayElement();
+      this.trial(display_element, trial);
+      load_callback();
     }
   }
 
