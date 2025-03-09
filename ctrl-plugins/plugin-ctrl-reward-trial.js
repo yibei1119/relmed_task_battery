@@ -399,15 +399,15 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
 
       const correct = trial.target_island === destinationIsland;
       const msg = correct 
-        ? "<p>Congratulations!</p><p>You successfully transport the cargo to the target island.</p>"
-        : "<p>Sorry!</p><p>The cargo has been transported to the wrong island. But don't worry, maybe next time.</p>";
+        ? "<p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p>"
+        : "<p>Sorry!</p><p>The cargo has been transported to the wrong island.<br>But don't worry, maybe next time.</p>";
 
       // Generate feedback display
       const html = `
         <main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-          <div class="instruction-dialog" style="bottom:50%;">
-            <div class="instruction-content" style="font-size: 24px;">
+          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
+            <div class="instruction-content" style="font-size: 32px; text-align: center;">
               ${msg}
             </div>
           </div>
