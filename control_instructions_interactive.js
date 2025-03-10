@@ -363,7 +363,7 @@ var instructionTrial = instructionPages.map((page, i) => {
     return {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: page.content,
-        choices: "j",
+        choices: ["j"],
         trial_duration: null,
         on_finish: () => {
             jsPsych.pluginAPI.clearAllTimeouts()
