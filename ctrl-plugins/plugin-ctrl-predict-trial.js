@@ -20,6 +20,11 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         default: 500,
         description: "Delay after choice before ending trial (ms)"
       },
+      choices : {
+        type: jspsych.ParameterType.KEYS,
+        default: ["d", "f", "j", "k"],
+        description: "Keys for island selection"
+      },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
         default: 300,
@@ -62,6 +67,14 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         'j': 2,
         'k': 3
       };
+
+      // Home base answers
+      this.controlRule = {
+        green: "coconut",
+        blue: "grape",
+        red: "orange",
+        yellow: "banana"
+      };
     }
 
     trial(display_element, trial) {
@@ -82,7 +95,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
             </div>
           </section>
         </div>
-        <p>Which island is the home base of this ship?</p>
+        <p style="position: relative; top: -5vh;">Which island is the home base of this ship?</p>
         <div class="island-choices">
           ${Object.entries(this.islandKeyList).map(([island, key]) => `
             <div class="destination-button" data-choice="${this.keyList[key]}">
@@ -118,7 +131,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       // Set up keyboard listener
       const keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleKeypress,
-        valid_responses: Object.keys(this.keyList),
+        valid_responses: trial.choices,
         rt_method: 'performance',
         persist: false,
         allow_held_key: false
@@ -133,13 +146,14 @@ var jsPsychPredictHomeBase = (function (jspsych) {
 
       const endTrial = () => {
         // Kill keyboard listeners
-        this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
 
         // Save data
         const trial_data = {
           trialphase: "predict_homebase",
           response: choice,
           rt: choice_rt,
+          correct: this.controlRule[trial.ship] === Object.keys(this.islandKeyList)[choice],
           ship: trial.ship
         };
 
@@ -149,6 +163,48 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         // End trial
         this.jsPsych.finishTrial(trial_data);
       };
+    }
+
+    // Simulation function
+    simulate(trial, simulation_mode, simulation_options, load_callback) {
+      if (simulation_mode == "data-only") {
+        load_callback();
+        this.simulate_data_only(trial, simulation_options);
+      }
+      if (simulation_mode == "visual") {
+        this.simulate_visual(trial, simulation_options, load_callback);
+      }
+    }
+
+    create_simulation_data(trial, simulation_options) {
+      let choice = this.keyList[this.jsPsych.pluginAPI.getValidKey(trial.choices)];
+      const default_data = {
+        trialphase: "predict_homebase",
+        response: choice,
+        rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
+        correct: this.controlRule[trial.ship] === Object.keys(this.islandKeyList)[choice],
+        ship: trial.ship
+      };
+
+      const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+      this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+      return data;
+    }
+
+    simulate_data_only(trial, simulation_options) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      this.jsPsych.finishTrial(data);
+    }
+
+    simulate_visual(trial, simulation_options, load_callback) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      const display_element = this.jsPsych.getDisplayElement();
+      this.trial(display_element, trial);
+      load_callback();
+
+      if (data.rt!== null) {
+        this.jsPsych.pluginAPI.pressKey(Object.keys(this.keyList)[data.response], data.rt);
+      }
     }
   }
 
@@ -210,18 +266,6 @@ var jsPsychPredictDest = (function (jspsych) {
       },
       rt: {
         type: jspsych.ParameterType.INT
-      },
-      ship: {
-        type: jspsych.ParameterType.STRING
-      },
-      near: {
-        type: jspsych.ParameterType.STRING
-      },
-      current: {
-        type: jspsych.ParameterType.INT
-      },
-      fuel_lvl: {
-        type: jspsych.ParameterType.INT
       }
     }
   };
@@ -281,7 +325,7 @@ var jsPsychPredictDest = (function (jspsych) {
             ${this.createOceanCurrents(trial.current)}
           </section>
         </div>
-        <p>Based on the current strength and fuel level, where will this ship most likely dock?</p>
+        <p style="position: relative; top: -5vh;">Based on the current strength and fuel level, where will this ship most likely dock?</p>
         <div class="island-choices">
           ${Object.entries(this.islandKeyList).map(([island, key]) => `
             <div class="destination-button" data-choice="${this.keyList[key]}">
@@ -332,17 +376,13 @@ var jsPsychPredictDest = (function (jspsych) {
 
       const endTrial = () => {
         // Kill keyboard listeners
-        this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
 
         // Save data
         const trial_data = {
           trialphase: "predict_dest",
           response: choice,
-          rt: choice_rt,
-          ship: trial.ship,
-          near: trial.near,
-          current: trial.current,
-          fuel_lvl: trial.fuel_lvl
+          rt: choice_rt
         };
 
         // Clear display
