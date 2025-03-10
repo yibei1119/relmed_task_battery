@@ -138,7 +138,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
 
       const endTrial = () => {
         // Kill keyboard listeners
-        this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
 
         // Save data
         const trial_data = {
