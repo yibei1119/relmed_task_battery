@@ -380,21 +380,6 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       control_rule_used: {
         type: jspsych.ParameterType.STRING
       },
-      effort_level: {
-        type: jspsych.ParameterType.INT
-      },
-      current_strength: {
-        type: jspsych.ParameterType.INT
-      },
-      ship_color: {
-        type: jspsych.ParameterType.STRING
-      },
-      near_island: {
-        type: jspsych.ParameterType.STRING
-      },
-      target_island: {
-        type: jspsych.ParameterType.STRING
-      },
       correct: {
         type: jspsych.ParameterType.BOOL
       }
@@ -476,11 +461,6 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         trialphase: "reward_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
-        effort_level: trial.effort_level,
-        current_strength: trial.current_strength,
-        ship_color: trial.ship_color,
-        near_island: trial.near_island,
-        target_island: trial.target_island,
         correct: correct
       };
 
