@@ -45,6 +45,10 @@ var jsPsychRewardShip = (function (jspsych) {
         default: "",
         description: "Amount of reward shown in the quest scroll"
       },
+      choices: {
+        type: jspsych.ParameterType.KEYS,
+        default: ["ArrowLeft", "ArrowRight"]
+      },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
         default: 300,
@@ -283,6 +287,57 @@ var jsPsychRewardShip = (function (jspsych) {
           </div>
         </div>
       `;
+    }
+
+    // Simulation function
+    simulate(trial, simulation_mode, simulation_options, load_callback) {
+      if (simulation_mode == "data-only") {
+        load_callback();
+        this.simulate_data_only(trial, simulation_options);
+      }
+      if (simulation_mode == "visual") {
+        this.simulate_visual(trial, simulation_options, load_callback);
+      }
+    }
+
+    create_simulation_data(trial, simulation_options) {
+      const keyToChoice = {"ArrowLeft": "left", "ArrowRight": "right"};
+      const trial_presses = this.jsPsych.randomization.randomInt(2, 20);
+      const default_data = {
+        trialphase: "reward",
+        response: keyToChoice[this.jsPsych.pluginAPI.getValidKey(trial.choices)],
+        rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
+        responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(125, 15, 0.5, true))),
+        trial_presses: trial_presses,
+        target: trial.target
+      };
+
+      const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+      this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+      return data;
+    }
+
+    simulate_data_only(trial, simulation_options) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      this.jsPsych.finishTrial(data);
+    }
+
+    simulate_visual(trial, simulation_options, load_callback) {
+      const choiceToKey = {"left": "ArrowLeft", "right": "ArrowRight"};
+      const data = this.create_simulation_data(trial, simulation_options);
+      const display_element = this.jsPsych.getDisplayElement();
+
+      this.trial(display_element, trial);
+      load_callback();
+
+      if (data.rt!== null) {
+        let t = data.rt;
+        this.jsPsych.pluginAPI.pressKey(choiceToKey[data.response], t);
+        data.responseTime.forEach((rt, i) => {
+          t += rt;
+          this.jsPsych.pluginAPI.pressKey(choiceToKey[data.response], t);
+        });
+      }
     }
   }
 
