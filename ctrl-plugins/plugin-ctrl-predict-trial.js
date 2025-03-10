@@ -145,6 +145,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
           trialphase: "predict_homebase",
           response: choice,
           rt: choice_rt,
+          correct: this.controlRule[trial.ship] === Object.keys(this.islandKeyList)[choice],
           ship: trial.ship
         };
 
