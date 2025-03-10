@@ -90,3 +90,11 @@ for (let i = 0; i < explore_sequence.length; i++) {
   }
 }
 
+// Add debriefing to the end of the experiment
+let controlDebriefing = [];
+controlDebriefing.push(control_acceptability_intro);
+controlDebriefing.push(acceptability_control);
+controlDebriefing.push(control_debrief);
+
+// Add the debriefing to the end of the experiment
+controlTimeline.push(controlDebriefing);

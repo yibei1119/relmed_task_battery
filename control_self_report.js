@@ -27,12 +27,15 @@ const controlRating = {
 };
 
 // Acceptability questions
-const acceptability_intro =
+const control_acceptability_intro =
 {
     type: jsPsychInstructions,
     css_classes: ['instructions'],
     pages: [
-        `<p>Please answer the following short questions.</p>`
+        `
+          <p>Please answer the following short questions.</p>
+          <p>Your feedback would be very helpful for us to improve the game.</p>
+        `
     ],
     show_clickable_nav: true,
     data: { trialphase: "pre_debrief_instructions" },
@@ -72,21 +75,29 @@ const acceptability_control = {
   }
 };
 
-const debrief = {
+const control_debrief = {
   type: jsPsychSurveyText,
   questions: [
       {
           prompt: "Thinking back on the whole study, was there anything unclear in any of the instructions?",
-          columns: 35,
-          rows: 3,
+          columns: 50,
+          rows: 5,
           value: '',
           name: "instructions",
           required: true
       },
       {
-        prompt: "Thinking back on the whole study, how did you approach the game when asked to explore the shipping network? What was your strategy to choose the ship and the fuel level?",
-        columns: 35,
-        rows: 3,
+        prompt: "Were any parts of the game difficult? If so, which ones and why?",
+        columns: 50,
+        rows: 5,
+        value: '',
+        name: "hardship",
+        required: true
+      },
+      {
+        prompt: "Looking back at the study, how did you approach the game when exploring the shipping network? What strategy did you use to choose the ship and fuel level?",
+        columns: 50,
+        rows: 5,
         value: '',
         name: "strategies",
         required: true
