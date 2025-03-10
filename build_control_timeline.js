@@ -74,6 +74,30 @@ reward_sequence.forEach(trial => {
   });
 });
 
+// Add feedback on the final rewards in total
+let controlTotalReward = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: function () {
+    let total_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('correct').sum() * 5 / 100;
+    return `<main class="main-stage">
+          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
+            <div class="instruction-content" style="font-size: 32px; text-align: center;">
+              <p>You total earnings from the shipping quests are ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}.!</p>
+              <p>Thank you for playing the game!</p>
+              <p>Now press any key to continue.</p>
+            </div>
+          </div>
+        </main>`;
+  },
+  choices: ['ALL_KEYS'],
+  response_ends_trial: true,
+  post_trial_gap: 800,
+  data: { 
+    trialphase: 'control_bonus',
+    control_bonus: jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('correct').sum() * 5 / 100
+  }
+};
 let controlTimeline = [];
 for (let i = 0; i < explore_sequence.length; i++) {
   controlTimeline.push(controlExploreTimeline[i]);
