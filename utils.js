@@ -163,6 +163,8 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
             }
         );
 
+        callback();
+
     } else if (window.context === "prolific") {
 
         var redcap_record = JSON.stringify([{
@@ -204,9 +206,6 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
         });
     }
 
-    
-
-    callback();
 }
 
 // Function to call at the end of the experiment
