@@ -123,7 +123,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       // Set up keyboard listener
       const keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleKeypress,
-        valid_responses: Object.keys(this.keyList),
+        valid_responses: trial.choices,
         rt_method: 'performance',
         persist: false,
         allow_held_key: false
