@@ -325,6 +325,13 @@ var jsPsychExploreShip = (function (jspsych) {
       const data = this.create_simulation_data(trial, simulation_options);
       const display_element = this.jsPsych.getDisplayElement();
 
+      // Faster visual simulation
+      if (simulation_options.speed_up) {
+        trial.explore_decision = trial.explore_decision / simulation_options.speed_up_factor;
+        trial.explore_effort = trial.explore_effort / simulation_options.speed_up_factor;
+        trial.post_trial_gap = trial.post_trial_gap / simulation_options.speed_up_factor;
+      }
+
       this.trial(display_element, trial);
       load_callback();
 
@@ -550,6 +557,13 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     simulate_visual(trial, simulation_options, load_callback) {
       const data = this.create_simulation_data(trial, simulation_options);
       const display_element = this.jsPsych.getDisplayElement();
+
+      // Faster visual simulation
+      if (simulation_options.speed_up) {
+        trial.feedback_duration = trial.feedback_duration / simulation_options.speed_up_factor;
+        trial.post_trial_gap = trial.post_trial_gap / simulation_options.speed_up_factor;
+      }
+
       this.trial(display_element, trial);
       load_callback();
     }

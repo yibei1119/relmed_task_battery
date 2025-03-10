@@ -85,16 +85,27 @@
 
   // control_timeline.push(instructionTrial);
   
-  // control_timeline.push(controlExploreTimeline);
+  control_timeline.push(controlExploreTimeline);
 
   // control_timeline.push(controlPredTimeline);
 
   // control_timeline.push(controlRewardTimeline);
 
-  console.log(controlTimeline);
-  control_timeline.push(controlTimeline);
+  // control_timeline.push(controlTimeline);
 
-  jsPsych.run(control_timeline);
+  // jsPsych.run(control_timeline);
+
+  const simulation_options = {
+    default: {
+      speed_up: true,
+      speed_up_factor: 5,
+      data: {
+        rt: 100
+      }
+    }
+  }
+
+  jsPsych.simulate(control_timeline, "visual", simulation_options);
 </script>
 
 </html>

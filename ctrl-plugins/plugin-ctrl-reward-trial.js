@@ -328,6 +328,14 @@ var jsPsychRewardShip = (function (jspsych) {
       const display_element = this.jsPsych.getDisplayElement();
 
       this.trial(display_element, trial);
+
+      // Faster visual simulation
+      if (simulation_options.speed_up) {
+        trial.reward_decision = trial.reward_decision / simulation_options.speed_up_factor;
+        trial.reward_effort = trial.reward_effort / simulation_options.speed_up_factor; 
+        trial.post_trial_gap = trial.post_trial_gap / simulation_options.speed_up_factor;
+      }
+
       load_callback();
 
       if (data.rt!== null) {
@@ -539,6 +547,12 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       `;
 
       display_element.innerHTML = html;
+
+      // Faster visual simulation
+      if (simulation_options.speed_up) {
+        trial.feedback_duration = trial.feedback_duration / simulation_options.speed_up_factor;
+        trial.post_trial_gap = trial.post_trial_gap / simulation_options.speed_up_factor;
+      }
 
       this.trial(display_element, trial);
       load_callback();
