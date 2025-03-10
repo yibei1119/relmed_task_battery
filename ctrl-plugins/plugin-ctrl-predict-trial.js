@@ -67,6 +67,14 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         'j': 2,
         'k': 3
       };
+
+      // Home base answers
+      this.controlRule = {
+        green: "coconut",
+        blue: "grape",
+        red: "orange",
+        yellow: "banana"
+      };
     }
 
     trial(display_element, trial) {
@@ -155,6 +163,48 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         // End trial
         this.jsPsych.finishTrial(trial_data);
       };
+    }
+
+    // Simulation function
+    simulate(trial, simulation_mode, simulation_options, load_callback) {
+      if (simulation_mode == "data-only") {
+        load_callback();
+        this.simulate_data_only(trial, simulation_options);
+      }
+      if (simulation_mode == "visual") {
+        this.simulate_visual(trial, simulation_options, load_callback);
+      }
+    }
+
+    create_simulation_data(trial, simulation_options) {
+      let choice = this.keyList[this.jsPsych.pluginAPI.getValidKey(trial.choices)];
+      const default_data = {
+        trialphase: "predict_homebase",
+        response: choice,
+        rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
+        correct: this.controlRule[trial.ship] === Object.keys(this.islandKeyList)[choice],
+        ship: trial.ship
+      };
+
+      const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+      this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+      return data;
+    }
+
+    simulate_data_only(trial, simulation_options) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      this.jsPsych.finishTrial(data);
+    }
+
+    simulate_visual(trial, simulation_options, load_callback) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      const display_element = this.jsPsych.getDisplayElement();
+      this.trial(display_element, trial);
+      load_callback();
+
+      if (data.rt!== null) {
+        this.jsPsych.pluginAPI.pressKey(Object.keys(this.keyList)[data.response], data.rt);
+      }
     }
   }
 
