@@ -98,6 +98,14 @@ let controlTotalReward = {
     control_bonus: jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('correct').sum() * 5 / 100
   }
 };
+
+// Add debriefing questions
+let controlDebriefing = [];
+controlDebriefing.push(control_acceptability_intro);
+controlDebriefing.push(acceptability_control);
+controlDebriefing.push(control_debrief);
+
+// Assembling the control timeline
 let controlTimeline = [];
 for (let i = 0; i < explore_sequence.length; i++) {
   controlTimeline.push(controlExploreTimeline[i]);
