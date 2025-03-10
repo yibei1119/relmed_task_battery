@@ -21,7 +21,7 @@
 /* Background elements positioning */
 .instruction-stage .background {
   position: absolute;
-  top: -8%;
+  top: -5vh;
   left: 0;
   width: 100%;
   height: 100%;
@@ -32,7 +32,7 @@
 /* Scene layout and positioning */
 .instruction-stage .scene {
   position: absolute;
-  top: -8%;
+  top: -5vh;
   left: 0;
   width: 100%;
   height: 70%; /* Increased height for more space */
