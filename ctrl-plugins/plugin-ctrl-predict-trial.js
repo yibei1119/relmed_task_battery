@@ -20,6 +20,11 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         default: 500,
         description: "Delay after choice before ending trial (ms)"
       },
+      choices : {
+        type: jspsych.ParameterType.KEYS,
+        default: ["d", "f", "j", "k"],
+        description: "Keys for island selection"
+      },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
         default: 300,
