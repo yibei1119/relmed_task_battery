@@ -108,13 +108,16 @@ controlDebriefing.push(control_debrief);
 // Assembling the control timeline
 let controlTimeline = [];
 for (let i = 0; i < explore_sequence.length; i++) {
+  // Add the explore trials
   controlTimeline.push(controlExploreTimeline[i]);
   if ((i + 1) % 6 === 0) {
     num_miniblock = Math.floor(i / 6)
     if (num_miniblock % 2 === 0) {
+      // Add the prediction trials after trial 6, 18, 30...
       indx = [0, 2].map(num => num + num_miniblock);
       controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
     } else {
+      // Add the reward trials after trial 12, 24, 36...
       controlTimeline.push(controlRating);
       indx = [0, 2].map(num => num + num_miniblock - 1);
       controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
@@ -122,11 +125,7 @@ for (let i = 0; i < explore_sequence.length; i++) {
   }
 }
 
-// Add debriefing to the end of the experiment
-let controlDebriefing = [];
-controlDebriefing.push(control_acceptability_intro);
-controlDebriefing.push(acceptability_control);
-controlDebriefing.push(control_debrief);
+controlTimeline.push(controlTotalReward);
 
 // Add the debriefing to the end of the experiment
 controlTimeline.push(controlDebriefing);
