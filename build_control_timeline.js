@@ -34,7 +34,8 @@ predict_sequence.forEach(trial => {
     timeline: [
       {
         type: jsPsychPredictHomeBase,
-        ship: jsPsych.timelineVariable('ship')
+        ship: jsPsych.timelineVariable('ship'),
+        save_timeline_variables: true
       },
       confidenceRating,
       noChoiceWarning("response")
@@ -54,7 +55,8 @@ reward_sequence.forEach(trial => {
         left: jsPsych.timelineVariable('left'),
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
-        reward_amount: "5p"
+        reward_amount: "5p",
+        save_timeline_variables: true
       },
       {
         timeline: [{
