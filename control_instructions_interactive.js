@@ -165,7 +165,7 @@ function setupFuelTrial(config) {
 
 // Main instruction pages configuration
 const nPages = 7;
-const instructionPages = [
+const controlInstructionPages = [
     // Page 1: Initial Welcome
     {
         content: `
@@ -359,7 +359,7 @@ const instructionPages = [
 ];
 
 // Create the instruction trial
-var instructionTrial = instructionPages.map((page, i) => {
+var controlInstructionTrial = controlInstructionPages.map((page, i) => {
     return {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: page.content,
@@ -373,9 +373,9 @@ var instructionTrial = instructionPages.map((page, i) => {
 });
 
 // Refactored trial 1 using setupFuelTrial
-instructionTrial[1] = {
+controlInstructionTrial[1] = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: instructionPages[1].content,
+    stimulus: controlInstructionPages[1].content,
     choices: "NO_KEYS",
     trial_duration: null,
     on_load: () => {
@@ -396,9 +396,9 @@ instructionTrial[1] = {
 };
 
 // Refactored trial 4 using setupFuelTrial
-instructionTrial[4] = {
+controlInstructionTrial[4] = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: instructionPages[4].content,
+    stimulus: controlInstructionPages[4].content,
     choices: "NO_KEYS",
     trial_duration: null,
     on_load: () => {
