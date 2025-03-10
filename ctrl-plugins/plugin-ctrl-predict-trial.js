@@ -210,18 +210,6 @@ var jsPsychPredictDest = (function (jspsych) {
       },
       rt: {
         type: jspsych.ParameterType.INT
-      },
-      ship: {
-        type: jspsych.ParameterType.STRING
-      },
-      near: {
-        type: jspsych.ParameterType.STRING
-      },
-      current: {
-        type: jspsych.ParameterType.INT
-      },
-      fuel_lvl: {
-        type: jspsych.ParameterType.INT
       }
     }
   };
@@ -338,11 +326,7 @@ var jsPsychPredictDest = (function (jspsych) {
         const trial_data = {
           trialphase: "predict_dest",
           response: choice,
-          rt: choice_rt,
-          ship: trial.ship,
-          near: trial.near,
-          current: trial.current,
-          fuel_lvl: trial.fuel_lvl
+          rt: choice_rt
         };
 
         // Clear display
