@@ -145,21 +145,66 @@ function updateState(state) {
 // Save data to REDCap
 function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
 
-    var jspsych_data = jsPsych.data.get().ignore('stimulus').json();
+    // Get data, remove stimulus string
+    let jspsych_data = jsPsych.data.get().ignore('stimulus').json();
 
-    postToParent(
-        {
-            ...{ 
-                data: jspsych_data 
+    if (window.context === "relmed") {
+        postToParent(
+            {
+                ...{ 
+                    data: jspsych_data 
+                },
+                ...extra_fields
+        },
+            () => {
+                setTimeout(function () {
+                    saveDataREDCap(retry - 1);
+                }, 1000);
+            }
+        );
+
+    } else if (window.context === "prolific") {
+
+        var redcap_record = JSON.stringify([{
+            participant_id: window.participantID,
+            jspsych_data: jspsych_data
+        }])
+    
+        fetch('https://h6pgstm0f9.execute-api.eu-north-1.amazonaws.com/prod/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            ...extra_fields
-    },
-        () => {
-            setTimeout(function () {
-                saveDataREDCap(retry - 1);
-            }, 1000);
+            body: redcap_record
+        })
+        .then(data => {
+            if (data.status === 200) {
+                console.log('Data successfully submitted to REDCap');
+            } else {
+                console.error('Error submitting data:', data.message);
+            }
+            return data.json()
+        })
+        .then(data => {
+            console.log(data)
+            callback(); // Call the callback function if submission is successful
         }
-    );
+        )
+        .catch(error => {
+            console.error('Error:', error);
+            if (retry > 0) {
+                console.log('Retrying to submit data...');
+                setTimeout(function(){
+                    saveDataREDCap(retry - 1);
+                }, 1000);
+            } else {
+                console.error('Failed to submit data after retrying.');
+                callback(error); // Call the callback function with the error if retries are exhausted
+            }
+        });
+    }
+
+    
 
     callback();
 }
