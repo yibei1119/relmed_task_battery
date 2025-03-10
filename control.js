@@ -93,7 +93,7 @@ const exploreTrial = {
   post_trial_gap: ctrlConfig.post_trial_gap,
   save_timeline_variables: true,
   data: {
-    trialphase: "ctrl_explore",
+    trialphase: "control_explore",
     responseTime: () => { return window.responseTime },
     response: () => { return window.choice },
     rt: () => { return window.choice_rt },
@@ -288,7 +288,7 @@ const exploreFeedback = {
     trial_duration: ctrlConfig.explore_feedback,
     post_trial_gap: ctrlConfig.post_trial_gap,
     data: {
-      trialphase: "ctrl_explore_feedback"
+      trialphase: "control_explore_feedback"
     },
     on_load: () => {
       // Clean up any leftover style elements from previous trials
@@ -463,7 +463,7 @@ const predictHomeBaseTrial = {
     )
   },
   data: {
-    trialphase: "ctrl_predict_homebase",
+    trialphase: "control_predict_homebase",
     response: () => { return window.choice },
     rt: () => { return window.choice_rt }
   },
@@ -521,7 +521,7 @@ const predictHomeBaseTrial = {
 //   trial_duration: 1000,
 //   post_trial_gap: 100,
 //   data: {
-//     trialphase: "ctrl_predict_homebase_feedback"
+//     trialphase: "control_predict_homebase_feedback"
 //   }
 // };
 
@@ -537,7 +537,7 @@ const predictDestTrial = {
     );
   },
   data: {
-    trialphase: "ctrl_predict_dest",
+    trialphase: "control_predict_dest",
     response: () => { return window.choice },
     rt: () => { return window.choice_rt }
   },
@@ -621,7 +621,7 @@ const rewardTrial = {
   post_trial_gap: ctrlConfig.post_trial_gap,
   save_timeline_variables: true,
   data: {
-    trialphase: "ctrl_reward",
+    trialphase: "control_reward",
     responseTime: () => { return window.responseTime },
     response: () => { return window.choice },
     rt: () => { return window.choice_rt },
@@ -792,7 +792,7 @@ const rewardFeedback = {
     trial_duration: ctrlConfig.reward_feedback,
     post_trial_gap: ctrlConfig.post_trial_gap,
     data: {
-      trialphase: "ctrl_reward_feedback"
+      trialphase: "control_reward_feedback"
     }
   }],
   conditional_function: function () {

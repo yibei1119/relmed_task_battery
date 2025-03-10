@@ -58,7 +58,7 @@ var jsPsychRewardShip = (function (jspsych) {
     data: {
       trialphase: {
         type: jspsych.ParameterType.STRING,
-        default: "reward"
+        default: "control_reward"
       },
       response: {
         type: jspsych.ParameterType.STRING
@@ -227,7 +227,7 @@ var jsPsychRewardShip = (function (jspsych) {
 
         // Save data
         const trial_data = {
-          trialphase: "reward",
+          trialphase: "control_reward",
           response: choice,
           rt: choice_rt,
           responseTime: responseTime,
@@ -304,7 +304,7 @@ var jsPsychRewardShip = (function (jspsych) {
       const keyToChoice = {"ArrowLeft": "left", "ArrowRight": "right"};
       const trial_presses = this.jsPsych.randomization.randomInt(2, 20);
       const default_data = {
-        trialphase: "reward",
+        trialphase: "control_reward",
         response: keyToChoice[this.jsPsych.pluginAPI.getValidKey(trial.choices)],
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
         responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(125, 15, 0.5, true))),
@@ -372,7 +372,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
     data: {
       trialphase: {
         type: jspsych.ParameterType.STRING,
-        default: "reward_feedback"
+        default: "control_reward_feedback"
       },
       destination_island: {
         type: jspsych.ParameterType.STRING
@@ -458,7 +458,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
 
       // Save data and end trial after duration
       const trial_data = {
-        trialphase: "reward_feedback",
+        trialphase: "control_reward_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
         correct: correct
@@ -502,7 +502,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
 
       const correct = trial.target_island === destinationIsland;
       const default_data = {
-        trialphase: "reward_feedback",
+        trialphase: "control_reward_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
         correct: correct

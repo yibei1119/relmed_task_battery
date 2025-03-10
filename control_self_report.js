@@ -4,7 +4,7 @@ const confidenceRating = {
     stimulus: '<p>How confident are you that your last choice was correct?</p>',
     choices: ["1<br>Not at all", "2", "3", "4", "5<br>Very confident"],
     data: {
-        trialphase: "ctrl_confidence"
+        trialphase: "control_confidence"
     }
   }],
   conditional_function: function () {
@@ -20,7 +20,7 @@ const controlRating = {
     stimulus: "<p>How in control do you feel at this moment?</p>",
     choices: ["1<br>Not at all", "2", "3<br>I don't know", "4", "5<br>Completely in control"],
     data: {
-      trialphase: "ctrl_controllability"
+      trialphase: "control_controllability"
     }
   }],
   post_trial_gap: 800
@@ -49,19 +49,19 @@ const acceptability_control = {
           prompt: "How difficult was the fruit shipping game?",
           labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very difficult"],
           required: true,
-          name: "ctrl_difficulty"
+          name: "control_difficulty"
       },
       {
           prompt: "How enjoyable was the fruit shipping game?",
           labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very enjoyable"],
           required: true,
-          name: "ctrl_enjoy"
+          name: "control_enjoy"
       },
       {
           prompt: "Was it clear to you what you needed to do in the fruit shipping game?",
           labels: ["1<br>Not clear at all", "2", "3", "4", "5<br>Extremely clear"],
           required: true,
-          name: "ctrl_clear"
+          name: "control_clear"
       }
   ],
   data: {

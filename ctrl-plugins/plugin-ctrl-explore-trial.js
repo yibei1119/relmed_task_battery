@@ -48,7 +48,7 @@ var jsPsychExploreShip = (function (jspsych) {
     data: {
       trialphase: {
         type: jspsych.ParameterType.STRING,
-        default: "explore"
+        default: "control_explore"
       },
       response: {
         type: jspsych.ParameterType.STRING
@@ -303,7 +303,7 @@ var jsPsychExploreShip = (function (jspsych) {
       const keyToChoice = {"ArrowLeft": "left", "ArrowRight": "right"};
       const trial_presses = this.jsPsych.randomization.randomInt(2, 20);
       const default_data = {
-        trialphase: "explore",
+        trialphase: "control_explore",
         response: keyToChoice[this.jsPsych.pluginAPI.getValidKey(trial.choices)],
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
         responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(125, 15, 0.5, true))),
@@ -365,7 +365,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     data: {
       trialphase: {
         type: jspsych.ParameterType.STRING,
-        default: "explore_feedback"
+        default: "control_explore_feedback"
       },
       destination_island: {
         type: jspsych.ParameterType.STRING
@@ -480,7 +480,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
 
       // Save data and end trial after duration
       const trial_data = {
-        trialphase: "explore_feedback",
+        trialphase: "control_explore_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
         effort_level: effortLevel,
@@ -527,7 +527,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         : this.controlRule[chosenColor];
 
       const default_data = {
-        trialphase: "explore_feedback",
+        trialphase: "control_explore_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
         effort_level: effortLevel,

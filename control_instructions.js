@@ -257,7 +257,7 @@ const instructionTrial = {
     button_label_next: "Next",
     button_label_previous: "Previous",
     show_page_number: true,
-    data: { phase: 'ctrl_instructions' },
+    data: { phase: 'control_instructions' },
     post_trial_gap: 800
 };
 

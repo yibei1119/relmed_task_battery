@@ -34,7 +34,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
     data: {
       trialphase: {
         type: jspsych.ParameterType.STRING,
-        default: "predict_homebase"
+        default: "control_predict_homebase"
       },
       response: {
         type: jspsych.ParameterType.STRING
@@ -150,7 +150,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
 
         // Save data
         const trial_data = {
-          trialphase: "predict_homebase",
+          trialphase: "control_predict_homebase",
           response: choice,
           rt: choice_rt,
           correct: this.controlRule[trial.ship] === Object.keys(this.islandKeyList)[choice],
@@ -179,7 +179,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
     create_simulation_data(trial, simulation_options) {
       let choice = this.keyList[this.jsPsych.pluginAPI.getValidKey(trial.choices)];
       const default_data = {
-        trialphase: "predict_homebase",
+        trialphase: "control_predict_homebase",
         response: choice,
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
         correct: this.controlRule[trial.ship] === Object.keys(this.islandKeyList)[choice],
@@ -259,7 +259,7 @@ var jsPsychPredictDest = (function (jspsych) {
     data: {
       trialphase: {
         type: jspsych.ParameterType.STRING,
-        default: "predict_dest"
+        default: "control_predict_dest"
       },
       response: {
         type: jspsych.ParameterType.INT
@@ -380,7 +380,7 @@ var jsPsychPredictDest = (function (jspsych) {
 
         // Save data
         const trial_data = {
-          trialphase: "predict_dest",
+          trialphase: "control_predict_dest",
           response: choice,
           rt: choice_rt
         };
