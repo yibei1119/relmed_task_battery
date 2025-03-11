@@ -141,7 +141,7 @@ let controlTimeline = [];
 // Add the preload
 controlTimeline.push(controlPreload);
 // Add the instructions
-controlTimeline.push(controlInstructionTrial);
+controlTimeline.push(controlInstructions);
 
 for (let i = 0; i < explore_sequence.length; i++) {
   // Add the explore trials
