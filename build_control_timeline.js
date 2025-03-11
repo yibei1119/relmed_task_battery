@@ -138,6 +138,11 @@ controlDebriefing.push(control_debrief);
 
 // Assembling the control timeline
 let controlTimeline = [];
+// Add the preload
+controlTimeline.push(controlPreload);
+// Add the instructions
+controlTimeline.push(controlInstructionTrial);
+
 for (let i = 0; i < explore_sequence.length; i++) {
   // Add the explore trials
   controlTimeline.push(controlExploreTimeline[i]);
@@ -156,6 +161,7 @@ for (let i = 0; i < explore_sequence.length; i++) {
   }
 }
 
+// Add the final reward feedback
 controlTimeline.push(controlTotalReward);
 
 // Add the debriefing to the end of the experiment
