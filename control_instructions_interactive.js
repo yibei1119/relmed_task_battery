@@ -86,6 +86,9 @@ function setupFuelTrial(config) {
     const leftContainer = document.querySelector('.fuel-container-left');
     const rightContainer = document.querySelector('.fuel-container-right');
 
+    document.getElementById("jspsych-instructions-next").disabled = true;
+    document.getElementById("display_element").focus();
+
     // Listener for the first key press
     const firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleFirstKey,
