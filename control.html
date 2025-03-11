@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
   <meta charset="UTF-8">
-  <title>Captain's Quest: Maritime Merchant</title>
+  <title>Fruit shipping game</title>
   <script src="jspsych/jspsych.js"></script>
   <script>
     // Initialize jsPsych object
@@ -22,14 +22,22 @@
   <script src="jspsych/plugin-instructions.js"></script>
   <script src="jspsych/plugin-preload.js"></script>
   <script src="jspsych/plugin-fullscreen.js"></script>
-  <script src="plugin-html-vas-response.js"></script>
+  <script src="jspsych/plugin-survey-likert.js"></script>
+  <script src="jspsych/plugin-survey-text.js"></script>
+  <script src="jspsych/plugin-fullscreen.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-explore-trial.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-predict-trial.js"></script>
+  <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
   <script src="utils.js"></script>
-  <script src="control.js"></script>
   <script src="control_instructions_interactive.js"></script>
+  <script src="control_self_report.js"></script>
+  <script src="control_sequences.js"></script>
+  <script src="build_control_timeline.js"></script>
   <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
   <link href="instruction_style.css" rel="stylesheet" type="text/css" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
+
 <style>
   .jsPsychDE {
     position: absolute;
@@ -44,44 +52,38 @@
   <div id='display_element' class='jsPsychDE'></div>
 </body>
 <script>
-  // Add the comparison task to the main experiment timeline
-  const preload = {
-    type: jsPsychPreload,
-    images: [
-      "ocean.png",
-      "ocean_above.png",
-      "simple_island_banana.png",
-      "simple_island_coconut.png",
-      "simple_island_grape.png",
-      "simple_island_orange.png",
-      "simple_ship_blue.png",
-      "simple_ship_green.png",
-      "simple_ship_red.png",
-      "simple_ship_yellow.png",
-      "island_icon_banana.png",
-      "island_icon_coconut.png",
-      "island_icon_grape.png",
-      "island_icon_orange.png",
-      "simple_ship_icon_blue.png",
-      "simple_ship_icon_green.png",
-      "simple_ship_icon_red.png",
-      "simple_ship_icon_yellow.png",
-      "left.png",
+  // Save participant variables to data
+  jsPsych.data.addProperties({
+            n_warnings: 0
+        })
+
+  let controlTestingTimeline = [];
   
-    ].map(s => "imgs/" + s),
-    post_trial_gap: 800,
-    continue_after_error: true
-  };
-  const ctrlTimeline = [
-    preload,
-    instructionTrial,
-    ...expTimeline,
-    ...predictionTimeline,
-    ...rewardTimeline
-];
-  // Run or simulate the experiment
-  // jsPsych.simulate(ctrlTimeline, "visual");
-  jsPsych.run(ctrlTimeline);
+  controlTestingTimeline.push(controlPreload);
+
+  // controlTestingTimeline.push(controlInstructions);
+  
+  // controlTestingTimeline.push(controlExploreTimeline);
+
+  // controlTestingTimeline.push(controlPredTimeline);
+
+  // controlTestingTimeline.push(controlRewardTimeline);
+
+  // controlTestingTimeline.push(controlDebriefing);
+
+  const simulation_options = {
+    default: {
+      speed_up: true,
+      speed_up_factor: 10,
+      data: {
+        rt: 200
+      }
+    }
+  }
+  
+  // jsPsych.run(controlTestingTimeline);
+  // jsPsych.simulate(controlTestingTimeline, "visual");
+  jsPsych.simulate(controlTestingTimeline, "visual", simulation_options);
 </script>
 
 </html>
