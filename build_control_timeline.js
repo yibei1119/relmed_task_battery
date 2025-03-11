@@ -1,3 +1,34 @@
+const controlPreload = {
+  type: jsPsychPreload,
+  images: [
+    "ocean.png",
+    "ocean_above.png",
+    "simple_island_banana.png",
+    "simple_island_coconut.png",
+    "simple_island_grape.png",
+    "simple_island_orange.png",
+    "simple_ship_blue.png",
+    "simple_ship_green.png",
+    "simple_ship_red.png",
+    "simple_ship_yellow.png",
+    "island_icon_banana.png",
+    "island_icon_coconut.png",
+    "island_icon_grape.png",
+    "island_icon_orange.png",
+    "simple_ship_icon_blue.png",
+    "simple_ship_icon_green.png",
+    "simple_ship_icon_red.png",
+    "simple_ship_icon_yellow.png",
+    "left.png",
+
+  ].map(s => "imgs/" + s),
+  post_trial_gap: 800,
+  continue_after_error: true,
+  data: {
+    trialphase: "control_preload"
+  }
+};
+
 const controlExploreTimeline = [];
 explore_sequence.forEach(trial => {
   controlExploreTimeline.push({
