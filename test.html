@@ -22,12 +22,12 @@
   <script src="jspsych/plugin-instructions.js"></script>
   <script src="jspsych/plugin-preload.js"></script>
   <script src="jspsych/plugin-fullscreen.js"></script>
-  <script src="plugin-html-vas-response.js"></script>
-  <script src="control_instructions_interactive.js"></script>
-  <script src="utils.js"></script>
   <script src="ctrl-plugins/plugin-ctrl-explore-trial.js"></script>
   <script src="ctrl-plugins/plugin-ctrl-predict-trial.js"></script>
   <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
+  <script src="control_instructions_interactive.js"></script>
+  <script src="control_self_report.js"></script>
+  <script src="utils.js"></script>
   <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
   <link href="instruction_style.css" rel="stylesheet" type="text/css" />
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -69,23 +69,23 @@ function buildTimeline() {
     const timeline = [preload];
     
     if (mode === 'all') {
-        return [preload, instructionTrial, exploreTrials, controlRating, predictionTrials, confidenceRating, rewardTrials];
+        return [preload, controlInstructions, exploreTrials, controlRating, predictionTrials, confidenceRating, rewardTrials];
     }
     
     if (mode === 'explore') {
-        return [preload, instructionTrial, exploreTrials, controlRating];
+        return [preload, controlInstructions, exploreTrials, controlRating];
     }
     
     if (mode === 'predict') {
-        return [preload, instructionTrial, predictionTrials, confidenceRating];
+        return [preload, controlInstructions, predictionTrials, confidenceRating];
     }
     
     if (mode === 'reward') {
-        return [preload, instructionTrial, rewardTrials];
+        return [preload, controlInstructions, rewardTrials];
     }
     
     if (mode === 'custom') {
-        timeline.push(instructionTrial);
+        timeline.push(controlInstructions);
         selectedTrials.forEach(trial => {
             switch(trial) {
                 case 'explore':
@@ -138,37 +138,6 @@ function buildTimeline() {
     continue_after_error: true
   };
 
-  // Self-report ratings
-  const controlRating = {
-    timeline: [{
-      type: jsPsychHtmlVasResponse,
-      stimulus: "<p>How in control do you feel at this moment?</p>",
-      prompt: "<p>Click on the slider to indicate your response.</p>",
-      scale_width: 600,
-      labels: ["Not at all in control", "I don't know", "Completely in control"],
-      required: true
-    }],
-    conditional_function: function () {
-      const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
-      return last_trial_choice !== null;
-    }
-  };
-
-  const confidenceRating = {
-    timeline: [{
-      type: jsPsychHtmlVasResponse,
-      stimulus: "<p>How confident are you that your last choice was correct?</p>",
-      prompt: "<p>Click on the slider to indicate your response.</p>",
-      scale_width: 600,
-      labels: ["Not at all", "Very confident"],
-      required: true
-    }],
-    conditional_function: function () {
-      const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
-      return last_trial_choice !== null;
-    }
-  };
-
   const warningTrial = noChoiceWarning("response");
 
   const exploreTrials = {
@@ -185,8 +154,6 @@ function buildTimeline() {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
-          effort_threshold: 10,
-          scale: 0.6,
           feedback_duration: 2000
         }],
         conditional_function: function () {
@@ -237,15 +204,15 @@ function buildTimeline() {
         predict_decision: parseInt(times.predict_decision),
         predict_choice: 500
       },
-      {
-        type: jsPsychPredictDest,
-        ship: jsPsych.timelineVariable('ship'),
-        near: jsPsych.timelineVariable('near'),
-        current: jsPsych.timelineVariable('current'),
-        fuel_lvl: jsPsych.timelineVariable('fuel_lvl'),
-        predict_decision: parseInt(times.predict_decision),
-        predict_choice: 500
-      }
+      // {
+      //   type: jsPsychPredictDest,
+      //   ship: jsPsych.timelineVariable('ship'),
+      //   near: jsPsych.timelineVariable('near'),
+      //   current: jsPsych.timelineVariable('current'),
+      //   fuel_lvl: jsPsych.timelineVariable('fuel_lvl'),
+      //   predict_decision: parseInt(times.predict_decision),
+      //   predict_choice: 500
+      // }
     ],
     timeline_variables: [
       {
@@ -279,8 +246,6 @@ function buildTimeline() {
         timeline: [{
           type: jsPsychRewardShipFeedback,
           target_island: jsPsych.timelineVariable('target'),
-          effort_threshold: 10,
-          scale: 0.6,
           feedback_duration: 2000
         }],
         conditional_function: function () {
@@ -308,15 +273,7 @@ function buildTimeline() {
       }
     ]
   };
-  // jsPsych.run([
-  //   preload,
-  //   instructionTrial,
-  //   exploreTrials, 
-  //   controlRating,
-  //   predictionTrials,
-  //   confidenceRating,
-  //   rewardTrials
-  // ]);
+  
   jsPsych.run(buildTimeline());
 </script>
 
