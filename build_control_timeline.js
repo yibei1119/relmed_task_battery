@@ -39,7 +39,16 @@ explore_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
-        save_timeline_variables: true
+        save_timeline_variables: true,
+        on_finish: function (data) {
+          if (data.response === null) {
+            var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+            console.log(up_to_now);
+            jsPsych.data.addProperties({
+                n_warnings: up_to_now + 1
+            });
+          }
+        }
       },
       {
         timeline: [{
@@ -66,7 +75,16 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        save_timeline_variables: true
+        save_timeline_variables: true,
+        on_finish: function (data) {
+          if (data.response === null) {
+            var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+            console.log(up_to_now);
+            jsPsych.data.addProperties({
+                n_warnings: up_to_now + 1
+            });
+          }
+        }
       },
       confidenceRating,
       noChoiceWarning("response")
@@ -87,7 +105,16 @@ reward_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
         reward_amount: "5p",
-        save_timeline_variables: true
+        save_timeline_variables: true,
+        on_finish: function (data) {
+          if (data.response === null) {
+            var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+            console.log(up_to_now);
+            jsPsych.data.addProperties({
+                n_warnings: up_to_now + 1
+            });
+          }
+        }
       },
       {
         timeline: [{
