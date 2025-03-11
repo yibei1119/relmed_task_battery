@@ -62,7 +62,6 @@ const createProgressBar = (current, total) => {
     return `
     <div class="progress-bar-container">
         <div class="progress-bar" style="width: ${(current / total) * 100}%"></div>
-        <p id="keypress-prompt">Press <span class="spacebar-icon"><strong>J</strong></span> to continue</p>
     </div>
 `;
 };
@@ -160,8 +159,8 @@ function setupFuelTrial(config) {
             jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
             document.querySelector('.instruction-content').innerHTML = config.finishMessage;
             jsPsych.pluginAPI.setTimeout(() => {
-                jsPsych.finishTrial();
-            }, config.finishDelay || 2000);
+                document.getElementById("jspsych-instructions-next").disabled = false;
+            }, config.finishDelay || 1000);
         }
     }
 }
@@ -402,8 +401,8 @@ const controlInstructionPages = [
                 <div class="instruction-content" style="font-size: 28px; text-align: center;">
                     <p>😊 Great job! You have completed the instructions.</p>
                     <p>You are now ready to manage the shipping network.</p>
-                    <p>Press <span class="spacebar-icon"><strong>J</strong></span> to start the game.<br>
-                    Press <span class="spacebar-icon"><strong>R</strong></span> to review the instructions.</p>
+                    <p>Press <span class="spacebar-icon">Next ></span> to continue.<br>
+                    Press <span class="spacebar-icon">Restart</span> to start over and re-view.</p>
                 </div>
             </div>
         </div>
@@ -412,27 +411,16 @@ const controlInstructionPages = [
 ];
 
 // Create the instruction trial
-var controlInstructionTrial = controlInstructionPages.map((page, i) => {
-    return {
-        type: jsPsychHtmlKeyboardResponse,
-        stimulus: page.content,
-        choices: ["j"],
-        trial_duration: null,
-        on_finish: () => {
-            jsPsych.pluginAPI.clearAllTimeouts()
-            jsPsych.pluginAPI.cancelAllKeyboardResponses();
-        }
-    };
-});
 
-// Refactored trial 1 using setupFuelTrial
-controlInstructionTrial[1] = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: controlInstructionPages[1].content,
-    choices: ["ScrollLock"],
-    trial_duration: null,
-    on_load: () => {
-        document.querySelector('#keypress-prompt').style.visibility = 'hidden';
+var controlInstructionTrial = [];
+controlInstructionTrial = {
+    type: jsPsychInstructions,
+    pages: controlInstructionPages.map(page => page.content),
+    allow_keys: false,
+    show_clickable_nav: true,
+    show_page_number: false,
+    on_page_change: function(current_page) {
+        if (current_page === 1) {
         setupFuelTrial({
             initialMessage: `<p>You can now load up fuel by <strong>pressing the same arrow key again and again.</strong> The fuel gauge will fill up as you press the key.</p>
             <p>Give it a try!</p>`,
@@ -441,21 +429,9 @@ controlInstructionTrial[1] = {
             finishCondition: (trialPresses, progress) => trialPresses >= 6,
             finishMessage: `<p>Fueling time is limited. The boat has to leave now!</p>`
         });
-    },
-    on_finish: () => {
-        jsPsych.pluginAPI.clearAllTimeouts();
-        jsPsych.pluginAPI.cancelAllKeyboardResponses();
-    }
-};
+        }
 
-// Refactored trial 4 using setupFuelTrial
-controlInstructionTrial[4] = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: controlInstructionPages[4].content,
-    choices: ["ScrollLock"],
-    trial_duration: null,
-    on_load: () => {
-        document.querySelector('#keypress-prompt').style.visibility = 'hidden';
+        if (current_page === 4) {
         setupFuelTrial({
             initialMessage: `<p>Keep adding fuel to the boat until it's full!</p>`,
             // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
@@ -464,16 +440,24 @@ controlInstructionTrial[4] = {
             finishCondition: (trialPresses, progress) => progress >= 100,
             finishMessage: `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`
         });
-    },
-    on_finish: () => {
-        jsPsych.pluginAPI.clearAllTimeouts();
-        jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        }
+
+        if (current_page === 8) {
+            const navigationElement = document.querySelector('.jspsych-instructions-nav');
+            const firstButton = navigationElement.querySelector('button:first-child');
+            const newButton = document.createElement('button');
+            newButton.id = 'jspsych-instructions-restart';
+            newButton.textContent = 'Restart';
+            newButton.className = 'jspsych-btn';
+            newButton.style.backgroundColor = '#ff7875';
+            newButton.addEventListener('click', () => {
+                
+            });
+            navigationElement.insertBefore(newButton, firstButton.nextSibling);
+
+        }
     }
 };
-
-// Tweak the choices of the final instruction page
-controlInstructionTrial[controlInstructionTrial.length - 1].choices = ["j", "r"];
-controlInstructionTrial[controlInstructionTrial.length - 1].simulation_options = {simulate: false};
 
 // Add looping functionality to the instruction trial
 const controlInstructions = {
