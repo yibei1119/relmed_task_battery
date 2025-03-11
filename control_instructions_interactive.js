@@ -164,7 +164,7 @@ function setupFuelTrial(config) {
 }
 
 // Main instruction pages configuration
-const nPages = 7;
+const nPages = 9;
 const controlInstructionPages = [
     // Page 1: Initial Welcome
     {
@@ -426,7 +426,7 @@ var controlInstructionTrial = controlInstructionPages.map((page, i) => {
 controlInstructionTrial[1] = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: controlInstructionPages[1].content,
-    choices: "NO_KEYS",
+    choices: ["ScrollLock"],
     trial_duration: null,
     on_load: () => {
         document.querySelector('#keypress-prompt').style.visibility = 'hidden';
@@ -449,7 +449,7 @@ controlInstructionTrial[1] = {
 controlInstructionTrial[4] = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: controlInstructionPages[4].content,
-    choices: "NO_KEYS",
+    choices: ["ScrollLock"],
     trial_duration: null,
     on_load: () => {
         document.querySelector('#keypress-prompt').style.visibility = 'hidden';
@@ -465,5 +465,22 @@ controlInstructionTrial[4] = {
     on_finish: () => {
         jsPsych.pluginAPI.clearAllTimeouts();
         jsPsych.pluginAPI.cancelAllKeyboardResponses();
+    }
+};
+
+// Tweak the choices of the final instruction page
+controlInstructionTrial[controlInstructionTrial.length - 1].choices = ["j", "r"];
+controlInstructionTrial[controlInstructionTrial.length - 1].simulation_options = {simulate: false};
+
+// Add looping functionality to the instruction trial
+const controlInstructions = {
+    timeline: [controlInstructionTrial],
+    loop_function: (data) => {
+        const last_iter = data.last(1).values()[0];
+        if (jsPsych.pluginAPI.compareKeys(last_iter.response, 'r')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 };
