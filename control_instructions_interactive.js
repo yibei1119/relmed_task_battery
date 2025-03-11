@@ -350,9 +350,59 @@ const controlInstructionPages = [
             ${createInstructionDialog(`
                 <p>So now, please keep trying these out. We will always give you information on how strong the ocean currents are that day (<span style="color: darkgray">1 = Low</span>, <span style="color: dimgray">2 = Mid</span>, and <span style="color: black">3 = High</span>).</p>
                 <p>The stronger the current, the more you'll have to fuel the boat <strong>if you want it to go to its homebase.</strong></p>
-                <p>Your first job as a new manager is to get a sense of all of this. When you're ready, press the button to start.</p>
+                <p>Your first job as a new manager is to get a sense of all of this.</p>
             `)}
             ${createProgressBar(7, nPages)}
+        </div>
+        `
+    },
+
+    // Page 8: Quest trial explanation
+    {
+        content: `
+        <div class="instruction-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+            <div class="quest-scroll">
+                <p style="position: absolute; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
+                <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
+                <img class="island-target" src="imgs/island_icon_coconut.png" alt="Target island" />
+                <p style="position: absolute; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
+            </div>
+            <div class="overlap-group">
+                <div class="choice-left">
+                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                </div>
+                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <div class="choice-right">
+                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                </div>
+            </div>
+            ${createOceanCurrents(2)}
+            </section>
+            ${createInstructionDialog(`
+                <p>Once in a while in your job, you will receive rewarded quests like this.</p>
+                <p>When you see the quest scroll, you should use your knowledge of the shipping network to choose the proper ship and add the fuel level you want.</p>
+                <p>You can earn extra money by completing the quests successfully.</p>
+            `)}
+            ${createProgressBar(8, nPages)}
+        </div>
+        `
+    },
+
+    // Page 9: End of instructions
+    {
+        content: `
+        <div class="instruction-stage">
+            <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+            <div class="instruction-dialog" style="bottom:30%; min-width: 600px;">
+                <div class="instruction-content" style="font-size: 28px; text-align: center;">
+                    <p>😊 Great job! You have completed the instructions.</p>
+                    <p>You are now ready to manage the shipping network.</p>
+                    <p>Press <span class="spacebar-icon"><strong>J</strong></span> to start the game.<br>
+                    Press <span class="spacebar-icon"><strong>R</strong></span> to review the instructions.</p>
+                </div>
+            </div>
         </div>
         `
     }
