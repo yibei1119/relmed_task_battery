@@ -127,7 +127,7 @@ function setupFuelTrial(config) {
         setupRepeatedKeyListener();
     }
     
-    let repeatedKeyListener;
+    let repeatedKeyListener = null;
     function setupRepeatedKeyListener() {
         repeatedKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
             callback_function: handleRepeatedKeypress,
@@ -421,25 +421,25 @@ controlInstructionTrial = {
     show_page_number: false,
     on_page_change: function(current_page) {
         if (current_page === 1) {
-        setupFuelTrial({
-            initialMessage: `<p>You can now load up fuel by <strong>pressing the same arrow key again and again.</strong> The fuel gauge will fill up as you press the key.</p>
-            <p>Give it a try!</p>`,
-            progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
-            // Finish trial when 6 fuel presses have been recorded.
-            finishCondition: (trialPresses, progress) => trialPresses >= 6,
-            finishMessage: `<p>Fueling time is limited. The boat has to leave now!</p>`
-        });
+            setupFuelTrial({
+                initialMessage: `<p>You can now load up fuel by <strong>pressing the same arrow key again and again.</strong> The fuel gauge will fill up as you press the key.</p>
+                <p>Give it a try!</p>`,
+                progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
+                // Finish trial when 6 fuel presses have been recorded.
+                finishCondition: (trialPresses, progress) => trialPresses >= 6,
+                finishMessage: `<p>Fueling time is limited. The boat has to leave now!</p>`
+            });
         }
 
         if (current_page === 4) {
-        setupFuelTrial({
-            initialMessage: `<p>Keep adding fuel to the boat until it's full!</p>`,
-            // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
-            progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
-            // Finish trial when the fuel bar reaches 100% width.
-            finishCondition: (trialPresses, progress) => progress >= 100,
-            finishMessage: `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`
-        });
+            setupFuelTrial({
+                initialMessage: `<p>Keep adding fuel to the boat until it's full!</p>`,
+                // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
+                progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
+                // Finish trial when the fuel bar reaches 100% width.
+                finishCondition: (trialPresses, progress) => progress >= 100,
+                finishMessage: `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`
+            });
         }
 
         if (current_page === 8) {
