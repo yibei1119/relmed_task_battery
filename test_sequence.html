@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Plugin Test</title>
+  <title>Fruit shipping game</title>
   <script src="jspsych/jspsych.js"></script>
   <script>
     // Initialize jsPsych object
@@ -52,34 +52,38 @@
   <div id='display_element' class='jsPsychDE'></div>
 </body>
 <script>
+  // Save participant variables to data
+  jsPsych.data.addProperties({
+            n_warnings: 0
+        })
 
-  let control_timeline = [];
+  let controlTestingTimeline = [];
   
-  control_timeline.push(controlPreload);
+  controlTestingTimeline.push(controlPreload);
 
-  control_timeline.push(controlInstructionTrial);
+  // controlTestingTimeline.push(controlInstructions);
   
-  control_timeline.push(controlExploreTimeline);
+  // controlTestingTimeline.push(controlExploreTimeline);
 
-  // control_timeline.push(controlPredTimeline);
+  // controlTestingTimeline.push(controlPredTimeline);
 
-  // control_timeline.push(controlRewardTimeline);
+  // controlTestingTimeline.push(controlRewardTimeline);
 
-  // control_timeline.push(controlTimeline);
-
-  // jsPsych.run(control_timeline);
+  // controlTestingTimeline.push(controlDebriefing);
 
   const simulation_options = {
     default: {
       speed_up: true,
-      speed_up_factor: 5,
+      speed_up_factor: 10,
       data: {
-        rt: 100
+        rt: 200
       }
     }
   }
-
-  jsPsych.simulate(control_timeline, "visual", simulation_options);
+  
+  // jsPsych.run(controlTestingTimeline);
+  // jsPsych.simulate(controlTestingTimeline, "visual");
+  jsPsych.simulate(controlTestingTimeline, "visual", simulation_options);
 </script>
 
 </html>
