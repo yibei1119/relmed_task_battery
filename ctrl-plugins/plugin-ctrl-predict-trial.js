@@ -95,7 +95,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
             </div>
           </section>
         </div>
-        <p style="position: relative; top: -5vh;">Which island is the home base of this ship?</p>
+        <p style="position: relative; top: -5vh;">Which island is the home base of this ship?<br>Press the key to choose.</p>
         <div class="island-choices">
           ${Object.entries(this.islandKeyList).map(([island, key]) => `
             <div class="destination-button" data-choice="${this.keyList[key]}">
@@ -332,7 +332,7 @@ var jsPsychPredictDest = (function (jspsych) {
             ${this.createOceanCurrents(trial.current)}
           </section>
         </div>
-        <p style="position: relative; top: -5vh;">Based on the current strength and fuel level, where will this ship most likely dock?</p>
+        <p style="position: relative; top: -5vh;">Based on the current strength and fuel level, where will this ship most likely dock?<br>Press the key to choose.</p>
         <div class="island-choices">
           ${Object.entries(this.islandKeyList).map(([island, key]) => `
             <div class="destination-button" data-choice="${this.keyList[key]}">
