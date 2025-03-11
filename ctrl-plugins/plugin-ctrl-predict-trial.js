@@ -199,14 +199,15 @@ var jsPsychPredictHomeBase = (function (jspsych) {
     simulate_visual(trial, simulation_options, load_callback) {
       const data = this.create_simulation_data(trial, simulation_options);
       const display_element = this.jsPsych.getDisplayElement();
-      this.trial(display_element, trial);
 
       // Faster visual simulation
       if (simulation_options.speed_up) {
         trial.predict_decision = trial.predict_decision / simulation_options.speed_up_factor;
+        trial.predict_choice = trial.predict_choice / simulation_options.speed_up_factor;
         trial.post_trial_gap = trial.post_trial_gap / simulation_options.speed_up_factor;
       }
 
+      this.trial(display_element, trial);
       load_callback();
 
       if (data.rt!== null) {
