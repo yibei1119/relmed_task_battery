@@ -458,6 +458,81 @@ controlInstructionTrial = {
     }
 };
 
+// Comprehension check
+let controlIntroComprehension = [];
+controlIntroComprehension.push({
+    type: jsPsychSurveyMultiChoice,
+    preamble: `<div class=instructions><p>For each statement, please indicate whether it is true or false:</p></div>`,
+    data: {trialphase: "control_instruction_quiz"},
+    questions: [
+        {
+            prompt: "My main task is to learn each ship’s home island and the amount of fuel required at each current level.",
+            name: "objective",
+            options: ["True", "False"],
+            required: true
+        },
+        {
+            prompt: "From time to time, my knowledge of the shipping task will be tested, and I can earn rewards for correct answers and completing quests.",
+            name: "reward",
+            options: ["True", "False"],
+            required: true
+        },
+        {
+            prompt: "Grape island is the home base for the blue ship.",
+            name: "homebase",
+            options: ["True", "False"],
+            required: true
+        },
+        {
+            prompt: "Different current levels require different amounts of fuel for a ship to reach its home base.",
+            name: "currents",
+            options: ["True", "False"],
+            required: true
+        },
+        {
+            prompt: "If a ship lacks sufficient fuel, the currents will carry it to the next island.",
+            name: "drift",
+            options: ["True", "False"],
+            required: true
+        }
+    ],
+    simulation_options: {
+        data: {
+            response: {
+                Q0: `True`,
+                Q1: `True`,
+                Q2: `True`,
+                Q3: `True`,
+                Q4: `True`,
+            }
+        }
+    }
+});
+
+controlIntroComprehension.push(
+    {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        timeline: [
+            {
+                pages: [
+                `<p>You did not answer all the quiz questions correctly.</p>
+                <p>Please read the instructions again before you continue.</p>`
+                ]
+            }
+        ],
+        conditional_function: () => {
+            const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
+
+            return !Object.values(data).every(value => value === "True");
+        },
+        show_clickable_nav: true,
+        data: {
+            trialphase: "control_instruction_quiz_failure"
+        }
+    }
+)
+
 // Add looping functionality to the instruction trial
 const controlInstructions = {
     timeline: [controlInstructionTrial],
