@@ -143,7 +143,7 @@ const pavlovian_images_f = () => {
         "-1": "PIT6.png",
         "-0.5": "PIT5.png"
     };
-    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "Pav_stims/session" + sessionNum + "/" + v]));
+    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "Pav_stims/" + window.session + "/" + v]));
     return PIT_imgs;
 };
 
@@ -368,7 +368,7 @@ async function load_squences(session) {
             throw new Error('Network response was not ok');
         }
         const structure = await response.json();
-        let sess_structure = structure[session - 1];
+        let sess_structure = structure[session];
 
         if (window.demo){
             sess_structure = sess_structure.slice(0,6);
@@ -385,7 +385,7 @@ async function load_squences(session) {
 
         const test_structure = await test_response.json();
 
-        let test_sess_structure = test_structure[session - 1];
+        let test_sess_structure = test_structure[session];
 
         if (window.demo){
             test_sess_structure = [test_sess_structure[0].slice(0,25)];
@@ -405,8 +405,8 @@ async function load_squences(session) {
 
         // Add folder to stimuli, and rename block
         for (i=0; i<pav_test_structure.length; i++){
-            pav_test_structure[i].stimulus_left = `imgs/Pav_stims/session${window.sessionNum}/${pav_test_structure[i].stimulus_left}`
-            pav_test_structure[i].stimulus_right = `imgs/Pav_stims/session${window.sessionNum}/${pav_test_structure[i].stimulus_right}`
+            pav_test_structure[i].stimulus_left = `imgs/Pav_stims/${window.session}/${pav_test_structure[i].stimulus_left}`
+            pav_test_structure[i].stimulus_right = `imgs/Pav_stims/${window.session}/${pav_test_structure[i].stimulus_right}`
             pav_test_structure[i].block = "pavlovian"
             pav_test_structure[i].feedback_left = pav_test_structure[i].magnitude_left
             pav_test_structure[i].feedback_right = pav_test_structure[i].magnitude_right
@@ -420,7 +420,7 @@ async function load_squences(session) {
         // Fetch WM structure
         const WM_response = await fetch('pilot8_WM.json');
         const WM_structure = await WM_response.json();
-        let WM_sess_structure = WM_structure[session - 1];
+        let WM_sess_structure = WM_structure[session];
 
         if (window.demo){
             WM_sess_structure = WM_sess_structure.slice(0,3);
@@ -429,7 +429,7 @@ async function load_squences(session) {
         // Fetch LTM structure
         const LTM_response = await fetch('pilot8_LTM.json');
         const LTM_structure = await LTM_response.json();
-        let LTM_sess_structure = LTM_structure[session - 1];
+        let LTM_sess_structure = LTM_structure[session];
 
         if (window.demo){
             LTM_sess_structure = LTM_sess_structure.slice(0,3);
@@ -438,7 +438,7 @@ async function load_squences(session) {
         // Fetch WM test structure
         const WM_test_response = await fetch('pilot8_WM_test.json');
         const WM_test_structure = await WM_test_response.json();
-        let WM_test_sess_structure = WM_test_structure[session - 1];
+        let WM_test_sess_structure = WM_test_structure[session];
 
         // Add folder to stimuli
         for (i=0; i<WM_test_sess_structure.length; i++){
@@ -451,7 +451,7 @@ async function load_squences(session) {
         // Fetch LTM test structure
         const LTM_test_response = await fetch('pilot8_LTM_test.json');
         const LTM_test_structure = await LTM_test_response.json();
-        let LTM_test_sess_structure = LTM_test_structure[session - 1];
+        let LTM_test_sess_structure = LTM_test_structure[session];
 
         // Add folder to stimuli
         for (i=0; i<LTM_test_sess_structure.length; i++){
