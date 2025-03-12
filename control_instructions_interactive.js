@@ -217,9 +217,9 @@ const controlInstructionPages = [
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
-                <p>As a manager, you will need to choose the right boat, and decide how much fuel to load it up with.</p>
-                <p>Choose one of the boats by pressing the left or right arrow key.</p>
-                <p>Let's try it out to <strong>select the blue boat by pressing the right arrow key.</strong></p>
+                <p>As a manager, you will need to choose the right ship, and decide how much fuel to load it up with.</p>
+                <p>Choose one of the ships by pressing the left or right arrow key.</p>
+                <p>Let's try it out to <strong>select the blue ship by pressing the right arrow key.</strong></p>
             `)}
             ${createProgressBar(2, nPages)}
         </div>
@@ -248,8 +248,8 @@ const controlInstructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>The boat didn't have enough fuel and ran out of fuel midway. Luckily, the ocean currents tend to carry boats with insufficient fuel to the next island in the chain.</p>
-                <p>So the boat just drifted from the <span style="color: gold">banana island</span>🍌 to the <span style="color: brown">coconut island</span>🥥, which is the next island in the chain.</p>`)}
+                <p>The ship didn't have enough fuel and ran out of fuel midway. Luckily, the ocean currents tend to carry ships with insufficient fuel to the next island in the chain.</p>
+                <p>So the ship just drifted from the <span style="color: gold">banana island</span>🍌 to the <span style="color: brown">coconut island</span>🥥, which is the next island in the chain.</p>`)}
             ${createProgressBar(3, nPages)}
         </div>
         `
@@ -262,8 +262,8 @@ const controlInstructionPages = [
             <img class="background" src="imgs/default_islands.png" alt="Background"/>
             ${createInstructionDialog(`
                 <p>Thanks to many former managers, this is a map of the four islands in the network. The arrows show how the ocean currents work.</p>
-                <p><strong>When a boat does not have sufficient fuel, the current carries it to the next island along the arrows.</strong></p>
-                <p>For example, without fuel, a boat leaving the <span style="color: orange">orange island</span>🍊 will end up on the <span style="color: gold">banana island</span>🍌.</p>
+                <p><strong>When a ship does not have sufficient fuel, the current carries it to the next island along the arrows.</strong></p>
+                <p>For example, without fuel, a ship leaving the <span style="color: orange">orange island</span>🍊 will end up on the <span style="color: gold">banana island</span>🍌.</p>
             `)}
             ${createProgressBar(4, nPages)}
         </div>
@@ -331,9 +331,9 @@ const controlInstructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, the boat had enough fuel this time! When a boat have enough fuel, it will try to return to its homebase.</p>
-                <p>This <span style="color: royalblue">blue boat</span> has a <span style="color: purple">grape island</span>🍇 as the homebase. Because it's fueled up this time, it went to its homebase island instead of drifting with the current to the next island.</p>
-                <p><strong>Note that the boats can also start from and sail back to their home bases.</strong></p>
+                <p>Great, the ship had enough fuel this time! When a ship have enough fuel, it will try to return to its homebase.</p>
+                <p>This <span style="color: royalblue">blue ship</span> has a <span style="color: purple">grape island</span>🍇 as the homebase. Because it's fueled up this time, it went to its homebase island instead of drifting with the current to the next island.</p>
+                <p><strong>Note that the ships can also start from and sail back to their home bases.</strong></p>
             `)}
             ${createProgressBar(6, nPages)}
         </div>
@@ -351,7 +351,7 @@ const controlInstructionPages = [
             </div>
             ${createInstructionDialog(`
                 <p>So now, please keep trying these out. We will always give you information on how strong the ocean currents are that day (<span style="color: darkgray">1 = Low</span>, <span style="color: dimgray">2 = Mid</span>, and <span style="color: black">3 = High</span>).</p>
-                <p>The stronger the current, the more you'll have to fuel the boat <strong>if you want it to go to its homebase.</strong></p>
+                <p>The stronger the current, the more you'll have to fuel the ship <strong>if you want it to go to its homebase.</strong></p>
                 <p>Your first job as a new manager is to get a sense of all of this.</p>
             `)}
             ${createProgressBar(7, nPages)}
@@ -427,18 +427,18 @@ controlInstructionTrial = {
                 progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
                 // Finish trial when 6 fuel presses have been recorded.
                 finishCondition: (trialPresses, progress) => trialPresses >= 6,
-                finishMessage: `<p>Fueling time is limited. The boat has to leave now!</p>`
+                finishMessage: `<p>Fueling time is limited. The ship has to leave now!</p>`
             });
         }
 
         if (current_page === 4) {
             setupFuelTrial({
-                initialMessage: `<p>Keep adding fuel to the boat until it's full!</p>`,
+                initialMessage: `<p>Keep adding fuel to the ship until it's full!</p>`,
                 // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
                 progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
                 // Finish trial when the fuel bar reaches 100% width.
                 finishCondition: (trialPresses, progress) => progress >= 100,
-                finishMessage: `<p>Now the fuel is full for this boat, and it's about to leave now!</p>`
+                finishMessage: `<p>Now the fuel is full for this ship, and it's about to leave now!</p>`
             });
         }
 
