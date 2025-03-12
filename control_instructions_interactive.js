@@ -398,11 +398,10 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean_above.png" alt="Background"/>
             <div class="instruction-dialog" style="bottom:30%; min-width: 600px;">
-                <div class="instruction-content" style="font-size: 24px; text-align: center;">
-                    <p>😊 Great job! You have completed the instructions.</p>
-                    <p>You are now ready to manage the shipping network.</p>
-                    <p>Press <span class="spacebar-icon">Next</span> to continue.<br>
-                    Press <span class="spacebar-icon">Restart</span> to start over.</p>
+                <div class="instruction-content" style="font-size: 1.2em; text-align: center;">
+                    <p>😊 <strong>Great job!</strong> You've successfully completed the instructions.</p>
+                    <p>You're now ready to start managing the shipping network.</p>
+                    <p>Press <span class="spacebar-icon">Next</span> to continue, or press <span class="spacebar-icon">Restart</span> if you'd like to review the instructions again.</p>
                 </div>
             </div>
         </div>
