@@ -19,13 +19,13 @@
         window.debug = window.participantID.includes("debug");
         window.demo = window.participantID.includes("DEMO") | window.participantID.includes("STAF");
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
-        window.sessionNum = jsPsych.data.getURLVariable('session_num');
+        window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
 
         // Save participant variables to data
         jsPsych.data.addProperties({
             participant_id: window.participantID,
-            session: window.sessionNum,
+            session: window.session,
             n_warnings: 0,
             version: "0.2",
             task: window.task,
@@ -100,7 +100,7 @@
                 "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
                 "occluding_clouds.png", "PILT_keys.jpg", "WM_keys.jpg"
             ].map(s => "imgs/" + s),
-            ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/session" + sessionNum + "/" + s)
+            ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
             ].flat(),
             post_trial_gap: 800
         },
@@ -295,6 +295,6 @@
     // Load sequences and start
     var procedure = [];
 
-    load_squences(window.sessionNum);
+    load_squences(window.session);
 </script>
 </html>
