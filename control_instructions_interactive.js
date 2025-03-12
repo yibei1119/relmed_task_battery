@@ -86,7 +86,7 @@ function setupFuelTrial(config) {
     const rightContainer = document.querySelector('.fuel-container-right');
 
     document.getElementById("jspsych-instructions-next").disabled = true;
-    document.getElementById("display_element").focus();
+    document.getElementById(jsPsych.getDisplayContainerElement().id).focus();
 
     // Listener for the first key press
     const firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
@@ -398,11 +398,11 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean_above.png" alt="Background"/>
             <div class="instruction-dialog" style="bottom:30%; min-width: 600px;">
-                <div class="instruction-content" style="font-size: 28px; text-align: center;">
+                <div class="instruction-content" style="font-size: 24px; text-align: center;">
                     <p>😊 Great job! You have completed the instructions.</p>
                     <p>You are now ready to manage the shipping network.</p>
-                    <p>Press <span class="spacebar-icon">Next ></span> to continue.<br>
-                    Press <span class="spacebar-icon">Restart</span> to start over and re-view.</p>
+                    <p>Press <span class="spacebar-icon">Next</span> to continue.<br>
+                    Press <span class="spacebar-icon">Restart</span> to start over.</p>
                 </div>
             </div>
         </div>
@@ -451,7 +451,7 @@ controlInstructionTrial = {
             newButton.className = 'jspsych-btn';
             newButton.style.backgroundColor = '#ff7875';
             newButton.addEventListener('click', () => {
-                
+                jsPsych.finishTrial({restart: true});
             });
             navigationElement.insertBefore(newButton, firstButton.nextSibling);
 
@@ -464,7 +464,7 @@ const controlInstructions = {
     timeline: [controlInstructionTrial],
     loop_function: (data) => {
         const last_iter = data.last(1).values()[0];
-        if (jsPsych.pluginAPI.compareKeys(last_iter.response, 'r')) {
+        if (last_iter.restart) {
             return true;
         } else {
             return false;
