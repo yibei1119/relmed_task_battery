@@ -414,10 +414,12 @@ const controlInstructionPages = [
 var controlInstructionTrial = [];
 controlInstructionTrial = {
     type: jsPsychInstructions,
+    css_classes: ['instructions'],
     pages: controlInstructionPages.map(page => page.content),
     allow_keys: false,
     show_clickable_nav: true,
     show_page_number: false,
+    data: {trialphase: "control_instructions"},
     on_page_change: function(current_page) {
         if (current_page === 1) {
             setupFuelTrial({
@@ -536,12 +538,31 @@ controlIntroComprehension.push(
 // Add looping functionality to the instruction trial
 const controlInstructions = {
     timeline: [controlInstructionTrial],
-    loop_function: (data) => {
-        const last_iter = data.last(1).values()[0];
-        if (last_iter.restart) {
-            return true;
-        } else {
-            return false;
-        }
+    loop_function: () => {
+        const restart = jsPsych.data.get().filter({trialphase: "control_instructions"}).last(1).select('restart').values[0];
+        return restart;
     }
 };
+
+const controlInstructionsLoop = {
+    timeline: [controlInstructions, controlIntroComprehension],
+    loop_function: () => {
+        const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
+
+        return !Object.values(data).every(value => value === "True");
+    }
+};
+
+const controlInstructionsTimeline = [
+    controlInstructionsLoop,
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        css_classes: ['instructions'],
+        stimulus: `<p><strong>Great! You're now ready to begin the real game.</strong></p>
+        <p>You'll play multiple rounds, which typically takes about <strong>20 minutes</strong> to complete.</p>
+        <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press either arrow key to begin.</p>
+        <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
+        choices: ['arrowright', 'arrowleft'],
+        data: {trialphase: "control_instruction_end"}
+    }
+];
