@@ -544,3 +544,35 @@ function inter_block_stimulus(){
 
     return txt
 }
+
+
+// Function to shuffle arrays in a consistent manner by using a string to set random seed
+// Function to generate a numeric seed from a string
+function stringToSeed(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+}
+
+// Simple LCG (Linear Congruential Generator) for pseudo-random numbers
+function seededRandom(seed) {
+    return function() {
+        seed = (seed * 1664525 + 1013904223) % 4294967296;
+        return (seed >>> 16) / 65536;
+    };
+}
+
+// Fisher-Yates shuffle with seeded RNG
+function shuffleArray(arr, seedString) {
+    let seed = stringToSeed(seedString);
+    let random = seededRandom(seed);
+    let shuffled = arr.slice(); // Clone the array to avoid mutation
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
