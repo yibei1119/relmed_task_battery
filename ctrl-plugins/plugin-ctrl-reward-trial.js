@@ -97,41 +97,41 @@ var jsPsychRewardShip = (function (jspsych) {
       const generateHTML = () => {
         const far = this.baseRule[trial.near];
         return `
-        <main class="main-stage">
-          <img class="background" src="imgs/ocean.png" alt="Background"/>
-          <section class="scene">
+          <main class="main-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
-            <div class="quest-scroll">
-              <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
-              <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
-              <img class="island-target" src="imgs/island_icon_${trial.target}.png" alt="Target island" />
-              <p style="position: absolute; z-index: 4; top: 55%; font-size: 2.5vh; color: maroon">Quest reward: ${trial.reward_amount}</p>
-            </div>
-            <div class="overlap-group">
-              <div class="choice-left">
-                <div class="fuel-container-left">
-                  <div class="fuel-indicator-container">
-                    <div class="fuel-indicator-bar"></div>
-                  </div>
-                </div>
-                <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
-                <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
+              <div class="quest-scroll">
+                <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
+                <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
+                <img class="island-target" src="imgs/island_icon_${trial.target}.png" alt="Target island" />
+                <p style="position: absolute; z-index: 4; top: 55%; font-size: 2.5vh; color: maroon">Quest reward: ${trial.reward_amount}</p>
               </div>
-              <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
-              <div class="choice-right">
-                <div class="fuel-container-right">
-                  <div class="fuel-indicator-container">
-                    <div class="fuel-indicator-bar"></div>
+              <div class="overlap-group">
+                <div class="choice-left">
+                  <div class="fuel-container-left">
+                    <div class="fuel-indicator-container">
+                      <div class="fuel-indicator-bar"></div>
+                    </div>
                   </div>
+                  <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
+                  <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="ship-right" src="imgs/simple_ship_${trial.right}.png" alt="Right ship" />
-                <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
+                <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <div class="choice-right">
+                  <div class="fuel-container-right">
+                    <div class="fuel-indicator-container">
+                      <div class="fuel-indicator-bar"></div>
+                    </div>
+                  </div>
+                  <img class="ship-right" src="imgs/simple_ship_${trial.right}.png" alt="Right ship" />
+                  <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
+                </div>
               </div>
-            </div>
-            ${this.createOceanCurrents(trial.current)}
-          </section>
-        </main>
-      `;
+              ${this.createOceanCurrents(trial.current)}
+            </section>
+          </main>
+        `;
       };
 
       // Define base rule mapping
