@@ -268,11 +268,7 @@ var jsPsychExploreShip = (function (jspsych) {
 
       // Function to end trial
       const endTrial = () => {
-        if (typeof repeated_listener !== 'undefined') {
-          this.jsPsych.pluginAPI.cancelKeyboardResponse(repeated_listener);
-        } else {
-          this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
-        }
+        this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
         display_element.innerHTML = '';
 
         // Save data
