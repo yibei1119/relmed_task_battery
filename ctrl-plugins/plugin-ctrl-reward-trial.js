@@ -94,10 +94,13 @@ var jsPsychRewardShip = (function (jspsych) {
       let choice_rt = 0;
 
       // Generate trial HTML
-      const html = `
+      const generateHTML = () => {
+        const far = this.baseRule[trial.near];
+        return `
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
+              <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
             <div class="quest-scroll">
               <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
               <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
@@ -129,8 +132,17 @@ var jsPsychRewardShip = (function (jspsych) {
           </section>
         </main>
       `;
+      };
 
-      display_element.innerHTML = html;
+      // Define base rule mapping
+      this.baseRule = {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      };
+
+      display_element.innerHTML = generateHTML();
 
       // Function to create and animate fuel icons
       const createFuelIcon = (container) => {
