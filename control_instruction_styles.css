@@ -444,7 +444,7 @@
 .current-indicator {
   position: absolute;
   top: 45%;
-  right: 20%;
+  left: 60%;
   z-index: 6;
 }
 
