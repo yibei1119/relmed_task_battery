@@ -39,11 +39,12 @@ explore_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
+        post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-            console.log(up_to_now);
+            console.log("n_warnings: " + up_to_now);
             jsPsych.data.addProperties({
                 n_warnings: up_to_now + 1
             });
@@ -53,6 +54,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
+          post_trial_gap: 0,
           on_finish: function (data) {
             // console.log(data);
           }
@@ -75,6 +77,7 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
+        post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
           if (data.response === null) {
@@ -105,6 +108,7 @@ reward_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
         reward_amount: "5p",
+        post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
           if (data.response === null) {
@@ -119,7 +123,8 @@ reward_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychRewardShipFeedback,
-          target_island: jsPsych.timelineVariable('target')
+          target_island: jsPsych.timelineVariable('target'),
+          post_trial_gap: 0
         }],
         conditional_function: function () {
           const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
