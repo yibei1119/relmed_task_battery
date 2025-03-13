@@ -394,8 +394,8 @@ const controlInstructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, the ship had enough fuel this time! When a ship have enough fuel, it will try to return to its homebase.</p>
-                <p>This <span style="color: royalblue">blue ship</span> has a <span style="color: purple">grape island</span>🍇 as the homebase. Because it's fueled up this time, it went to its homebase island instead of drifting with the current to the next island.</p>
+                <p>Great, the ship had enough fuel this time! When a ship have enough fuel, it will try to return to its home base.</p>
+                <p>This <span style="color: royalblue">blue ship</span> has a <span style="color: purple">grape island</span>🍇 as the home base. Because it's fueled up this time, it went to its home base island instead of drifting with the current to the next island.</p>
                 <p><strong>Note that the ships can also start from and sail back to their home bases.</strong></p>
             `)}
             ${createProgressBar(8, nPages)}
@@ -449,7 +449,7 @@ const controlInstructionPages = [
             </div>
             ${createInstructionDialog(`
                 <p>Three stripes indicate a strong current: you will need a lot of fuel.</p>
-                <p>The stronger the current, the more fuel you'll have to fuel the ship <strong>if you want it to go to its homebase</strong>.</p>
+                <p>The stronger the current, the more fuel you'll have to fuel the ship <strong>if you want it to go to its home base</strong>.</p>
             `)}
             ${createProgressBar(11, nPages)}
         </div>
@@ -550,7 +550,32 @@ const controlInstructionPages = [
         `
     },
 
-    // Page 14: End of instructions
+    // Page 14: Other types of questions
+    {
+        content: `
+        <div class="instruction-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+                <div class="overlap-group">
+                    <div class="choice-left">
+                        <div class="selection-indicator" style="top: 50%;">
+                            <div class="selection-label">What's the home base of this ship?</div>
+                            <span class="selection-dot"></span>
+                        </div>
+                        <img class="island-near" src="imgs/simple_island_banana.png" style="visibility:hidden;" alt="Nearer island" />
+                        <img class="ship-left" src="imgs/simple_ship_blue.png" style="top:-20%" alt="Prediction ship" />
+                    </div>
+                </div>
+            </section>
+            ${createInstructionDialog(`
+                <p>Sometimes we'll also check your knowledge directly. We'll show you a ship and simply ask you to identify its home island.</p>
+            `)}
+            ${createProgressBar(15, nPages)}
+        </div>
+        `
+    },
+
+    // Page 15: End of instructions
     {
         content: `
         <div class="instruction-stage">
@@ -612,7 +637,7 @@ controlInstructionTrial = {
             });
         }
 
-        if (current_page === 14) {
+        if (current_page === 15) {
             const navigationElement = document.querySelector('.jspsych-instructions-nav');
             const firstButton = navigationElement.querySelector('button:first-child');
             const newButton = document.createElement('button');
