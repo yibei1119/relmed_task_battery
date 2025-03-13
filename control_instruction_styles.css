@@ -321,20 +321,20 @@
 /* Progress bar styling */
 .progress-bar-container {
   position: absolute;
-  top: 110%;
+  top: 113%;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
-  height: 4px;
+  width: 400px;
+  height: 6px;
   background: rgba(187, 187, 187, 0.3);
-  border-radius: 2px;
+  border-radius: 6px;
   z-index: 15;
 }
 
 .progress-bar {
   height: 100%;
   background: #FFD700;
-  border-radius: 2px;
+  border-radius: 6px;
   transition: width 0.3s ease;
 }
 
@@ -444,7 +444,7 @@
 .current-indicator {
   position: absolute;
   top: 45%;
-  right: 20%;
+  left: 60%;
   z-index: 6;
 }
 
@@ -484,13 +484,13 @@
 }
 
 .far-indicator {
-  top: 20%;
-  right: 30%;
+  top: 15%;
+  right: 20%;
 }
 
 .near-indicator {
-  top: 45%;
-  right: 30%;
+  top: 22%;
+  right: 28%;
 }
 
 /* Shared dot and label styles */
