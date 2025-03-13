@@ -160,7 +160,7 @@ function setupFuelTrial(config) {
 }
 
 // Main instruction pages configuration
-const nPages = 15;
+const nPages = 16;
 const controlInstructionPages = [
     // Page 0: Initial Welcome
     {
