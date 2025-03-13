@@ -484,13 +484,13 @@
 }
 
 .far-indicator {
-  top: 20%;
-  right: 30%;
+  top: 15%;
+  right: 20%;
 }
 
 .near-indicator {
-  top: 45%;
-  right: 30%;
+  top: 22%;
+  right: 28%;
 }
 
 /* Shared dot and label styles */
