@@ -64,7 +64,10 @@ explore_sequence.forEach(trial => {
           return lastTrialChoice !== null;
         }
       },
-      noChoiceWarning("response")
+      noChoiceWarning("response", 
+        `<main class="main-stage">
+          <img class="background" src="imgs/ocean.png" alt="Background"/>
+        </main>`)
     ],
     timeline_variables: [trial]
   });
@@ -132,7 +135,11 @@ reward_sequence.forEach(trial => {
           return lastTrialChoice !== null;
         }
       },
-      noChoiceWarning("response")
+      noChoiceWarning("response",
+        `<main class="main-stage">
+          <img class="background" src="imgs/ocean.png" alt="Background"/>
+        </main>`
+      )
     ],
     timeline_variables: [trial]
   });
