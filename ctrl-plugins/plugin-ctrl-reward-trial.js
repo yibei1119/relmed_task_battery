@@ -72,9 +72,6 @@ var jsPsychRewardShip = (function (jspsych) {
       },
       trial_presses: {
         type: jspsych.ParameterType.INT
-      },
-      target: {
-        type: jspsych.ParameterType.STRING
       }
     }
   };
@@ -244,7 +241,6 @@ var jsPsychRewardShip = (function (jspsych) {
           rt: choice_rt,
           responseTime: responseTime,
           trial_presses: trial_presses,
-          target: trial.target
         };
 
         // Clear display
@@ -321,7 +317,6 @@ var jsPsychRewardShip = (function (jspsych) {
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
         responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(125, 15, 0.5, true))),
         trial_presses: trial_presses,
-        target: trial.target
       };
 
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
