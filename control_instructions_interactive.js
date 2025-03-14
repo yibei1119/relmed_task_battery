@@ -288,21 +288,16 @@ const controlInstructionPages = [
     {
         content: `
         <div class="instruction-stage">
-            <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-                <svg class="trajectory-path">
-                    <line x1="0" y1="100%" x2="0" y2="0" 
-                    stroke="rgba(255,255,255,0.5)" 
-                    stroke-width="2" 
-                    class="path-animation"/>
-                </svg>
-                <img class="destination-island" 
-                    src="imgs/island_icon_coconut.png" 
-                    alt="Destination island" />
-                <div class="ship-container">
-                    <img class="ship-feedback" 
-                    src="imgs/simple_ship_icon_blue.png" 
-                    alt="Chosen ship" />
+                <div class="overlap-group">
+                    <div class="choice-left">
+                        <img class="island-near" src="imgs/simple_island_coconut.png">
+                    </div>
+                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
+                    <div class="choice-right">
+                        <img class="ship-right" src="imgs/simple_ship_blue.png">
+                    </div>
                 </div>
             </section>
             ${createInstructionDialog(`
@@ -376,21 +371,16 @@ const controlInstructionPages = [
     {
         content: `
         <div class="instruction-stage">
-            <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-                <svg class="trajectory-path">
-                    <line x1="0" y1="100%" x2="0" y2="0" 
-                    stroke="rgba(255,255,255,0.5)" 
-                    stroke-width="2" 
-                    class="path-animation"/>
-                </svg>
-                <img class="destination-island" 
-                    src="imgs/island_icon_grape.png" 
-                    alt="Destination island" />
-                <div class="ship-container">
-                    <img class="ship-feedback" 
-                    src="imgs/simple_ship_icon_blue.png" 
-                    alt="Chosen ship" />
+                <div class="overlap-group">
+                    <div class="choice-left">
+                        <img class="island-near" src="imgs/simple_island_grape.png">
+                    </div>
+                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
+                    <div class="choice-right">
+                        <img class="ship-right" src="imgs/simple_ship_blue.png">
+                    </div>
                 </div>
             </section>
             ${createInstructionDialog(`
@@ -613,6 +603,46 @@ controlInstructionTrial = {
                 finishCondition: (trialPresses, progress) => trialPresses >= 5,
                 finishMessage: `<p>Fueling time is limited. The ship has to leave now!</p>`
             });
+        }
+
+        if (current_page === 4 || current_page === 7) {
+            // Add animation styles
+            const animationStyle = document.createElement('style');
+            animationStyle.setAttribute('data-feedback-animation', 'true');
+
+            const shipImg = document.querySelector('.ship-right');
+            
+            // Determine if ship should be flipped based on which side it starts from
+            // Ships on the left are already flipped with scaleX(-1) in the CSS
+            // As long as it's flipped here, it will move in the correct direction
+            const choice = 'right';
+            const shouldFlip = choice === 'left';
+            const scaleX = shouldFlip ? '-1' : '1';
+            
+            // Calculate the distance to move the ship
+            const distance = document.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/2;
+
+            // Create the animation CSS with proper scale preservation
+            animationStyle.textContent = `
+                @keyframes moveShip {
+                0% { 
+                    transform: scaleX(${scaleX}) translateX(0);
+                }
+                100% { 
+                    transform: scaleX(${scaleX}) translateX(-${distance}px);
+                }
+                }
+                
+                .ship-animate {
+                animation: moveShip 0.95s ease-in-out forwards;
+                }
+            `;
+            document.head.appendChild(animationStyle);
+
+            // Apply the animation class after a small delay to ensure DOM is ready
+            setTimeout(() => {
+                shipImg.classList.add('ship-animate');
+            }, 50);
         }
 
         if (current_page === 6) {
