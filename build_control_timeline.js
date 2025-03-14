@@ -80,9 +80,10 @@ predict_sequence.forEach(trial => {
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
+          console.log(data);
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-            console.log(up_to_now);
+            console.log("n_warnings: " + up_to_now);
             jsPsych.data.addProperties({
                 n_warnings: up_to_now + 1
             });
@@ -113,7 +114,7 @@ reward_sequence.forEach(trial => {
         on_finish: function (data) {
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-            console.log(up_to_now);
+            console.log("n_warnings: " + up_to_now);
             jsPsych.data.addProperties({
                 n_warnings: up_to_now + 1
             });
