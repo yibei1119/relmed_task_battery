@@ -126,7 +126,7 @@
   bottom: 0%
 }
 
-.ship-right, .arrow-right {
+.ship-left, .arrow-right {
   transform: scaleX(-1);
 }
 
