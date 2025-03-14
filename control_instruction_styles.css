@@ -144,7 +144,7 @@
   z-index: 4;
 }
 
-.instruction-stage .ship-right {
+.instruction-stage .ship-left {
   transform: scaleX(-1);
 }
 

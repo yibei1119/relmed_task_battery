@@ -591,12 +591,12 @@ function showTemporaryWarning(message, duration = 800) {
     }, duration);
 }
 
-function noChoiceWarning(resp_var = "response") {
+function noChoiceWarning(resp_var = "response", stimulus = "") {
     const warning_trial = {
         timeline: [{
             type: jsPsychHtmlKeyboardResponse,
             choices: "NO_KEYS",
-            stimulus: "",
+            stimulus: stimulus,
             data: {
                 trialphase: "no_choice_warning"
             },
