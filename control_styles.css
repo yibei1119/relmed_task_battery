@@ -59,7 +59,7 @@
   top: 49%;
   height: 46.875%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   z-index: 3;
 }

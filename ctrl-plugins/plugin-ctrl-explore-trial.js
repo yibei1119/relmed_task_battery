@@ -356,7 +356,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     parameters: {
       feedback_duration: {
         type: jspsych.ParameterType.INT,
-        default: 2000000,
+        default: 3000,
         description: "Duration to show feedback (ms)"
       },
       post_trial_gap: {
@@ -449,7 +449,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       // Generate feedback display
       const html = `
         <main class="main-stage">
-          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
             <div class="overlap-group">
               <div class="choice-left">
@@ -475,7 +475,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       // Create the ship image element
       const shipImg = document.createElement('img');
       shipImg.className = `ship-${choice}`;
-      shipImg.src = `imgs/simple_ship_icon_${chosenColor}.png`;
+      shipImg.src = `imgs/simple_ship_${chosenColor}.png`;
       // Add the image to the container
       choiceContainer.appendChild(shipImg);
 
@@ -486,14 +486,11 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       islandContainer.innerHTML = '';
       // Create the island image element
       const islandImg = document.createElement('img');
-      islandImg.className = `ship-${islandSide}`;  
-      islandImg.src = `imgs/island_icon_${destinationIsland}.png`;
+      // islandImg.className = `ship-${islandSide}`;  
+      islandImg.className = `island-near`;  
+      islandImg.src = `imgs/simple_island_${destinationIsland}.png`;
       // Add the image to the container
       islandContainer.appendChild(islandImg);
-
-      // Set the overlap-group justifications
-      const overlapGroup = display_element.querySelector('.overlap-group');
-      overlapGroup.style.justifyContent = "space-around";
 
       // Add animation styles
       const animationStyle = document.createElement('style');
@@ -506,7 +503,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       const scaleX = shouldFlip ? '-1' : '1';
       
       // Calculate the distance to move the ship
-      const distance = display_element.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/2;
+      const distance = display_element.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/4;
 
       // Create the animation CSS with proper scale preservation
       animationStyle.textContent = `
