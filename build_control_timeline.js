@@ -80,6 +80,7 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
+        predict_decision: 8000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
