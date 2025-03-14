@@ -58,12 +58,52 @@
             n_warnings: 0
         })
 
-  // Get condition from URL, all caps are prolific, lowercase are ours
-  window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
-  window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
+  // // Get condition from URL, all caps are prolific, lowercase are ours
+  // window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
+  // window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
 
-  if (window.participantID.includes("simulate")) {
-      const simulation_options = {
+  // if (window.participantID.includes("simulate")) {
+  //     const simulation_options = {
+  //         default: {
+  //           speed_up: true,
+  //           speed_up_factor: 10,
+  //           data: {
+  //             rt: 200
+  //           }
+  //         }
+  //     }
+
+  //     if (window.participantID.includes("SLOW")) {
+  //         simulation_options.default.speed_up = false;
+  //         simulation_options.default.speed_up_factor = 1;
+  //     }
+
+  //     if (window.participantID.includes("DATA")) {
+  //       jsPsych.simulate(controlTimeline, "data-only");
+  //     } else {
+  //       jsPsych.simulate(controlTimeline, "visual", simulation_options);
+  //     }
+  // } else {
+  //     jsPsych.run(controlTimeline);
+  // }
+
+  let controlTestingTimeline = [];
+  
+  controlTestingTimeline.push(controlPreload);
+
+  // controlTestingTimeline.push(controlInstructionsTimeline);
+  
+  controlTestingTimeline.push(controlExploreTimeline);
+
+  // controlTestingTimeline.push(controlPredTimeline);
+
+  // controlTestingTimeline.push(controlRewardTimeline);
+
+  // controlTestingTimeline.push(controlDebriefing);
+  
+  jsPsych.run(controlTestingTimeline);
+
+        const simulation_options = {
           default: {
             speed_up: true,
             speed_up_factor: 10,
@@ -72,36 +112,6 @@
             }
           }
       }
-
-      if (window.participantID.includes("SLOW")) {
-          simulation_options.default.speed_up = false;
-          simulation_options.default.speed_up_factor = 1;
-      }
-
-      if (window.participantID.includes("DATA")) {
-        jsPsych.simulate(controlTimeline, "data-only");
-      } else {
-        jsPsych.simulate(controlTimeline, "visual", simulation_options);
-      }
-  } else {
-      jsPsych.run(controlTimeline);
-  }
-
-  // let controlTestingTimeline = [];
-  
-  // controlTestingTimeline.push(controlPreload);
-
-  // controlTestingTimeline.push(controlInstructions);
-  
-  // controlTestingTimeline.push(controlExploreTimeline);
-
-  // controlTestingTimeline.push(controlPredTimeline);
-
-  // controlTestingTimeline.push(controlRewardTimeline);
-
-  // controlTestingTimeline.push(controlDebriefing);
-  
-  // jsPsych.run(controlTestingTimeline);
   // jsPsych.simulate(controlTestingTimeline, "visual");
   // jsPsych.simulate(controlTestingTimeline, "visual", simulation_options);
 </script>

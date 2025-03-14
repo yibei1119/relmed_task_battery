@@ -356,7 +356,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     parameters: {
       feedback_duration: {
         type: jspsych.ParameterType.INT,
-        default: 2000,
+        default: 2000000,
         description: "Duration to show feedback (ms)"
       },
       post_trial_gap: {
@@ -451,19 +451,12 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         <main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <section class="scene">
-            <svg class="trajectory-path">
-              <line x1="0" y1="100%" x2="0" y2="0" 
-                    stroke="rgba(255,255,255,0.5)" 
-                    stroke-width="2" 
-                    class="path-animation"/>
-            </svg>
-            <img class="destination-island" 
-                src="imgs/island_icon_${destinationIsland}.png" 
-                alt="Destination island" />
-            <div class="ship-container">
-              <img class="ship-feedback" 
-                  src="imgs/simple_ship_icon_${chosenColor}.png" 
-                  alt="Chosen ship" />
+            <div class="overlap-group">
+              <div class="choice-left">
+              </div>
+              <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
+              <div class="choice-right">
+              </div>
             </div>
           </section>
         </main>
@@ -475,11 +468,67 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
       oldStyles.forEach(style => style.remove());
 
-      // Ensure ship starts at correct position
-      const shipContainer = display_element.querySelector('.ship-container');
-      if (shipContainer) {
-        shipContainer.style.visibility = 'visible';
-      }
+      // Get the choice container
+      const choiceContainer = display_element.querySelector(`.choice-${choice}`);
+      // Clear any existing content
+      choiceContainer.innerHTML = '';
+      // Create the ship image element
+      const shipImg = document.createElement('img');
+      shipImg.className = `ship-${choice}`;
+      shipImg.src = `imgs/simple_ship_icon_${chosenColor}.png`;
+      // Add the image to the container
+      choiceContainer.appendChild(shipImg);
+
+      // Handle the island side
+      const islandSide = choice === 'left' ? 'right' : 'left';
+      const islandContainer = display_element.querySelector(`.choice-${islandSide}`);
+      // Clear any existing content
+      islandContainer.innerHTML = '';
+      // Create the island image element
+      const islandImg = document.createElement('img');
+      islandImg.className = `ship-${islandSide}`;  
+      islandImg.src = `imgs/island_icon_${destinationIsland}.png`;
+      // Add the image to the container
+      islandContainer.appendChild(islandImg);
+
+      // Set the overlap-group justifications
+      const overlapGroup = display_element.querySelector('.overlap-group');
+      overlapGroup.style.justifyContent = "space-around";
+
+      // Add animation styles
+      const animationStyle = document.createElement('style');
+      animationStyle.setAttribute('data-feedback-animation', 'true');
+      
+      // Determine if ship should be flipped based on which side it starts from
+      // Ships on the left are already flipped with scaleX(-1) in the CSS
+      // As long as it's flipped here, it will move in the correct direction
+      const shouldFlip = choice === 'left';
+      const scaleX = shouldFlip ? '-1' : '1';
+      
+      // Calculate the distance to move the ship
+      const distance = display_element.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/2;
+
+      // Create the animation CSS with proper scale preservation
+      animationStyle.textContent = `
+        @keyframes moveShip {
+          0% { 
+            transform: scaleX(${scaleX}) translateX(0);
+          }
+          100% { 
+            transform: scaleX(${scaleX}) translateX(-${distance}px);
+          }
+        }
+        
+        .ship-animate {
+          animation: moveShip 0.95s ease-in-out forwards;
+        }
+      `;
+      document.head.appendChild(animationStyle);
+
+      // Apply the animation class after a small delay to ensure DOM is ready
+      setTimeout(() => {
+        shipImg.classList.add('ship-animate');
+      }, 50);
 
       // Save data and end trial after duration
       const trial_data = {
