@@ -65,31 +65,68 @@ const pre_kick_out_warning = {
     }
 }
 
-
-const kick_out_warning = {
-    type: jsPsychHtmlKeyboardResponse,
-    conditional_function: function() {
-      if (jsPsych.data.get().last(1).select('n_warnings').values[0] == window.maxWarnings) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    css_classes: ['instructions'],
-    timeline: [
-        {
-        stimulus: `<p>You might be making taking a little too long to make your choices.</p>
-        <p>We're interested in your quick judgments, so please try to respond a little faster—even if it feels a bit less precise.</p>
-        <p>Press either the right or left arrow to continue.</p>
-        `
+if (window.context == "relmed") {
+    const kick_out_warning = {
+        type: jsPsychHtmlKeyboardResponse,
+        conditional_function: function() {
+          if (jsPsych.data.get().last(1).select('n_warnings').values[0] == window.maxWarnings) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        css_classes: ['instructions'],
+        timeline: [
+            {
+            stimulus: `<p>You might be making taking a little too long to make your choices.</p>
+            <p>We're interested in your quick judgments, so please try to respond a little faster—even if it feels a bit less precise.</p>
+            <p>Press either the right or left arrow to continue.</p>
+            `
+            }
+        ],
+        choices: ["arrowright", "arrowleft"],
+        data: {
+          trialphase: 'speed-accuracy'
         }
-    ],
-    choices: ["arrowright", "arrowleft"],
-    data: {
-      trialphase: 'speed-accuracy'
+    }    
+} else {
+    const kick_out_warning = {
+        type: jsPsychHtmlKeyboardResponse,
+        conditional_function: function() {
+          if (jsPsych.data.get().last(1).select('n_warnings').values[0] >= window.maxWarnings) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        css_classes: ['instructions'],
+        timeline: [
+            {   
+                stimulus: '...',
+                trial_duration: 200,
+                on_finish: function(trial) {
+                    // Save data
+                    saveDataREDCap(retry = 3);
+                    // Allow refresh
+                    window.removeEventListener('beforeunload', preventRefresh);
+                }
+            },
+            {
+            stimulus: `<p>You may not be following the study instructions as intended, as you didn't respond more than 15 times.</p>
+                <p>Unfortunately, you cannot continue with this study.</p>
+                <p>If you believe this is a mistake, please email haoyang.lu@ucl.ac.uk, explaining the circumstances.</p>
+                <p>Please return this study on Prolific.</p>
+                <p>You may now close this tab.</p>
+            `
+            }
+        ],
+        choices: ["NO_KEYS"],
+        data: {
+          trialphase: 'kick-out'
+        }
     }
+    
 }
-
 const kick_out = {
     timeline: [
         pre_kick_out_warning,
