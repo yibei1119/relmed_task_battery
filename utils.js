@@ -612,3 +612,35 @@ function noChoiceWarning(resp_var = "response", stimulus = "") {
     }
     return warning_trial;
 };
+
+function setupMultiKeysListener(keysToTrack, callback_function, targetElement = document) {
+    const pressedKeys = {};
+
+    // Named functions are required for proper removal
+    function handleKeyDown(event) {
+        pressedKeys[event.key] = true;
+        areKeysPressed() ? callback_function() : null;
+    }
+
+    function handleKeyUp(event) {
+        pressedKeys[event.key] = false;
+    }
+
+    targetElement.addEventListener('keydown', handleKeyDown);
+    targetElement.addEventListener('keyup', handleKeyUp);
+
+    function areKeysPressed() {
+        return keysToTrack.every(key => pressedKeys[key] === true);
+    }
+
+    // Cleanup function to remove listeners
+    function cleanup() {
+        targetElement.removeEventListener('keydown', handleKeyDown);
+        targetElement.removeEventListener('keyup', handleKeyUp);
+    }
+
+    return {
+        // areKeysPressed,
+        cleanup
+    };
+}
