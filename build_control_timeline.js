@@ -41,6 +41,12 @@ explore_sequence.forEach(trial => {
         current: jsPsych.timelineVariable('current'),
         post_trial_gap: 0,
         save_timeline_variables: true,
+        on_start: function (trial) {
+          const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
+          if (last_trialphase === "control_confidence") {
+            trial.explore_decision += 2000;
+          }
+        },
         on_finish: function (data) {
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
@@ -115,6 +121,12 @@ reward_sequence.forEach(trial => {
         reward_amount: "5p",
         post_trial_gap: 0,
         save_timeline_variables: true,
+        on_start: function (trial) {
+          const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
+          if (last_trialphase === "control_controllability") {
+            trial.reward_decision += 2000;
+          }
+        },
         on_finish: function (data) {
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
@@ -182,7 +194,7 @@ let controlTimeline = [];
 // Add the preload
 controlTimeline.push(controlPreload);
 // Add the instructions
-controlTimeline.push(controlInstructions);
+controlTimeline.push(controlInstructionsTimeline);
 
 for (let i = 0; i < explore_sequence.length; i++) {
   // Add the explore trials
