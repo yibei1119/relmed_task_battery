@@ -272,6 +272,8 @@
         }        
 
         if (window.task === "pilot8") {
+            PILT_tasks = return_PILT_full_sequence(PILT_structure.slice(0,5), test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure);
+
             procedure.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
@@ -288,8 +290,11 @@
             procedure = procedure.concat(maxPressTimeline);
 
             // PILT instructions
-            let PILT_instructions = prepare_PILT_instructions();
-            procedure.push(PILT_instructions);
+            procedure = procedure.concat(PILT_tasks.PILT_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PILT
+            ]);
             
             // Add LTM block
             procedure.push(PILT_tasks.LTM_procedure);
