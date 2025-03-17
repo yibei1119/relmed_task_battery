@@ -182,7 +182,7 @@ var prompt_PERS_negAct = [
 
 var questionnaire_phq = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 1</h1>" +
+    instructions: ["<h2>Questionnaire 1 out of 10</h2>" +
         "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by any of the following problems?</p>" +
         "<p>Please respond to all items.</p>"
     ],
@@ -207,7 +207,7 @@ var questionnaire_phq = {
 
 var questionnaire_gad = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 3</h1>" +
+    instructions: ["<h2>Questionnaire 3 out of 10</h2>" +
         "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by following problems?</p>"
     ],
     items: prompt_gad,
@@ -221,7 +221,7 @@ var questionnaire_gad = {
 // questions_WSAS.unshift({prompt: "If you're retired or choose not to have a job for reasons unrelated to your problem, tick here", labels: [""], required: false});
 var questionnaire_WSAS = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 4</h1>" +
+    instructions: ["<h2>Questionnaire 4 out of 10</h2>" +
         "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>" +
         '<div style="border: 2px solid #000; padding: 10px; display: inline-block; background-color: #f9f9f9; border-radius: 5px;"><label style="display: inline-flex; align-items: center;">If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here&nbsp<input type="checkbox" id="retiredCheck" style="margin-left: 5px;"></label></div>'
     ],
@@ -240,7 +240,7 @@ var questionnaire_WSAS = {
 
 var questionnaire_ICECAP = {
     type: jsPsychSurveyMultiChoice,
-    preamble: ["<h1>Questionnaire 5</h1>" +
+    preamble: ["<h2>Questionnaire 5 out of 10</h2>" +
         "<p>Please indicate which statements best describe your overall quality of life at the moment by choosing ONE option for each of the five groups below.</p>"
     ],
     css_classes: ['instructions'],
@@ -257,7 +257,7 @@ var questionnaire_ICECAP = {
 
 var questionnaire_BFI = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 6</h1>" +
+    instructions: ["<h2>Questionnaire 6 out of 10</h2>" +
         "<p>How well do the following statements describe your personality?</p>"
     ],
     items: prompt_BFI,
@@ -270,7 +270,7 @@ var questionnaire_BFI = {
 
 var questionnaire_pvss = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 2</h1>" +
+    instructions: ["<h2>Questionnaire 2 out of 10</h2>" +
         '<p class="instructions">Please indicate to what extent these statements describe your <b><u>responses over the last two weeks, including today.</u></br>' +
         'Did you NOT have this experience? No problem. Please indicate how you <u>would have responded</u> if you had experienced the situation over the last two weeks.</b></br>' +
         'Please consider only the aspect of the situation that is described, paying particular attention to the <u>underlined text</u>. For example, if the statement says, "<u>I wanted</u> to meet new people," rate how much you wanted or would have wanted to meet new people over the last two weeks, assuming that the opportunity presented itself. Do not consider what the situation would have required of you or whether it would have been possible for you to meet people.</p>'
@@ -310,7 +310,7 @@ var questionnaire_pvss = {
 
 var questionnaire_BADS = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 7</h1>" +
+    instructions: ["<h2>Questionnaire 7 out of 10</h2>" +
         "<p>Please read each statement carefully and then circle the number which best describes how much the statement was true for you DURING THE PAST WEEK, INCLUDING TODAY.</p>"
     ],
     items: prompt_BADS,
@@ -323,7 +323,7 @@ var questionnaire_BADS = {
 
 var questionnaire_hopelessness = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 8</h1>" +
+    instructions: ["<h2>Questionnaire 8 out of 10</h2>" +
         "<p>For each of the statements below, please choose the option that best applies to you.</p>"
     ],
     items: prompt_hopelessness,
@@ -336,7 +336,7 @@ var questionnaire_hopelessness = {
 
 var questionnaire_RRS_brooding = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 9</h1>" +
+    instructions: ["<h2>Questionnaire 9 out of 10</h2>" +
         "<p>People think and do many different things when they feel depressed. Please read each of the items below and indicate whether you almost never, sometimes, often, or almost always think or do each one when you feel down, sad, or depressed. Please indicate what you generally do, not what you think you should do.</p>"
     ],
     items: prompt_RRS_brooding,
@@ -349,7 +349,7 @@ var questionnaire_RRS_brooding = {
 
 var questionnaire_PERS_negAct = {
     type: jsPsychSurveyTemplate,
-    instructions: ["<h1>Questionnaire 10</h1>" +
+    instructions: ["<h2>Questionnaire 10 out of 10</h2>" +
         "<p>This questionnaire is designed to measure different aspects of how you typically react to experiencing emotional events. Please score the following statements according to how much they apply or do not apply to you on a typical day.</p>"
     ],
     items: prompt_PERS_negAct,
@@ -365,7 +365,7 @@ const questionnaires_timeline = [
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `<p>Please answer the following questionnaires.</p>` +
+            `<p>Please answer the following ten questionnaires.</p>` +
             `<p>Each questionnaire will be presented on a separate page.</p>` +
             `<p>Your responses are important, and we ask that you carefully read each question and answer as accurately and thoughtfully as possible.</p>` +
             `<p>Please take your time with each item, and remember that there are no “right” or “wrong” answers. Your honest and thorough responses will help us gather meaningful data.</p>` +
@@ -377,10 +377,10 @@ const questionnaires_timeline = [
             simulate: false
         }
     },
-    // questionnaire_phq,
-    // questionnaire_pvss,
-    // questionnaire_gad,
-    // questionnaire_WSAS,
+    questionnaire_phq,
+    questionnaire_pvss,
+    questionnaire_gad,
+    questionnaire_WSAS,
     questionnaire_ICECAP,
     questionnaire_BFI,
     questionnaire_BADS,
