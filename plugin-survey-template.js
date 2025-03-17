@@ -76,6 +76,12 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         default:  'Continue',
         description: 'The text that appears on the button to finish the trial.'
       },
+      before_finish:{
+        type: jspsych.ParameterType.FUNCTION,
+        pretty_name: 'Run before trial finish',
+        default: () => {},
+        description: 'This will run just before the screen is cleared and trial is terminated.'
+      }
     },
     data: {
         responses: {
@@ -391,6 +397,9 @@ var jsPsychSurveyTemplate = (function (jspsych) {
 
         // Remove event listener
         document.removeEventListener("click", log_event);
+
+        // Run before_finish
+        trial.before_finish(trialdata);
 
         // Update screen
         display_element.innerHTML = '';
