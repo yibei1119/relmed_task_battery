@@ -593,6 +593,7 @@ controlInstructionTrial = {
     show_clickable_nav: true,
     show_page_number: false,
     data: {trialphase: "control_instructions"},
+    simulation_options: {simulate: false},
     on_page_change: function(current_page) {
         if (current_page === 3) {
             setupFuelTrial({
@@ -753,6 +754,7 @@ controlIntroComprehension.push(
             return !Object.values(data).every(value => value === "True");
         },
         show_clickable_nav: true,
+        simulation_options: {simulate: false},
         data: {
             trialphase: "control_instruction_quiz_failure"
         }
@@ -789,6 +791,7 @@ const controlInstructionsTimeline = [
         // choices: ['arrowright', 'arrowleft'],
         data: {trialphase: "control_instruction_end"},
         response_ends_trial: false,
+        simulation_options: {simulate: false},
         on_load: function() {
             const start = performance.now();
             const multiKeysListener = setupMultiKeysListener(
