@@ -383,7 +383,7 @@ const questionnaires_timeline = [
             `<p>Click 'Next' to begin.</p>`
         ],
         show_clickable_nav: true,
-        data: {trialphase: "pre_debrief_instructions"},
+        data: {trialphase: "pre_questionnaire_instructions"},
         simulation_options:{
             simulate: false
         }
