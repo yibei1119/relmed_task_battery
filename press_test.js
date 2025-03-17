@@ -123,7 +123,7 @@ const maxPressInstructions = {
     <div id="instruction-container">
         <div id="instruction-text" style="text-align: left;">
             <p>Before we start the first game, we need to complete a short test of your keyboard.</p>
-            <p>On the next screen, you will need to <span class="highlight">press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can.</span></p>
+            <p>On the next screen, you will need to <span class="highlight-txt">press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can.</span></p>
         </div>
     </div>
     `,
@@ -137,7 +137,7 @@ const maxPressFeedback = {
         return `
         <div id="instruction-container">
             <div id="instruction-text" style="text-align: center;">
-                <h2><span class="highlight">Well done!</span></h2>
+                <h2><span class="highlight-txt">Well done!</span></h2>
                 <p>On average, you pressed <strong>${data.avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
                 <p>Press <strong>Continue</strong> to proceed to the first game.</p>
             </div>
