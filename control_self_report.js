@@ -38,9 +38,9 @@ const control_acceptability_intro =
         `
     ],
     show_clickable_nav: true,
-    data: { trialphase: "pre_debrief_instructions" },
+    data: { trialphase: "control_pre_debrief_instructions" },
     simulation_options: {
-        simulate: true
+        simulate: false
     }
 };
 
@@ -71,7 +71,7 @@ const acceptability_control = {
       trialphase: "acceptability_ctrl"
   },
   simulation_options: {
-      simulate: true
+      simulate: false
   }
 };
 
@@ -95,18 +95,26 @@ const control_debrief = {
         required: true
       },
       {
-        prompt: "Looking back at the study, how did you approach the game when exploring the shipping network? What strategy did you use to choose the ship and fuel level?",
+        prompt: "How did you approach the game when exploring the shipping network? What strategy did you use to choose the ship and fuel level?",
         columns: 50,
         rows: 5,
         value: '',
         name: "strategies",
         required: true
+      },
+      {
+        prompt: "To overcome the currents and lead the ships to the home bases, how much effort (such as times of presses or the fuel level in percentage) did you put in for low, mid, and strong current levels?",
+        columns: 50,
+        rows: 5,
+        value: '',
+        name: "efforts",
+        required: true
       }
   ],
   data: {
-      trialphase: 'debrief_instructions'
+      trialphase: 'control_debrief_text'
   },
   simulation_options: {
-      simulate: true
+      simulate: false
   }
 };
