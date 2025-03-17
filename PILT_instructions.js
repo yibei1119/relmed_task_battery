@@ -1,5 +1,13 @@
 // Instructions for the PILT
 const small_coin_size = 100;
+const demo_stimuli = [
+    "almond_1.jpg",
+    "envelope_1.jpg",
+    "strainer_1.jpg",
+    "anchor_1.jpg",
+    "bus_1.jpg",
+    "cantaloupe_1.jpg"
+]
 
 function prepare_PILT_instructions() {
     const inter_block_instruct = {
@@ -67,8 +75,8 @@ function prepare_PILT_instructions() {
             timeline: build_PILT_task(
                 [[
                     {
-                        stimulus_left: "ukulele_1.jpg",
-                        stimulus_right: "envelope_1.jpg",
+                        stimulus_left: demo_stimuli[0],
+                        stimulus_right: demo_stimuli[1],
                         stimulus_middle: "",
                         feedback_middle: "",
                         n_stimuli: 2,
@@ -129,8 +137,8 @@ function prepare_PILT_instructions() {
                 [
                     dumbbell_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "strainer_1.jpg" : "can_2.jpg",
-                            stimulus_right: e ? "can_2.jpg" : "strainer_1.jpg",
+                            stimulus_left: e ? demo_stimuli[2] : demo_stimuli[3],
+                            stimulus_right: e ? demo_stimuli[3] : demo_stimuli[2],
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: true,
@@ -184,8 +192,8 @@ function prepare_PILT_instructions() {
                 [
                     hammer_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "harp_1.jpg" : "cantaloupe_1.jpg",
-                            stimulus_right: e ? "cantaloupe_1.jpg" : "harp_1.jpg",
+                            stimulus_left: e ? demo_stimuli[4] : demo_stimuli[5],
+                            stimulus_right: e ? demo_stimuli[5] : demo_stimuli[4],
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: true,
