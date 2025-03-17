@@ -53,6 +53,7 @@ explore_sequence.forEach(trial => {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
+            saveDataREDCap(retry = 3);
           }
 
           if (data.response === null) {
@@ -99,6 +100,7 @@ predict_sequence.forEach(trial => {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
+            saveDataREDCap(retry = 3);
           }
 
           if (data.response === null) {
@@ -143,6 +145,7 @@ reward_sequence.forEach(trial => {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
+            saveDataREDCap(retry = 3);
           }
 
           if (data.response === null) {
@@ -205,6 +208,9 @@ let controlDebriefing = [];
 controlDebriefing.push(control_acceptability_intro);
 controlDebriefing.push(acceptability_control);
 controlDebriefing.push(control_debrief);
+controlDebriefing["on_timeline_start"] = () => {
+  saveDataREDCap(retry = 3);
+}
 
 // Assembling the control timeline
 let controlTimeline = [];
