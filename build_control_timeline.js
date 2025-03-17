@@ -182,7 +182,7 @@ let controlTotalReward = {
   },
   choices: "ALL_KEYS",
   response_ends_trial: true,
-  post_trial_gap: 800,
+  post_trial_gap: 400,
   data: { 
     trialphase: 'control_bonus',
     control_bonus: jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('correct').sum() * 5 / 100
