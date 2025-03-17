@@ -243,6 +243,7 @@ var questionnaire_ICECAP = {
     preamble: ["<h1>Questionnaire 5</h1>" +
         "<p>Please indicate which statements best describe your overall quality of life at the moment by choosing ONE option for each of the five groups below.</p>"
     ],
+    css_classes: ['instructions'],
     questions: prompt_ICECAP.map((prompt, index) => ({
         prompt: prompt,
         options: multichoice_ICECAP[index],
@@ -376,10 +377,10 @@ const questionnaires_timeline = [
             simulate: false
         }
     },
-    questionnaire_phq,
-    questionnaire_pvss,
-    questionnaire_gad,
-    questionnaire_WSAS,
+    // questionnaire_phq,
+    // questionnaire_pvss,
+    // questionnaire_gad,
+    // questionnaire_WSAS,
     questionnaire_ICECAP,
     questionnaire_BFI,
     questionnaire_BADS,
