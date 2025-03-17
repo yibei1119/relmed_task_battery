@@ -226,7 +226,7 @@ const controlInstructionPages = [
                 <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="selection-indicator">
-                        <div class="selection-label">and blue ship</div>
+                        <div class="selection-label">...and blue ship</div>
                         <span class="selection-dot"></span>
                     </div>
                     <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
@@ -400,7 +400,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(1)}
             <div class="current-indicator">
-                <div class="label">Low current: a little fuel needed</div>
+                <div class="label">Low current:<br> a little fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>But how much fuel is enough? This depends on the ocean current. You can check the current strength each day:</p>
@@ -418,7 +418,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(2)}
             <div class="current-indicator">
-                <div class="label">Medium current: a moderate amount of fuel needed</div>
+                <div class="label">Medium current:<br> a moderate amount of fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>Two stripes mean medium current: a moderate amount of fuel is needed...</p>
@@ -435,7 +435,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(3)}
             <div class="current-indicator">
-                <div class="label">Strong current: a lot of fuel needed</div>
+                <div class="label">Strong current:<br> a lot of fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>Three stripes indicate a strong current: you will need a lot of fuel.</p>
@@ -513,7 +513,7 @@ const controlInstructionPages = [
             </section>
             ${createInstructionDialog(`
                 <p>Let's give it a try!</p>
-                <p>Remember, you've already learned that the blue ship's home base is <strong>Grape Island</strong>. So, if you provide it with enough fuel, it will take you directly to the target island.</p>
+                <p>Remember, you've already learned that <strong>the <span style="color: royalblue">blue ship</span>'s home base is <span style="color: purple">grape island</span>🍇</strong>. So, if you provide it with enough fuel, it will take you directly to the target island.</p>
                 <p>Now, try the blue ship and fuel it up to reach the target island.</p>
             `)}
             ${createProgressBar(13, nPages)}
