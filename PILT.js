@@ -362,7 +362,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
 async function load_squences(session) {
     try {
         // Fetch PILT sequences
-        const response = await fetch('pilot7_PILT.json');
+        const response = await fetch('trial1_PILT.json');
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -377,7 +377,7 @@ async function load_squences(session) {
         window.totalBlockNumber = sess_structure.length
 
         // Fetch post-PILT test sequences
-        const test_response = await fetch('pilot7_PILT_test.json');
+        const test_response = await fetch('trial1_PILT_test.json');
 
         if (!test_response.ok) {
             throw new Error(`Network response was not ok ${test_response}`);
@@ -418,7 +418,7 @@ async function load_squences(session) {
         }
 
         // Fetch WM structure
-        const WM_response = await fetch('pilot8_WM.json');
+        const WM_response = await fetch('trial1_WM.json');
         const WM_structure = await WM_response.json();
         let WM_sess_structure = WM_structure[session];
 
@@ -427,7 +427,7 @@ async function load_squences(session) {
         }
 
         // Fetch LTM structure
-        const LTM_response = await fetch('pilot8_LTM.json');
+        const LTM_response = await fetch('trial1_LTM.json');
         const LTM_structure = await LTM_response.json();
         let LTM_sess_structure = LTM_structure[session];
 
@@ -436,7 +436,7 @@ async function load_squences(session) {
         }
 
         // Fetch WM test structure
-        const WM_test_response = await fetch('pilot8_WM_test.json');
+        const WM_test_response = await fetch('trial1_WM_test.json');
         const WM_test_structure = await WM_test_response.json();
         let WM_test_sess_structure = WM_test_structure[session];
 
@@ -449,7 +449,7 @@ async function load_squences(session) {
         }
 
         // Fetch LTM test structure
-        const LTM_test_response = await fetch('pilot8_LTM_test.json');
+        const LTM_test_response = await fetch('trial1_LTM_test.json');
         const LTM_test_structure = await LTM_test_response.json();
         let LTM_test_sess_structure = LTM_test_structure[session];
 
