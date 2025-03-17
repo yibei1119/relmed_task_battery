@@ -88,7 +88,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
             </div>
           </section>
         </div>
-        <p style="position: relative; top: -5vh;">Which island is the home base of this ship?<br>Press the icon below to choose.</p>
+        <p style="position: relative; top: -5vh;"><strong><span class="highlight-txt">Which island is the home base of this ship?</span></strong><br>Use the mouse to click the button below to choose.</p>
         <div class="island-choices">
         </div>
       `;
