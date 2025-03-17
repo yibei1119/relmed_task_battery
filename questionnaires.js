@@ -181,68 +181,69 @@ var prompt_PERS_negAct = [
 // Questionnaires
 
 var questionnaire_phq = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 1</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 1 out of 10</h2>" +
         "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by any of the following problems?</p>" +
         "<p>Please respond to all items.</p>"
     ],
-    questions: [
-        { prompt: "Little interest or pleasure in doing things", labels: likert_phq, required: true },
-        { prompt: "Feeling down, depressed, or hopeless", labels: likert_phq, required: true }, // Catch-origin
-        { prompt: "Trouble falling or staying asleep, or sleeping too much", labels: likert_phq, required: true },
-        { prompt: "Feeling tired or having little energy", labels: likert_phq, required: true },
-        { prompt: "Poor appetite or overeating", labels: likert_phq, required: true },
-        { prompt: "Feeling bad about yourself - or that you are a failure or have let yourself or your family down", labels: likert_phq, required: true },
-        { prompt: "Trouble concentrating on things, such as reading the newspaper of watching television", labels: likert_phq, required: true },
-        { prompt: "Moving or speaking so slowly that other people have noticed, or the opposite - being so fidgety or restless that you have been moving around a lot more than usual", labels: likert_phq, required: true },
-        { prompt: "Experiencing sadness or a sense of despair", labels: likert_phq, required: true }, // Catch
-        { prompt: "Thoughts that you would be better off dead, or of hurting yourself in some way", labels: likert_phq, required: true },
+    items: [
+        "Little interest or pleasure in doing things",
+        "Feeling down, depressed, or hopeless", // Catch-origin
+        "Trouble falling or staying asleep, or sleeping too much",
+        "Feeling tired or having little energy",
+        "Poor appetite or overeating",
+        "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
+        "Trouble concentrating on things, such as reading the newspaper of watching television",
+        "Moving or speaking so slowly that other people have noticed, or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
+        "Experiencing sadness or a sense of despair", // Catch
+        "Thoughts that you would be better off dead, or of hurting yourself in some way",
     ],
-    scale_width: 700,
+    scale: likert_phq,
+    survey_width: 700,
     data: {
         trialphase: "PHQ"
     }
 };
 
 var questionnaire_gad = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 3</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 3 out of 10</h2>" +
         "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by following problems?</p>"
     ],
-    questions: prompt_gad.map(prompt => ({
-        prompt: prompt,
-        labels: likert_gad,
-        required: true
-    })),
-    scale_width: 700,
+    items: prompt_gad,
+    scale: likert_gad,
+    survey_width: 700,
     data: {
         trialphase: "GAD"
     }
 };
 
-var questions_WSAS = prompt_WSAS.map(prompt => ({
-    prompt: prompt,
-    labels: likert_WSAS,
-    required: true
-}));
-questions_WSAS.unshift({prompt: "If you're retired or choose not to have a job for reasons unrelated to your problem, tick here", labels: [""], required: false});
+// questions_WSAS.unshift({prompt: "If you're retired or choose not to have a job for reasons unrelated to your problem, tick here", labels: [""], required: false});
 var questionnaire_WSAS = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 4</h1>" +
-        "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>"
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 4 out of 10</h2>" +
+        "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>" +
+        '<div style="border: 2px solid #000; padding: 10px; display: inline-block; background-color: #f9f9f9; border-radius: 5px;"><label style="display: inline-flex; align-items: center;">If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here&nbsp<input type="checkbox" id="retiredCheck" style="margin-left: 5px;"></label></div>'
     ],
-    questions: questions_WSAS,
-    scale_width: 700,
+    items: prompt_WSAS,
+    scale: likert_WSAS,
+    survey_width: 700,
     data: {
         trialphase: "WSAS"
+    },
+    before_finish: (data) => {
+        let checkbox = document.getElementById("retiredCheck");
+        data['responses']['retired_check'] = checkbox.checked;
+
     }
 };
 
 var questionnaire_ICECAP = {
     type: jsPsychSurveyMultiChoice,
-    preamble: ["<h1>Questionnaire 5</h1>" +
+    preamble: ["<h2>Questionnaire 5 out of 10</h2>" +
         "<p>Please indicate which statements best describe your overall quality of life at the moment by choosing ONE option for each of the five groups below.</p>"
     ],
+    css_classes: ['instructions'],
     questions: prompt_ICECAP.map((prompt, index) => ({
         prompt: prompt,
         options: multichoice_ICECAP[index],
@@ -255,117 +256,105 @@ var questionnaire_ICECAP = {
 };
 
 var questionnaire_BFI = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 6</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 6 out of 10</h2>" +
         "<p>How well do the following statements describe your personality?</p>"
     ],
-    questions: prompt_BFI.map(prompt => ({
-        prompt: prompt,
-        labels: likert_BFI,
-        required: true
-    })),
-    scale_width: 700,
+    items: prompt_BFI,
+    scale: likert_BFI,
+    survey_width: 700,
     data: {
         trialphase: "BFI"
     }
 };
 
 var questionnaire_pvss = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 2</h1>" +
-        'Please indicate to what extent these statements describe your <b><u>responses over the last two weeks, including today.</u></br>' +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 2 out of 10</h2>" +
+        '<p class="instructions">Please indicate to what extent these statements describe your <b><u>responses over the last two weeks, including today.</u></br>' +
         'Did you NOT have this experience? No problem. Please indicate how you <u>would have responded</u> if you had experienced the situation over the last two weeks.</b></br>' +
-        'Please consider only the aspect of the situation that is described, paying particular attention to the <u>underlined text</u>. For example, if the statement says, "<u>I wanted</u> to meet new people," rate how much you wanted or would have wanted to meet new people over the last two weeks, assuming that the opportunity presented itself. Do not consider what the situation would have required of you or whether it would have been possible for you to meet people.'
+        'Please consider only the aspect of the situation that is described, paying particular attention to the <u>underlined text</u>. For example, if the statement says, "<u>I wanted</u> to meet new people," rate how much you wanted or would have wanted to meet new people over the last two weeks, assuming that the opportunity presented itself. Do not consider what the situation would have required of you or whether it would have been possible for you to meet people.</p>'
     ],
-    questions: [
-        { prompt: 'I <u>savoured</u> my first bite of food after feeling hungry', labels: likert_pvss, required: true },
-        { prompt: 'I <u>put energy</u> into activities I enjoy', labels: likert_pvss, required: true },
-        { prompt: 'I <u>was delighted</u> to catch a breath of fresh air outdoors', labels: likert_pvss, required: true },
-        { prompt: 'I <u>wanted</u> to spend time with people I know', labels: likert_pvss, required: true },
-        { prompt: 'A fun activity during the weekend sustained my good mood <u>throughout the new week</u>', labels: likert_pvss, required: true },
-        { prompt: 'It <u>felt good</u> to have physical contact with someone I felt close to', labels: likert_pvss, required: true },
-        { prompt: 'I <u>expected</u> to enjoy a brief moment outdoors', labels: likert_pvss, required: true },
-        { prompt: 'I <u>looked forward</u> to hearing feedback on my work', labels: likert_pvss, required: true },
-        { prompt: 'I <u>expected</u> to enjoy my meals', labels: likert_pvss, required: true },
-        { prompt: 'Receiving praise about my work made me feel pleased <u>for the rest of the day</u>', labels: likert_pvss, required: true },
-        { prompt: 'I <u>looked forward</u> to spending time with others', labels: likert_pvss, required: true },
-        { prompt: 'I <u>wanted</u> to accomplish goals I set for myself', labels: likert_pvss, required: true },
-        { prompt: 'I <u>expected</u> to enjoy being hugged by someone I love', labels: likert_pvss, required: true },
-        { prompt: 'I <u>wanted</u> to participate in a fun activity with friends', labels: likert_pvss, required: true }, // Catch-origin
-        { prompt: 'I <u>worked hard</u> to earn positive feedback on my projects', labels: likert_pvss, required: true },
-        { prompt: 'I <u>looked forward</u> to an upcoming meal', labels: likert_pvss, required: true },
-        { prompt: 'I <u>felt pleased</u> when I reached a goal I set for myself', labels: likert_pvss, required: true },
-        { prompt: 'Getting a hug from someone close to me made me happy <u>even after</u> we parted', labels: likert_pvss, required: true },
-        { prompt: 'I <u>expected</u> to master the tasks I undertook', labels: likert_pvss, required: true },
-        { prompt: "I wished to engage in enjoyable activities with people I'm close to", labels: likert_pvss, required: true }, // Catch
-        { prompt: 'I <u>actively pursued</u> activities I thought would be fun', labels: likert_pvss, required: true },
-        { prompt: 'I <u>went out of my way</u> to admire the beauty around me', labels: likert_pvss, required: true },
+    items: [
+        'I <u>savoured</u> my first bite of food after feeling hungry',
+        'I <u>put energy</u> into activities I enjoy',
+        'I <u>was delighted</u> to catch a breath of fresh air outdoors',
+        'I <u>wanted</u> to spend time with people I know',
+        'A fun activity during the weekend sustained my good mood <u>throughout the new week</u>',
+        'It <u>felt good</u> to have physical contact with someone I felt close to',
+        'I <u>expected</u> to enjoy a brief moment outdoors',
+        'I <u>looked forward</u> to hearing feedback on my work',
+        'I <u>expected</u> to enjoy my meals',
+        'Receiving praise about my work made me feel pleased <u>for the rest of the day</u>',
+        'I <u>looked forward</u> to spending time with others',
+        'I <u>wanted</u> to accomplish goals I set for myself',
+        'I <u>expected</u> to enjoy being hugged by someone I love',
+        'I <u>wanted</u> to participate in a fun activity with friends', // Catch-origin
+        'I <u>worked hard</u> to earn positive feedback on my projects',
+        'I <u>looked forward</u> to an upcoming meal',
+        'I <u>felt pleased</u> when I reached a goal I set for myself',
+        'Getting a hug from someone close to me made me happy <u>even after</u> we parted',
+        'I <u>expected</u> to master the tasks I undertook',
+        "I felt like engaging in enjoyable activities with people I'm close to", // Catch
+        'I <u>actively pursued</u> activities I thought would be fun',
+        'I <u>went out of my way</u> to admire the beauty around me',
     ],
-    scale_width: 700,
+    scale: likert_pvss,
+    survey_width: 900,
+    item_width: 25,
+    scale_repeat: 5,
     data: {
         trialphase: "PVSS"
     }
 }
 
 var questionnaire_BADS = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 7</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 7 out of 10</h2>" +
         "<p>Please read each statement carefully and then circle the number which best describes how much the statement was true for you DURING THE PAST WEEK, INCLUDING TODAY.</p>"
     ],
-    questions: prompt_BADS.map(prompt => ({
-        prompt: prompt,
-        labels: likert_BADS,
-        required: true
-    })),
-    scale_width: 700,
+    items: prompt_BADS,
+    scale: likert_BADS,
+    survey_width: 700,
     data: {
         trialphase: "BADS"
     }
 };
 
 var questionnaire_hopelessness = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 8</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 8 out of 10</h2>" +
         "<p>For each of the statements below, please choose the option that best applies to you.</p>"
     ],
-    questions: prompt_hopelessness.map(prompt => ({
-        prompt: prompt,
-        labels: likert_hopelessness,
-        required: true
-    })),
-    scale_width: 700,
+    items: prompt_hopelessness,
+    scale: likert_hopelessness,
+    survey_width: 700,
     data: {
         trialphase: "Hopelessness"
     }
 };
 
 var questionnaire_RRS_brooding = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 9</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 9 out of 10</h2>" +
         "<p>People think and do many different things when they feel depressed. Please read each of the items below and indicate whether you almost never, sometimes, often, or almost always think or do each one when you feel down, sad, or depressed. Please indicate what you generally do, not what you think you should do.</p>"
     ],
-    questions: prompt_RRS_brooding.map(prompt => ({
-        prompt: prompt,
-        labels: likert_RRS_brooding,
-        required: true
-    })),
-    scale_width: 700,
+    items: prompt_RRS_brooding,
+    scale: likert_RRS_brooding,
+    survey_width: 700,
     data: {
         trialphase: "RRS_brooding"
     }
 };
 
 var questionnaire_PERS_negAct = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 10</h1>" +
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h2>Questionnaire 10 out of 10</h2>" +
         "<p>This questionnaire is designed to measure different aspects of how you typically react to experiencing emotional events. Please score the following statements according to how much they apply or do not apply to you on a typical day.</p>"
     ],
-    questions: prompt_PERS_negAct.map(prompt => ({
-        prompt: prompt,
-        labels: likert_PERS_negAct,
-        required: true
-    })),
-    scale_width: 700,
+    items: prompt_PERS_negAct,
+    scale: likert_PERS_negAct,
+    survey_width: 700,
     data: {
         trialphase: "PERS_negAct"
     }
@@ -376,7 +365,7 @@ const questionnaires_timeline = [
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `<p>Please answer the following questionnaires.</p>` +
+            `<p>Please answer the following ten questionnaires.</p>` +
             `<p>Each questionnaire will be presented on a separate page.</p>` +
             `<p>Your responses are important, and we ask that you carefully read each question and answer as accurately and thoughtfully as possible.</p>` +
             `<p>Please take your time with each item, and remember that there are no “right” or “wrong” answers. Your honest and thorough responses will help us gather meaningful data.</p>` +
