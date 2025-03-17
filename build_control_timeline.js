@@ -41,6 +41,7 @@ explore_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
+        explore_decision: 4000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
@@ -133,6 +134,7 @@ reward_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
         reward_amount: "5p",
+        reward_decision: 4000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
