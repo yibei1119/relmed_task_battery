@@ -39,7 +39,7 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         array: true,
         pretty_name: 'Infrequency items',
         description: 'Infrequency-check item numbers (0-indexed)',
-        default: null
+        default: []
       },
       instructions: {
         type: jspsych.ParameterType.HTML_STRING,
@@ -219,7 +219,7 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         item_order = jsPsych.randomization.shuffle(item_order);
 
         // check if the first item is an infrequency item; if so, re-shuffle to avoid this
-        while (!(trial.infrequency_items === null) && trial.infrequency_items.toString().includes([item_order[0]])){
+        while (!(trial.infrequency_items.length === 0) && trial.infrequency_items.toString().includes([item_order[0]])){
           item_order = jsPsych.randomization.shuffle(item_order);
         }
 
