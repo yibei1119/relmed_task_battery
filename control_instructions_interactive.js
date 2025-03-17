@@ -454,10 +454,10 @@ const controlInstructionPages = [
             <section class="scene">
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="quest-scroll">
-                <p style="position: absolute; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
+                <p style="position: absolute; text-align: center; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
                 <img class="island-target" src="imgs/island_icon_grape.png" alt="Target island" />
-                <p style="position: absolute; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
+                <p style="position: absolute; text-align: center; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
             </div>
             <div class="overlap-group">
                 <div class="choice-left">
