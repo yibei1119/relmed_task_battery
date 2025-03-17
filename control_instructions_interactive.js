@@ -776,6 +776,9 @@ const controlInstructionsLoop = {
         const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
 
         return !Object.values(data).every(value => value === "True");
+    },
+    on_timeline_start: () => {
+        updateState(`control_start_instructions`)
     }
 };
 
