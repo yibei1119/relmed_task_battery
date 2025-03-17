@@ -15,7 +15,7 @@ function prepare_PILT_instructions() {
         css_classes: ['instructions'],
         pages: () => [inter_block_stimulus()],
         show_clickable_nav: true,
-        data: {trialphase: "instruction"}
+        data: {trialphase: "pilt_instruction"}
     }
 
     let inst =  [
@@ -54,7 +54,7 @@ function prepare_PILT_instructions() {
         return pages
     },
         show_clickable_nav: true,
-        data: {trialphase: "instruction"},
+        data: {trialphase: "pilt_instruction"},
         on_start: () => {updateState("pilt_start_instructions")}
     }
     ];
@@ -69,7 +69,7 @@ function prepare_PILT_instructions() {
                     <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
                     `,
             choices: ['arrowleft', 'arrowright'],
-            data: {trialphase: "instruction"}
+            data: {trialphase: "pilt_instruction"}
         },
         {
             timeline: build_PILT_task(
@@ -113,7 +113,7 @@ function prepare_PILT_instructions() {
             <p>However, even the best cards may sometimes give only a penny or occasionally break a one-pound coin.</p>`
         ],
         show_clickable_nav: true,
-        data: {trialphase: "instruction"}
+        data: {trialphase: "pilt_instruction"}
     },
     {
         type: jsPsychHtmlKeyboardResponse,
@@ -125,7 +125,7 @@ function prepare_PILT_instructions() {
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
 `,
         choices: ['arrowleft', 'arrowright'],
-        data: {trialphase: "instruction"}
+        data: {trialphase: "pilt_instruction"}
     }]);
 
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
@@ -178,7 +178,7 @@ function prepare_PILT_instructions() {
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "instruction"} 
+            data: {trialphase: "pilt_instruction"} 
         }
     ]);
 
@@ -231,7 +231,7 @@ function prepare_PILT_instructions() {
                         <p>You must answer all questions correctly to begin the game.</p>\
                         <p>If not, you can review the instructions and try again.</p>`],
                 show_clickable_nav: true,
-                data: {trialphase: "instruction"}
+                data: {trialphase: "pilt_instruction"}
             }
     ]);
 
@@ -311,7 +311,7 @@ function prepare_PILT_instructions() {
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "instruction"}
+            data: {trialphase: "pilt_instruction"}
         }
     ]
 
