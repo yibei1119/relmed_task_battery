@@ -65,8 +65,9 @@ const pre_kick_out_warning = {
     }
 }
 
+let kick_out_warning = {}
 if (window.context == "relmed") {
-    const kick_out_warning = {
+    kick_out_warning = {
         type: jsPsychHtmlKeyboardResponse,
         conditional_function: function() {
           if (jsPsych.data.get().last(1).select('n_warnings').values[0] == window.maxWarnings) {
@@ -90,7 +91,7 @@ if (window.context == "relmed") {
         }
     }    
 } else {
-    const kick_out_warning = {
+    kick_out_warning = {
         type: jsPsychHtmlKeyboardResponse,
         conditional_function: function() {
           if (jsPsych.data.get().last(1).select('n_warnings').values[0] >= window.maxWarnings) {
