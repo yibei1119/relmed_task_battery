@@ -273,7 +273,7 @@ var jsPsychExploreShip = (function (jspsych) {
 
         // Save data
         const trial_data = {
-          trialphase: "explore",
+          trialphase: "control_explore",
           response: choice,
           rt: choice_rt,
           responseTime: responseTime,
