@@ -315,7 +315,7 @@ var jsPsychRewardShip = (function (jspsych) {
         trialphase: "control_reward",
         response: keyToChoice[this.jsPsych.pluginAPI.getValidKey(trial.choices)],
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
-        responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(125, 15, 0.5, true))),
+        responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(100, 10, 0.5, true))),
         trial_presses: trial_presses,
       };
 
