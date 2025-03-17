@@ -50,6 +50,11 @@ explore_sequence.forEach(trial => {
           }
         },
         on_finish: function (data) {
+          const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          if (n_trials % 24 === 0) {
+            console.log("n_trials: " + n_trials);
+          }
+
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
             console.log("n_warnings: " + up_to_now);
@@ -62,10 +67,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
-          post_trial_gap: 0,
-          on_finish: function (data) {
-            // console.log(data);
-          }
+          post_trial_gap: 0
         }],
         conditional_function: function () {
           const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
@@ -94,7 +96,11 @@ predict_sequence.forEach(trial => {
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
-          console.log(data);
+          const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          if (n_trials % 24 === 0) {
+            console.log("n_trials: " + n_trials);
+          }
+
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
             console.log("n_warnings: " + up_to_now);
@@ -134,6 +140,11 @@ reward_sequence.forEach(trial => {
           }
         },
         on_finish: function (data) {
+          const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          if (n_trials % 24 === 0) {
+            console.log("n_trials: " + n_trials);
+          }
+
           if (data.response === null) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
             console.log("n_warnings: " + up_to_now);
