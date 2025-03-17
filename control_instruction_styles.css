@@ -77,14 +77,14 @@
 .current-trace {
   position: absolute;
   height: 2px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   width: 25%;
 }
 
 .current-line {
   position: absolute;
   height: 2px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   width: 30%;
   transform-origin: left center;
 }
