@@ -257,6 +257,11 @@
             ]);
         }        
 
+        if (window.task === "quests"){
+            // Add questionnaire timeline
+            procedure = procedure.concat(questionnaires_timeline);
+        }
+
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
 
