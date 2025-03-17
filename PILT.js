@@ -16,7 +16,7 @@ const inter_block_msg = {
     css_classes: ['instructions'],
     stimulus: inter_block_stimulus,
     data: {
-        trialphase: "inter_block",
+        trialphase: "pilt_inter_block",
     },
     on_start: saveDataREDCap,
     on_finish: () => { window.skipThisBlock = false }
