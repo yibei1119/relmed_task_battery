@@ -218,21 +218,23 @@ var questionnaire_gad = {
     }
 };
 
-var questions_WSAS = prompt_WSAS.map(prompt => ({
-    prompt: prompt,
-    labels: likert_WSAS,
-    required: true
-}));
-questions_WSAS.unshift({prompt: "If you're retired or choose not to have a job for reasons unrelated to your problem, tick here", labels: [""], required: false});
+// questions_WSAS.unshift({prompt: "If you're retired or choose not to have a job for reasons unrelated to your problem, tick here", labels: [""], required: false});
 var questionnaire_WSAS = {
-    type: jsPsychSurveyLikert,
-    preamble: ["<h1>Questionnaire 4</h1>" +
-        "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>"
+    type: jsPsychSurveyTemplate,
+    instructions: ["<h1>Questionnaire 4</h1>" +
+        "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>" +
+        '<div style="border: 2px solid #000; padding: 10px; display: inline-block; background-color: #f9f9f9; border-radius: 5px;"><label style="display: inline-flex; align-items: center;">If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here&nbsp<input type="checkbox" id="retiredCheck" style="margin-left: 5px;"></label></div>'
     ],
-    questions: questions_WSAS,
-    scale_width: 700,
+    items: prompt_WSAS,
+    scale: likert_WSAS,
+    survey_width: 700,
     data: {
         trialphase: "WSAS"
+    },
+    before_finish: (data) => {
+        let checkbox = document.getElementById("retiredCheck");
+        data['responses']['retired_check'] = checkbox.checked;
+
     }
 };
 
@@ -374,7 +376,7 @@ const questionnaires_timeline = [
             simulate: false
         }
     },
-    // questionnaire_phq,
+    questionnaire_phq,
     questionnaire_pvss,
     questionnaire_gad,
     questionnaire_WSAS,
