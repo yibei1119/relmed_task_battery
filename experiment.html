@@ -254,6 +254,52 @@
             ]);
         }        
 
+        if (window.task === "pilot8") {
+            procedure.push({
+                type: jsPsychInstructions,
+                css_classes: ['instructions'],
+                pages:  [
+                `<p>Welcome back!</p>
+                <p>You will now play more games of trial and error learning.</p>
+                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
+                ],
+                show_clickable_nav: true,
+                data: {trialphase: "instruction"}
+            });
+
+            // Add max press rate test
+            procedure = procedure.concat(maxPressTimeline);
+
+            // PILT instructions
+            let PILT_instructions = prepare_PILT_instructions();
+            procedure.push(PILT_instructions);
+            
+            // Add LTM block
+            procedure.push(PILT_tasks.LTM_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_ltm
+            ]);
+
+            // Add post-LTM test
+            procedure.push(PILT_tasks.LTM_test_procedure);
+
+            // Add WM block
+            procedure.push(PILT_tasks.WM_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_wm
+            ]);
+
+            // Add post-WM test
+            procedure.push(PILT_tasks.WM_test_procedure);
+
+            // Control
+            procedure.push(controlTimeline);
+
+            // Free text
+        }
+
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
 
