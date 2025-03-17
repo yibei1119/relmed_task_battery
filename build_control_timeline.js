@@ -33,6 +33,8 @@ const controlExploreTimeline = [];
 explore_sequence.forEach(trial => {
   controlExploreTimeline.push({
     timeline: [
+      kick_out,
+      fullscreen_prompt,
       {
         type: jsPsychExploreShip,
         left: jsPsych.timelineVariable('left'),
@@ -83,6 +85,8 @@ const controlPredTimeline = [];
 predict_sequence.forEach(trial => {
   controlPredTimeline.push({
     timeline: [
+      kick_out,
+      fullscreen_prompt,
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
@@ -111,6 +115,8 @@ const controlRewardTimeline = [];
 reward_sequence.forEach(trial => {
   controlRewardTimeline.push({
     timeline: [
+      kick_out,
+      fullscreen_prompt,
       {
         type: jsPsychRewardShip,
         target: jsPsych.timelineVariable('target'),

@@ -84,16 +84,16 @@
   //       jsPsych.simulate(controlTimeline, "visual", simulation_options);
   //     }
   // } else {
-  //     jsPsych.run(controlTimeline);
+      jsPsych.run(controlTimeline);
   // }
 
   let controlTestingTimeline = [];
   
   controlTestingTimeline.push(controlPreload);
 
-  // controlTestingTimeline.push(controlInstructionsTimeline);
+  controlTestingTimeline.push(controlInstructionsTimeline);
   
-  controlTestingTimeline.push(controlExploreTimeline);
+  // controlTestingTimeline.push(controlExploreTimeline);
 
   // controlTestingTimeline.push(controlPredTimeline);
 
@@ -101,7 +101,7 @@
 
   // controlTestingTimeline.push(controlDebriefing);
   
-  jsPsych.run(controlTestingTimeline);
+  // jsPsych.run(controlTestingTimeline);
 
         const simulation_options = {
           default: {
