@@ -76,6 +76,44 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         default:  'Continue',
         description: 'The text that appears on the button to finish the trial.'
       },
+    },
+    data: {
+        responses: {
+            type: jspsych.ParameterType.OBJECT,
+            pretty_name: "Participant responses"
+        },
+        rt: {
+            type: jspsych.ParameterType.FLOAT,
+            pretty_name: "Overall response times"
+        },
+        radio_event_ids: {
+            type: jspsych.ParameterType.ARRAY,
+            pretty_name: "Order of questions clicked"
+        },
+        radio_event_times: {
+            type: jspsych.ParameterType.ARRAY,
+            pretty_name: "Times of questions clicks"
+        },
+        key_event_times:  {
+            type: jspsych.ParameterType.ARRAY,
+            pretty_name: "Times of keyboard strokes"
+        },
+        mouse_event_times:  {
+            type: jspsych.ParameterType.ARRAY,
+            pretty_name: "Times of mouse clicks"
+        },
+        straightlining:  {
+            type: jspsych.ParameterType.FLOAT,
+            pretty_name: "Maximum percentage of responses of the same position"
+        },
+        zigzagging: {
+            type: jspsych.ParameterType.FLOAT,
+            pretty_name: "fraction of responses that exhibit response adjacency"
+        },
+        honeypot: {
+            type: jspsych.ParameterType.INT,
+            pretty_name: 'Whether hidden radio button was clicked. 0 - no. 1 - yes'
+        },
     }
   }
 
