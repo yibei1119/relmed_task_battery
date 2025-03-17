@@ -3,7 +3,7 @@ import requests
 from os import environ
 import io
 
-def upload_file_to_redcap(record, file_content, field):
+def upload_file_to_redcap(record, file_content):
     token = environ.get('REDCAP_API_TOKEN')
     
     # Create an in-memory file object
@@ -19,7 +19,7 @@ def upload_file_to_redcap(record, file_content, field):
         'content': 'file',
         'action': 'import',
         'record': record,
-        'field': field
+        'field': 'jspsych_data'
     }
     
     r = requests.post('https://redcap.slms.ucl.ac.uk/api/', data=data, files=files)
@@ -29,9 +29,9 @@ def upload_file_to_redcap(record, file_content, field):
 def lambda_handler(event, context):
     
     token = environ.get('REDCAP_API_TOKEN')
-    
-    auto_number = json.loads(event['body'])[0]['auto_number']
-    
+
+    print(event)
+        
     data = {
     'token': token,
     'content': 'record',
@@ -39,9 +39,7 @@ def lambda_handler(event, context):
     'format': 'json',
     'type': 'flat',
     'overwriteBehavior': 'normal',
-    'forceAutoNumber': auto_number,
     'data': event['body'],
-    'returnContent': 'auto_ids',
     'returnFormat': 'json'
     }
     
@@ -50,18 +48,15 @@ def lambda_handler(event, context):
     # Save as file
     body_data = json.loads(event['body'])[0]
     print(body_data)
+
+    participant_id = body_data['participant_id']
+    print(participant_id)
     
-    if auto_number == "false":
-        record_id = body_data['record_id']
-    else:
-        record_id = int(r.json()[0].split(",")[0])
-    print(record_id)
     jspsych_data = body_data["jspsych_data"]  
     
     # Upload the long text as a file
-    task = json.loads(event['body'])[0]['task']
-    file_upload_response = upload_file_to_redcap(record_id, 
-        jspsych_data, task.lower() + "_data")
+    file_upload_response = upload_file_to_redcap(participant_id, 
+        jspsych_data)
     print(file_upload_response)
 
     return {
