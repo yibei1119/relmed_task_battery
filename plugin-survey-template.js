@@ -152,6 +152,7 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         margin: auto;
         font-size: 16px;
         line-height: 1.5em;
+        text-align: left;
       }
       .survey-template-container {
         display: grid;
