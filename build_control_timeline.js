@@ -214,7 +214,7 @@ controlTimeline.push(controlPreload);
 controlTimeline.push(controlInstructionsTimeline);
 
 // Add the explore, predict, reward trials
-controlExploreTimeline[0]["on_start"] = () => {
+controlExploreTimeline[0]["on_timeline_start"] = () => {
   updateState("control_task_start");
   updateState("no_resume_10_minutes");
 };
