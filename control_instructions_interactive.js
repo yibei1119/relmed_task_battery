@@ -400,7 +400,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(1)}
             <div class="current-indicator">
-                <div class="label">Low current:<br> a little fuel needed</div>
+                <div class="label"><strong>Low current<strong>:<br> a little fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>But how much fuel is enough? This depends on the ocean current. You can check the current strength each day:</p>
@@ -418,7 +418,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(2)}
             <div class="current-indicator">
-                <div class="label">Medium current:<br> a moderate amount of fuel needed</div>
+                <div class="label"><strong>Medium current</strong>:<br> a moderate amount of fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>Two stripes mean medium current: a moderate amount of fuel is needed...</p>
@@ -435,7 +435,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(3)}
             <div class="current-indicator">
-                <div class="label">Strong current:<br> a lot of fuel needed</div>
+                <div class="label"><strong>Strong current</strong>:<br> a lot of fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>Three stripes indicate a strong current: you will need a lot of fuel.</p>
@@ -488,10 +488,10 @@ const controlInstructionPages = [
             <section class="scene">
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="quest-scroll">
-                <p style="position: absolute; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
+                <p style="position: absolute; text-align: center; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
                 <img class="island-target" src="imgs/island_icon_grape.png" alt="Target island" />
-                <p style="position: absolute; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
+                <p style="position: absolute; text-align: center; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
             </div>
             <div class="overlap-group">
                 <div class="choice-left">
