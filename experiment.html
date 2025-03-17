@@ -311,6 +311,10 @@
             // Add post-WM test
             procedure.push(PILT_tasks.WM_test_procedure);
 
+            // Add coin lottery
+            procedure.push(lottery_instructions);
+            procedure.push(coin_lottery);
+
             // Control
             procedure.push(controlTimeline);
 
