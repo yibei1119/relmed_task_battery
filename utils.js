@@ -251,9 +251,18 @@ function end_experiment() {
 
     window.removeEventListener('beforeunload', preventRefresh);
 
-    saveDataREDCap(10, { 
-        message: "endTask"
-    });
+    if (window.context === "relmed") {
+        saveDataREDCap(10, {
+            message: "endTask"
+        });
+    } else {
+        saveDataREDCap(10, {
+            message: "endTask"
+        }, () => {
+            // Redirect
+            window.location.replace("https://app.prolific.com/submissions/complete?cc=CQTRGXFP")
+        });
+    }
 }
 
 // Function for formatting data from API

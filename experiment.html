@@ -136,15 +136,23 @@
     }
     
     // End of experiment message
+    const end_exp_msg_content = [];
+    if (window.context === "relmed") {
+        end_exp_msg_content = [
+            `<p>Thank you for completing this module!</p>
+            <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes. Please don't close or refresh your browser at this time.</p>`];
+    } else {
+        end_exp_msg_content = [
+            `<p>Thank you for participating in this study!</p>
+            <p>The purpose of this study is to develop games that can measure people's individual learning tendencies. In the future, these games will be used to facilitate mental health research ongoing at UCL.</p>`,
+            `<p>When you click continue, your data will be uploaded to the server. This may take up to two minutes.Please don't close or refresh your browser at this time.</p>
+            <p>When data upload is complete, you will be rediredted to Prolific to complete your submission</p>`];
+    }
     const end_experiment_msgs = [
         {
             type: jsPsychInstructions,
             css_classes: ['instructions'],
-            pages: [
-                `<p>Thank you for completing this module!</p>
-                <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes.
-                    Please don't close or refresh your browser at this time.</p>`
-            ],
+            pages: end_exp_msg_content,
             show_clickable_nav: true,
             data: {trialphase: "experiment_end_message"}
         },
