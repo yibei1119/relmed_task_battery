@@ -49,7 +49,7 @@ var jsPsychSurveyTemplate = (function (jspsych) {
       randomize_question_order: {
         type: jspsych.ParameterType.BOOL,
         pretty_name: 'Randomize Question Order',
-        default: true,
+        default: false,
         description: 'If true, the order of the questions will be randomized'
       },
       scale_repeat: {
