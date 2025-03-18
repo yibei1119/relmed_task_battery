@@ -625,6 +625,28 @@ function shuffleArray(arr, seedString) {
 }
 
 // Warnings for unresponsive trials
+/**
+ * Determines whether a warning can be shown on this trial.
+ *
+ * This function checks the following conditions:
+ * 1. The total number of warnings issued so far (`dd_n_warnings`) 
+ *    is less than the maximum allowed (`window.max_warnings_per_task`).
+ * 2. The warning was not already shown in the specified number of trials back 
+ *    (default is the last trial, useful for pre-trial computations. Change to 2 for post-trial computations).
+ * 3. If `window.context` is `"prolific"`, a warning is always allowed, overriding other conditions.
+ *
+ * @param {number} [warning_expected_n_back=1] - The number of trials back to check 
+ *        whether a warning was already shown.
+ * @returns {boolean} - Returns `true` if a warning can be shown, otherwise `false`.
+ */
+const can_be_warned = (task, warning_expected_n_back = 1) => {
+    const task_n_warnings = jsPsych.data.get().last(1).select(`${task}_n_warnings`).values[0] ?? 0;
+    console.log(jsPsych.data.get().last(1).select(`${task}_n_warnings`).values);
+    const last_trial_shown = jsPsych.data.get().last(warning_expected_n_back).select("trialphase").values[0];
+    return ((task_n_warnings < window.max_warnings_per_task) && (last_trial_shown !== "no_choice_warning")) || (window.context === "prolific");
+};
+
+
 // Function to create and show warning
 function showTemporaryWarning(message, duration = 800) {
     // Create warning element
@@ -670,7 +692,7 @@ function showTemporaryWarning(message, duration = 800) {
     }, duration);
 }
 
-function noChoiceWarning(resp_var = "response", stimulus = "") {
+function noChoiceWarning(resp_var = "response", stimulus = "", task = "") {
     const warning_trial = {
         timeline: [{
             type: jsPsychHtmlKeyboardResponse,
@@ -686,7 +708,16 @@ function noChoiceWarning(resp_var = "response", stimulus = "") {
         }],
         conditional_function: function () {
             const last_trial_choice = jsPsych.data.get().last(1).select(resp_var).values[0];
-            return last_trial_choice === null;
+
+            return (last_trial_choice === null) && can_be_warned(task, 2)
+            
+        },
+        on_finish: () => {
+            // Update task warning counter if can be warned on this trial
+            const task_n_warnings = jsPsych.data.get().last(1).select("dd_n_warnings").values[0];
+            jsPsych.data.addProperties({
+                dd_n_warnings: task_n_warnings + 1
+            });
         }
     }
     return warning_trial;
