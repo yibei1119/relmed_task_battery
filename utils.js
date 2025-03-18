@@ -641,7 +641,6 @@ function shuffleArray(arr, seedString) {
  */
 const can_be_warned = (task, warning_expected_n_back = 1) => {
     const task_n_warnings = jsPsych.data.get().last(1).select(`${task}_n_warnings`).values[0] ?? 0;
-    console.log(jsPsych.data.get().last(1).select(`${task}_n_warnings`).values);
     const last_trial_shown = jsPsych.data.get().last(warning_expected_n_back).select("trialphase").values[0];
     return ((task_n_warnings < window.max_warnings_per_task) && (last_trial_shown !== "no_choice_warning")) || (window.context === "prolific");
 };
