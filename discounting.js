@@ -42,9 +42,9 @@ const dd_trial = {
     enable_button_after: 500,
     trial_duration: () => {
         if (can_be_warned("dd")){
-            return window.default_response_deadline * 1000
+            return window.default_response_deadline
         } else {
-            return window.default_long_response_deadline * 1000
+            return window.default_long_response_deadline
         }
     },
     post_trial_gap: 200,
