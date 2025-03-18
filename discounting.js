@@ -36,12 +36,15 @@ const dd_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: "<p>Would you prefer:</p>",
     choices: jsPsych.timelineVariable("choices"),
+    button_html: function(choice, choice_index) {
+        return `<button class="jspsych-btn dd-btn">${choice}</button>`;
+      },
     enable_button_after: 500,
     trial_duration: () => {
         if (can_be_warned("dd")){
-            return window.default_response_deadline
+            return window.default_response_deadline * 1000
         } else {
-            return window.default_long_response_deadline
+            return window.default_long_response_deadline * 1000
         }
     },
     post_trial_gap: 200,
