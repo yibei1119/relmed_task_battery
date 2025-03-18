@@ -1,6 +1,6 @@
 // Monetary Choice Questionnaire
 
-const sum_delays = [
+const dd_sum_delays = [
     { today: 54, later: 55, delay: 117 },
     { today: 55, later: 75, delay: 61 },
     { today: 19, later: 25, delay: 53 },
@@ -30,11 +30,22 @@ const sum_delays = [
     { today: 20, later: 55, delay: 7 },
 ]
 
-const discounting_trial = {
+const dd_choices = dd_sum_delays.map((d) => {return {choices: [`£${d.today}\ntoday`, `£${d.later}\nin ${d.delay} days`]}})
+
+const dd_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: "<p>Would you prefer:</p>",
-    choices: jsPsych.timeline_variable("choices"),
+    choices: jsPsych.timelineVariable("choices"),
     enable_button_after: 500,
     trial_duration: window.default_response_deadline,
+    post_trial_gap: 200
+}
+
+const dd_timeline = {
+    timeline: [dd_trial],
+    timeline_variables: dd_choices,
+    on_finish: (data) => {
+        data.chosen_later = data.response == 1
+    }
 }
 
