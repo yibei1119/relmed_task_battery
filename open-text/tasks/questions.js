@@ -62,16 +62,13 @@ let lvl2_catch_ans = 'catch response'
 /*
 
 */
-function question_trial(qs_list, q_index = 0, q_count, save_fn, save_fn_user, auth_instance, currentUser_instance, jsPsych_instance) {
+function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsPsych_instance) {
     /**
      * Creates a jsPsych survey text trial with various UI enhancements and validation mechanisms.
      *
      * @param {Array} qs_list - List of question objects containing question details.
      * @param {number} [q_index=0] - Index of the current question in the list.
      * @param {number} q_count - The current question number in the experiment sequence.
-     * @param {Function} save_fn - Function to save user responses to the database.
-     * @param {Function} save_fn_user - Function to save user metadata and progress.
-     * @param {Object} auth_instance - Authentication instance used for user authentication.
      * @param {Object} currentUser_instance - Object representing the current user session and progress.
      * @param {Object} jsPsych_instance - Instance of jsPsyc
      *
@@ -232,7 +229,7 @@ function question_trial(qs_list, q_index = 0, q_count, save_fn, save_fn_user, au
                             // na_check.disabled = false; // disable checkbox
                             alert_el.style.visibility = 'hidden'
                             submit_bttn.style.visibility = 'hidden'
-                            // document.getElementById('jspsych-experiment').innerHTML = ''
+                            // document.getElementById('display_element').innerHTML = ''
                             jsPsych_instance.finishTrial()
                         });
                     } else {
@@ -281,11 +278,13 @@ function question_trial(qs_list, q_index = 0, q_count, save_fn, save_fn_user, au
             if (na_check) {
                 // if rather not say, then ask to return submission
                 if (no_skip) {
-                    save_fn_user(auth_instance, currentUser_instance, {
-                        completed: "Yes", returned: "Yes", code: 'RETURNED'
-                    }).catch(() => {
-                        document.getElementById('jspsych-experiment').innerHTML = generic_error;
-                    })
+                    // Use saveDataREDCap to save the return status
+                    var extraFields = {
+                        completed: "Yes",
+                        returned: "Yes",
+                        code: 'RETURNED'
+                    }
+                    saveDataREDCap(3);
                     jsPsych_instance.abortExperiment(return_text)
                 }
             } else {
@@ -309,54 +308,37 @@ function question_trial(qs_list, q_index = 0, q_count, save_fn, save_fn_user, au
                 currentUser_instance.empty_count += empty_response * 1
                 // console.log('empty count: ', currentUser_instance.empty_count)
 
-                // Process and save data
-                // Create data objects for firebase
-                let tmp_obj = {
-                    ['responses_' + q_name]: data['response'], ['is_empty_' + q_name]: empty_response, // ['na_checked_' + q_name]: na_check,
-                }
-                let tmp_obj_rt = {
-                    ['rts_' + q_name]: data['rt'], ['timeout_' + q_name]: data['timeout'],
-                }
-                let tmp_obj_dump = {
-                    ['z_dump_' + q_name]: data
-                }
+                // Process and prepare data for REDCap as extra fields
+                var extraFields = {
+                    // Response data
+                    [`responses_${q_name}`]: data['response'],
+                    [`is_empty_${q_name}`]: empty_response,
+                    
+                    // Response time and timeout data
+                    [`rts_${q_name}`]: data['rt'],
+                    [`timeout_${q_name}`]: data['timeout'],
+                    
+                    // User metrics
+                    empty_count: currentUser_instance.empty_count,
+                    timeout_count: currentUser_instance.timeout_count
+                };
 
-                // save responses
-                save_fn(auth_instance, currentUser_instance, tmp_obj, 'questions', 'open_questions').catch(error => {
-                    console.log('Issue saving data')
-                    console.log(error)
-                })
-
-                // save reaction times
-                save_fn(auth_instance, currentUser_instance, tmp_obj_rt, 'questions', 'open_questions_rts').catch(error => {
-                    console.log('Issue saving data')
-                    console.log(error)
-                })
-                // dump data
-                save_fn(auth_instance, currentUser_instance, tmp_obj_dump, 'questions', 'open_questions_dump').catch(error => {
-                    console.log('Issue saving data')
-                    console.log(error)
-                })
-                save_fn_user(auth_instance, currentUser_instance, {
-                    empty_count: currentUser_instance.empty_count, timeout_count: currentUser_instance.timeout_count
-                }).catch(() => {
-                })
+                // saveDataREDCap(3);
 
                 // count warn about timeouts or empty responses
                 if (data['timeout'] || empty_response) {
                     currentUser_instance.warning_count += 1
-                    save_fn_user(auth_instance, currentUser_instance, {warning_count: currentUser_instance.warning_count}).catch(() => {
-                    })
+                    
                     if (currentUser_instance.warning_count > max_timeout && no_skip) {
-                        save_fn_user(auth_instance, currentUser_instance, {
-                            completed: "Yes", returned: "Yes", code: 'WARNED'
-                        }).catch(() => {
-                            document.getElementById('jspsych-experiment').innerHTML = generic_error;
-                        })
-                        jsPsych_instance.abortExperiment(return_timeout_text)
-
+                        var extraFields = {
+                            completed: "Yes", 
+                            returned: "Yes", 
+                            code: 'WARNED'
+                        }
+                        saveDataREDCap(3);
+                        jsPsych_instance.abortExperiment(return_timeout_text);
                     } else {
-                        showAlert(jsPsych_instance, currentUser_instance)
+                        showAlert(jsPsych_instance, currentUser_instance);
                     }
                 }
             }

@@ -3,19 +3,11 @@
 // Open-ended questions config
 let min_words = 30 // Minimum number of words required to write <=================== CHANGE FOR LIVE (def: 30)
 let qs_ans_required = false // obsolete boolean for requiring response
-let prevent_paste = false // prevent pasting text into box <=================== CHANGE FOR LIVE to TRUE (def: true)
+let prevent_paste = true // prevent pasting text into box <=================== CHANGE FOR LIVE to TRUE (def: true)
 let writing_time = 90 // time in seconds to write a response (def: 90)
 let warning_time = 30 // warning X seconds before the time runs out (def: 30)
 let qs_read_time = 7 // extra time to read the question on top of the writing time (def: 7)
 let oq_timelimit_text = '1.5 minutes' // display the initial time to answer a question
-
-// Useful variables for firebase and js psych
-let subversion = ''
-let firestore_task = 'relmed-toy' + subversion // firestore db task name
-let base_url = "https://app.prolific.com/submissions/complete?cc=" // for prolific redirects
-var dur_experiment = `19`; // duration of experiment in minutes for consent/PIS
-var study_subname = 'Understanding introspection and self-report' // subtitle of the study for consent
-let uid; // variable storing firebase uid
 
 // Boolean values
 let console_debug = true // whether to print to console
@@ -23,9 +15,7 @@ let do_online = true // whether to run online or offline
 // let do_online = false // whether to run online or offline
 let no_skip = true // prevent skipping question if no response or timeout
 
-// let quick_consent = true // whether to do quick consent (1st option only required)
-let quick_consent = false // whether to run online or offline
-let run_sim = false // whether to run in simulation mode
+let run_sim = false || window.participantID.includes('simulate') // whether to run in simulation mode
 
 // Error codes
 let no_consent_error = 'E_NC1' // return when no consent is given
@@ -38,17 +28,9 @@ let max_timeout = 4 // max number of timeouts or empty responses allowed (next o
 let warning_text = `You've timed out or haven't provided a full response!`
 let warning_last_chance = `<br><br>This is your <b>last warning</b>, next time you <u>will be asked to return your submission.</u>`
 
-// Initialise jsPsych
-let my_jsPsych_init = function () {
-    return initJsPsych({
-        override_safe_mode: true,
-    });
-}
-
 // User class for storing booleans etc for a given participant
 class User {
-    constructor(uid) {
-        this.uid = uid;
+    constructor() {
         this.consent = null
         this.attention_check1 = 0
         this.attention_check2 = 0
@@ -59,36 +41,6 @@ class User {
         this.warning_count = 0
         this.last_checked = null
     }
-
-    // Sets requisite IDs in class based on URL or random if not specified - adds to jsPsych data property
-    get_ids(jsPsych_instance) {
-        let prolificID = jsPsych_instance.data.getURLVariable('PROLIFIC_PID');
-        let studyID = jsPsych_instance.data.getURLVariable('STUDY_ID')
-        let sessionID = jsPsych_instance.data.getURLVariable('SESSION_ID')
-
-        // handle empty URL variables
-        if (prolificID == null || prolificID.toString().length === 0) {
-            prolificID = Array.from(Array(20), () => Math.floor(Math.random() * 36).toString(36)).join('');
-        }
-        if (studyID == null || studyID.toString().length === 0) {
-            studyID = Array.from(Array(20), () => Math.floor(Math.random() * 36).toString(36)).join('');
-        }
-        if (sessionID == null || sessionID.toString().length === 0) {
-            sessionID = Array.from(Array(20), () => Math.floor(Math.random() * 36).toString(36)).join('');
-        }
-        this.PID = prolificID;
-        this.ST_ID = studyID;
-        this.SE_ID = sessionID;
-
-        jsPsych_instance.data.addProperties({
-            uid: this.uid,
-            PID: prolificID,
-            ST_ID: studyID,
-            SE_ID: sessionID,
-        })
-
-    }
-
 }
 
 
@@ -104,7 +56,7 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
      * @param {string} q_name - The identifier of the current question, used to check for special cases.
      * @param {Object} jsPsych_instance - The jsPsych instance used for adding experimental data.
      */
-        // process text input
+    // process text input
     let text = input.value
     text = text.replace(/\s\s+/g, ' ');
 
@@ -131,7 +83,7 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
 
             // attention check case
             let catch_resp = input.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-            jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+            jsPsych_instance.data.addProperties({ 'lvl2_attention': catch_resp })
             if (catch_resp) {
                 submit_bttn.style.visibility = "visible"
                 div_counter.style.visibility = "hidden"
@@ -202,7 +154,7 @@ function showAlert(jsPsych_instance, currentUser_instance) {
     } else {
         alert_text += '<br><br>The experiment will resume shortly.</div>'
     }
-    document.getElementById('jspsych-experiment').innerHTML = alert_text
+    document.getElementById('jspsych-content').innerHTML = alert_text
 
     let alertBox = document.getElementById("customAlert");
     alertBox.style.display = "block";  // Show the alert box
