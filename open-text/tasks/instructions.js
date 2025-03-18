@@ -31,9 +31,9 @@ let trigger_text_end = `<div class="instr_stim trigger">
 // Page - Welcome
 let welcome_text = `
     <div class="instr_stim">
-    <h2><b>Welcome to the experiment!</b></h2>
-    <p>Thank you for consenting and taking time to help science.</p>
-    <h4>Before we begin, please carefully go through the following instruction screens.</h4>
+    <h2><b>Well done!</b></h2>
+    <p>Thank you for your participation and efforts so far.</p>
+    <h4>Before we begin the very last part of the study, please carefully go through the following instruction screens.</h4>
     <br>
     <p class="next_page">Press <b>n</b> to proceed.</p>
     </div>
@@ -41,7 +41,7 @@ let welcome_text = `
 
 // Page 2
 let instr_page2_main = `
-    <h4>In this experiment, you will have to answer questions by writing text.</h4>
+    <h4>In this task, you will have to answer questions by writing text.</h4>
     <p>The questions will be about yourself, your feelings, background, attitudes and behaviour in your everyday life.</p>
     <p>You will have <b>`+oq_timelimit_text+`</b> to write a response of at <b>least `+min_words.toString()+` words</b> for each question.</p>
 `
@@ -85,9 +85,7 @@ let instr_page4 = `
 // Page 5
 let instr_page5_main = `
     <div id='instr_req_warning'>
-    <b>All the questions are required</b>. However, remember, you are <b>free to withdraw at any point</b>.<br>
-    If you are <u>not comfortable answering a question, please indicate this by clicking a relevant checkbox.</u><br>
-    You will then be asked to <b>return your submission.</b>
+    <b>All the questions are required</b>.
     </div>
     <br>
     &#8213;
