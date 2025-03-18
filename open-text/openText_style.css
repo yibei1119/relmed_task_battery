@@ -1,40 +1,40 @@
 /*------- Generic styles -------*/
-h1 {
+.open-text h1 {
     font-size: 2vw;
 }
 
-h2 {
+.open-text h2 {
     font-size: 1.85vw;
 }
 
-h3 {
+.open-text h3 {
     font-size: 1.5vw;
 }
 
-h4 {
+.open-text h4 {
     font-size: 1.25vw;
 }
 
-p {
+.open-text p {
     font-size: 1.15vw;
     line-height: normal;
 }
 
-a {
+.open-text a {
     font-size: 1.15vw;
 }
 
-ul {
+.open-text ul {
     line-height: normal;
     font-size: 1.15vw;
 }
 
-li {
+.open-text li {
     line-height: normal;
     font-size: 1.15vw;
 }
 
-label {
+.open-text label {
     font-size: 1.15vw;
 }
 

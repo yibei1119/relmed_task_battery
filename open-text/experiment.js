@@ -10,6 +10,9 @@ let openText_welcome_trial = {
     post_trial_gap: 500,
     choices: ['n'],
     stimulus: welcome_text,
+    on_start: function (trial) {
+        document.body.className = "open-text";
+    }
 }
 let openText_instructions = {
     type: jsPsychInstructions,
@@ -38,6 +41,7 @@ for (let i = 0; i < q_max; i++) {
 let relmed_open_timeline = {
     timeline: relmed_open_timeline_array,
     on_timeline_finish: () => {
+        document.body.className = '';
         saveDataREDCap(3);
     }
 }
