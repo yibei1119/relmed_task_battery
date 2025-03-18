@@ -44,6 +44,9 @@
     <script src="jspsych/plugin-survey-likert.js"></script>
     <script src="jspsych/plugin-survey-text.js"></script>
     <script src="jspsych/plugin-fullscreen.js"></script>
+    <script src="ctrl-plugins/plugin-ctrl-explore-trial.js"></script>
+    <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
+    <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
     <script src="utils.js"></script>
     <script src="plugin-PILT.js"></script>
     <script src="plugin-survey-template.js"></script>
@@ -61,11 +64,17 @@
     <script src="acceptability.js"></script>
     <script src="questionnaires.js"></script>
     <script src="discounting.js"></script>
+    <script src="control_instructions_interactive.js"></script>
+    <script src="control_self_report.js"></script>
+    <script src="control_sequences.js"></script>
+    <script src="build_control_timeline.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
     <link href="vigour_styles.css" rel="stylesheet" type="text/css" />
     <link href="PIT_styles.css" rel="stylesheet" type="text/css" />
     <link href="reversal.css" rel="stylesheet" type="text/css" />
     <link href="PILT.css" rel="stylesheet" type="text/css" />
+    <link href="control_instruction_styles.css" rel="stylesheet" type="text/css" />
+    <link href="control_styles.css" rel="stylesheet" type="text/css" />
 </head>
 <style>
     .jsPsychDE {
@@ -131,15 +140,23 @@
     }
     
     // End of experiment message
+    let end_exp_msg_content = [];
+    if (window.context === "relmed") {
+        end_exp_msg_content = [
+            `<p>Thank you for completing this module!</p>
+            <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes. Please don't close or refresh your browser at this time.</p>`];
+    } else {
+        end_exp_msg_content = [
+            `<p>Thank you for participating in this study!</p>
+            <p>The purpose of this study is to develop games that can measure people's individual learning tendencies. In the future, these games will be used to facilitate mental health research ongoing at UCL.</p>`,
+            `<p>When you click continue, your data will be uploaded to the server. This may take up to two minutes.Please don't close or refresh your browser at this time.</p>
+            <p>When data upload is complete, you will be rediredted to Prolific to complete your submission</p>`];
+    }
     const end_experiment_msgs = [
         {
             type: jsPsychInstructions,
             css_classes: ['instructions'],
-            pages: [
-                `<p>Thank you for completing this module!</p>
-                <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes.
-                    Please don't close or refresh your browser at this time.</p>`
-            ],
+            pages: end_exp_msg_content,
             show_clickable_nav: true,
             data: {trialphase: "experiment_end_message"}
         },
@@ -283,7 +300,6 @@
             });
 
             // Prompt before refresh
-            // Prompt before refresh
             window.addEventListener('beforeunload', preventRefresh);
 
         }
@@ -292,10 +308,17 @@
         if (window.participantID.includes("simulate")) {
             const simulation_options = {
                 default: {
+                    speed_up: true,
+                    speed_up_factor: 10,
                     data: {
                     rt: 200
                     }
                 }
+            }
+
+            if (window.participantID.includes("SLOW")) {
+                simulation_options.default.speed_up = false;
+                simulation_options.default.speed_up_factor = 1;
             }
 
             jsPsych.simulate(procedure, "visual", simulation_options);

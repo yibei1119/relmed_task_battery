@@ -251,9 +251,18 @@ function end_experiment() {
 
     window.removeEventListener('beforeunload', preventRefresh);
 
-    saveDataREDCap(10, { 
-        message: "endTask"
-    });
+    if (window.context === "relmed") {
+        saveDataREDCap(10, {
+            message: "endTask"
+        });
+    } else {
+        saveDataREDCap(10, {
+            message: "endTask"
+        }, () => {
+            // Redirect
+            window.location.replace("https://app.prolific.com/submissions/complete?cc=CQTRGXFP")
+        });
+    }
 }
 
 // Function for formatting data from API
@@ -613,4 +622,102 @@ function shuffleArray(arr, seedString) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+// Warnings for unresponsive trials
+// Function to create and show warning
+function showTemporaryWarning(message, duration = 800) {
+    // Create warning element
+    const warningElement = document.createElement('div');
+    warningElement.id = 'vigour-warning-temp';
+    warningElement.innerText = message;
+
+    // Style the warning
+    warningElement.style.cssText = `
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background-color: rgba(244, 206, 92, 0.9);
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 24px;
+        font-weight: 500;
+        color: #182b4b;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        text-align: center;
+        letter-spacing: 0.0px;
+    `;
+
+    // Add to document body
+    document.body.appendChild(warningElement);
+
+    // Force reflow to ensure transition works
+    warningElement.offsetHeight;
+
+    // Show warning
+    warningElement.style.opacity = '1';
+
+    // Remove after duration
+    setTimeout(() => {
+        warningElement.style.opacity = '0';
+        setTimeout(() => {
+            warningElement.remove();
+        }, 200); // Wait for fade out transition
+    }, duration);
+}
+
+function noChoiceWarning(resp_var = "response", stimulus = "") {
+    const warning_trial = {
+        timeline: [{
+            type: jsPsychHtmlKeyboardResponse,
+            choices: "NO_KEYS",
+            stimulus: stimulus,
+            data: {
+                trialphase: "no_choice_warning"
+            },
+            trial_duration: 1000,
+            on_load: function () {
+                showTemporaryWarning("Don't forget to participate!", 800);
+            }
+        }],
+        conditional_function: function () {
+            const last_trial_choice = jsPsych.data.get().last(1).select(resp_var).values[0];
+            return last_trial_choice === null;
+        }
+    }
+    return warning_trial;
+};
+
+function setupMultiKeysListener(keysToTrack, callback_function, targetElement = document) {
+    const pressedKeys = {};
+
+    // Named functions are required for proper removal
+    function handleKeyDown(event) {
+        pressedKeys[event.key] = true;
+        areKeysPressed() ? callback_function() : null;
+    }
+
+    function handleKeyUp(event) {
+        pressedKeys[event.key] = false;
+    }
+
+    targetElement.addEventListener('keydown', handleKeyDown);
+    targetElement.addEventListener('keyup', handleKeyUp);
+
+    function areKeysPressed() {
+        return keysToTrack.every(key => pressedKeys[key] === true);
+    }
+
+    // Cleanup function to remove listeners
+    function cleanup() {
+        targetElement.removeEventListener('keydown', handleKeyDown);
+        targetElement.removeEventListener('keyup', handleKeyUp);
+    }
+
+    return {
+        // areKeysPressed,
+        cleanup
+    };
 }

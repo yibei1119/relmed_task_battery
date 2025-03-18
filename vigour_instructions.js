@@ -82,8 +82,8 @@ const ruleInstruction = {
     
     <p>Throughout the game, you will see different piggy banks with unique appearances:</p>
     <ul>
-        <li><img src="imgs/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight">Vividness</span> of piggy colors: Indicates how fast you need to shake it.</li>
-        <li><img src="imgs/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight">Tail length</span>: Longer piggy tails = more valuable coins.</li>
+        <li><img src="imgs/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Vividness</span> of piggy colors: Indicates how fast you need to shake it.</li>
+        <li><img src="imgs/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Tail length</span>: Longer piggy tails = more valuable coins.</li>
     </ul>
     </div>
     `,
@@ -104,7 +104,7 @@ const ruleInstruction = {
         </div>
     </div>
     
-    <p><span class="highlight">Your bonus</span>: At the end of the game, we will pay you a proportion of the total amount of coins collected across all the piggy banks.</p>
+    <p><span class="highlight-txt">Your bonus</span>: At the end of the game, we will pay you a proportion of the total amount of coins collected across all the piggy banks.</p>
     </div>
       `]
 };
@@ -178,7 +178,7 @@ function updateInstructionText(shakeCount) {
   const messages = [
     '<p>Welcome to the piggy bank game!</p><p>Press <span class="spacebar-icon">B</span> on the keyboard to shake this piggy bank!</p>',
     '<p>Press <span class="spacebar-icon">B</span> on the keyboard to shake this piggy bank!</p><p>You can press <span class="spacebar-icon">B</span> again to keep on shaking...</p>',
-    '<p>Well done, You just got a coin out of the piggy bank!</p><p><span class="highlight">You can always press again for more coins.</span> Try getting some more!</p>'
+    '<p>Well done, You just got a coin out of the piggy bank!</p><p><span class="highlight-txt">You can always press again for more coins.</span> Try getting some more!</p>'
   ];
   let messageIndex = 0;
   if (shakeCount < 1) {
