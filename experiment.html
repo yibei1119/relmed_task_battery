@@ -21,7 +21,6 @@
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.sessionNum = jsPsych.data.getURLVariable('session_num');
         window.task = jsPsych.data.getURLVariable('task');
-
         // Save participant variables to data
         jsPsych.data.addProperties({
             participant_id: window.participantID,
@@ -29,7 +28,6 @@
             n_warnings: 0,
             version: "0.2",
             task: window.task,
-            module_start_time: jsPsych.getStartTime(),
             pre_kick_out_warned: false,
         })
     </script>
@@ -43,6 +41,7 @@
     <script src="jspsych/plugin-survey-likert.js"></script>
     <script src="jspsych/plugin-survey-text.js"></script>
     <script src="jspsych/plugin-fullscreen.js"></script>
+    <script src="jspsych/plugin-call-function.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-explore-trial.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
@@ -98,6 +97,15 @@
 </body>
 <script>
     // Preliminary checks
+    const save_start_time = {
+        type: jsPsychCallFunction,
+        func: function() {
+            window.module_start_time = format_date_from_string(jsPsych.getStartTime());
+            jsPsych.data.addProperties({
+                module_start_time: module_start_time
+            });
+        }
+    }
     const preliminary_checks = [
         {
             type: jsPsychPreload,
@@ -169,6 +177,9 @@
     function run_full_experiment(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure){
 
         let procedure = [];
+
+        // Save start time
+        procedure = procedure.concat(save_start_time);
 
         // Preliminary screen checks and load images
         procedure = procedure.concat(preliminary_checks);
