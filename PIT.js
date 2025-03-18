@@ -262,7 +262,7 @@ const PITruleInstruction = {
         <li><img src="imgs/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <strong>Tail length</strong>: Longer piggy tails = more valuable coins.</li>
         <li>You can win coins of <strong>1 Penny, 2 Pence, and 5 Pence.</strong></li>
       </ul>
-      <p><span class="highlight">But this time, you'll play in a cloudy place.<br>Coins will drop and be collected as usual, but they'll be hidden behind clouds.<br>You won't see them during the game.</span></p>
+      <p><span class="highlight-txt">But this time, you'll play in a cloudy place.<br>Coins will drop and be collected as usual, but they'll be hidden behind clouds.<br>You won't see them during the game.</span></p>
       <p>We will also pay you the total amount of coins from a randomly selected piggy bank at the end of this game.</p>
       <p>When you're ready, press <span class="spacebar-icon">B</span> to start!</p>
     </div>
@@ -284,8 +284,8 @@ const PITruleInstruction_2 = {
     <p><strong>You will now play the same game again for the next few minutes. The rules remain the same:</strong></p>
 
     <ul>
-        <li><img src="imgs/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight">Vividness</span> of piggy colors: Indicates how hard you need to shake it.</li>
-        <li><img src="imgs/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight">Tail length</span>: Longer piggy tails = more valuable coins.</li>
+        <li><img src="imgs/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Vividness</span> of piggy colors: Indicates how hard you need to shake it.</li>
+        <li><img src="imgs/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Tail length</span>: Longer piggy tails = more valuable coins.</li>
     </ul>
 
     <p>Types of coins you can win:</p>
@@ -308,12 +308,12 @@ const PITruleInstruction_2 = {
     `<div id="instruction-text" style="text-align: left">
       <p><strong>But this time, you'll play in a cloudy place.</strong></p>
       <img src="imgs/occluding_clouds.png" style="height:12em">
-      <p><span class="highlight">Coins will drop and be collected as usual, but they'll be hidden behind clouds.<br>You won't see them during the game.</span></p>
+      <p><span class="highlight-txt">Coins will drop and be collected as usual, but they'll be hidden behind clouds.<br>You won't see them during the game.</span></p>
       <p>We will also pay you the bonus in the same way as in the previous game at the end.</p>
     </div>`,
     `
     <div id="instruction-text" style="text-align: left">
-      <p><span class="highlight">In this cloudy place, the background will also change occasionally.</span></p>
+      <p><span class="highlight-txt">In this cloudy place, the background will also change occasionally.</span></p>
       <p>These are the backgrounds you will see. Each time you see a background, <strong>one</strong> coin will either be added or removed from your earnings, regardless of what you do.</p>
 
           <div class="pav-stimuli-container">
