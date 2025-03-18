@@ -400,7 +400,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(1)}
             <div class="current-indicator">
-                <div class="label"><strong>Low current<strong>:<br> a little fuel needed</div>
+                <div class="label"><strong>Low current</strong>:<br> a little fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>But how much fuel is enough? This depends on the ocean current. You can check the current strength each day:</p>
