@@ -45,7 +45,7 @@ const dd_timeline = {
     timeline: [dd_trial],
     timeline_variables: dd_choices,
     on_finish: (data) => {
-        data.chosen_later = data.response == 1
+        data.chosen_later = data.response === null ? null : data.response == 1
     }
 }
 
