@@ -37,15 +37,53 @@ const dd_trial = {
     stimulus: "<p>Would you prefer:</p>",
     choices: jsPsych.timelineVariable("choices"),
     enable_button_after: 500,
-    trial_duration: window.default_response_deadline,
-    post_trial_gap: 200
-}
-
-const dd_timeline = {
-    timeline: [dd_trial],
-    timeline_variables: dd_choices,
+    trial_duration: () => {
+        if (can_be_warned("dd")){
+            return window.default_response_deadline
+        } else {
+            return window.default_long_response_deadline
+        }
+    },
+    post_trial_gap: 200,
     on_finish: (data) => {
-        data.chosen_later = data.response === null ? null : data.response == 1
+        if (data.response === null){
+
+            // Update general warning counter
+            const gen_n_warnings = jsPsych.data.get().last(1).select("n_warnings").values[0];
+            
+            jsPsych.data.addProperties({
+                n_warnings: gen_n_warnings + 1
+            });
+
+        }
     }
-}
+};
+
+const dd_instructions = {
+    type: jsPsychInstructions,
+    css_classes: ['instructions'],
+    pages: [
+        "<p>On each turn of the first task, you'll see two hypothetical options for winning money. Each time, just pick the one you prefer.</p>",
+        "<p>For each of the next 27 choices, please indicate which reward you would prefer: the smaller reward today, or the larger reward in the specified number of days.</p>"
+    ],
+    on_finish: () => {
+        jsPsych.data.addProperties({
+            dd_n_warnings: 0
+        });
+    }
+};
+
+const dd_timeline = [
+    dd_instructions,
+    {
+        timeline: [
+            dd_trial,
+            noChoiceWarning("response", "", "dd")
+        ],
+        timeline_variables: dd_choices,
+        on_finish: (data) => {
+            data.chosen_later = data.response === null ? null : data.response == 1
+        }
+    }
+]
 
