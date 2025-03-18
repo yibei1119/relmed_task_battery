@@ -66,10 +66,14 @@ const dd_instructions = {
         "<p>On each turn of the first task, you'll see two hypothetical options for winning money. Each time, just pick the one you prefer.</p>",
         "<p>For each of the next 27 choices, please indicate which reward you would prefer: the smaller reward today, or the larger reward in the specified number of days.</p>"
     ],
+    show_clickable_nav: true,
     on_finish: () => {
         jsPsych.data.addProperties({
             dd_n_warnings: 0
         });
+    },
+    data: {
+        trialphase: "dd_instructions"
     }
 };
 
