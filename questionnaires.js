@@ -116,11 +116,11 @@ var prompt_gad = [
 ];
 
 var prompt_WSAS = [
-    "Because of my [problem] my <b>ability to work</b> is impaired. '0' means 'not at all impaired' and '8' means very severely impaired to the point I can't work.",
-    "Because of my [problem] my <b>home management</b> (cleaning, tidying, shopping, cooking, looking after home or children, paying bills) is impaired.",
-    "Because of my [problem] my <b>social leisure activities</b> (with other people e.g. parties, bars, clubs, outings, visits, dating, home entertaining) are impaired.",
-    "Because of my [problem], my <b>private leisure activities</b> (done alone, such as reading, gardening, collecting, sewing, walking alone) are impaired.",
-    "Because of my [problem], my ability to form and maintain <b>close relationships</b> with others, including those I live with, is impaired."
+    "Because of my depression my <b>ability to work</b> is impaired. '0' means 'not at all impaired' and '8' means very severely impaired to the point I can't work.",
+    "Because of my depression my <b>home management</b> (cleaning, tidying, shopping, cooking, looking after home or children, paying bills) is impaired.",
+    "Because of my depression my <b>social leisure activities</b> (with other people e.g. parties, bars, clubs, outings, visits, dating, home entertaining) are impaired.",
+    "Because of my depression, my <b>private leisure activities</b> (done alone, such as reading, gardening, collecting, sewing, walking alone) are impaired.",
+    "Because of my depression, my ability to form and maintain <b>close relationships</b> with others, including those I live with, is impaired."
 ];
 
 var prompt_ICECAP = [
