@@ -90,6 +90,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
         questions: [qs_list[q_index]],
         css_classes: ['lvlx_qs'],
         trial_duration: 1000 * (writing_time + qs_read_time),
+        data: {trialphase: 'open-text'},
         on_load: function () {
             // preamble margin-top style if in simulation mod
             if (!run_sim) {
