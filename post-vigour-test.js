@@ -141,7 +141,7 @@ const postVigourInstructions = {
   stimulus: `
     <div id="instruction-text" style="text-align: left">
       <p><strong>Next you will see pairs of piggy banks that you have seen before.</strong></p>
-      <p><span class="highlight">Your job is to choose which one you would prefer to play with in the future.</span></p>
+      <p><span class="highlight-txt">Your job is to choose which one you would prefer to play with in the future.</span></p>
       <p>Use the <span class="spacebar-icon">←</span> [left arrow] to choose the left piggy bank.</p>
       <p>Use the <span class="spacebar-icon">→</span> [right arrow] to choose the right piggy bank.</p>
       <p>When you're ready, press <span class="spacebar-icon">B</span> to begin.</p>
