@@ -60,6 +60,7 @@
     <script src="PIT.js"></script>
     <script src="acceptability.js"></script>
     <script src="questionnaires.js"></script>
+    <script src="discounting.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
     <link href="vigour_styles.css" rel="stylesheet" type="text/css" />
     <link href="PIT_styles.css" rel="stylesheet" type="text/css" />
@@ -260,6 +261,9 @@
         }        
 
         if (window.task === "quests"){
+            // Add delay discounting timeline
+            procedure = procedure.concat(dd_timeline);
+
             // Add questionnaire timeline
             procedure = procedure.concat(questionnaires_timeline);
         }
