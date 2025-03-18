@@ -103,7 +103,7 @@ const control_debrief = {
         required: true
       },
       {
-        prompt: "To overcome the currents and lead the ships to the home bases, how much effort (such as times of presses or the fuel level in percentage) did you put in for low, mid, and strong current levels?",
+        prompt: "How much effort (e.g., number of presses or percentage of fuel used) did you expend<br>to overcome the low, medium, and strong currents and guide the ships back to their home bases?",
         columns: 50,
         rows: 5,
         value: '',
