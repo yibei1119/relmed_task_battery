@@ -5,9 +5,11 @@
     <title>RELMED</title>
     <script src="jspsych/jspsych.js"></script>
     <script>
-        window.maxWarnings = 15;
-        window.interimWarning = 5;
+        window.maxWarnings = 15; // How many warnings before kick out
+        window.interimWarning = 5; // How many missing responses before a please change your ways message
+        window.max_warnings_per_task = 3; // How many times to show no response warning in a task - only for RELMED context
         window.default_response_deadline = 4000;
+        window.default_long_response_deadline = 6000;
 
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
