@@ -622,6 +622,8 @@ function shuffleArray(arr, seedString) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+}
+
 // Warnings for unresponsive trials
 // Function to create and show warning
 function showTemporaryWarning(message, duration = 800) {
