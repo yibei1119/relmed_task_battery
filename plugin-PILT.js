@@ -405,7 +405,7 @@ jsPsychPILT = (function (jspsych) {
                         this.data.response_deadline_warning = true;
 
                         // Display messge
-                        // document.getElementById('centerTxt').innerText = 'Please respond more quickly!'
+                        document.getElementById('centerTxt').innerText = ''
                         showTemporaryWarning("Don't forget to participate!", trial.warning_duration - 200)
 
                         // End trial after warning message
