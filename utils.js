@@ -116,7 +116,7 @@ if (window.context == "relmed") {
             stimulus: `<p>You may not be following the study instructions as intended, as you didn't respond more than 15 times.</p>
                 <p>Unfortunately, you cannot continue with this study.</p>
                 <p>If you believe this is a mistake, please email haoyang.lu@ucl.ac.uk, explaining the circumstances.</p>
-                <p>Please return this study on Prolific.</p>
+                <p>Please return this study on <a href="https://app.prolific.com/">Prolific</a>.</p>
                 <p>You may now close this tab.</p>
             `
             }
@@ -206,7 +206,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     } else if (window.context === "prolific") {
 
         var redcap_record = JSON.stringify([{
-            participant_id: window.participantID,
+            participant_id: window.participantID + "_" + window.module_start_time,
             jspsych_data: jspsych_data
         }])
     

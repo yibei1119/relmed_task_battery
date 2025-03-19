@@ -97,9 +97,10 @@
   
   // controlTestingTimeline.push(controlExploreTimeline);
 
-  controlTestingTimeline.push(controlPredTimeline);
+  // controlTestingTimeline.push(controlPredTimeline);
 
   // controlTestingTimeline.push(controlRewardTimeline);
+  // controlTestingTimeline.push([controlRating]);
 
   // controlTestingTimeline.push(controlDebriefing);
   
@@ -114,8 +115,8 @@
       }
     }
   }
-  // jsPsych.run(controlTestingTimeline);
-  jsPsych.simulate(controlTestingTimeline, "visual");
+  jsPsych.run(controlTestingTimeline);
+  // jsPsych.simulate(controlTestingTimeline, "visual");
   // jsPsych.simulate(controlTestingTimeline, "visual", simulation_options);
 </script>
 
