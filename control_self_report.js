@@ -3,15 +3,26 @@ const confidenceRating = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<p><strong><span class="highlight-txt">How confident are you that your last choice was correct?</span></strong></p>`,
     choices: ["1<br>Not at all", "2", "3", "4", "5<br>Very confident"],
+    trial_duration: 30000,
+    post_trial_gap: 400,
     data: {
         trialphase: "control_confidence"
+    },
+    on_finish: function (data) {
+      console.log(data);
+      if (data.response === null) {
+        var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+        console.log("n_warnings: " + up_to_now);
+        jsPsych.data.addProperties({
+            n_warnings: up_to_now + 1
+        });
+      }
     }
   }],
   conditional_function: function () {
     const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
     return last_trial_choice !== null;
-  },
-  post_trial_gap: 400
+  }
 };
 
 const controlRating = {
@@ -19,11 +30,23 @@ const controlRating = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<p><strong><span class="highlight-txt">How in control do you feel at this moment?</span></strong></p>`,
     choices: ["1<br>Not at all", "2", "3<br>I don't know", "4", "5<br>Completely in control"],
+    trial_duration: 30000,
+    post_trial_gap: 400,
     data: {
       trialphase: "control_controllability"
+    },
+    on_finish: function (data) {
+      if (data.response === null) {
+        var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+        console.log("n_warnings: " + up_to_now);
+        jsPsych.data.addProperties({
+            n_warnings: up_to_now + 1
+        });
+      }
     }
-  }],
-  post_trial_gap: 400
+  },
+  noChoiceWarning("response")
+]
 };
 
 // Acceptability questions
