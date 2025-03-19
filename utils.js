@@ -651,6 +651,7 @@ const can_be_warned = (task, warning_expected_n_back = 1) => {
     
     // Check for a data field documenting warning message shown. For tasks with internal warning messages this would be "response_deadline_warning"
     const last_trial_shown = jsPsych.data.get().filter({trialphase: task}).last(warning_expected_n_back).select("response_deadline_warning").values[0] ?? false;
+
     return ((task_n_warnings < window.max_warnings_per_task) && (last_trial !== "no_choice_warning") && (!last_trial_shown)) || (window.context === "prolific");
 };
 
