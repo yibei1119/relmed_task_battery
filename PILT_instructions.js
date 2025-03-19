@@ -344,16 +344,26 @@ const lottery_instructions = {
 }
 
 // Post-PILT test instructions
-const test_instructions = {
-    type: jsPsychInstructions,
-    css_classes: ['instructions'],
-    pages: [
-        '<p>You will now continue to another round of the card choosing game.</p>\
-            <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
-            <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
-    ],
-    show_clickable_nav: true,
-    data: {trialphase: "post-task_test_instructions"}
+const test_instructions = (task) => {
+    return {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+            '<p>You will now continue to another round of the card choosing game.</p>\
+                <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
+                <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: `post-${task}_test_instructions`},
+        on_finish: () => {
+            
+            jsPsych.data.addProperties({
+                [`${task}_test_n_warnings`]: 0
+            });
+
+            console.log(jsPsych.data.get().last(1).select(`${task}_test_n_warnings`).values)
+        }
+    }
 }
 
 // LTM instructions
