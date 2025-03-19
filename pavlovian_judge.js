@@ -1,4 +1,4 @@
-const PIT_imgs = ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/session" + sessionNum + "/" + s);
+const PIT_imgs = ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s);
 function getOrCreateImgContainer() {
   let imgContainer = document.getElementById('img-container');
   if (!imgContainer) {

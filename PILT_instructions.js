@@ -1,5 +1,13 @@
 // Instructions for the PILT
 const small_coin_size = 100;
+const demo_stimuli = [
+    "almond_1.jpg",
+    "envelope_1.jpg",
+    "strainer_1.jpg",
+    "anchor_1.jpg",
+    "bus_1.jpg",
+    "cantaloupe_1.jpg"
+]
 
 function prepare_PILT_instructions() {
     const inter_block_instruct = {
@@ -7,7 +15,7 @@ function prepare_PILT_instructions() {
         css_classes: ['instructions'],
         pages: () => [inter_block_stimulus()],
         show_clickable_nav: true,
-        data: {trialphase: "instruction"}
+        data: {trialphase: "pilt_instruction"}
     }
 
     let inst =  [
@@ -46,68 +54,66 @@ function prepare_PILT_instructions() {
         return pages
     },
         show_clickable_nav: true,
-        data: {trialphase: "instruction"},
+        data: {trialphase: "pilt_instruction"},
         on_start: () => {updateState("pilt_start_instructions")}
     }
     ];
 
-    if (window.sessionNum == 1) {
-        inst.push(
-            {
-                type: jsPsychHtmlKeyboardResponse,
-                css_classes: ['instructions'],
-                stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
-                        <p>Let's try it out now! Flip a card on the next screen.</p>
-                        <p>Place your fingers on the left and right arrow keys as shown below, and press either one to continue.</p>
-                        <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
-                        `,
-                choices: ['arrowleft', 'arrowright'],
-                data: {trialphase: "instruction"}
-            },
-            {
-                timeline: build_PILT_task(
-                    [[
-                        {
-                            stimulus_left: "ukulele_1.jpg",
-                            stimulus_right: "envelope_1.jpg",
-                            stimulus_middle: "",
-                            feedback_middle: "",
-                            n_stimuli: 2,
-                            present_pavlovian: true,
-                            pavlovian_images: pavlovian_images_f(),
-                            optimal_side: "",
-                            feedback_left: 1,
-                            feedback_right: 1,
-                            optimal_right: 1,
-                            block: "practice1",
-                            trial: 1,
-                            valence: 1,
-                            response_deadline: -1,
-                            stimulus_group: 1,
-                            stimulus_group_id: 1,
-                            n_groups: 1,
-                            rest_1pound: 0,
-                            rest_50pence: 0,
-                            rest_1penny: 0,
-                            early_stop: false
-                        }
-                    ]],
-                    false
-                )
-            }
-        );
-    }
-  
+    inst.push(
+        {
+            type: jsPsychHtmlKeyboardResponse,
+            css_classes: ['instructions'],
+            stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
+                    <p>Let's try it out now! Flip a card on the next screen.</p>
+                    <p>Place your fingers on the left and right arrow keys as shown below, and press either one to continue.</p>
+                    <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
+                    `,
+            choices: ['arrowleft', 'arrowright'],
+            data: {trialphase: "pilt_instruction"}
+        },
+        {
+            timeline: build_PILT_task(
+                [[
+                    {
+                        stimulus_left: demo_stimuli[0],
+                        stimulus_right: demo_stimuli[1],
+                        stimulus_middle: "",
+                        feedback_middle: "",
+                        n_stimuli: 2,
+                        present_pavlovian: true,
+                        pavlovian_images: pavlovian_images_f(),
+                        optimal_side: "",
+                        feedback_left: 1,
+                        feedback_right: 1,
+                        optimal_right: 1,
+                        block: "practice1",
+                        trial: 1,
+                        valence: 1,
+                        response_deadline: -1,
+                        stimulus_group: 1,
+                        stimulus_group_id: 1,
+                        n_groups: 1,
+                        rest_1pound: 0,
+                        rest_50pence: 0,
+                        rest_1penny: 0,
+                        early_stop: false
+                    }
+                ]],
+                false
+            )
+        }
+    );
+
     inst = inst.concat([{
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `${window.sessionNum == 1 ? `<p>You found a one pound coin!</p>` : ``}
+            `<p>You found a one pound coin!</p>
             <p>Some cards are better than others, and through trial and error, you can learn which ones are best.</p> 
             <p>However, even the best cards may sometimes give only a penny or occasionally break a one-pound coin.</p>`
         ],
         show_clickable_nav: true,
-        data: {trialphase: "instruction"}
+        data: {trialphase: "pilt_instruction"}
     },
     {
         type: jsPsychHtmlKeyboardResponse,
@@ -119,16 +125,11 @@ function prepare_PILT_instructions() {
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
 `,
         choices: ['arrowleft', 'arrowright'],
-        data: {trialphase: "instruction"}
+        data: {trialphase: "pilt_instruction"}
     }]);
 
-    let dumbbell_on_right = [true, true, false, true, false, false];
-    let reward_magnitude = [0.5, 1, 1, 0.5, 1, 0.5];
-
-    if (window.sessionNum > 1){
-        dumbbell_on_right = [1, 3, 4, 0].map(i => dumbbell_on_right[i])
-        reward_magnitude = [3, 4, 0, 1].map(i => reward_magnitude[i])
-    }
+    let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
+    let reward_magnitude = shuffleArray([0.5, 1, 1, 0.5, 1, 0.5], window.session + "b");
 
     inst.push(
         {
@@ -136,8 +137,8 @@ function prepare_PILT_instructions() {
                 [
                     dumbbell_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "strainer_1.jpg" : "can_2.jpg",
-                            stimulus_right: e ? "can_2.jpg" : "strainer_1.jpg",
+                            stimulus_left: e ? demo_stimuli[2] : demo_stimuli[3],
+                            stimulus_right: e ? demo_stimuli[3] : demo_stimuli[2],
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: true,
@@ -177,17 +178,12 @@ function prepare_PILT_instructions() {
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "instruction"} 
+            data: {trialphase: "pilt_instruction"} 
         }
     ]);
 
-    let hammer_on_right = [false, true, false, true, false, false];
-    let punishment_magnitude = [-0.01, -0.5, -0.5, -0.01, -0.01, -0.5];
-
-    if (window.sessionNum > 1){
-        hammer_on_right = [1, 3, 4, 0].map(i => hammer_on_right[i])
-        punishment_magnitude = [3, 4, 0, 1].map(i => punishment_magnitude[i])
-    }
+    let hammer_on_right = shuffleArray([false, true, false, true, false, false], window.session);
+    let punishment_magnitude = shuffleArray([-0.01, -0.5, -0.5, -0.01, -0.01, -0.5], window.session + "c");
 
 
     inst.push(
@@ -196,8 +192,8 @@ function prepare_PILT_instructions() {
                 [
                     hammer_on_right.map((e, i) => 
                         ({
-                            stimulus_left: e ? "harp_1.jpg" : "cantaloupe_1.jpg",
-                            stimulus_right: e ? "cantaloupe_1.jpg" : "harp_1.jpg",
+                            stimulus_left: e ? demo_stimuli[4] : demo_stimuli[5],
+                            stimulus_right: e ? demo_stimuli[5] : demo_stimuli[4],
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: true,
@@ -235,7 +231,7 @@ function prepare_PILT_instructions() {
                         <p>You must answer all questions correctly to begin the game.</p>\
                         <p>If not, you can review the instructions and try again.</p>`],
                 show_clickable_nav: true,
-                data: {trialphase: "instruction"}
+                data: {trialphase: "pilt_instruction"}
             }
     ]);
 
@@ -315,7 +311,12 @@ function prepare_PILT_instructions() {
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "instruction"}
+            data: {trialphase: "pilt_instruction"},
+            on_finish: () => {
+                jsPsych.data.addProperties({
+                    pilt_n_warnings: 0
+                });
+            }
         }
     ]
 
@@ -343,16 +344,26 @@ const lottery_instructions = {
 }
 
 // Post-PILT test instructions
-const test_instructions = {
-    type: jsPsychInstructions,
-    css_classes: ['instructions'],
-    pages: [
-        '<p>You will now continue to another round of the card choosing game.</p>\
-            <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
-            <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
-    ],
-    show_clickable_nav: true,
-    data: {trialphase: "post-task_test_instructions"}
+const test_instructions = (task) => {
+    return {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+            '<p>You will now continue to another round of the card choosing game.</p>\
+                <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
+                <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: `post-${task}_test_instructions`},
+        on_finish: () => {
+            
+            jsPsych.data.addProperties({
+                [`${task}_test_n_warnings`]: 0
+            });
+
+            console.log(jsPsych.data.get().last(1).select(`${task}_test_n_warnings`).values)
+        }
+    }
 }
 
 // LTM instructions
@@ -381,7 +392,12 @@ const LTM_instructions = [
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
-        data: {trialphase: "LTM_instructions"}
+        data: {trialphase: "LTM_instructions"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                ltm_n_warnings: 0
+            });
+        }
     }
 ]
 
@@ -409,7 +425,12 @@ const WM_instructions = [
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
-        data: {trialphase: "WM_instructions"}
+        data: {trialphase: "WM_instructions"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                wm_n_warnings: 0
+            });
+        }
     }
 ]
 

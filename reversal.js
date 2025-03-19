@@ -41,6 +41,18 @@ for (i=0; i<reversal_timeline.length; i++){
                             feedback_right: jsPsych.timelineVariable('feedback_right'),
                             feedback_left: jsPsych.timelineVariable('feedback_left'),
                             optimal_right: jsPsych.timelineVariable('optimal_right'),
+                            response_deadline: () => {
+                                if (can_be_warned("reversal")){
+                                    // console.log(window.default_response_deadline)
+                                    return window.default_response_deadline
+                                } else {
+                                    // console.log(window.default_long_response_deadline)
+                                    return window.default_long_response_deadline
+                                }
+                            },
+                            show_warning: () => {
+                                return can_be_warned("reversal")
+                            },
                             on_finish: () => {
                                 n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
                                 
@@ -68,9 +80,16 @@ for (i=0; i<reversal_timeline.length; i++){
                 },
                 on_finish: function(data) {
                     if (data.response === null) {
-                        var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+                        const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
                         jsPsych.data.addProperties({
                             n_warnings: up_to_now + 1
+                        });
+                    }
+
+                    if (data.response_deadline_warning) {
+                        const up_to_now = parseInt(jsPsych.data.get().last(1).select('reversal_n_warnings').values);
+                        jsPsych.data.addProperties({
+                            reversal_n_warnings: up_to_now + 1
                         });
                     }
                  },
@@ -114,6 +133,11 @@ const reversal_instructions = [
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowleft', 'arrowright'],
-        data: {trialphase: "reversal_instruction"}
+        data: {trialphase: "reversal_instruction"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                reversal_n_warnings: 0
+            });
+        },
     },
 ]

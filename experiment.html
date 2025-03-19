@@ -5,8 +5,11 @@
     <title>RELMED</title>
     <script src="jspsych/jspsych.js"></script>
     <script>
-        window.maxWarnings = 15;
-        window.interimWarning = 5;
+        window.maxWarnings = 15; // How many warnings before kick out
+        window.interimWarning = 5; // How many missing responses before a please change your ways message
+        window.max_warnings_per_task = 3; // How many times to show no response warning in a task - only for RELMED context
+        window.default_response_deadline = 4000;
+        window.default_long_response_deadline = 6000;
 
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
@@ -19,12 +22,12 @@
         window.debug = window.participantID.includes("debug");
         window.demo = window.participantID.includes("DEMO") | window.participantID.includes("STAF");
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
-        window.sessionNum = jsPsych.data.getURLVariable('session_num');
+        window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
         // Save participant variables to data
         jsPsych.data.addProperties({
             participant_id: window.participantID,
-            session: window.sessionNum,
+            session: window.session,
             n_warnings: 0,
             version: "0.2",
             task: window.task,
@@ -48,6 +51,7 @@
     <script src="open-text//plugin-survey-text_jo.js"></script>
     <script src="utils.js"></script>
     <script src="plugin-PILT.js"></script>
+    <script src="plugin-survey-template.js"></script>
     <script src="pilot6_reversal_sequence.js"></script>
     <script src="plugin-reversal.js"></script>
     <script src="reversal.js"></script>
@@ -61,6 +65,7 @@
     <script src="PIT.js"></script>
     <script src="acceptability.js"></script>
     <script src="questionnaires.js"></script>
+    <script src="discounting.js"></script>
     <script src="control_instructions_interactive.js"></script>
     <script src="control_self_report.js"></script>
     <script src="control_sequences.js"></script>
@@ -77,6 +82,7 @@
     <link href="control_instruction_styles.css" rel="stylesheet" type="text/css" />
     <link href="control_styles.css" rel="stylesheet" type="text/css" />
     <link href="open-text/openText_style.css" rel="stylesheet" type="text/css" />
+    <link href="dd.css" rel="stylesheet" type="text/css" />
 </head>
 <style>
     .jsPsychDE {
@@ -123,9 +129,10 @@
                 "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
                 "occluding_clouds.png", "PILT_keys.jpg", "WM_keys.jpg"
             ].map(s => "imgs/" + s),
-            ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/session" + sessionNum + "/" + s)
+            ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
             ].flat(),
-            post_trial_gap: 800
+            post_trial_gap: 800,
+            on_finish: () => {updateState("load_successful")}
         },
         {
             type: jsPsychFullscreen,
@@ -154,7 +161,8 @@
     if (window.context === "relmed") {
         end_exp_msg_content = [
             `<p>Thank you for completing this module!</p>
-            <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes. Please don't close or refresh your browser at this time.</p>`];
+            <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes. Please don't close or refresh your browser at this time.</p>
+            <p>When data upload is complete, you will be redirected back to My RELMED.</p>`];
     } else {
         end_exp_msg_content = [
             `<p>Thank you for participating in this study!</p>
@@ -252,6 +260,62 @@
             procedure.push(lottery_instructions);
             procedure.push(coin_lottery);
         }
+
+        if (window.task == "pilt") {
+            procedure.push({
+                type: jsPsychInstructions,
+                css_classes: ['instructions'],
+                pages:  [
+                `<p>Welcome back!</p>
+                <p>You will now play more games of trial and error learning.</p>
+                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
+                ],
+                show_clickable_nav: true,
+                data: {trialphase: "instruction"}
+            });
+
+            procedure = procedure.concat(PILT_tasks.PILT_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PILT
+            ]);
+        }
+
+        if (window.task == "vigour") {
+            // Add max press rate test
+            procedure = procedure.concat(maxPressTimeline);
+
+            procedure = procedure.concat(vigourTimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_vigour
+            ]);
+        }
+
+        if (window.task == "pit") {
+            // Add PIT timeline: instructions, trials, bonus
+            const PITtimeline = [
+                PITinstructions,
+                PITtrials
+            ];
+            procedure = procedure.concat(PITtimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PIT
+            ]);
+        }
+
+        if (window.task == "ltm") {
+            // Add LTM block
+            procedure.push(PILT_tasks.LTM_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_ltm
+            ]);
+
+            // Add post-LTM test
+            procedure.push(PILT_tasks.LTM_test_procedure);
+        }
         
         if (window.task === "wm") {
             // Add LTM block
@@ -275,6 +339,19 @@
             procedure.push(PILT_tasks.WM_test_procedure);
         }
 
+        if (window.task === "wm_only") {
+            // Add WM block
+            procedure.push(PILT_tasks.WM_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_wm
+            ]);
+
+            // Add post-WM test
+            procedure.push(PILT_tasks.WM_test_procedure);
+        }
+
+
         if (window.task === "reversal") {
             // Welcome message
             procedure.push(welcome_msgs);
@@ -286,66 +363,22 @@
                 acceptability_intro,
                 acceptability_reversal
             ]);
-        }        
-
-        if (window.task === "pilot8") {
-            // Recreate PILT tasks with a subset of PILT
-            PILT_tasks = return_PILT_full_sequence(PILT_structure.slice(0,5), test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure);
-
-            // Welcome message
-            procedure.push(welcome_msgs);
-
-            // Add max press rate test
-            procedure = procedure.concat(maxPressTimeline);
-
-            procedure.push({
-                type: jsPsychInstructions,
-                css_classes: ['instructions'],
-                pages:  [
-                `<p>Welcome back!</p>
-                <p>You will now play more games of trial and error learning.</p>
-                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
-                ],
-                show_clickable_nav: true,
-                data: {trialphase: "instruction"}
-            });
-
-            // PILT instructions
-            procedure = procedure.concat(PILT_tasks.PILT_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_PILT
-            ]);
-            
-            // Add LTM block
-            procedure.push(PILT_tasks.LTM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_ltm
-            ]);
-
-            // Add post-LTM test
-            procedure.push(PILT_tasks.LTM_test_procedure);
-
-            // Add WM block
-            procedure.push(PILT_tasks.WM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_wm
-            ]);
-
-            // Add post-WM test
-            procedure.push(PILT_tasks.WM_test_procedure);
-
-            // Add coin lottery
-            procedure.push(lottery_instructions);
-            procedure.push(coin_lottery);
-
+        }
+        
+        if (window.task == "control") {
             // Control
             procedure.push(controlTimeline);
+        }
+
+        if (window.task === "quests"){
+            // Add delay discounting timeline
+            procedure = procedure.concat(dd_timeline);
 
             // Free text
             procedure.push(openTextTimeline);
+
+            // Add questionnaire timeline
+            procedure = procedure.concat(questionnaires_timeline);
         }
 
         // Final messages and data saving
@@ -393,6 +426,6 @@
     // Load sequences and start
     var procedure = [];
 
-    load_squences(window.sessionNum);
+    load_squences(window.session);
 </script>
 </html>
