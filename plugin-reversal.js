@@ -195,7 +195,6 @@ var jsPsychReversal = (function (jspsych) {
                 response.response_deadline_warning = true;
                 
                 // Display messge
-                // document.getElementById('rev-deadline-warning').innerText = 'Please respond more quickly!'
                 showTemporaryWarning("Don't forget to participate!", trial.warning_duration - 200)
 
                 // End trial
@@ -219,8 +218,6 @@ var jsPsychReversal = (function (jspsych) {
 
             // Set up response deadline timer
             if (trial.response_deadline > 0) {
-
-                console.log(trial.show_warning)
 
                 if (trial.show_warning){
                     this.jsPsych.pluginAPI.setTimeout(deadline_warning, trial.response_deadline);
