@@ -311,7 +311,12 @@ function prepare_PILT_instructions() {
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "pilt_instruction"}
+            data: {trialphase: "pilt_instruction"},
+            on_finish: () => {
+                jsPsych.data.addProperties({
+                    pilt_n_warnings: 0
+                });
+            }
         }
     ]
 
@@ -377,7 +382,12 @@ const LTM_instructions = [
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
-        data: {trialphase: "LTM_instructions"}
+        data: {trialphase: "LTM_instructions"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                ltm_n_warnings: 0
+            });
+        }
     }
 ]
 
@@ -405,7 +415,12 @@ const WM_instructions = [
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
-        data: {trialphase: "WM_instructions"}
+        data: {trialphase: "WM_instructions"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                wm_n_warnings: 0
+            });
+        }
     }
 ]
 
