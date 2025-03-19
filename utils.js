@@ -641,7 +641,8 @@ function shuffleArray(arr, seedString) {
  * @param {number} [warning_expected_n_back=1] - The number of trials back to check 
  *        whether a warning was already shown.
  * @returns {boolean} - Returns `true` if a warning can be shown, otherwise `false`.
- */const can_be_warned = (task, warning_expected_n_back = 1) => {
+ */
+const can_be_warned = (task, warning_expected_n_back = 1) => {
     // Fetch number of previous warnings on this task
     const task_n_warnings = jsPsych.data.get().last(1).select(`${task}_n_warnings`).values[0] ?? 0;
     
