@@ -372,6 +372,23 @@
                 acceptability_intro,
                 acceptability_reversal
             ]);
+
+            procedure.push({
+                type: jsPsychInstructions,
+                css_classes: ['instructions'],
+                pages:  [
+                `<p>You will now play another game of trial and error learning.</p>
+                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
+                ],
+                show_clickable_nav: true,
+                data: {trialphase: "instruction"}
+            });
+
+            procedure = procedure.concat(PILT_tasks.PILT_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PILT
+            ]);
         }
 
 
