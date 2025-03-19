@@ -361,6 +361,20 @@
             procedure = procedure.concat(questionnaires_timeline);
         }
 
+        if (window.task === "screening") {
+            // Welcome message
+            procedure.push(welcome_msgs);
+
+            // Add reversal timeline
+            procedure = procedure.concat(reversal_instructions);
+            procedure = procedure.concat(reversal_blocks);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_reversal
+            ]);
+        }
+
+
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
 

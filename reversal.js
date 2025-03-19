@@ -1,7 +1,7 @@
 // This files creates the jsPsych timeline for the reversal task block
 
 // Parameters
-const rev_n_trials = window.demo ? 50 : 150; // N trials
+const rev_n_trials = (window.demo || (window.task === "screening")) ? 50 : 150; // N trials
 
 // Parse json sequence
 const reversal_timeline = JSON.parse(reversal_json);
@@ -129,7 +129,7 @@ const reversal_instructions = [
         type: jsPsychHtmlKeyboardResponse,
         css_classes: ['instructions'],
         stimulus: `
-            <p>You will now play the squirrel game for about 5 minutes without breaks.</p>
+            <p>You will now play the squirrel game for about ${rev_n_trials == 50 ? 3 : 5} minutes without breaks.</p>
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowleft', 'arrowright'],
