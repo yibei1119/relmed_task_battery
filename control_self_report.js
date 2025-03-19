@@ -9,7 +9,6 @@ const confidenceRating = {
         trialphase: "control_confidence"
     },
     on_finish: function (data) {
-      console.log(data);
       if (data.response === null) {
         var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
         console.log("n_warnings: " + up_to_now);
