@@ -311,7 +311,12 @@ function prepare_PILT_instructions() {
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "pilt_instruction"}
+            data: {trialphase: "pilt_instruction"},
+            on_finish: () => {
+                jsPsych.data.addProperties({
+                    pilt_n_warnings: 0
+                });
+            }
         }
     ]
 
@@ -339,16 +344,26 @@ const lottery_instructions = {
 }
 
 // Post-PILT test instructions
-const test_instructions = {
-    type: jsPsychInstructions,
-    css_classes: ['instructions'],
-    pages: [
-        '<p>You will now continue to another round of the card choosing game.</p>\
-            <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
-            <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
-    ],
-    show_clickable_nav: true,
-    data: {trialphase: "post-task_test_instructions"}
+const test_instructions = (task) => {
+    return {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+            '<p>You will now continue to another round of the card choosing game.</p>\
+                <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
+                <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: `post-${task}_test_instructions`},
+        on_finish: () => {
+            
+            jsPsych.data.addProperties({
+                [`${task}_test_n_warnings`]: 0
+            });
+
+            console.log(jsPsych.data.get().last(1).select(`${task}_test_n_warnings`).values)
+        }
+    }
 }
 
 // LTM instructions
@@ -377,7 +392,12 @@ const LTM_instructions = [
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
-        data: {trialphase: "LTM_instructions"}
+        data: {trialphase: "LTM_instructions"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                ltm_n_warnings: 0
+            });
+        }
     }
 ]
 
@@ -405,7 +425,12 @@ const WM_instructions = [
         <p>When you are ready to start playing, place your fingers on the left, right, and up arrow keys as shown below, and press the up arrow key.</p>
         <img src='imgs/WM_keys.jpg' style='width:250px;'></img>`,
         choices: ['arrowup'],
-        data: {trialphase: "WM_instructions"}
+        data: {trialphase: "WM_instructions"},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                wm_n_warnings: 0
+            });
+        }
     }
 ]
 
