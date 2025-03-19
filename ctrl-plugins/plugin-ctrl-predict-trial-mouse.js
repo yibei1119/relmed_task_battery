@@ -137,8 +137,8 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         const trial_data = {
           trialphase: "control_predict_homebase",
           rt: response.rt,
-          button: response.button,
-          response: trial.choices[response.button],
+          response: response.button,
+          button: trial.choices[response.button],
           correct: this.controlRule[trial.ship] === trial.choices[response.button]
         };
 
