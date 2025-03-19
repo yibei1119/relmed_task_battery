@@ -88,6 +88,11 @@ jsPsychPILT = (function (jspsych) {
                 type: jspsych.ParameterType.INT,
                 default: 1500
             },
+            /** Whether to show response deadline warning */
+            show_warning: {
+                type: jspsych.ParameterType.BOOL,
+                default: true
+            },
             /** Duration of choice feedback before flip */
             choice_feedback_duration: {
                 type: jspsych.ParameterType.INT,
@@ -240,6 +245,8 @@ jsPsychPILT = (function (jspsych) {
                 this.data.feedback_middle = trial.feedback_middle;
             }
 
+            this.data.response_deadline_warning = false;
+
             // Create stimuli
             display_element.innerHTML = this.create_stimuli(trial.n_stimuli);
 
@@ -388,16 +395,24 @@ jsPsychPILT = (function (jspsych) {
 
                 } else {
                     // no response
-                    this.data.response = 'noresp'
+                    this.data.response = 'noresp';
 
                     // Set outcome to lowest possible on trial
-                    this.data.chosen_feedback = Math.min(this.data.feedback_left, this.data.feedback_right)
+                    this.data.chosen_feedback = Math.min(this.data.feedback_left, this.data.feedback_right);
 
-                    // Display messge
-                    document.getElementById('centerTxt').innerText = 'Please respond more quickly!'
+                    if (trial.show_warning){
+                        // Report warning shown
+                        this.data.response_deadline_warning = true;
 
-                    // End trial after warning message
-                    this.jsPsych.pluginAPI.setTimeout(endTrial, (trial.warning_duration))
+                        // Display messge
+                        // document.getElementById('centerTxt').innerText = 'Please respond more quickly!'
+                        showTemporaryWarning("Don't forget to participate!", trial.warning_duration - 200)
+
+                        // End trial after warning message
+                        this.jsPsych.pluginAPI.setTimeout(endTrial, (trial.warning_duration));
+                    } else {
+                        endTrial()
+                    }
                 }
             }
 
