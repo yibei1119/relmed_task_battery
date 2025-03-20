@@ -24,9 +24,7 @@ function prepare_PILT_instructions() {
             css_classes: ['instructions'],
             pages: () => {
 
-            let pages = [];
-
-            pages = pages.concat([
+            let pages = [
             `<p><b>THE CARD CHOOSING GAME</b></p>
                 <p>In this game you are the owner of a safe.</p>
                 <img src='imgs/safe.png' style='width:100px; height:100px;'>
@@ -44,13 +42,17 @@ function prepare_PILT_instructions() {
                 <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
-            `<p>When you flip a card, you might also see broken coins like these:</p>\
+        ];
+
+        if (window.session !== "screening"){
+            pages.push(`<p>When you flip a card, you might also see broken coins like these:</p>\
                 <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
                 <td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>
-                <p>This means that such a coin was broken from your safe.</p>`
-        ]);
+                <p>This means that such a coin was broken from your safe.</p>`);
+        }
+
         return pages
     },
         show_clickable_nav: true,
@@ -166,60 +168,61 @@ function prepare_PILT_instructions() {
         }
     )
 
-
-    inst = inst.concat([
-        inter_block_instruct,
-        {
-            type: jsPsychHtmlKeyboardResponse,
-            css_classes: ['instructions'],
-            stimulus: `<p>Now, let's practice minimizing your coin losses. 
-            On the next screen, choose cards to lose as little money as possible.</p>
-            <p>One of the picture cards will often break the high-value coins in your safe, while the other will mostly break only your pennies.</p>
-            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
-            <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-            choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "pilt_instruction"} 
-        }
-    ]);
-
-    let hammer_on_right = shuffleArray([false, true, false, true, false, false], window.session);
-    let punishment_magnitude = shuffleArray([-0.01, -0.5, -0.5, -0.01, -0.01, -0.5], window.session + "c");
-
-
-    inst.push(
-        {
-            timeline: build_PILT_task(
-                [
-                    hammer_on_right.map((e, i) => 
-                        ({
-                            stimulus_left: e ? demo_stimuli[4] : demo_stimuli[5],
-                            stimulus_right: e ? demo_stimuli[5] : demo_stimuli[4],
-                            stimulus_middle: "",
-                            feedback_middle: "",
-                            present_pavlovian: window.session !== "screening",
-                            pavlovian_images: pavlovian_images_f(),
-                            n_stimuli: 2,
-                            optimal_side: "",
-                            feedback_left: e ? -1 : punishment_magnitude[i],
-                            feedback_right: e ? punishment_magnitude[i] : -1,
-                            optimal_right: e,
-                            block: "practice3",
-                            trial: i,
-                            valence: -1,
-                            stimulus_group: 1,
-                            stimulus_group_id: 1,
-                            n_groups: 1,
-                            rest_1pound: 0,
-                            rest_50pence: 0,
-                            rest_1penny: 0,
-                            early_stop: false
-                        })
-                    )
-                ],
-                false
-            )
-        }
-    );
+    if (window.session !== "screening"){
+        inst = inst.concat([
+            inter_block_instruct,
+            {
+                type: jsPsychHtmlKeyboardResponse,
+                css_classes: ['instructions'],
+                stimulus: `<p>Now, let's practice minimizing your coin losses. 
+                On the next screen, choose cards to lose as little money as possible.</p>
+                <p>One of the picture cards will often break the high-value coins in your safe, while the other will mostly break only your pennies.</p>
+                <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
+                <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
+                choices: ['arrowright', 'arrowleft'],
+                data: {trialphase: "pilt_instruction"} 
+            }
+        ]);
+    
+        let hammer_on_right = shuffleArray([false, true, false, true, false, false], window.session);
+        let punishment_magnitude = shuffleArray([-0.01, -0.5, -0.5, -0.01, -0.01, -0.5], window.session + "c");
+    
+    
+        inst.push(
+            {
+                timeline: build_PILT_task(
+                    [
+                        hammer_on_right.map((e, i) => 
+                            ({
+                                stimulus_left: e ? demo_stimuli[4] : demo_stimuli[5],
+                                stimulus_right: e ? demo_stimuli[5] : demo_stimuli[4],
+                                stimulus_middle: "",
+                                feedback_middle: "",
+                                present_pavlovian: window.session !== "screening",
+                                pavlovian_images: pavlovian_images_f(),
+                                n_stimuli: 2,
+                                optimal_side: "",
+                                feedback_left: e ? -1 : punishment_magnitude[i],
+                                feedback_right: e ? punishment_magnitude[i] : -1,
+                                optimal_right: e,
+                                block: "practice3",
+                                trial: i,
+                                valence: -1,
+                                stimulus_group: 1,
+                                stimulus_group_id: 1,
+                                n_groups: 1,
+                                rest_1pound: 0,
+                                rest_50pence: 0,
+                                rest_1penny: 0,
+                                early_stop: false
+                            })
+                        )
+                    ],
+                    false
+                )
+            }
+        );
+    }
 
     inst = inst.concat(
         [
@@ -237,21 +240,24 @@ function prepare_PILT_instructions() {
 
     let quiz_questions = [
         {
-            prompt: "Some cards are better than others, but even the best cards might only give a penny or break a £1 coin.",
+            prompt: `Some cards are better than others, but even the best cards might only give a penny${window.session !== "screening" ? " or break a £1 coin" : ''}.`,
             options: ["True", "False"],
             required: true
         },
         {
-            prompt: "If I find a broken coin, that means I lost that coin.",
-            options: ["True", "False"],
-            required: true
-        },
-        {
-            prompt: "My goal is to collect as many high-value coins as I can and avoid breaking them.",
+            prompt: `My goal is to collect as many high-value coins as I can${window.session !== "screening" ? " and avoid breaking them" : ''}.`,
             options: ["True", "False"],
             required: true
         },
     ];
+
+    if (window.session !== "screening"){
+        quiz_questions.splice(1, 0, {
+            prompt: "If I find a broken coin, that means I lost that coin.",
+            options: ["True", "False"],
+            required: true
+        });
+    }
 
     inst.push(
         {
@@ -306,8 +312,8 @@ function prepare_PILT_instructions() {
             type: jsPsychHtmlKeyboardResponse,
             css_classes: ['instructions'],
             stimulus: `<p>Great! Let's start playing for real.</p>
-            <p>You will now complete 20 rounds of the card choosing game, taking 15-20 minutes to complete on average.</p>
-            <p>You will be able to take a short break between rounds, if you feel you need it.</p>
+            <p>You will now complete ${window.session === "screening" ? "another round" : "20 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "15-20 minutes"} on average to complete.</p>
+            ${window.session !== "screening" ? "<p>You will be able to take a short break between rounds, if you feel you need it.</p>" : ""}
             <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
