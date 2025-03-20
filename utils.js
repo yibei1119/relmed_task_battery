@@ -441,6 +441,12 @@ function createProportionalArray(originalArray, newSize) {
 
 // Compute the remaining nubmer of 1 pound, 50 pence, 1 penny, when they are the best option.
 function computeBestRest(structure){
+
+    // Pass null if null
+    if (structure == null) {
+        return null
+    }
+
     for (let b=0; b<structure.length; b++){
 
         // Initiate counter at last trial as zero
