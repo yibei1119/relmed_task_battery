@@ -34,7 +34,7 @@ function prepare_PILT_instructions() {
                 <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr>
                 <tr><td>60x one pound coins</td><td>60x fifty pence coins</td><td>60x one penny coins</td></tr></table></div>
                 <p>At the end of the game, you will draw one coin from your safe, and that will be your bonus payment.</p>
-                <p>Your goal is to add valuable coins to your safe while avoid losing the valuable coins already in it.</p>`,
+                <p>Your goal is to add valuable coins to your safe${window.task == "screening" ? "" : " while avoid losing the valuable coins already in it"}.</p>`,
             `<p>On each turn of this game, you will see two cards.
                 You have three seconds to flip one of the two cards.</p>
                 <p>This will reveal the coin you collect: either 1 pound, 50 pence, or 1 penny.</p>
@@ -112,7 +112,7 @@ function prepare_PILT_instructions() {
         pages: [
             `<p>You found a one pound coin!</p>
             <p>Some cards are better than others, and through trial and error, you can learn which ones are best.</p> 
-            <p>However, even the best cards may sometimes give only a penny or occasionally break a one-pound coin.</p>`
+            <p>However, even the best cards may sometimes give only a penny${window.task == "screening" ? "" : " or occasionally break a one-pound coin"}.</p>`
         ],
         show_clickable_nav: true,
         data: {trialphase: "pilt_instruction"}
