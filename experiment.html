@@ -129,7 +129,7 @@
                 "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
                 "occluding_clouds.png", "PILT_keys.jpg", "WM_keys.jpg"
             ].map(s => "imgs/" + s),
-            ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
+            window.session === "screening"? [] : ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
             ].flat(),
             post_trial_gap: 800,
             on_finish: () => {updateState("load_successful")}
@@ -141,16 +141,27 @@
             message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
         }
     ]
+    
+    let welcome_text;
+    if (window.context === "prolific"){
+        welcome_text = `<p><b>Thank you for taking part in this study!</b></p>
+                <p>The purpose of this study is to examine how people learn from positive and negative feedback while playing games.
+                <p>In this study, you'll play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
+                <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
+                `
+    } else {
+        `<p><b>Thank you for taking part in this RELMED session!</b></p>
+                <p>The purpose of this session is to examine how people learn from positive and negative feedback while playing games.
+                <p>You will play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
+                <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
+                `
+    }
 
     const welcome_msgs = {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-        `<p><b>Thank you for taking part in this study!</b></p>
-                <p>The purpose of this study is to examine how people learn from positive and negative feedback while playing games.
-                <p>In this study, you'll play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
-                <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
-                `
+            welcome_text
         ],
         show_clickable_nav: true,
         data: {trialphase: "instruction"}
@@ -337,6 +348,11 @@
 
             // Add post-WM test
             procedure.push(PILT_tasks.WM_test_procedure);
+
+            if (["wk24", "wk28"].includes(window.session)) {
+                // Add delay discounting timeline
+                procedure = procedure.concat(dd_timeline);
+            }
         }
 
         if (window.task === "wm_only") {
@@ -371,8 +387,11 @@
         }
 
         if (window.task === "quests"){
-            // Add delay discounting timeline
-            procedure = procedure.concat(dd_timeline);
+
+            if (["wk0", "wk2", "wk4"].includes(window.session)) {
+                // Add delay discounting timeline
+                procedure = procedure.concat(dd_timeline);
+            }
 
             // Free text
             procedure.push(openTextTimeline);
@@ -380,6 +399,40 @@
             // Add questionnaire timeline
             procedure = procedure.concat(questionnaires_timeline);
         }
+
+        if (window.task === "screening") {
+            // Welcome message
+            procedure.push(welcome_msgs);
+
+            // Add reversal timeline
+            procedure = procedure.concat(reversal_instructions);
+            procedure = procedure.concat(reversal_blocks);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_reversal
+            ]);
+
+            procedure.push({
+                type: jsPsychInstructions,
+                css_classes: ['instructions'],
+                pages:  [
+                `<p>You will now play another game of trial and error learning.</p>
+                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
+                ],
+                show_clickable_nav: true,
+                data: {trialphase: "instruction"}
+            });
+
+            procedure = procedure.concat(PILT_tasks.PILT_procedure);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PILT
+            ]);
+
+            // Add questionnaire timeline
+            procedure = procedure.concat(questionnaires_timeline);
+        }
+
 
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
@@ -426,6 +479,6 @@
     // Load sequences and start
     var procedure = [];
 
-    load_squences(window.session);
+    load_sequences(window.session);
 </script>
 </html>

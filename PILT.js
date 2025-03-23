@@ -358,7 +358,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
             }
         ];
 
-        if (isValidNumber(block_number) & task_name === "pilt"){
+        if (isValidNumber(block_number) & task_name === "pilt" && (window.session !== "screening")){
             block.push(
                 {
                     type: jsPsychHtmlKeyboardResponse,
@@ -404,118 +404,96 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
 }
 
 // Load PILT sequences from json file
-async function load_squences(session) {
+async function fetchJSON(url) {
     try {
-        // Fetch PILT sequences
-        const response = await fetch('trial1_PILT.json');
-
+        const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const structure = await response.json();
-        let sess_structure = structure[session];
-
-        if (window.demo){
-            sess_structure = sess_structure.slice(0,6);
+            throw new Error(`Network response was not ok: ${url}`);
         }
 
-        window.totalBlockNumber = sess_structure.length
-
-        // Fetch post-PILT test sequences
-        const test_response = await fetch('trial1_PILT_test.json');
-
-        if (!test_response.ok) {
-            throw new Error(`Network response was not ok ${test_response}`);
-        }
-
-        const test_structure = await test_response.json();
-
-        let test_sess_structure = test_structure[session];
-
-        if (window.demo){
-            test_sess_structure = [test_sess_structure[0].slice(0,25)];
-        }
-
-        // Add folder to stimuli, and rename block
-        for (i=0; i<test_sess_structure.length; i++){
-            for(j=0; j<test_sess_structure[i].length; j++) {
-                test_sess_structure[i][j].stimulus_left = `imgs/PILT_stims/${test_sess_structure[i][j].stimulus_left}`
-                test_sess_structure[i][j].stimulus_right = `imgs/PILT_stims/${test_sess_structure[i][j].stimulus_right}`    
-            }
-        }
-
-        // Fetch pavlovian test sequences
-        const pavlovian_response = await fetch('pavlovian_test.json');
-        let pav_test_structure = await pavlovian_response.json();
-
-        // Add folder to stimuli, and rename block
-        for (i=0; i<pav_test_structure.length; i++){
-            pav_test_structure[i].stimulus_left = `imgs/Pav_stims/${window.session}/${pav_test_structure[i].stimulus_left}`
-            pav_test_structure[i].stimulus_right = `imgs/Pav_stims/${window.session}/${pav_test_structure[i].stimulus_right}`
-            pav_test_structure[i].block = "pavlovian"
-            pav_test_structure[i].feedback_left = pav_test_structure[i].magnitude_left
-            pav_test_structure[i].feedback_right = pav_test_structure[i].magnitude_right
-        }
-
-        // Add Pavlovaian test to the end of test strucutre
-        if (!window.demo){
-            test_sess_structure = [pav_test_structure].concat(test_sess_structure);
-        }
-
-        // Fetch WM structure
-        const WM_response = await fetch('trial1_WM.json');
-        const WM_structure = await WM_response.json();
-        let WM_sess_structure = WM_structure[session];
-
-        if (window.demo){
-            WM_sess_structure = WM_sess_structure.slice(0,3);
-        }
-
-        // Fetch LTM structure
-        const LTM_response = await fetch('trial1_LTM.json');
-        const LTM_structure = await LTM_response.json();
-        let LTM_sess_structure = LTM_structure[session];
-
-        if (window.demo){
-            LTM_sess_structure = LTM_sess_structure.slice(0,3);
-        }
-
-        // Fetch WM test structure
-        const WM_test_response = await fetch('trial1_WM_test.json');
-        const WM_test_structure = await WM_test_response.json();
-        let WM_test_sess_structure = WM_test_structure[session];
-
-        // Add folder to stimuli
-        for (i=0; i<WM_test_sess_structure.length; i++){
-            for(j=0; j<WM_test_sess_structure[i].length; j++) {
-                WM_test_sess_structure[i][j].stimulus_left = `imgs/PILT_stims/${WM_test_sess_structure[i][j].stimulus_left}`
-                WM_test_sess_structure[i][j].stimulus_right = `imgs/PILT_stims/${WM_test_sess_structure[i][j].stimulus_right}`    
-            }
-        }
-
-        // Fetch LTM test structure
-        const LTM_test_response = await fetch('trial1_LTM_test.json');
-        const LTM_test_structure = await LTM_test_response.json();
-        let LTM_test_sess_structure = LTM_test_structure[session];
-
-        // Add folder to stimuli
-        for (i=0; i<LTM_test_sess_structure.length; i++){
-            for(j=0; j<LTM_test_sess_structure[i].length; j++) {
-                LTM_test_sess_structure[i][j].stimulus_left = `imgs/PILT_stims/${LTM_test_sess_structure[i][j].stimulus_left}`
-                LTM_test_sess_structure[i][j].stimulus_right = `imgs/PILT_stims/${LTM_test_sess_structure[i][j].stimulus_right}`    
-            }
-        }
-        
-        
-        run_full_experiment(sess_structure, test_sess_structure, WM_sess_structure, WM_test_sess_structure, LTM_sess_structure, LTM_test_sess_structure);
+        data = await response.json();
+        return data
     } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
+        console.error(`Error fetching ${url}:`, error);
+        throw error;
     }
 }
 
-function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_test_structure, LTM_structure, LTM_test_structure) {
+function adjustStimuliPaths(structure, folder) {
+
+    // Return null if null
+    if (structure == null) {
+        return null
+    }
+    
+    // Adjust stimuli paths otherwise
+    structure.forEach(block => {
+        block.forEach(trial => {
+            trial.stimulus_left = `imgs/${folder}/${trial.stimulus_left}`;
+            trial.stimulus_right = `imgs/${folder}/${trial.stimulus_right}`;
+        });
+    });
+}
+
+async function load_sequences(session) {
+    try {
+
+        // Load json
+        const [
+            PILT_structure, PILT_test_structure, pav_test_structure,
+            WM_structure, LTM_structure,
+            WM_test_structure, LTM_test_structure
+        ] = await Promise.all([
+            fetchJSON('trial1_PILT.json'),
+            fetchJSON('trial1_PILT_test.json'),
+            fetchJSON('pavlovian_test.json'),
+            fetchJSON('trial1_WM.json'),
+            fetchJSON('trial1_LTM.json'),
+            fetchJSON('trial1_WM_test.json'),
+            fetchJSON('trial1_LTM_test.json')
+        ]);
+
+        // Select session
+        let PILT_sess = PILT_structure[session];
+        let PILT_test_sess = PILT_test_structure[session];
+        let WM_sess = WM_structure[session];
+        let LTM_sess = LTM_structure[session];
+        let WM_test_sess = WM_test_structure[session];
+        let LTM_test_sess = LTM_test_structure[session];
+
+        if (window.demo) {
+            PILT_sess = PILT_sess.slice(0, 6);
+            PILT_test_sess = [PILT_test_sess[0].slice(0, 25)];
+            WM_sess = WM_sess.slice(0, 3);
+            LTM_sess = LTM_sess.slice(0, 3);
+        }
+        
+        adjustStimuliPaths(PILT_test_sess, 'PILT_stims');
+        adjustStimuliPaths(WM_test_sess, 'PILT_stims');
+        adjustStimuliPaths(LTM_test_sess, 'PILT_stims');
+
+        pav_test_structure.forEach(trial => {
+            trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
+            trial.stimulus_right = `imgs/Pav_stims/${window.session}/${trial.stimulus_right}`;
+            trial.block = "pavlovian";
+            trial.feedback_left = trial.magnitude_left;
+            trial.feedback_right = trial.magnitude_right;
+        });
+
+        if (!window.demo) {
+            PILT_test_sess = [pav_test_structure].concat(PILT_test_sess);
+        }
+
+        run_full_experiment(PILT_sess, PILT_test_sess, WM_sess, WM_test_sess, LTM_sess, LTM_test_sess);
+    } catch (error) {
+        console.error('Error loading sequences:', error);
+    }
+}
+
+
+function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_structure, WM_test_structure, LTM_structure, LTM_test_structure) {
     // Compute best-rest
-    computeBestRest(structure);
+    computeBestRest(PILT_structure);
     computeBestRest(WM_structure);
     computeBestRest(LTM_structure);
 
@@ -525,46 +503,74 @@ function return_PILT_full_sequence(structure, test_structure, WM_structure, WM_t
     PILT_procedure = PILT_procedure.concat(prepare_PILT_instructions());
 
     // Add PILT
-    let PILT_blocks = build_PILT_task(structure);
-    PILT_blocks[0]["on_start"] = () => {updateState("pilt_task_start")};
-    PILT_procedure = PILT_procedure.concat(PILT_blocks);
+    if (PILT_structure != null){
+        let PILT_blocks = build_PILT_task(PILT_structure);
+        PILT_blocks[0]["on_start"] = () => {updateState("pilt_task_start")};
+        PILT_procedure = PILT_procedure.concat(PILT_blocks);    
+    } else {
+       PILT_procedure = []
+    }
 
     // Add test
-    let PILT_test_procedure = [];
-    PILT_test_procedure.push(test_instructions('pilt'));
-    let test_blocks = build_post_PILT_test(test_structure);
-    test_blocks[0]["on_start"] = () => {
-        updateState("post_test_task_start");
-        updateState("no_resume");
-    };
-    PILT_test_procedure = PILT_test_procedure.concat(test_blocks);
+    let PILT_test_procedure;
+    if (PILT_test_structure[1] != null) {
+        PILT_test_procedure = [];
+        PILT_test_procedure.push(test_instructions('pilt'));
+        let test_blocks = build_post_PILT_test(PILT_test_structure);
+        test_blocks[0]["on_start"] = () => {
+            updateState("post_test_task_start");
+            updateState("no_resume");
+        };
+        PILT_test_procedure = PILT_test_procedure.concat(test_blocks);    
+    } else {
+        PILT_test_procedure = [];
+    }
 
     // WM block
-    let WM_blocks = build_PILT_task(WM_structure, true, "wm");
-    WM_blocks[0]["on_start"] = () => {
-        updateState("wm_task_start");
-        updateState("no_resume_10_minutes");
-    };
-    const WM_procedure = WM_instructions.concat(WM_blocks);
+    let WM_procedure;
+    if (WM_structure != null){
+        let WM_blocks = build_PILT_task(WM_structure, true, "wm");
+        WM_blocks[0]["on_start"] = () => {
+            updateState("wm_task_start");
+            updateState("no_resume_10_minutes");
+        };
+        WM_procedure = WM_instructions.concat(WM_blocks);    
+    } else {
+        WM_procedure = [];
+    }
 
     // LTM block
-    let LTM_blocks = build_PILT_task(LTM_structure, true, "ltm");
-    LTM_blocks[0]["on_start"] = () => {
-        updateState("ltm_task_start");
-        updateState("no_resume_10_minutes");
-    };
-    const LTM_procedure = LTM_instructions.concat(LTM_blocks);
-    
+    let LTM_procedure;
+    if (LTM_structure != null) {
+        let LTM_blocks = build_PILT_task(LTM_structure, true, "ltm");
+        LTM_blocks[0]["on_start"] = () => {
+            updateState("ltm_task_start");
+            updateState("no_resume_10_minutes");
+        };
+        LTM_procedure = LTM_instructions.concat(LTM_blocks);    
+    } else {
+        LTM_procedure = []
+    }
 
     // WM test block
-    let WM_test_procedure = [];
-    WM_test_procedure.push(test_instructions('wm'));
-    WM_test_procedure = WM_test_procedure.concat(build_post_PILT_test(WM_test_structure, "wm"));
+    let WM_test_procedure;
+    if (WM_test_structure != null) {
+        WM_test_procedure = [];
+        WM_test_procedure.push(test_instructions('wm'));
+        WM_test_procedure = WM_test_procedure.concat(build_post_PILT_test(WM_test_structure, "wm"));    
+    } else {
+        WM_test_procedure = [];
+    }
 
     // LTM test block
-    let LTM_test_procedure = [];
-    LTM_test_procedure.push(test_instructions('ltm'));
-    LTM_test_procedure = LTM_test_procedure.concat(build_post_PILT_test(LTM_test_structure, "ltm"));
+    let LTM_test_procedure;
+    if (LTM_test_structure != null) {
+        LTM_test_procedure = [];
+        LTM_test_procedure.push(test_instructions('ltm'));
+        LTM_test_procedure = LTM_test_procedure.concat(build_post_PILT_test(LTM_test_structure, "ltm"));    
+    } else {
+        LTM_test_procedure = [];
+    }
     
 
 

@@ -441,6 +441,12 @@ function createProportionalArray(originalArray, newSize) {
 
 // Compute the remaining nubmer of 1 pound, 50 pence, 1 penny, when they are the best option.
 function computeBestRest(structure){
+
+    // Pass null if null
+    if (structure == null) {
+        return null
+    }
+
     for (let b=0; b<structure.length; b++){
 
         // Initiate counter at last trial as zero
@@ -520,7 +526,7 @@ function inter_block_stimulus(){
     let txt = ``
 
     // Add text and tallies for early stop
-    if (window.skipThisBlock){
+    if (window.skipThisBlock && window.task !== "screening"){
         
         txt += `<p>You've found the better ${n_groups > 1 ? "cards" : "card"}.</p><p>You will skip the remaining turns and `;
         
@@ -533,9 +539,11 @@ function inter_block_stimulus(){
         <p>Altogether, these coins were ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:<p>`
         
         // Add rest to outcomes
-        chosen_outcomes[valence * 1] += last_trial.select('rest_1pound').values[0];
-        chosen_outcomes[valence * 0.5] += last_trial.select('rest_50pence').values[0];
-        chosen_outcomes[valence * 0.01] += last_trial.select('rest_1penny').values[0];
+        if (window.task !== "screening"){
+            chosen_outcomes[valence * 1] += last_trial.select('rest_1pound').values[0];
+            chosen_outcomes[valence * 0.5] += last_trial.select('rest_50pence').values[0];
+            chosen_outcomes[valence * 0.01] += last_trial.select('rest_1penny').values[0];    
+        }
 
     } else {
         txt += `<p><img src='imgs/safe.png' style='width:100px; height:100px;'></p>

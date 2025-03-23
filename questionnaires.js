@@ -180,187 +180,208 @@ var prompt_PERS_negAct = [
 
 // Questionnaires
 
-var questionnaire_phq = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 1 out of 10</h2>" +
-        "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by any of the following problems?</p>" +
-        "<p>Please respond to all items.</p>"
-    ],
-    items: [
-        "Little interest or pleasure in doing things",
-        "Feeling down, depressed, or hopeless", // Catch-origin
-        "Trouble falling or staying asleep, or sleeping too much",
-        "Feeling tired or having little energy",
-        "Poor appetite or overeating",
-        "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
-        "Trouble concentrating on things, such as reading the newspaper of watching television",
-        "Moving or speaking so slowly that other people have noticed, or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
-        "Experiencing sadness or a sense of despair", // Catch
-        "Thoughts that you would be better off dead, or of hurting yourself in some way",
-    ],
-    scale: likert_phq,
-    survey_width: 700,
-    data: {
-        trialphase: "PHQ"
-    }
+var questionnaire_phq = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by any of the following problems?</p>" +
+            "<p>Please respond to all items.</p>"
+        ],
+        items: [
+            "Little interest or pleasure in doing things",
+            "Feeling down, depressed, or hopeless", // Catch-origin
+            "Trouble falling or staying asleep, or sleeping too much",
+            "Feeling tired or having little energy",
+            "Poor appetite or overeating",
+            "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
+            "Trouble concentrating on things, such as reading the newspaper of watching television",
+            "Moving or speaking so slowly that other people have noticed, or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
+            "Experiencing sadness or a sense of despair", // Catch
+            "Thoughts that you would be better off dead, or of hurting yourself in some way",
+        ],
+        scale: likert_phq,
+        survey_width: 700,
+        data: {
+            trialphase: "PHQ"
+        }
+    };
 };
 
-var questionnaire_gad = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 3 out of 10</h2>" +
-        "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by following problems?</p>"
-    ],
-    items: prompt_gad,
-    scale: likert_gad,
-    survey_width: 700,
-    data: {
-        trialphase: "GAD"
-    }
+var questionnaire_gad = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>Over the <u>last 2 weeks</u>, how often have you been bothered by following problems?</p>"
+        ],
+        items: prompt_gad,
+        scale: likert_gad,
+        survey_width: 700,
+        data: {
+            trialphase: "GAD"
+        }
+    };
 };
 
 // questions_WSAS.unshift({prompt: "If you're retired or choose not to have a job for reasons unrelated to your problem, tick here", labels: [""], required: false});
-var questionnaire_WSAS = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 4 out of 10</h2>" +
-        "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>" +
-        '<div style="border: 2px solid #000; padding: 10px; display: inline-block; background-color: #f9f9f9; border-radius: 5px;"><label style="display: inline-flex; align-items: center;">If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here&nbsp<input type="checkbox" id="retiredCheck" style="margin-left: 5px;"></label></div>'
-    ],
-    items: prompt_WSAS,
-    scale: likert_WSAS,
-    survey_width: 700,
-    data: {
-        trialphase: "WSAS"
-    },
-    before_finish: (data) => {
-        let checkbox = document.getElementById("retiredCheck");
-        data['responses']['retired_check'] = checkbox.checked;
-
-    }
+var questionnaire_WSAS = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>People's problems sometimes affect their ability to do certain day-to-day tasks in their lives. To rate your problems look at each section and determine on the scale provided how much your problem impairs your ability to carry out the activity. This assessment is not intended to be a diagnosis. If you are concerned about your results in any way, please speak with a qualified health professional.</p>" +
+            '<div style="border: 2px solid #000; padding: 10px; display: inline-block; background-color: #f9f9f9; border-radius: 5px;"><label style="display: inline-flex; align-items: center;">If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here&nbsp<input type="checkbox" id="retiredCheck" style="margin-left: 5px;"></label></div>'
+        ],
+        items: prompt_WSAS,
+        scale: likert_WSAS,
+        survey_width: 700,
+        data: {
+            trialphase: "WSAS"
+        },
+        before_finish: (data) => {
+            let checkbox = document.getElementById("retiredCheck");
+            data['responses']['retired_check'] = checkbox.checked;
+    
+        }
+    };
 };
 
-var questionnaire_ICECAP = {
-    type: jsPsychSurveyMultiChoice,
-    preamble: ["<h2>Questionnaire 5 out of 10</h2>" +
-        "<p>Please indicate which statements best describe your overall quality of life at the moment by choosing ONE option for each of the five groups below.</p>"
-    ],
-    css_classes: ['instructions'],
-    questions: prompt_ICECAP.map((prompt, index) => ({
-        prompt: prompt,
-        options: multichoice_ICECAP[index],
-        required: true
-    })),
-    scale_width: 700,
-    data: {
-        trialphase: "ICECAP"
-    }
+var questionnaire_ICECAP = (i,total) => {
+    return {
+        type: jsPsychSurveyMultiChoice,
+        preamble: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>Please indicate which statements best describe your overall quality of life at the moment by choosing ONE option for each of the five groups below.</p>"
+        ],
+        css_classes: ['instructions'],
+        questions: prompt_ICECAP.map((prompt, index) => ({
+            prompt: prompt,
+            options: multichoice_ICECAP[index],
+            required: true
+        })),
+        scale_width: 700,
+        data: {
+            trialphase: "ICECAP"
+        }
+    };    
 };
 
-var questionnaire_BFI = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 6 out of 10</h2>" +
-        "<p>How well do the following statements describe your personality?</p>"
-    ],
-    items: prompt_BFI,
-    scale: likert_BFI,
-    survey_width: 700,
-    data: {
-        trialphase: "BFI"
-    }
+var questionnaire_BFI = (i,total) => {
+    {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>How well do the following statements describe your personality?</p>"
+        ],
+        items: prompt_BFI,
+        scale: likert_BFI,
+        survey_width: 700,
+        data: {
+            trialphase: "BFI"
+        }
+    };
 };
 
-var questionnaire_pvss = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 2 out of 10</h2>" +
-        '<p class="instructions">Please indicate to what extent these statements describe your <b><u>responses over the last two weeks, including today.</u></br>' +
-        'Did you NOT have this experience? No problem. Please indicate how you <u>would have responded</u> if you had experienced the situation over the last two weeks.</b></br>' +
-        'Please consider only the aspect of the situation that is described, paying particular attention to the <u>underlined text</u>. For example, if the statement says, "<u>I wanted</u> to meet new people," rate how much you wanted or would have wanted to meet new people over the last two weeks, assuming that the opportunity presented itself. Do not consider what the situation would have required of you or whether it would have been possible for you to meet people.</p>'
-    ],
-    items: [
-        'I <u>savoured</u> my first bite of food after feeling hungry',
-        'I <u>put energy</u> into activities I enjoy',
-        'I <u>was delighted</u> to catch a breath of fresh air outdoors',
-        'I <u>wanted</u> to spend time with people I know',
-        'A fun activity during the weekend sustained my good mood <u>throughout the new week</u>',
-        'It <u>felt good</u> to have physical contact with someone I felt close to',
-        'I <u>expected</u> to enjoy a brief moment outdoors',
-        'I <u>looked forward</u> to hearing feedback on my work',
-        'I <u>expected</u> to enjoy my meals',
-        'Receiving praise about my work made me feel pleased <u>for the rest of the day</u>',
-        'I <u>looked forward</u> to spending time with others',
-        'I <u>wanted</u> to accomplish goals I set for myself',
-        'I <u>expected</u> to enjoy being hugged by someone I love',
-        'I <u>wanted</u> to participate in a fun activity with friends', // Catch-origin
-        'I <u>worked hard</u> to earn positive feedback on my projects',
-        'I <u>looked forward</u> to an upcoming meal',
-        'I <u>felt pleased</u> when I reached a goal I set for myself',
-        'Getting a hug from someone close to me made me happy <u>even after</u> we parted',
-        'I <u>expected</u> to master the tasks I undertook',
-        "I felt like engaging in enjoyable activities with people I'm close to", // Catch
-        'I <u>actively pursued</u> activities I thought would be fun',
-        'I <u>went out of my way</u> to admire the beauty around me',
-    ],
-    scale: likert_pvss,
-    survey_width: 900,
-    item_width: 25,
-    scale_repeat: 5,
-    data: {
-        trialphase: "PVSS"
-    }
-}
-
-var questionnaire_BADS = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 7 out of 10</h2>" +
-        "<p>Please read each statement carefully and then circle the number which best describes how much the statement was true for you DURING THE PAST WEEK, INCLUDING TODAY.</p>"
-    ],
-    items: prompt_BADS,
-    scale: likert_BADS,
-    survey_width: 700,
-    data: {
-        trialphase: "BADS"
-    }
+var questionnaire_pvss = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            '<p class="instructions">Please indicate to what extent these statements describe your <b><u>responses over the last two weeks, including today.</u></br>' +
+            'Did you NOT have this experience? No problem. Please indicate how you <u>would have responded</u> if you had experienced the situation over the last two weeks.</b></br>' +
+            'Please consider only the aspect of the situation that is described, paying particular attention to the <u>underlined text</u>. For example, if the statement says, "<u>I wanted</u> to meet new people," rate how much you wanted or would have wanted to meet new people over the last two weeks, assuming that the opportunity presented itself. Do not consider what the situation would have required of you or whether it would have been possible for you to meet people.</p>'
+        ],
+        items: [
+            'I <u>savoured</u> my first bite of food after feeling hungry',
+            'I <u>put energy</u> into activities I enjoy',
+            'I <u>was delighted</u> to catch a breath of fresh air outdoors',
+            'I <u>wanted</u> to spend time with people I know',
+            'A fun activity during the weekend sustained my good mood <u>throughout the new week</u>',
+            'It <u>felt good</u> to have physical contact with someone I felt close to',
+            'I <u>expected</u> to enjoy a brief moment outdoors',
+            'I <u>looked forward</u> to hearing feedback on my work',
+            'I <u>expected</u> to enjoy my meals',
+            'Receiving praise about my work made me feel pleased <u>for the rest of the day</u>',
+            'I <u>looked forward</u> to spending time with others',
+            'I <u>wanted</u> to accomplish goals I set for myself',
+            'I <u>expected</u> to enjoy being hugged by someone I love',
+            'I <u>wanted</u> to participate in a fun activity with friends', // Catch-origin
+            'I <u>worked hard</u> to earn positive feedback on my projects',
+            'I <u>looked forward</u> to an upcoming meal',
+            'I <u>felt pleased</u> when I reached a goal I set for myself',
+            'Getting a hug from someone close to me made me happy <u>even after</u> we parted',
+            'I <u>expected</u> to master the tasks I undertook',
+            "I felt like engaging in enjoyable activities with people I'm close to", // Catch
+            'I <u>actively pursued</u> activities I thought would be fun',
+            'I <u>went out of my way</u> to admire the beauty around me',
+        ],
+        scale: likert_pvss,
+        survey_width: 900,
+        item_width: 25,
+        scale_repeat: 5,
+        data: {
+            trialphase: "PVSS"
+        }
+    };
 };
 
-var questionnaire_hopelessness = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 8 out of 10</h2>" +
-        "<p>For each of the statements below, please choose the option that best applies to you.</p>"
-    ],
-    items: prompt_hopelessness,
-    scale: likert_hopelessness,
-    survey_width: 700,
-    data: {
-        trialphase: "Hopelessness"
-    }
+var questionnaire_BADS = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>Please read each statement carefully and then circle the number which best describes how much the statement was true for you DURING THE PAST WEEK, INCLUDING TODAY.</p>"
+        ],
+        items: prompt_BADS,
+        scale: likert_BADS,
+        survey_width: 700,
+        data: {
+            trialphase: "BADS"
+        }
+    };
 };
 
-var questionnaire_RRS_brooding = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 9 out of 10</h2>" +
-        "<p>People think and do many different things when they feel depressed. Please read each of the items below and indicate whether you almost never, sometimes, often, or almost always think or do each one when you feel down, sad, or depressed. Please indicate what you generally do, not what you think you should do.</p>"
-    ],
-    items: prompt_RRS_brooding,
-    scale: likert_RRS_brooding,
-    survey_width: 700,
-    data: {
-        trialphase: "RRS_brooding"
-    }
+
+var questionnaire_hopelessness = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>For each of the statements below, please choose the option that best applies to you.</p>"
+        ],
+        items: prompt_hopelessness,
+        scale: likert_hopelessness,
+        survey_width: 700,
+        data: {
+            trialphase: "Hopelessness"
+        }
+    };
 };
 
-var questionnaire_PERS_negAct = {
-    type: jsPsychSurveyTemplate,
-    instructions: ["<h2>Questionnaire 10 out of 10</h2>" +
-        "<p>This questionnaire is designed to measure different aspects of how you typically react to experiencing emotional events. Please score the following statements according to how much they apply or do not apply to you on a typical day.</p>"
-    ],
-    items: prompt_PERS_negAct,
-    scale: likert_PERS_negAct,
-    survey_width: 700,
-    data: {
-        trialphase: "PERS_negAct"
-    }
-};
+var questionnaire_RRS_brooding = (i,total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>People think and do many different things when they feel depressed. Please read each of the items below and indicate whether you almost never, sometimes, often, or almost always think or do each one when you feel down, sad, or depressed. Please indicate what you generally do, not what you think you should do.</p>"
+        ],
+        items: prompt_RRS_brooding,
+        scale: likert_RRS_brooding,
+        survey_width: 700,
+        data: {
+            trialphase: "RRS_brooding"
+        }
+    };
+}; 
 
-const questionnaires_timeline = [
+const questionnaire_PERS_negAct = (i, total) => {
+    return {
+        type: jsPsychSurveyTemplate,
+        instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
+            "<p>This questionnaire is designed to measure different aspects of how you typically react to experiencing emotional events. Please score the following statements according to how much they apply or do not apply to you on a typical day.</p>"
+        ],
+        items: prompt_PERS_negAct,
+        scale: likert_PERS_negAct,
+        survey_width: 700,
+        data: {
+            trialphase: "PERS_negAct"
+        }
+    };
+}; 
+
+let questionnaires_timeline = [
     {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
@@ -376,15 +397,39 @@ const questionnaires_timeline = [
         simulation_options:{
             simulate: false
         }
-    },
-    questionnaire_phq,
-    questionnaire_pvss,
-    questionnaire_gad,
-    questionnaire_WSAS,
-    questionnaire_ICECAP,
-    questionnaire_BFI,
-    questionnaire_BADS,
-    questionnaire_hopelessness,
-    questionnaire_RRS_brooding,
-    questionnaire_PERS_negAct
+    }
 ];
+
+if (window.session === "screening"){
+    // Self-report battery A
+    questionnaires_timeline = questionnaires_timeline.concat(
+        questionnaire_phq(1,4),
+        questionnaire_WSAS(2,4),
+        questionnaire_ICECAP(3,4),
+        questionnaire_BFI(4,4),
+    );
+} else if (["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
+    // Self-report battery B
+    questionnaires_timeline = questionnaires_timeline.concat(
+        questionnaire_phq(1,7),
+        questionnaire_gad(2,7),
+        questionnaire_pvss(3,7),
+        questionnaire_BADS(4,7),
+        questionnaire_hopelessness(5,7),
+        questionnaire_RRS_brooding(6,7),
+        questionnaire_PERS_negAct(7,7)
+    );
+} else {
+    // Self-report battery C
+    questionnaires_timeline = questionnaires_timeline.concat(
+        questionnaire_phq(1,9),
+        questionnaire_gad(2,9),
+        questionnaire_WSAS(3,9),
+        questionnaire_ICECAP(4,9),
+        questionnaire_pvss(5,9),
+        questionnaire_BADS(6,9),
+        questionnaire_hopelessness(7,9),
+        questionnaire_RRS_brooding(8,9),
+        questionnaire_PERS_negAct(9,9)
+    );
+}

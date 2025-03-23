@@ -335,9 +335,10 @@ jsPsychPILT = (function (jspsych) {
                         coinBackground.className = "PILTCoinBackground"
 
                         coin.src = `imgs/${trial.coin_images[this.data.chosen_feedback]}`;
-                        coinBackground.src = `imgs/${trial.pavlovian_images[this.data.chosen_feedback]}`;
 
                         if (trial.present_pavlovian) {
+                            coinBackground.src = `imgs/${trial.pavlovian_images[this.data.chosen_feedback]}`;
+                            
                             document.getElementById(this.data.response).appendChild(coinBackground)
                             document.getElementById(this.data.response).appendChild(coinCircle)
                         }
