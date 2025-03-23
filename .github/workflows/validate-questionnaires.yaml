@@ -1,0 +1,31 @@
+name: Validate Questionnaires
+
+on:
+  push:
+    paths:
+      - "questionnaires.js"  # Runs only when this file changes
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04 # Latest LTS version of Ubuntu
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4  # Checks out your repository
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18  # Use LTS version of Node.js
+
+      - name: Install Dependencies (if needed)
+        run: npm install  # Installs dependencies if you have any, remove if not needed
+
+      - name: Run Validation Script
+        run: node validation/validate_questionnaires.js  # Runs your validation script (e.g., generating the table)
+
+      - name: Upload HTML Table as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: questionnaire_table  # Name of the artifact
+          path: questionnaire_table.html  # Path to the generated file
