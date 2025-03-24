@@ -11,6 +11,11 @@ global.window = {
     session: "wk0"
 };
 
+// Placeholder for document
+global.document = {
+    getElementById: () => {}
+}
+
 // Load questionnaire object-generating functions
 const questionnaires = require('../../questionnaires.js')
 
@@ -40,6 +45,17 @@ function extractQuestionnaireData(questionnaireFunc, name) {
                 possible_values: item.options.join("<br>")
             }
         ))
+    }
+
+    // Collect extra items
+    if ("before_finish" in questionnaire){
+        let extra_item = questionnaire.before_finish({responses: {}});
+
+        extra_item.variable_name = name + "_" + extra_item.variable_name;
+
+        items.push(
+            extra_item
+        );
     }
     
     return {
