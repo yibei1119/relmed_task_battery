@@ -2,9 +2,9 @@
 const fs = require('fs');
 
 // Create placeholders for jsPsych plugins instead of loading them
-const jsPsychInstructions = "placeholder";
-const jsPsychSurveyTemplate = "placeholder";
-const jsPsychSurveyMultiChoice = "placeholder";
+global.jsPsychInstructions = "placeholder";
+global.jsPsychSurveyTemplate = "placeholder";
+global.jsPsychSurveyMultiChoice = "placeholder";
 
 // Load questionnaire object-generating functions
 const questionnaires = require('../questionnaires.js')
