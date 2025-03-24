@@ -82,20 +82,14 @@ function generateTableHTML(extracted_questionnaire) {
     if (same_values || same_type){
         first_row = items.shift()
         table += `<tr>
-            <td>${first_row.variable_name}</td>
-            ${same_type ? `<td rowspan = "${items.length + 1}">${first_row.type}</td>` : "<td>" + first_row.type + "</td>"}
-            <td>${first_row.text}</td>
-            ${same_values ? `<td rowspan = "${items.length + 1}">${first_row.possible_values}</td>` : "<td>" + first_row.possible_values + "</td>"}
+            <td>${first_row.variable_name}</td>${same_type ? `<td rowspan = "${items.length + 1}">${first_row.type}</td>` : "<td>" + first_row.type + "</td>"}<td>${first_row.text}</td>${same_values ? `<td rowspan = "${items.length + 1}">${first_row.possible_values}</td>` : "<td>" + first_row.possible_values + "</td>"}
         </tr>`
     }
 
     // Add rest of rows
     items.forEach(row => {
         table += `<tr>
-            <td>${row.variable_name}</td>
-            ${same_type ? "" : "<td>" + row.type + "</td>"}
-            <td>${row.text}</td>
-            ${same_values ? "" : "<td>" + row.possible_values + "</td>"}
+            <td>${row.variable_name}</td>${same_type ? "" : "<td>" + row.type + "</td>"}<td>${row.text}</td>${same_values ? "" : "<td>" + row.possible_values + "</td>"}
         </tr>`;
     });
     table += "</table>";
