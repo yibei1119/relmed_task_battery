@@ -515,8 +515,9 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
 
     // Add test
     function generateTestProcedure(structure, name) {
+
         let procedure;
-        if (structure[1] != null) {
+        if ((structure != null) && (structure.length == 1 || structure[1] != null)) {
             procedure = [];
             procedure.push(test_instructions(name));
             let test_blocks = build_post_PILT_test(structure, name);
