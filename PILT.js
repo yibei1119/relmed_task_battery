@@ -386,6 +386,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
                     const block = jsPsych.evaluateTimelineVariable('block');
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
+                        updateState("no_resume_10_minutes");
                         updateState(`${task_name}_start_block_${block}`)
                     }
                 }
@@ -505,34 +506,43 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     // Add PILT
     if (PILT_structure != null){
         let PILT_blocks = build_PILT_task(PILT_structure);
-        PILT_blocks[0]["on_start"] = () => {updateState("pilt_task_start")};
+        PILT_blocks[0]["on_start"] = () => {
+            updateState("no_resume_10_minutes");
+            updateState("pilt_task_start")
+        };
         PILT_procedure = PILT_procedure.concat(PILT_blocks);    
     } else {
        PILT_procedure = []
     }
 
     // Add test
-    let PILT_test_procedure;
-    if (PILT_test_structure[1] != null) {
-        PILT_test_procedure = [];
-        PILT_test_procedure.push(test_instructions('pilt'));
-        let test_blocks = build_post_PILT_test(PILT_test_structure);
-        test_blocks[0]["on_start"] = () => {
-            updateState("post_test_task_start");
-            updateState("no_resume");
-        };
-        PILT_test_procedure = PILT_test_procedure.concat(test_blocks);    
-    } else {
-        PILT_test_procedure = [];
+    function generateTestProcedure(structure, name) {
+        let procedure;
+        if (structure[1] != null) {
+            procedure = [];
+            procedure.push(test_instructions(name));
+            let test_blocks = build_post_PILT_test(structure, name);
+            test_blocks[0]["on_start"] = () => {
+                updateState("no_resume");
+                updateState(`${name}_post_test_task_start`);
+            };
+            procedure = procedure.concat(test_blocks);    
+        } else {
+            procedure = [];
+        }
+
+        return procedure 
     }
 
+   const PILT_test_procedure = generateTestProcedure(PILT_test_structure, "pilt");
+    
     // WM block
     let WM_procedure;
     if (WM_structure != null){
         let WM_blocks = build_PILT_task(WM_structure, true, "wm");
         WM_blocks[0]["on_start"] = () => {
-            updateState("wm_task_start");
             updateState("no_resume_10_minutes");
+            updateState("wm_task_start");
         };
         WM_procedure = WM_instructions.concat(WM_blocks);    
     } else {
@@ -544,8 +554,8 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     if (LTM_structure != null) {
         let LTM_blocks = build_PILT_task(LTM_structure, true, "ltm");
         LTM_blocks[0]["on_start"] = () => {
-            updateState("ltm_task_start");
             updateState("no_resume_10_minutes");
+            updateState("ltm_task_start");
         };
         LTM_procedure = LTM_instructions.concat(LTM_blocks);    
     } else {
@@ -553,25 +563,10 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     }
 
     // WM test block
-    let WM_test_procedure;
-    if (WM_test_structure != null) {
-        WM_test_procedure = [];
-        WM_test_procedure.push(test_instructions('wm'));
-        WM_test_procedure = WM_test_procedure.concat(build_post_PILT_test(WM_test_structure, "wm"));    
-    } else {
-        WM_test_procedure = [];
-    }
+    const WM_test_procedure = generateTestProcedure(WM_test_structure, "wm");
 
     // LTM test block
-    let LTM_test_procedure;
-    if (LTM_test_structure != null) {
-        LTM_test_procedure = [];
-        LTM_test_procedure.push(test_instructions('ltm'));
-        LTM_test_procedure = LTM_test_procedure.concat(build_post_PILT_test(LTM_test_structure, "ltm"));    
-    } else {
-        LTM_test_procedure = [];
-    }
-    
+    const LTM_test_procedure = generateTestProcedure(LTM_test_structure, "ltm");    
 
 
     return {
