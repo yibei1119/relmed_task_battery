@@ -349,7 +349,10 @@ vigourTrials.forEach(trial => {
   });
 });
 
-experimentTimeline[0]["on_timeline_start"] = () => {updateState(`vigour_start_task`)}
+experimentTimeline[0]["on_timeline_start"] = () => {
+  updateState("no_resume_10_minutes");
+  updateState(`vigour_start_task`);
+}
 
 // Log-normal probability density function
 function logNormalPDF(x, mu, sigma) {
