@@ -14,6 +14,8 @@ global.window = {
 // Load questionnaire object-generating functions
 const questionnaires = require('../questionnaires.js')
 
+console.log(questionnaires)
+
 // Function to extract questionnaire data
 function extractQuestionnaireData(questionnaireFunc, name) {
     const questionnaire = questionnaireFunc(1, 1);
