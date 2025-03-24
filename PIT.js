@@ -162,7 +162,10 @@ PITtrialList.forEach(trial => {
   });
 });
 
-PITtrials[0]["on_timeline_start"] = () => {updateState(`pit_start_task`)};
+PITtrials[0]["on_timeline_start"] = () => {
+  updateState(`no_resume_10_minutes`);
+  updateState(`pit_start_task`);
+};
 
 function getSelectedPITtrial() {
   const raw_data = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial");
@@ -387,6 +390,6 @@ const PITinstructions = {
     }
   },
   on_timeline_start: () => {
-    updateState(`pit_start_instructions`)
+    updateState(`pit_start_instructions`);
   }
 }
