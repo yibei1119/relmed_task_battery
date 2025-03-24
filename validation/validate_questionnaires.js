@@ -8,7 +8,7 @@ global.jsPsychSurveyMultiChoice = "placeholder";
 
 // Placeholder for window
 global.window = {
-    session: "wk0",  // Define the properties you need here
+    session: "wk0"
 };
 
 // Load questionnaire object-generating functions
