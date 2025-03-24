@@ -38,16 +38,16 @@ jobs:
           if grep -q "$START_MARKER" README.md; then
             awk -v start="$START_MARKER" -v end="$END_MARKER" '
               $0 ~ start {print; while (getline && $0 !~ end) {}}
-              $0 ~ end {print ""; system("cat report.html"); print; next}
+              $0 ~ end {print ""; system("cat questionnaire_table.html"); print; next}
               {print}
             ' README.md > temp.md && mv temp.md README.md
           else
             # If markers do not exist, append them
             echo -e "\n$START_MARKER" >> README.md
-            cat report.html >> README.md
+            cat questionnaire_table.html >> README.md
             echo -e "\n$END_MARKER" >> README.md
           fi
-                    
+
       - name: Commit and push changes
         run: |
           git config --global user.name 'github-actions[bot]'
