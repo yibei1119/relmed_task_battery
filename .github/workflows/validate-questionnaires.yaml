@@ -18,9 +18,6 @@ jobs:
         with:
           node-version: 18  # Use LTS version of Node.js
 
-      - name: Install Dependencies (if needed)
-        run: npm install  # Installs dependencies if you have any, remove if not needed
-
       - name: Run Validation Script
         run: node validation/validate_questionnaires.js  # Runs your validation script (e.g., generating the table)
 
