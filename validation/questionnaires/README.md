@@ -41,15 +41,17 @@
             <td>GAD7_Q7</td><td>Feeling afraid as if something awful might happen</td>
         </tr></table><br>
 <h3>WSAS</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>WSAS_Q0</td><td rowspan = "5">Likert</td><td>Because of my depression my <b>ability to work</b> is impaired. '0' means 'not at all impaired' and '8' means very severely impaired to the point I can't work.</td><td rowspan = "5">0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
+            <td>WSAS_Q0</td><td>Likert</td><td>Because of my depression my <b>ability to work</b> is impaired. '0' means 'not at all impaired' and '8' means very severely impaired to the point I can't work.</td><td>0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
         </tr><tr>
-            <td>WSAS_Q1</td><td>Because of my depression my <b>home management</b> (cleaning, tidying, shopping, cooking, looking after home or children, paying bills) is impaired.</td>
+            <td>WSAS_Q1</td><td>Likert</td><td>Because of my depression my <b>home management</b> (cleaning, tidying, shopping, cooking, looking after home or children, paying bills) is impaired.</td><td>0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
         </tr><tr>
-            <td>WSAS_Q2</td><td>Because of my depression my <b>social leisure activities</b> (with other people e.g. parties, bars, clubs, outings, visits, dating, home entertaining) are impaired.</td>
+            <td>WSAS_Q2</td><td>Likert</td><td>Because of my depression my <b>social leisure activities</b> (with other people e.g. parties, bars, clubs, outings, visits, dating, home entertaining) are impaired.</td><td>0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
         </tr><tr>
-            <td>WSAS_Q3</td><td>Because of my depression, my <b>private leisure activities</b> (done alone, such as reading, gardening, collecting, sewing, walking alone) are impaired.</td>
+            <td>WSAS_Q3</td><td>Likert</td><td>Because of my depression, my <b>private leisure activities</b> (done alone, such as reading, gardening, collecting, sewing, walking alone) are impaired.</td><td>0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
         </tr><tr>
-            <td>WSAS_Q4</td><td>Because of my depression, my ability to form and maintain <b>close relationships</b> with others, including those I live with, is impaired.</td>
+            <td>WSAS_Q4</td><td>Likert</td><td>Because of my depression, my ability to form and maintain <b>close relationships</b> with others, including those I live with, is impaired.</td><td>0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
+        </tr><tr>
+            <td>retired_check</td><td>Checkbox</td><td>If you're retired or choose not to have a job for reasons unrelated to your problem, tick here</td><td>true<br>false</td>
         </tr></table><br>
 <h3>ICECAP</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
             <td>ICECAP_Q0</td><td rowspan = "5">Multiple choice</td><td>Feeling settled and secure</td><td>I am able to feel settled and secure in <b>all</b> areas of my life<br>I am able to feel settled and secure in <b>many</b> areas of my life<br>I am able to feel settled and secure in <b>a few</b> areas of my life<br>I am <b>unable</b> to feel settled and secure in <b>any</b> areas of my life</td>
@@ -175,4 +177,4 @@
             <td>BFI_Q8</td><td>I see myself as someone who gets nervous easily</td>
         </tr><tr>
             <td>BFI_Q9</td><td>I see myself as someone who has an active imagination</td>
-        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
+        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
