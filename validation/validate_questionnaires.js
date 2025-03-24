@@ -53,12 +53,10 @@ function extractQuestionnaireData(questionnaireFunc, name) {
 }
 
 // Extract questionnaires
-let extracted_quests = {};
+let extracted_quests = [];
 for (let [key, func] of Object.entries(questionnaires)) {
-    extracted_quests[key] = extractQuestionnaireData(func, key);
+    extracted_quests.push(extractQuestionnaireData(func, key));
 }
-
-console.log(extracted_quests)
 
 // Function to generate HTML table per questionnaire
 function generateTableHTML(extracted_questionnaire) {
