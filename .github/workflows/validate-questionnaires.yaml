@@ -34,14 +34,20 @@ jobs:
           START_MARKER="<!-- START Validation Report -->"
           END_MARKER="<!-- END Validation Report -->"
 
-          # Read the existing README, replace the content between the markers, and write back the file
-          sed -i "/$START_MARKER/,/$END_MARKER/{/$START_MARKER/{p; r questionnaire_table.html" ;d}" README.md
-          
-          # If markers aren't found, append the content (this ensures the first time it will work)
-          if ! grep -q "$START_MARKER" README.md; then
-            echo -e "\n$START_MARKER\n$(cat questionnaire_table.html)\n$END_MARKER" >> README.md
+          # If markers exist, replace content between them
+          if grep -q "$START_MARKER" README.md; then
+            awk -v start="$START_MARKER" -v end="$END_MARKER" '
+              $0 ~ start {print; while (getline && $0 !~ end) {}}
+              $0 ~ end {print ""; system("cat report.html"); print; next}
+              {print}
+            ' README.md > temp.md && mv temp.md README.md
+          else
+            # If markers do not exist, append them
+            echo -e "\n$START_MARKER" >> README.md
+            cat report.html >> README.md
+            echo -e "\n$END_MARKER" >> README.md
           fi
-          
+                    
       - name: Commit and push changes
         run: |
           git config --global user.name 'github-actions[bot]'
