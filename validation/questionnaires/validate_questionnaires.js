@@ -11,6 +11,11 @@ global.window = {
     session: "wk0"
 };
 
+// Placeholder for document
+global.document = {
+    getElementById: () => {}
+}
+
 // Load questionnaire object-generating functions
 const questionnaires = require('../../questionnaires.js')
 
