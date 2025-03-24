@@ -17,12 +17,7 @@ const questionnaires = require('../../questionnaires.js')
 // Function to extract questionnaire data
 function extractQuestionnaireData(questionnaireFunc, name) {
     const questionnaire = questionnaireFunc(1, 1);
-    
-    // Extract scale if likert
-    const scale = "scale" in questionnaire ? "<ul><li>" + Object.entries(questionnaire.scale)
-    .map(([key, value]) => value === '' ? key : `${key}: ${value}`)
-    .join("</li><li>") + "</li></ul>" : null;
-    
+        
     // Extract items
     let items;
     if ("items" in questionnaire) {
@@ -31,7 +26,9 @@ function extractQuestionnaireData(questionnaireFunc, name) {
                 variable_name: `${name}_Q${index}`,
                 type: "Likert",
                 text: item,
-                possible_values: `0-${questionnaire.scale.length}`
+                possible_values: Object.entries(questionnaire.scale)
+                .map(([key, value]) => value === '' ? key : `${key}: ${value}`)
+                .join("<br>")
             }
         ))
     } else {
@@ -46,7 +43,6 @@ function extractQuestionnaireData(questionnaireFunc, name) {
     }
     
     return {
-        scale: scale,
         items: items,
         name: name
     }
@@ -63,7 +59,6 @@ function generateTableHTML(extracted_questionnaire) {
 
     // Unpack attributes
     const items = extracted_questionnaire.items;
-    const scale = extracted_questionnaire.scale;
     const name = extracted_questionnaire.name;
     
     // Check if there are any cells that can be merged
@@ -71,10 +66,6 @@ function generateTableHTML(extracted_questionnaire) {
     const same_type = items.every(obj => obj.type === items[0].type);
 
     let preamble = `<h3>${name}</h3>`
-
-    if (scale !== null){
-        preamble += `<p>Likert scale text:</p>${scale}`
-    }
 
     let table = "<table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr>";
 
