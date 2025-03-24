@@ -67,16 +67,31 @@ function prepare_PILT_instructions() {
             css_classes: ['instructions'],
             stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
                     <p>Let's try it out now! Flip a card on the next screen.</p>
-                    <p>Place your fingers on the left and right arrow keys as shown below, and press either one to continue.</p>
+                    <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
                     <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
                     `,
-            choices: ['arrowleft', 'arrowright'],
-            data: {trialphase: "pilt_instruction"}
+            // choices: ['arrowleft', 'arrowright'],
+            data: {trialphase: "pilt_instruction"},
+            response_ends_trial: false,
+            simulation_options: {simulate: false},
+            on_load: function() {
+                const start = performance.now();
+                const multiKeysListener = setupMultiKeysListener(
+                    ['ArrowRight', 'ArrowLeft'], 
+                    function() {
+                        jsPsych.finishTrial({
+                            rt: Math.floor(performance.now() - start)
+                        });
+                        // Clean up the event listeners to prevent persistining into the next trial
+                        multiKeysListener.cleanup();
+                    }
+                );
+            }
         },
         {
             timeline: build_PILT_task(
                 [[
-                    {
+                    {   
                         stimulus_left: demo_stimuli[0],
                         stimulus_right: demo_stimuli[1],
                         stimulus_middle: "",
@@ -123,11 +138,27 @@ function prepare_PILT_instructions() {
         stimulus: `<p>Let's practice collecting coins. \
             On the next screen, choose cards to collect as much money as you can.</p>
             <p>One of the picture cards has mostly high value coins behind it, while the other has mostly pennies behind it.</p>
-            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
+            <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
 `,
-        choices: ['arrowleft', 'arrowright'],
-        data: {trialphase: "pilt_instruction"}
+        // choices: ['arrowleft', 'arrowright'],
+        data: {trialphase: "pilt_instruction"},
+        response_ends_trial: false,
+        simulation_options: {simulate: false},
+        on_load: function() {
+            const start = performance.now();
+            const multiKeysListener = setupMultiKeysListener(
+                ['ArrowRight', 'ArrowLeft'], 
+                function() {
+                    jsPsych.finishTrial({
+                        rt: Math.floor(performance.now() - start)
+                    });
+                    // Clean up the event listeners to prevent persistining into the next trial
+                    multiKeysListener.cleanup();
+                }
+            );
+        }
+
     }]);
 
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
@@ -177,10 +208,26 @@ function prepare_PILT_instructions() {
                 stimulus: `<p>Now, let's practice minimizing your coin losses. 
                 On the next screen, choose cards to lose as little money as possible.</p>
                 <p>One of the picture cards will often break the high-value coins in your safe, while the other will mostly break only your pennies.</p>
-                <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start practising.</p>
+                <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
                 <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-                choices: ['arrowright', 'arrowleft'],
-                data: {trialphase: "pilt_instruction"} 
+                // choices: ['arrowright', 'arrowleft'],
+                data: {trialphase: "pilt_instruction"},
+                response_ends_trial: false,
+                simulation_options: {simulate: false},
+                on_load: function() {
+                    const start = performance.now();
+                    const multiKeysListener = setupMultiKeysListener(
+                        ['ArrowRight', 'ArrowLeft'], 
+                        function() {
+                            jsPsych.finishTrial({
+                                rt: Math.floor(performance.now() - start)
+                            });
+                            // Clean up the event listeners to prevent persistining into the next trial
+                            multiKeysListener.cleanup();
+                        }
+                    );
+                }
+        
             }
         ]);
     
@@ -314,7 +361,7 @@ function prepare_PILT_instructions() {
             stimulus: `<p>Great! Let's start playing for real.</p>
             <p>You will now complete ${window.session === "screening" ? "another round" : "20 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "15-20 minutes"} on average to complete.</p>
             ${window.session !== "screening" ? "<p>You will be able to take a short break between rounds, if you feel you need it.</p>" : ""}
-            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start playing.</p>
+            <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
             choices: ['arrowright', 'arrowleft'],
             data: {trialphase: "pilt_instruction"},
@@ -322,6 +369,21 @@ function prepare_PILT_instructions() {
                 jsPsych.data.addProperties({
                     pilt_n_warnings: 0
                 });
+            },
+            response_ends_trial: false,
+            simulation_options: {simulate: false},
+            on_load: function() {
+                const start = performance.now();
+                const multiKeysListener = setupMultiKeysListener(
+                    ['ArrowRight', 'ArrowLeft'], 
+                    function() {
+                        jsPsych.finishTrial({
+                            rt: Math.floor(performance.now() - start)
+                        });
+                        // Clean up the event listeners to prevent persistining into the next trial
+                        multiKeysListener.cleanup();
+                    }
+                );
             }
         }
     ]
