@@ -49,9 +49,13 @@ function extractQuestionnaireData(questionnaireFunc, name) {
 
     // Collect extra items
     if ("before_finish" in questionnaire){
+        let extra_item = questionnaire.before_finish({responses: {}});
+
+        extra_item.variable_name = name + "_" + extra_item.variable_name;
+
         items.push(
-            questionnaire.before_finish({responses: {}})
-        )
+            extra_item
+        );
     }
     
     return {
