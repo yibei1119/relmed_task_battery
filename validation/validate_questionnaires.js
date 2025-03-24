@@ -93,9 +93,9 @@ function generateTableHTML(extracted_questionnaire) {
     items.forEach(row => {
         table += `<tr>
             <td>${row.variable_name}</td>
-            <td>${row.type}</td>
+            ${same_type ? "" : "<td>" + row.type + "</td>"}
             <td>${row.text}</td>
-            <td>${row.possible_values}</td>
+            ${same_values ? "" : "<td>" + row.possible_values + "</td>"}
         </tr>`;
     });
     table += "</table>";
