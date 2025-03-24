@@ -51,7 +51,7 @@
         </tr><tr>
             <td>WSAS_Q4</td><td>Likert</td><td>Because of my depression, my ability to form and maintain <b>close relationships</b> with others, including those I live with, is impaired.</td><td>0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
         </tr><tr>
-            <td>retired_check</td><td>Checkbox</td><td>If you're retired or choose not to have a job for reasons unrelated to your problem, tick here</td><td>true<br>false</td>
+            <td>WSAS_retired_check</td><td>Checkbox</td><td>If you're retired or choose not to have a job for reasons unrelated to your problem, tick here</td><td>true<br>false</td>
         </tr></table><br>
 <h3>ICECAP</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
             <td>ICECAP_Q0</td><td rowspan = "5">Multiple choice</td><td>Feeling settled and secure</td><td>I am able to feel settled and secure in <b>all</b> areas of my life<br>I am able to feel settled and secure in <b>many</b> areas of my life<br>I am able to feel settled and secure in <b>a few</b> areas of my life<br>I am <b>unable</b> to feel settled and secure in <b>any</b> areas of my life</td>
@@ -177,4 +177,4 @@
             <td>BFI_Q8</td><td>I see myself as someone who gets nervous easily</td>
         </tr><tr>
             <td>BFI_Q9</td><td>I see myself as someone who has an active imagination</td>
-        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
+        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
