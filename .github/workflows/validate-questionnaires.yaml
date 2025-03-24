@@ -27,3 +27,25 @@ jobs:
         with:
           name: questionnaire_table  # Name of the artifact
           path: questionnaire_table.html  # Path to the generated file
+      
+      - name: Replace validation report in README
+        run: |
+          # Find the start and end markers for the report in the README
+          START_MARKER="<!-- START Validation Report -->"
+          END_MARKER="<!-- END Validation Report -->"
+
+          # Read the existing README, replace the content between the markers, and write back the file
+          sed -i "/$START_MARKER/,/$END_MARKER/{/$START_MARKER/{p; r questionnaire_table.html" ;d}" README.md
+          
+          # If markers aren't found, append the content (this ensures the first time it will work)
+          if ! grep -q "$START_MARKER" README.md; then
+            echo -e "\n$START_MARKER\n$(cat questionnaire_table.html)\n$END_MARKER" >> README.md
+          fi
+          
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git commit -m "Update README with latest validation report"
+          git push
