@@ -40,7 +40,7 @@ function extractQuestionnaireData(questionnaireFunc, name) {
                 variable_name: `${name}_Q${index}`,
                 type: "Multiple choice",
                 text: item.prompt,
-                possible_values: item.options.join(", ")
+                possible_values: item.options.join("<br>")
             }
         ))
     }
