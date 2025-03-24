@@ -2,8 +2,8 @@
 
 <!-- START Validation Report -->
 
-<h2>Questionnaire requirements</h2><h3>PHQ9</h3><p>Likert scale text:</p><ul><li>0: Not at all</li><li>1: Several days</li><li>2: More than half the days</li><li>3: Nearly every day</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>PHQ9_Q0</td><td rowspan = "10">Likert</td><td>Little interest or pleasure in doing things</td><td rowspan = "10">0-4</td>
+<h2>Questionnaire requirements</h2><h3>PHQ9</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>PHQ9_Q0</td><td rowspan = "10">Likert</td><td>Little interest or pleasure in doing things</td><td rowspan = "10">0: Not at all<br>1: Several days<br>2: More than half the days<br>3: Nearly every day</td>
         </tr><tr>
             <td>PHQ9_Q1</td><td>Feeling down, depressed, or hopeless</td>
         </tr><tr>
@@ -23,8 +23,8 @@
         </tr><tr>
             <td>PHQ9_Q9</td><td>Thoughts that you would be better off dead, or of hurting yourself in some way</td>
         </tr></table><br>
-<h3>GAD7</h3><p>Likert scale text:</p><ul><li>0: Not at all</li><li>1: Several days</li><li>2: More than half the days</li><li>3: Nearly every day</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>GAD7_Q0</td><td rowspan = "8">Likert</td><td>Feeling nervous, anxious or on edge</td><td rowspan = "8">0-4</td>
+<h3>GAD7</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>GAD7_Q0</td><td rowspan = "8">Likert</td><td>Feeling nervous, anxious or on edge</td><td rowspan = "8">0: Not at all<br>1: Several days<br>2: More than half the days<br>3: Nearly every day</td>
         </tr><tr>
             <td>GAD7_Q1</td><td>Not being able to stop or control worrying</td>
         </tr><tr>
@@ -40,8 +40,8 @@
         </tr><tr>
             <td>GAD7_Q7</td><td>Feeling afraid as if something awful might happen</td>
         </tr></table><br>
-<h3>WSAS</h3><p>Likert scale text:</p><ul><li>0: Not at all</li><li>1</li><li>2: Slightly</li><li>3</li><li>4: Definitely</li><li>5</li><li>6: Markedly</li><li>7</li><li>8: Very severely</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>WSAS_Q0</td><td rowspan = "5">Likert</td><td>Because of my depression my <b>ability to work</b> is impaired. '0' means 'not at all impaired' and '8' means very severely impaired to the point I can't work.</td><td rowspan = "5">0-9</td>
+<h3>WSAS</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>WSAS_Q0</td><td rowspan = "5">Likert</td><td>Because of my depression my <b>ability to work</b> is impaired. '0' means 'not at all impaired' and '8' means very severely impaired to the point I can't work.</td><td rowspan = "5">0: Not at all<br>1<br>2: Slightly<br>3<br>4: Definitely<br>5<br>6: Markedly<br>7<br>8: Very severely</td>
         </tr><tr>
             <td>WSAS_Q1</td><td>Because of my depression my <b>home management</b> (cleaning, tidying, shopping, cooking, looking after home or children, paying bills) is impaired.</td>
         </tr><tr>
@@ -62,8 +62,8 @@
         </tr><tr>
             <td>ICECAP_Q4</td><td>Enjoyment and pleasure</td><td>I can have <b>a lot</b> of enjoyment and pleasure<br>I can have <b>quite a lot</b> of enjoyment and pleasure<br>I can have a <b>little</b> enjoyment and pleasure<br>I <b>cannot</b> have <b>any</b> enjoyment and pleasure</td>
         </tr></table><br>
-<h3>PVSS</h3><p>Likert scale text:</p><ul><li>0: Extremely untrue of me</li><li>1: Very untrue of me</li><li>2: Moderately untrue of me</li><li>3: Slightly untrue of me</li><li>4: Neutral</li><li>5: Slightly true of me</li><li>6: Moderately true of me</li><li>7: Very true of me</li><li>8: Extremely true of me</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>PVSS_Q0</td><td rowspan = "22">Likert</td><td>I <u>savoured</u> my first bite of food after feeling hungry</td><td rowspan = "22">0-9</td>
+<h3>PVSS</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>PVSS_Q0</td><td rowspan = "22">Likert</td><td>I <u>savoured</u> my first bite of food after feeling hungry</td><td rowspan = "22">0: Extremely untrue of me<br>1: Very untrue of me<br>2: Moderately untrue of me<br>3: Slightly untrue of me<br>4: Neutral<br>5: Slightly true of me<br>6: Moderately true of me<br>7: Very true of me<br>8: Extremely true of me</td>
         </tr><tr>
             <td>PVSS_Q1</td><td>I <u>put energy</u> into activities I enjoy</td>
         </tr><tr>
@@ -107,8 +107,8 @@
         </tr><tr>
             <td>PVSS_Q21</td><td>I <u>went out of my way</u> to admire the beauty around me</td>
         </tr></table><br>
-<h3>BADS</h3><p>Likert scale text:</p><ul><li>0: Not at all</li><li>1</li><li>2: A little</li><li>3</li><li>4: A lot</li><li>5</li><li>6: Completely</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>BADS_Q0</td><td rowspan = "10">Likert</td><td>There were certain things I needed to do that I didn't do</td><td rowspan = "10">0-7</td>
+<h3>BADS</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>BADS_Q0</td><td rowspan = "10">Likert</td><td>There were certain things I needed to do that I didn't do</td><td rowspan = "10">0: Not at all<br>1<br>2: A little<br>3<br>4: A lot<br>5<br>6: Completely</td>
         </tr><tr>
             <td>BADS_Q1</td><td>I am content with the amount and types of things I did.</td>
         </tr><tr>
@@ -128,13 +128,13 @@
         </tr><tr>
             <td>BADS_Q9</td><td>I did things that were enjoyable.</td>
         </tr></table><br>
-<h3>hopelessness</h3><p>Likert scale text:</p><ul><li>0: Absolutely agree</li><li>1: Somewhat agree</li><li>2: Cannot say</li><li>3: Somewhat disagree</li><li>4: Absolutely disagree</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>hopelessness_Q0</td><td rowspan = "2">Likert</td><td>The future seems to me to be hopeless and I can't believe that things are changing for the better.</td><td rowspan = "2">0-5</td>
+<h3>hopelessness</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>hopelessness_Q0</td><td rowspan = "2">Likert</td><td>The future seems to me to be hopeless and I can't believe that things are changing for the better.</td><td rowspan = "2">0: Absolutely agree<br>1: Somewhat agree<br>2: Cannot say<br>3: Somewhat disagree<br>4: Absolutely disagree</td>
         </tr><tr>
             <td>hopelessness_Q1</td><td>I feel that it is impossible to reach the goals I would like to strive for.</td>
         </tr></table><br>
-<h3>RRS_brooding</h3><p>Likert scale text:</p><ul><li>0: Almost never</li><li>1: Sometimes</li><li>2: Often</li><li>3: Almost always</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>RRS_brooding_Q0</td><td rowspan = "5">Likert</td><td>think "What am I doing to deserve this?"</td><td rowspan = "5">0-4</td>
+<h3>RRS_brooding</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>RRS_brooding_Q0</td><td rowspan = "5">Likert</td><td>think "What am I doing to deserve this?"</td><td rowspan = "5">0: Almost never<br>1: Sometimes<br>2: Often<br>3: Almost always</td>
         </tr><tr>
             <td>RRS_brooding_Q1</td><td>think "Why do I always react this way?"</td>
         </tr><tr>
@@ -144,8 +144,8 @@
         </tr><tr>
             <td>RRS_brooding_Q4</td><td>think "Why can't I handle things better?"</td>
         </tr></table><br>
-<h3>PERS_negAct</h3><p>Likert scale text:</p><ul><li>0: Very unlike me</li><li>1: Somewhat unlike me</li><li>2: Neither like nor unlike me</li><li>3: Somewhat like me</li><li>4: Very like me</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>PERS_negAct_Q0</td><td rowspan = "5">Likert</td><td>I tend to get upset very easily</td><td rowspan = "5">0-5</td>
+<h3>PERS_negAct</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>PERS_negAct_Q0</td><td rowspan = "5">Likert</td><td>I tend to get upset very easily</td><td rowspan = "5">0: Very unlike me<br>1: Somewhat unlike me<br>2: Neither like nor unlike me<br>3: Somewhat like me<br>4: Very like me</td>
         </tr><tr>
             <td>PERS_negAct_Q1</td><td>I tend to get disappointed very easily</td>
         </tr><tr>
@@ -155,8 +155,8 @@
         </tr><tr>
             <td>PERS_negAct_Q4</td><td>I tend to get pessimistic about negative things very quickly</td>
         </tr></table><br>
-<h3>BFI</h3><p>Likert scale text:</p><ul><li>0: Disagree strongly</li><li>1: Disagree a little</li><li>2: Neither agree nor disagree</li><li>3: Agree a little</li><li>4: Agree strongly</li></ul><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
-            <td>BFI_Q0</td><td rowspan = "10">Likert</td><td>I see myself as someone who is reserved</td><td rowspan = "10">0-5</td>
+<h3>BFI</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
+            <td>BFI_Q0</td><td rowspan = "10">Likert</td><td>I see myself as someone who is reserved</td><td rowspan = "10">0: Disagree strongly<br>1: Disagree a little<br>2: Neither agree nor disagree<br>3: Agree a little<br>4: Agree strongly</td>
         </tr><tr>
             <td>BFI_Q1</td><td>I see myself as someone who is generally trusting</td>
         </tr><tr>
@@ -175,4 +175,4 @@
             <td>BFI_Q8</td><td>I see myself as someone who gets nervous easily</td>
         </tr><tr>
             <td>BFI_Q9</td><td>I see myself as someone who has an active imagination</td>
-        </tr></table>        </tr></table><!-- END Validation Report -->
+        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
