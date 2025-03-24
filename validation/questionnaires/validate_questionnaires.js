@@ -43,7 +43,7 @@ function extractQuestionnaireData(questionnaireFunc, name) {
     }
 
     // Collect extra items
-    if (before_finish in questionnaire){
+    if ("before_finish" in questionnaire){
         items.push(
             questionnaire.before_finish({responses: {}})
         )
