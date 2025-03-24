@@ -6,6 +6,11 @@ global.jsPsychInstructions = "placeholder";
 global.jsPsychSurveyTemplate = "placeholder";
 global.jsPsychSurveyMultiChoice = "placeholder";
 
+// Placeholder for window
+global.window = {
+    session: "wk0",  // Define the properties you need here
+};
+
 // Load questionnaire object-generating functions
 const questionnaires = require('../questionnaires.js')
 
