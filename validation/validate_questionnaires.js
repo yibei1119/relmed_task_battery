@@ -2,7 +2,7 @@
 const fs = require('fs');
 
 // Load jsPsych
-const jsPsych = require('../jspsych/jspsych.js');
+require('../jspsych/jspsych.js');
 
 // Load plugins
 require('../jspsych/plugin-survey-multi-choice.js'); 
