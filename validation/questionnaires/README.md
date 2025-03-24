@@ -3,7 +3,7 @@
 ### To do
 - [x] Requirement table
 - [ ] Validate display under different browsers and resolutions
-- [ ] Validate that choices are being outputted corectly as preprocessed data, for a distribution of agents.
+- [ ] Validate that choices are being outputted corectly as preprocessed data, for a distribution of agents and for each session.
 
 <!-- START Validation Report -->
 
