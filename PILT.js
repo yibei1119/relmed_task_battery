@@ -326,6 +326,11 @@ const coin_lottery = {
         // Normalize and return
         let sum = weightedSum.reduce((acc, value) => acc + value, 0);
         return weightedSum.map(value => value / sum);
+    },
+    on_finish: (data) => {
+        const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
+
+        postToParent({bonus: bonus});
     }
 }
 
