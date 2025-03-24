@@ -129,7 +129,7 @@
                 "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
                 "occluding_clouds.png", "PILT_keys.jpg", "WM_keys.jpg"
             ].map(s => "imgs/" + s),
-            window.session === "screening"? [] : ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
+            ["screening", "wk6", "wk8", "wk52"].includes(window.session) ? [] : ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
             ].flat(),
             post_trial_gap: 800,
             on_finish: () => {updateState("load_successful")}
