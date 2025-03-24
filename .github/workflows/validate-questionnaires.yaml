@@ -20,7 +20,7 @@ jobs:
           node-version: 18  # Use LTS version of Node.js
 
       - name: Run Validation Script
-        run: node validation/validate_questionnaires.js  # Runs your validation script (e.g., generating the table)
+        run: node validation/questionnaires/validate_questionnaires.js
 
       - name: Upload HTML Table as Artifact
         uses: actions/upload-artifact@v4
