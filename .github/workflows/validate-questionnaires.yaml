@@ -40,7 +40,7 @@ jobs:
               $0 ~ start {print; while (getline && $0 !~ end) {}}
               $0 ~ end {print ""; system("cat questionnaire_table.html"); print; next}
               {print}
-            ' README.md > temp.md && mv temp.md README.md
+            ' README.md > temp.md && mv temp.md validation/questionnaires/README.md
           else
             # If markers do not exist, append them
             echo -e "\n$START_MARKER" >> README.md
@@ -52,6 +52,6 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add README.md
-          git commit -m "Update README with latest validation report"
+          git add validation/questionnaires/README.md
+          git commit -m "Update questionnaire README with latest validation report"
           git push
