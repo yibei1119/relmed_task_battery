@@ -238,7 +238,11 @@ var questionnaire_WSAS = (i,total) => {
         },
         before_finish: (data) => {
             let checkbox = document.getElementById("retiredCheck");
-            data['responses']['retired_check'] = checkbox.checked;
+
+            // When running in node.js, checkbox == null
+            if (checkbox !== null){
+                data['responses']['retired_check'] = checkbox.checked;
+            }
             
             // Return details for questionnaire requirement document
             return {
