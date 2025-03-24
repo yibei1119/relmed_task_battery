@@ -83,9 +83,9 @@ function generateTableHTML(extracted_questionnaire) {
         first_row = items.shift()
         table += `<tr>
             <td>${first_row.variable_name}</td>
-            ${same_type ? `<td rowspan = "${items.length}">${first_row.type}</td>` : "<td>" + first_row.type + "</td>"}
+            ${same_type ? `<td rowspan = "${items.length + 1}">${first_row.type}</td>` : "<td>" + first_row.type + "</td>"}
             <td>${first_row.text}</td>
-            ${same_values ? `<td rowspan = "${items.length}">${first_row.possible_values}</td>` : "<td>" + first_row.possible_values + "</td>"}
+            ${same_values ? `<td rowspan = "${items.length + 1}">${first_row.possible_values}</td>` : "<td>" + first_row.possible_values + "</td>"}
         </tr>`
     }
 
