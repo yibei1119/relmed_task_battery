@@ -9,12 +9,6 @@ require('../jspsych/plugin-survey-multi-choice.js');
 require('../plugin-survey-template.js'); 
 
 
-// Initialize jsPsych
-const jsPsych = initJsPsych({
-    display_element: 'display_element',
-});
-
-
 // Load questionnaire object-generating functions
 const questionnaires = require('../questionnaires.js')
 
