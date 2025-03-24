@@ -264,7 +264,7 @@ var questionnaire_ICECAP = (i,total) => {
 };
 
 var questionnaire_BFI = (i,total) => {
-    {
+    return {
         type: jsPsychSurveyTemplate,
         instructions: [`<h2>Questionnaire ${i} out of ${total}</h2>` +
             "<p>How well do the following statements describe your personality?</p>"
@@ -432,4 +432,22 @@ if (window.session === "screening"){
         questionnaire_RRS_brooding(8,9),
         questionnaire_PERS_negAct(9,9)
     );
+}
+
+
+// Export if run by node.js, for generating requirement document
+if (typeof module !== 'undefined' && module.exports) {
+    // Export for Node.js validation
+    module.exports = {
+        PHQ9: questionnaire_phq,
+        GAD7: questionnaire_gad,
+        WSAS: questionnaire_WSAS,
+        ICECAP: questionnaire_ICECAP,
+        PVSS: questionnaire_pvss,
+        BADS: questionnaire_BADS,
+        hopelessness: questionnaire_hopelessness,
+        RRS_brooding: questionnaire_RRS_brooding,
+        PERS_negAct: questionnaire_PERS_negAct,
+        BFI: questionnaire_BFI
+    };
 }
