@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "questionnaires.js"  # Runs when questionnaire file changes
-      - "validation/validate-questionnaires.js"  # Or when validation file changes
+      - "validation/validate_questionnaires.js"  # Or when validation file changes
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
