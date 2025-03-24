@@ -1,5 +1,10 @@
 # Questionnaire validation
 
+### To do
+- [x] Requirement table
+- [ ] Validate display under different browsers and resolutions
+- [ ] Validate that choices are being outputted corectly as preprocessed data, for a distribution of agents.
+
 <!-- START Validation Report -->
 
 <h2>Questionnaire requirements</h2><h3>PHQ9</h3><table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr><tr>
