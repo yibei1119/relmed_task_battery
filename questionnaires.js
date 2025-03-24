@@ -239,7 +239,14 @@ var questionnaire_WSAS = (i,total) => {
         before_finish: (data) => {
             let checkbox = document.getElementById("retiredCheck");
             data['responses']['retired_check'] = checkbox.checked;
-    
+            
+            // Return details for questionnaire requirement document
+            return {
+                variable_name: "retired_check",
+                type: "Checkbox",
+                text: 'If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here',
+                possible_values: "true<br>false"
+            }
         }
     };
 };
