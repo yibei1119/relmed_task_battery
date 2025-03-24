@@ -19,9 +19,9 @@ function extractQuestionnaireData(questionnaireFunc, name) {
     const questionnaire = questionnaireFunc(1, 1);
     
     // Extract scale if likert
-    const scale = "scale" in questionnaire ? Object.entries(questionnaire.scale)
+    const scale = "scale" in questionnaire ? "<ul><li>" + Object.entries(questionnaire.scale)
     .map(([key, value]) => value === '' ? key : `${key}: ${value}`)
-    .join(", ") : null;
+    .join("</li><li>") + "</li></ul>" : null;
     
     // Extract items
     let items;
@@ -73,7 +73,7 @@ function generateTableHTML(extracted_questionnaire) {
     let preamble = `<h2>${name}</h2>`
 
     if (scale !== null){
-        preamble += `<p>Likert scale text: ${scale}</p>`
+        preamble += `<p>Likert scale text:</p>${scale}`
     }
 
     let table = "<table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr>";
