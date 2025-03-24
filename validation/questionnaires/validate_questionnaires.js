@@ -70,7 +70,7 @@ function generateTableHTML(extracted_questionnaire) {
     const same_values = items.every(obj => obj.possible_values === items[0].possible_values);
     const same_type = items.every(obj => obj.type === items[0].type);
 
-    let preamble = `<h2>${name}</h2>`
+    let preamble = `<h3>${name}</h3>`
 
     if (scale !== null){
         preamble += `<p>Likert scale text:</p>${scale}`
@@ -97,7 +97,7 @@ function generateTableHTML(extracted_questionnaire) {
 }
 
 // Generate HTML
-let htmlContent = "<h1>RELMED trial 1 questionnaire requirements</h1>";
+let htmlContent = "<h2>Questionnaire requirements</h2>";
 
 htmlContent += extracted_quests.map(generateTableHTML).join('<br>\n');
 
