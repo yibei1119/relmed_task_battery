@@ -35,17 +35,17 @@ jobs:
           END_MARKER="<!-- END Validation Report -->"
 
           # If markers exist, replace content between them
-          if grep -q "$START_MARKER" README.md; then
+          if grep -q "$START_MARKER" validation/questionnaires/README.md; then
             awk -v start="$START_MARKER" -v end="$END_MARKER" '
               $0 ~ start {print; while (getline && $0 !~ end) {}}
               $0 ~ end {print ""; system("cat questionnaire_table.html"); print; next}
               {print}
-            ' README.md > temp.md && mv temp.md validation/questionnaires/README.md
+            ' validation/questionnaires/README.md > temp.md && mv temp.md validation/questionnaires/README.md
           else
             # If markers do not exist, append them
-            echo -e "\n$START_MARKER" >> README.md
-            cat questionnaire_table.html >> README.md
-            echo -e "\n$END_MARKER" >> README.md
+            echo -e "\n$START_MARKER" >> validation/questionnaires/README.md
+            cat questionnaire_table.html >> validation/questionnaires/README.md
+            echo -e "\n$END_MARKER" >> validation/questionnaires/README.md
           fi
 
       - name: Commit and push changes
