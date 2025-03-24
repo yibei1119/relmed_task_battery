@@ -390,7 +390,6 @@ const PITinstructions = {
     }
   },
   on_timeline_start: () => {
-    updateState(`no_resume_10_minutes`);
     updateState(`pit_start_instructions`);
   }
 }

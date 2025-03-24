@@ -386,7 +386,6 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
                     const block = jsPsych.evaluateTimelineVariable('block');
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
-                        updateState("no_resume_10_minutes");
                         updateState(`${task_name}_start_block_${block}`)
                     }
                 }
@@ -507,7 +506,6 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     if (PILT_structure != null){
         let PILT_blocks = build_PILT_task(PILT_structure);
         PILT_blocks[0]["on_start"] = () => {
-            updateState("no_resume_10_minutes");
             updateState("pilt_task_start")
         };
         PILT_procedure = PILT_procedure.concat(PILT_blocks);    
@@ -554,7 +552,6 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     if (LTM_structure != null) {
         let LTM_blocks = build_PILT_task(LTM_structure, true, "ltm");
         LTM_blocks[0]["on_start"] = () => {
-            updateState("no_resume_10_minutes");
             updateState("ltm_task_start");
         };
         LTM_procedure = LTM_instructions.concat(LTM_blocks);    
