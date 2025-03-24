@@ -1,14 +1,6 @@
 // Create a requirement document for the questionnaires
 const fs = require('fs');
 
-// Load jsPsych
-require('../jspsych/jspsych.js');
-
-// Load plugins
-require('../jspsych/plugin-survey-multi-choice.js'); 
-require('../plugin-survey-template.js'); 
-
-
 // Load questionnaire object-generating functions
 const questionnaires = require('../questionnaires.js')
 
@@ -23,7 +15,7 @@ function extractQuestionnaireData(questionnaireFunc, name) {
     
     // Extract items
     let items;
-    if (questionnaire.type === jsPsychSurveyTemplate) {
+    if ("items" in questionnaire) {
         items = questionnaire.items.map((item, index) => (
             {
                 variable_name: `${name}_Q${index}`,
@@ -33,10 +25,6 @@ function extractQuestionnaireData(questionnaireFunc, name) {
             }
         ))
     } else {
-        if (questionnaire.type !== jsPsychSurveyMultiChoice) {
-            throw new Error("Expecting multiple choice plugin");
-        }
-
         items = questionnaire.questions.map((item, index) => (
             {
                 variable_name: `${name}_Q${index}`,
