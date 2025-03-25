@@ -14,6 +14,17 @@
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
             display_element: 'display_element',
+            on_trial_finishe: (data) => {
+
+                // If there are events
+                if (window.start_pause_events.length !== 0){
+                    // Add to data
+                    data.start_pause_events = window.start_pause_events
+
+                    // Clear buffer
+                    window.start_pause_events = [];
+                }
+            }
         });
         
         // Get condition from URL, all caps are prolific, lowercase are ours
@@ -24,6 +35,7 @@
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
+        
         // Save participant variables to data
         jsPsych.data.addProperties({
             participant_id: window.participantID,
@@ -31,8 +43,12 @@
             n_warnings: 0,
             version: "0.2",
             task: window.task,
-            pre_kick_out_warned: false,
+            pre_kick_out_warned: false
         })
+
+        // Buffer for experiment start / pause events
+        window.start_pause_events = [];
+
     </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
     <script src="jspsych/plugin-html-button-response.js"></script>
@@ -478,11 +494,13 @@
 
                 if (msg === "pause_task"){
                     console.log("Experiment paused")
+                    window.start_pause_events.push({time: jsPsych.getTotalTime(), event: "pause"})
                     jsPsych.pauseExperiment()
                 }
 
                 if (msg === "resume_task"){
                     console.log("Experiment resumed")
+                    window.start_pause_events.push({time: jsPsych.getTotalTime(), event: "resume"})
                     jsPsych.resumeExperiment()
                 }
             }, false);
