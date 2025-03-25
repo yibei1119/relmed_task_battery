@@ -35,7 +35,7 @@ Data is written to REDCap via a call to an AWS lamda function.
 
 <!-- LOADING-TEST-RESULTS -->
 
-### 🧪 Test Results
+### 🧪 Can all tasks load?
 
 | Session | Task | Status |
 |---------|------|--------|
