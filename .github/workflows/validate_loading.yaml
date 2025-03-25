@@ -3,28 +3,25 @@ name: Playwright Tests
 on:
   push:
   pull_request:
-  workflow_dispatch:
 
 jobs:
   test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: npm install playwright
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18  # Use a supported Node.js version
 
-      - name: Run Playwright Tests
-        run: npx playwright test validation/ || true  # Continue even if tests fail
+      - name: Install dependencies
+        run: npm install
 
-      - name: Generate README Update
-        run: node validation/update-readme-loading.js
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "Update loading test results in README" || exit 0
-          git push
+      - name: Run Playwright tests
+        run: npx playwright test
