@@ -14,15 +14,16 @@
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
             display_element: 'display_element',
-            on_trial_finishe: (data) => {
+            on_trial_finish: (data) => {
 
                 // If there are events
-                if (window.start_pause_events.length !== 0){
+                if (window.pause_resume_events.length !== 0){
+
                     // Add to data
-                    data.start_pause_events = window.start_pause_events
+                    data.pause_resume_events = window.pause_resume_events
 
                     // Clear buffer
-                    window.start_pause_events = [];
+                    window.pause_resume_events = [];
                 }
             }
         });
@@ -47,7 +48,7 @@
         })
 
         // Buffer for experiment start / pause events
-        window.start_pause_events = [];
+        window.pause_resume_events = [];
 
     </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
@@ -494,13 +495,13 @@
 
                 if (msg === "pause_task"){
                     console.log("Experiment paused")
-                    window.start_pause_events.push({time: jsPsych.getTotalTime(), event: "pause"})
+                    window.pause_resume_events.push({time: jsPsych.getTotalTime(), event: "pause"})
                     jsPsych.pauseExperiment()
                 }
 
                 if (msg === "resume_task"){
                     console.log("Experiment resumed")
-                    window.start_pause_events.push({time: jsPsych.getTotalTime(), event: "resume"})
+                    window.pause_resume_events.push({time: jsPsych.getTotalTime(), event: "resume"})
                     jsPsych.resumeExperiment()
                 }
             }, false);
