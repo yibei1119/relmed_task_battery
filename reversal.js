@@ -130,14 +130,29 @@ const reversal_instructions = [
         css_classes: ['instructions'],
         stimulus: `
             <p>You will now play the squirrel game for about ${rev_n_trials == 50 ? 3 : 5} minutes without breaks.</p>
-            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start.</p>
+            <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-        choices: ['arrowleft', 'arrowright'],
+        // choices: ['arrowleft', 'arrowright'],
         data: {trialphase: "reversal_instruction"},
         on_finish: () => {
             jsPsych.data.addProperties({
                 reversal_n_warnings: 0
             });
         },
+        response_ends_trial: false,
+        simulation_options: {simulate: false},
+        on_load: function() {
+            const start = performance.now();
+            const multiKeysListener = setupMultiKeysListener(
+                ['ArrowRight', 'ArrowLeft'], 
+                function() {
+                    jsPsych.finishTrial({
+                        rt: Math.floor(performance.now() - start)
+                    });
+                    // Clean up the event listeners to prevent persistining into the next trial
+                    multiKeysListener.cleanup();
+                }
+            );
+        }
     },
 ]
