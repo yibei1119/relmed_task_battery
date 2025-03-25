@@ -3,6 +3,57 @@ window.pilt_test_confidence_every = 4;
 
 window.skipThisBlock = false;
 
+// First preload for task
+const preload_PILT = {
+    type: jsPsychPreload,
+    images: [
+        [
+            "1penny.png", "1pennybroken.png",
+            "1pound.png", "1poundbroken.png",
+            "50pence.png", "50pencebroken.png",
+            "safe.png","PILT_keys.jpg", "WM_keys.jpg"
+        ].map(s => "imgs/" + s),
+        window.sesssion === "screening" ? [] : [
+            "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
+        ].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
+    ],
+    post_trial_gap: 800,
+    data: {
+        trialphase: "preload_PILT"
+    },
+    on_finish: () => {
+
+        // Report to tests
+        console.log("load_successful")
+
+        // Report to relmed.ac.uk
+        postToParent({message: "load_successful"})
+    }
+}
+
+const preload_wm_ltm = {
+    type: jsPsychPreload,
+    images: [
+        "1penny.png", 
+        "1pound.png", 
+        "50pence.png",
+        "safe.png", "WM_keys.jpg"
+    ].map(s => "imgs/" + s),
+    post_trial_gap: 800,
+    data: {
+        trialphase: "preload_WM_LTM"
+    },
+    on_finish: () => {
+
+        // Report to tests
+        console.log("load_successful")
+
+        // Report to relmed.ac.uk
+        postToParent({message: "load_successful"})
+    }
+}
+
+
 // Message between blocks
 const inter_block_msg = {
     type: jsPsychHtmlKeyboardResponse,

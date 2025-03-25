@@ -135,40 +135,13 @@
             });
         }
     }
-    const preliminary_checks = [
-        {
-            type: jsPsychPreload,
-            images: [[
-                "1penny.png", "1pennybroken.png",
-                "1pound.png", "1poundbroken.png",
-                "50pence.png", "50pencebroken.png",
-                "safe.png",
-                "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
-                "occluding_clouds.png", "PILT_keys.jpg", "WM_keys.jpg"
-            ].map(s => "imgs/" + s),
-            ["screening", "wk6", "wk8", "wk52"].includes(window.session) ? [] : ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
-            ].flat(),
-            post_trial_gap: 800,
-            on_finish: () => {
 
-                // Report to tests
-                console.log("load_successful")
-
-                // Report to relmed.ac.uk
-                postToParent({message: "load_successful"})
-            }
-        },
-    ]
-
-    // Fullscreen prompt for prolific
-    if (window.context === "prolific"){
-        preliminary_checks.push({
-            type: jsPsychFullscreen,
-            fullscreen_mode: true,
-            css_classes: ['instructions'],
-            message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
-        });
-    }
+    const enter_fullscreen = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: true,
+        css_classes: ['instructions'],
+        message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
+    };
     
     let welcome_txt;
     if (window.context === "prolific"){
@@ -234,8 +207,10 @@
         // Save start time
         procedure = procedure.concat(save_start_time);
 
-        // Preliminary screen checks and load images
-        procedure = procedure.concat(preliminary_checks);
+        // Fullscreen prompt
+        if (window.context === "prolific"){
+            procedure.push(enter_fullscreen);
+        }
 
         // Create card choosing timelines
         if (["pilt-to-test", "pilt", "wm", "ltm", "wm_only", "screening"].includes(window.task)){
@@ -244,6 +219,10 @@
 
         if (window.task === "pilt-to-test") {
 
+            // Preload
+            procedure.push(preload_PILT);
+
+            // Welcome message
             procedure.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
@@ -267,6 +246,7 @@
 
             // Add vigour task timeline
             const vigourTimeline = [
+                preload_vigour,
                 vigourInstructions,
                 ...experimentTimeline,
             ];
@@ -303,6 +283,9 @@
         }
 
         if (window.task == "pilt") {
+            // Preload
+            procedure.push(preload_PILT);
+
             procedure.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
@@ -323,6 +306,9 @@
         }
 
         if (window.task == "vigour") {
+            // Preload
+            procedure.push(preload_vigour);
+            
             // Add max press rate test
             procedure = procedure.concat(maxPressTimeline);
 
@@ -341,6 +327,7 @@
         if (window.task == "pit") {
             // Add PIT timeline: instructions, trials, bonus
             const PITtimeline = [
+                preload_vigour,
                 PITinstructions,
                 PITtrials
             ];
@@ -352,6 +339,9 @@
         }
 
         if (window.task == "ltm") {
+            // Preload
+            procedure.push(preload_wm_ltm);
+
             // Add LTM block
             procedure.push(PILT_tasks.LTM_procedure);
             procedure = procedure.concat([
@@ -364,6 +354,9 @@
         }
         
         if (window.task === "wm") {
+            // Preload
+            procedure.push(preload_wm_ltm);
+
             // Add LTM block
             procedure.push(PILT_tasks.LTM_procedure);
             procedure = procedure.concat([
@@ -391,6 +384,9 @@
         }
 
         if (window.task === "wm_only") {
+            // Preload
+            procedure.push(preload_wm_ltm);
+
             // Add WM block
             procedure.push(PILT_tasks.WM_procedure);
             procedure = procedure.concat([
@@ -404,6 +400,10 @@
 
 
         if (window.task === "reversal") {
+
+            // Preload
+            procedure.push(reversal_preload);
+            
             // Welcome message
             procedure.push(welcome_msgs);
 
