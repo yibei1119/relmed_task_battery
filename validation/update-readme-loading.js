@@ -24,7 +24,7 @@ let readme = fs.readFileSync(readmeFile, "utf8");
 
 // Replace the existing test results section (or add it)
 const marker = "<!-- LOADING-TEST-RESULTS -->";
-const newSection = `${marker}\n\n### 🧪 Test Results\n\n${resultTable}\n${marker}`;
+const newSection = `${marker}\n\n### 🧪 Can all tasks load?\n\n${resultTable}\n${marker}`;
 
 if (readme.includes(marker)) {
     readme = readme.replace(new RegExp(`${marker}[\\s\\S]*${marker}`), newSection);
