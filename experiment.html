@@ -305,6 +305,11 @@
             // Add max press rate test
             procedure = procedure.concat(maxPressTimeline);
 
+            // Add vigour task timeline
+            const vigourTimeline = [
+                vigourInstructions,
+                ...experimentTimeline,
+            ];
             procedure = procedure.concat(vigourTimeline);
             procedure = procedure.concat([
                 acceptability_intro,
