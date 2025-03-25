@@ -39,6 +39,8 @@ Data is written to REDCap via a call to an AWS lamda function.
 
 | Session | Task | Status |
 |---------|------|--------|
+| screening | screening | ✅ Success |
+| wk0 | pilt-to-test | ✅ Success |
 | wk0 | reversal | ✅ Success |
 | wk0 | control | ✅ Success |
 | wk0 | wm | ✅ Success |
