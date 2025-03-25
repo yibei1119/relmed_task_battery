@@ -14,7 +14,8 @@ const reversal_preload = {
         "imgs/squirrels_bg.png",
         "imgs/squirrels_fg.png",
         "imgs/1penny.png",
-        "imgs/1pound.png"
+        "imgs/1pound.png",
+        "imgs/PILT_keys.jpg"
     ],
     post_trial_gap: 400,
     data: {
