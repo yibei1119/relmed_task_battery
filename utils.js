@@ -140,7 +140,7 @@ const kick_out = {
   
   // Function that checks for fullscreen
 function check_fullscreen(){
-    if (window.debug){
+    if (window.debug || window.context === "relmed"){
         return false
     }
 

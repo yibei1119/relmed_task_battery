@@ -141,13 +141,17 @@
                 postToParent({message: "load_successful"})
             }
         },
-        {
+    ]
+
+    // Fullscreen prompt for prolific
+    if (window.context === "relmed"){
+        preliminary_checks.push({
             type: jsPsychFullscreen,
             fullscreen_mode: true,
             css_classes: ['instructions'],
             message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
-        }
-    ]
+        });
+    }
     
     let welcome_txt;
     if (window.context === "prolific"){
