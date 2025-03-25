@@ -70,7 +70,9 @@ if (window.context == "relmed") {
     kick_out_warning = {
         type: jsPsychHtmlKeyboardResponse,
         conditional_function: function() {
-          if (jsPsych.data.get().last(1).select('n_warnings').values[0] == window.maxWarnings) {
+            const n_warnings = jsPsych.data.get().last(1).select('n_warnings').values[0];
+            const warned = jsPsych.data.get().select('trialphase').values.includes("speed-accuracy");
+          if ((n_warnings == window.maxWarnings) && (!warned)) {
             return true;
           } else {
             return false;

@@ -1,0 +1,16 @@
+{
+  "name": "relmed_trial1",
+  "version": "1.0.0",
+  "description": "This reposistory hosts the experiment website for the eighth pilot for RELMED (Internal name Pilot 8?), which includes PILT, Vigour, PIT, reversal, WM, control, and questionnaires. The task is coded with jsPsych.",
+  "main": "PILT.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.51.1",
+    "playwright": "^1.51.1"
+  }
+}

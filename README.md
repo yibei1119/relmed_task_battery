@@ -31,3 +31,42 @@ Data is written to REDCap via a call to an AWS lamda function.
 └── lambda - AWS lambda function scripts/
     └── .
 ```
+
+
+<!-- LOADING-TEST-RESULTS -->
+
+### 🧪 Test Results
+
+| Session | Task | Status |
+|---------|------|--------|
+| screening | screening | ✅ Success |
+| wk0 | pilt-to-test | ✅ Success |
+| wk0 | reversal | ✅ Success |
+| wk0 | control | ✅ Success |
+| wk0 | wm | ✅ Success |
+| wk2 | pilt-to-test | ✅ Success |
+| wk2 | reversal | ✅ Success |
+| wk2 | control | ✅ Success |
+| wk2 | wm | ✅ Success |
+| wk4 | pilt-to-test | ✅ Success |
+| wk4 | reversal | ✅ Success |
+| wk4 | control | ✅ Success |
+| wk4 | wm | ✅ Success |
+| wk24 | pilt-to-test | ✅ Success |
+| wk24 | reversal | ✅ Success |
+| wk24 | control | ✅ Success |
+| wk24 | wm | ✅ Success |
+| wk28 | pilt-to-test | ✅ Success |
+| wk28 | reversal | ✅ Success |
+| wk28 | control | ✅ Success |
+| wk28 | wm | ✅ Success |
+| wk0 | quests | ✅ Success |
+| wk2 | quests | ✅ Success |
+| wk4 | quests | ✅ Success |
+| wk24 | quests | ✅ Success |
+| wk28 | quests | ✅ Success |
+| wk6 | quests | ✅ Success |
+| wk8 | quests | ✅ Success |
+| wk52 | quests | ✅ Success |
+
+<!-- LOADING-TEST-RESULTS -->

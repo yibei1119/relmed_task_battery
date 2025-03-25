@@ -6,3 +6,6 @@ Icon
 /jspsych_examples/
 /analysis
 relmed_vigour_task.code-workspace
+node_modules/
+package-lock.json
+test-results/
