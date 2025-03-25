@@ -436,6 +436,9 @@
         }
 
         if (window.task === "screening") {
+            // Preload
+            procedure.push(reversal_preload);
+
             // Welcome message
             procedure.push(welcome_msgs);
 
@@ -446,6 +449,9 @@
                 acceptability_intro,
                 acceptability_reversal
             ]);
+
+            // Preload
+            procedure.push(preload_PILT);
 
             procedure.push({
                 type: jsPsychInstructions,
