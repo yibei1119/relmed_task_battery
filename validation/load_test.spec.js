@@ -48,7 +48,6 @@ test.describe("Website Load Test", () => {
             const task = params.get("task") || "N/A";
 
             results.push({ session, task, passed });
-            console.log(results)
 
             // Save results after each test
             fs.writeFileSync("loading-test-results.json", JSON.stringify(results, null, 2));
