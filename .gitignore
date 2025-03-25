@@ -8,5 +8,4 @@ Icon
 relmed_vigour_task.code-workspace
 node_modules/
 package-lock.json
-package.json
 test-results/
