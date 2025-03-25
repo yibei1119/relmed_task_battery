@@ -31,9 +31,6 @@ const maxPressRateTrial = {
     },
     choices: 'NO_KEYS',
     data: {trialphase: 'max_press_rate'},
-    simulation_options: {
-        simulate: false
-    },
     on_start: function (trial) {
         if (window.participantID.includes("simulate")) {
             trial.trial_duration = 1000;
@@ -112,6 +109,11 @@ const maxPressRateTrial = {
         allow_held_key: false,
         minimum_valid_rt: 10
         });
+    },
+    on_finish: function (data) {
+        if (window.participantID.includes("simulate")) {
+            data.avgSpeed = 5.0;
+        }
     }
 };
 
