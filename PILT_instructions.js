@@ -317,10 +317,13 @@ function prepare_PILT_instructions() {
             },
             simulation_options: {
                 data: {
-                    response: {
+                    response: window.session === "screening" ? {
+                        Q0: `True`,
+                        Q1: `True`
+                    } : {
                         Q0: `True`,
                         Q1: `True`,
-                        Q2: `True`,
+                        Q2: `True`
                     }
                 }
             }   
