@@ -25,7 +25,8 @@
                     // Clear buffer
                     window.pause_resume_events = [];
                 }
-            }
+            },
+            on_close: saveDataREDCap
         });
         
         // Get condition from URL, all caps are prolific, lowercase are ours
@@ -432,6 +433,7 @@
 
         if (window.task === "quests"){
 
+            // Report loading successful
             procedure.push({
                 type: jsPsychCallFunction,
                 func: function() {
