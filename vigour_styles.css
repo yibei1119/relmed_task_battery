@@ -17,17 +17,19 @@
   justify-content: center;
 }
 
-#coin-container, #persist-coin-container {
-  position: absolute;
+#persist-coin-container {
+  position: fixed;
   display: flex;
   justify-content: center;
   pointer-events: none;
+  z-index: -1;
 }
 
 #coin-container {
   position: absolute;
   display: flex;
   justify-content: center;
+  pointer-events: none;
   height: 60%;
   width: 90%;
   top: 40%;
