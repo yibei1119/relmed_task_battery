@@ -380,6 +380,10 @@
             if (["wk24", "wk28"].includes(window.session)) {
                 // Add delay discounting timeline
                 procedure = procedure.concat(dd_timeline);
+
+                // Free text
+                procedure.push(openTextTimeline);
+
             }
         }
 
@@ -431,10 +435,10 @@
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
                 // Add delay discounting timeline
                 procedure = procedure.concat(dd_timeline);
-            }
 
-            // Free text
-            // procedure.push(openTextTimeline);
+                // Free text
+                procedure.push(openTextTimeline);
+            }
 
             // Add questionnaire timeline
             procedure = procedure.concat(questionnaires_timeline);
