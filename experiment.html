@@ -432,6 +432,17 @@
 
         if (window.task === "quests"){
 
+            procedure.push({
+                type: jsPsychCallFunction,
+                func: function() {
+                    // Report to tests
+                    console.log("load_successful")
+
+                    // Report to relmed.ac.uk
+                    postToParent({message: "load_successful"})
+                }
+            });
+
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
                 // Add delay discounting timeline
                 procedure = procedure.concat(dd_timeline);
