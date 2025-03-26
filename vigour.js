@@ -133,6 +133,29 @@ function observeResizing(elementId, callback) {
   }
 }
 
+// Function to create persistent coin container
+function createPersistentCoinContainer() {
+  // Check if it already exists
+  if (document.getElementById('persist-coin-container')) {
+    return;
+  }
+  
+  // Create the container
+  const persistContainer = document.createElement('div');
+  persistContainer.id = 'persist-coin-container';
+  document.body.appendChild(persistContainer);
+  
+  // Initialize position
+  updatePersistentCoinContainer();
+}
+
+function removePersistentCoinContainer() {
+  const persistContainer = document.getElementById('persist-coin-container');
+  if (persistContainer) {
+    persistContainer.remove();
+  }
+}
+
 // Update persistent coin container position based on coin container
 function updatePersistentCoinContainer() {
   const coinContainer = document.getElementById('coin-container');
@@ -380,6 +403,11 @@ vigourTrials.forEach(trial => {
 experimentTimeline[0]["on_timeline_start"] = () => {
   updateState("no_resume_10_minutes");
   updateState(`vigour_start_task`);
+  createPersistentCoinContainer();
+}
+
+experimentTimeline.at(-1)["on_timeline_finish"] = () => {
+  removePersistentCoinContainer();
 }
 
 // Log-normal probability density function
