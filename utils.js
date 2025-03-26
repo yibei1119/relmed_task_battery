@@ -192,6 +192,11 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
         postToParent(
             {
                 ...{ 
+                    record_id: window.participantID + "_" + window.module_start_time,
+                    participant_id: window.participantID,
+                    sitting_start_time: window.module_start_time,
+                    session: window.session,
+                    module: window.task,
                     data: jspsych_data 
                 },
                 ...extra_fields
@@ -208,7 +213,11 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     } else if (window.context === "prolific") {
 
         var redcap_record = JSON.stringify([{
-            participant_id: window.participantID + "_" + window.module_start_time,
+            record_id: window.participantID + "_" + window.module_start_time,
+            participant_id: window.participantID,
+            sitting_start_time: window.module_start_time,
+            session: window.session,
+            module: window.task,
             jspsych_data: jspsych_data
         }])
     
