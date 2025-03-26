@@ -70,7 +70,9 @@ if (window.context == "relmed") {
     kick_out_warning = {
         type: jsPsychHtmlKeyboardResponse,
         conditional_function: function() {
-          if (jsPsych.data.get().last(1).select('n_warnings').values[0] == window.maxWarnings) {
+            const n_warnings = jsPsych.data.get().last(1).select('n_warnings').values[0];
+            const warned = jsPsych.data.get().select('trialphase').values.includes("speed-accuracy");
+          if ((n_warnings == window.maxWarnings) && (!warned)) {
             return true;
           } else {
             return false;
@@ -138,7 +140,7 @@ const kick_out = {
   
   // Function that checks for fullscreen
 function check_fullscreen(){
-    if (window.debug){
+    if (window.debug || window.context === "relmed"){
         return false
     }
 
@@ -190,6 +192,11 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
         postToParent(
             {
                 ...{ 
+                    record_id: window.participantID + "_" + window.module_start_time,
+                    participant_id: window.participantID,
+                    sitting_start_time: window.module_start_time,
+                    session: window.session,
+                    module: window.task,
                     data: jspsych_data 
                 },
                 ...extra_fields
@@ -206,7 +213,11 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     } else if (window.context === "prolific") {
 
         var redcap_record = JSON.stringify([{
-            participant_id: window.participantID + "_" + window.module_start_time,
+            record_id: window.participantID + "_" + window.module_start_time,
+            participant_id: window.participantID,
+            sitting_start_time: window.module_start_time,
+            session: window.session,
+            module: window.task,
             jspsych_data: jspsych_data
         }])
     

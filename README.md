@@ -31,3 +31,22 @@ Data is written to REDCap via a call to an AWS lamda function.
 └── lambda - AWS lambda function scripts/
     └── .
 ```
+
+
+<!-- LOADING-TEST-RESULTS -->
+
+### 🧪 Can all tasks load?
+
+| Session | Task | Status |
+|---------|------|--------|
+| wk28 | wm | ✅ Success |
+| wk0 | quests | ✅ Success |
+| wk2 | quests | ✅ Success |
+| wk4 | quests | ✅ Success |
+| wk24 | quests | ✅ Success |
+| wk28 | quests | ✅ Success |
+| wk6 | quests | ✅ Success |
+| wk8 | quests | ✅ Success |
+| wk52 | quests | ✅ Success |
+
+<!-- LOADING-TEST-RESULTS -->

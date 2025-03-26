@@ -14,16 +14,30 @@
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
             display_element: 'display_element',
+            on_trial_finish: (data) => {
+
+                // If there are events
+                if (window.pause_resume_events.length !== 0){
+
+                    // Add to data
+                    data.pause_resume_events = window.pause_resume_events
+
+                    // Clear buffer
+                    window.pause_resume_events = [];
+                }
+            },
+            on_close: saveDataREDCap
         });
         
         // Get condition from URL, all caps are prolific, lowercase are ours
         window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
         window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
-        window.debug = window.participantID.includes("debug");
+        window.debug = window.participantID.includes("debug") || window.participantID.includes("TST");
         window.demo = window.participantID.includes("DEMO") | window.participantID.includes("STAF");
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
+        
         // Save participant variables to data
         jsPsych.data.addProperties({
             participant_id: window.participantID,
@@ -31,8 +45,12 @@
             n_warnings: 0,
             version: "0.2",
             task: window.task,
-            pre_kick_out_warned: false,
+            pre_kick_out_warned: false
         })
+
+        // Buffer for experiment start / pause events
+        window.pause_resume_events = [];
+
     </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
     <script src="jspsych/plugin-html-button-response.js"></script>
@@ -118,29 +136,13 @@
             });
         }
     }
-    const preliminary_checks = [
-        {
-            type: jsPsychPreload,
-            images: [[
-                "1penny.png", "1pennybroken.png",
-                "1pound.png", "1poundbroken.png",
-                "50pence.png", "50pencebroken.png",
-                "safe.png",
-                "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
-                "occluding_clouds.png", "PILT_keys.jpg", "WM_keys.jpg"
-            ].map(s => "imgs/" + s),
-            ["screening", "wk6", "wk8", "wk52"].includes(window.session) ? [] : ["PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
-            ].flat(),
-            post_trial_gap: 800,
-            on_finish: () => {updateState("load_successful")}
-        },
-        {
-            type: jsPsychFullscreen,
-            fullscreen_mode: true,
-            css_classes: ['instructions'],
-            message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
-        }
-    ]
+
+    const enter_fullscreen = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: true,
+        css_classes: ['instructions'],
+        message: "<p>This study runs in full screen mode.</p><p>Press the button below to continue.</p>"
+    };
     
     let welcome_txt;
     if (window.context === "prolific"){
@@ -206,8 +208,10 @@
         // Save start time
         procedure = procedure.concat(save_start_time);
 
-        // Preliminary screen checks and load images
-        procedure = procedure.concat(preliminary_checks);
+        // Fullscreen prompt
+        if (window.context === "prolific"){
+            procedure.push(enter_fullscreen);
+        }
 
         // Create card choosing timelines
         if (["pilt-to-test", "pilt", "wm", "ltm", "wm_only", "screening"].includes(window.task)){
@@ -216,6 +220,10 @@
 
         if (window.task === "pilt-to-test") {
 
+            // Preload
+            procedure.push(preload_PILT);
+
+            // Welcome message
             procedure.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
@@ -239,6 +247,7 @@
 
             // Add vigour task timeline
             const vigourTimeline = [
+                preload_vigour,
                 vigourInstructions,
                 ...experimentTimeline,
             ];
@@ -275,6 +284,9 @@
         }
 
         if (window.task == "pilt") {
+            // Preload
+            procedure.push(preload_PILT);
+
             procedure.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
@@ -295,9 +307,17 @@
         }
 
         if (window.task == "vigour") {
+            // Preload
+            procedure.push(preload_vigour);
+            
             // Add max press rate test
             procedure = procedure.concat(maxPressTimeline);
 
+            // Add vigour task timeline
+            const vigourTimeline = [
+                vigourInstructions,
+                ...experimentTimeline,
+            ];
             procedure = procedure.concat(vigourTimeline);
             procedure = procedure.concat([
                 acceptability_intro,
@@ -308,6 +328,7 @@
         if (window.task == "pit") {
             // Add PIT timeline: instructions, trials, bonus
             const PITtimeline = [
+                preload_vigour,
                 PITinstructions,
                 PITtrials
             ];
@@ -319,6 +340,9 @@
         }
 
         if (window.task == "ltm") {
+            // Preload
+            procedure.push(preload_wm_ltm);
+
             // Add LTM block
             procedure.push(PILT_tasks.LTM_procedure);
             procedure = procedure.concat([
@@ -331,6 +355,9 @@
         }
         
         if (window.task === "wm") {
+            // Preload
+            procedure.push(preload_wm_ltm);
+
             // Add LTM block
             procedure.push(PILT_tasks.LTM_procedure);
             procedure = procedure.concat([
@@ -354,10 +381,17 @@
             if (["wk24", "wk28"].includes(window.session)) {
                 // Add delay discounting timeline
                 procedure = procedure.concat(dd_timeline);
+
+                // Free text
+                procedure.push(openTextTimeline);
+
             }
         }
 
         if (window.task === "wm_only") {
+            // Preload
+            procedure.push(preload_wm_ltm);
+
             // Add WM block
             procedure.push(PILT_tasks.WM_procedure);
             procedure = procedure.concat([
@@ -371,6 +405,10 @@
 
 
         if (window.task === "reversal") {
+
+            // Preload
+            procedure.push(reversal_preload);
+            
             // Welcome message
             procedure.push(welcome_msgs);
 
@@ -388,21 +426,41 @@
             procedure.push(controlTimeline);
         }
 
+        if (window.task === "dd") {
+            // Add delay discounting timeline
+            procedure = procedure.concat(dd_timeline);
+        }
+
         if (window.task === "quests"){
+
+            // Report loading successful
+            procedure.push({
+                type: jsPsychCallFunction,
+                func: function() {
+                    // Report to tests
+                    console.log("load_successful")
+
+                    // Report to relmed.ac.uk
+                    postToParent({message: "load_successful"})
+                }
+            });
 
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
                 // Add delay discounting timeline
                 procedure = procedure.concat(dd_timeline);
-            }
 
-            // Free text
-            // procedure.push(openTextTimeline);
+                // Free text
+                procedure.push(openTextTimeline);
+            }
 
             // Add questionnaire timeline
             procedure = procedure.concat(questionnaires_timeline);
         }
 
         if (window.task === "screening") {
+            // Preload
+            procedure.push(reversal_preload);
+
             // Welcome message
             procedure.push(welcome_msgs);
 
@@ -413,6 +471,9 @@
                 acceptability_intro,
                 acceptability_reversal
             ]);
+
+            // Preload
+            procedure.push(preload_PILT);
 
             procedure.push({
                 type: jsPsychInstructions,
@@ -439,7 +500,7 @@
         // Final messages and data saving
         procedure = procedure.concat(end_experiment_msgs);
 
-          // Prevent right clicking and refreshing the page
+        // Prevent right clicking and refreshing the page
         if (!debug) {
             // Prevent right-click
             document.addEventListener('contextmenu', event => event.preventDefault());
@@ -452,6 +513,31 @@
 
             // Prompt before refresh
             window.addEventListener('beforeunload', preventRefresh);
+
+        }
+
+        // Add event listener for pause  / resume messages from relmed.ac.uk
+        if (window.context === "relmed"){
+            
+            window.addEventListener("message", (event) => {
+                // Check origin for security
+                if (!(["localhost:3000", "https://relmed.ac.uk"].includes(event.origin))) return;
+
+                const msg = event.data.message;
+                console.log("Message received from parent:", msg);
+
+                if (msg === "pause_task"){
+                    console.log("Experiment paused")
+                    window.pause_resume_events.push({time: jsPsych.getTotalTime(), event: "pause"})
+                    jsPsych.pauseExperiment()
+                }
+
+                if (msg === "resume_task"){
+                    console.log("Experiment resumed")
+                    window.pause_resume_events.push({time: jsPsych.getTotalTime(), event: "resume"})
+                    jsPsych.resumeExperiment()
+                }
+            }, false);
 
         }
 

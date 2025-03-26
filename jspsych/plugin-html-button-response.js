@@ -181,7 +181,7 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
       }
       if (trial.enable_button_after > 0) {
         var btns = document.querySelectorAll("#jspsych-html-button-response-btngroup button");
-        console.log(btns)
+
         for (var i = 0; i < btns.length; i++) {
           btns[i].setAttribute("disabled", "disabled");
         }

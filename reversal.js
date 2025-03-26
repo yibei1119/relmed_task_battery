@@ -6,27 +6,36 @@ const rev_n_trials = (window.demo || (window.task === "screening")) ? 50 : 150; 
 // Parse json sequence
 const reversal_timeline = JSON.parse(reversal_json);
 
-// Assemble list of blocks - first load images
-var reversal_blocks = [
-    {
-        type: jsPsychPreload,
-        images: [
-            "imgs/squirrels_empty.png",
-            "imgs/squirrels_bg.png",
-            "imgs/squirrels_fg.png",
-            "imgs/1penny.png",
-            "imgs/1pound.png"
-        ],
-        post_trial_gap: 400,
-        data: {
-            trialphase: "reversal_preload"
-        },
-        continue_after_error: true,
-        on_finish: () => {
-            updateState(`no_resume`)
-            updateState(`reversal_start_task`)
-        }
+// First preload for task
+const reversal_preload = {
+    type: jsPsychPreload,
+    images: [
+        "imgs/squirrels_empty.png",
+        "imgs/squirrels_bg.png",
+        "imgs/squirrels_fg.png",
+        "imgs/1penny.png",
+        "imgs/1pound.png",
+        "imgs/PILT_keys.jpg"
+    ],
+    post_trial_gap: 400,
+    data: {
+        trialphase: "reversal_preload"
+    },
+    continue_after_error: true,
+    on_finish: () => {
+        // Report to tests
+        console.log("load_successful")
+
+        // Report to relmed.ac.uk
+        postToParent({message: "load_successful"})
+
+        updateState(`no_resume`)
+        updateState(`reversal_start_task`)
     }
+}
+
+// Assemble list of blocks
+var reversal_blocks = [
 ];
 for (i=0; i<reversal_timeline.length; i++){
     reversal_blocks.push([
@@ -130,14 +139,29 @@ const reversal_instructions = [
         css_classes: ['instructions'],
         stimulus: `
             <p>You will now play the squirrel game for about ${rev_n_trials == 50 ? 3 : 5} minutes without breaks.</p>
-            <p>Place your fingers on the left and right arrow keys as shown below, and press either one to start.</p>
+            <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-        choices: ['arrowleft', 'arrowright'],
+        // choices: ['arrowleft', 'arrowright'],
         data: {trialphase: "reversal_instruction"},
         on_finish: () => {
             jsPsych.data.addProperties({
                 reversal_n_warnings: 0
             });
         },
+        response_ends_trial: false,
+        simulation_options: {simulate: false},
+        on_load: function() {
+            const start = performance.now();
+            const multiKeysListener = setupMultiKeysListener(
+                ['ArrowRight', 'ArrowLeft'], 
+                function() {
+                    jsPsych.finishTrial({
+                        rt: Math.floor(performance.now() - start)
+                    });
+                    // Clean up the event listeners to prevent persistining into the next trial
+                    multiKeysListener.cleanup();
+                }
+            );
+        }
     },
 ]

@@ -1,7 +1,8 @@
 // Configuration object
 const maxPressConfig = {
     duration: 7000,  // 7 seconds in milliseconds
-    validKey: 'j'
+    validKey: 'j',
+    minSpeed: 3.0 // 5% in pilots 7 & 8 max press rates
 };
 
 // Function to get each key press RT
@@ -31,9 +32,6 @@ const maxPressRateTrial = {
     },
     choices: 'NO_KEYS',
     data: {trialphase: 'max_press_rate'},
-    simulation_options: {
-        simulate: false
-    },
     on_start: function (trial) {
         if (window.participantID.includes("simulate")) {
             trial.trial_duration = 1000;
@@ -112,6 +110,11 @@ const maxPressRateTrial = {
         allow_held_key: false,
         minimum_valid_rt: 10
         });
+    },
+    on_finish: function (data) {
+        if (window.participantID.includes("simulate")) {
+            data.avgSpeed = 5.0;
+        }
     }
 };
 
@@ -133,12 +136,12 @@ const maxPressInstructions = {
 const maxPressFeedback = {
     type: jsPsychHtmlButtonResponse,
     stimulus: function() {
-        const data = window.participantID.includes("simulate") ? {avgSpeed: 0} : jsPsych.data.get().last(1).values()[0];
+        const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
         return `
         <div id="instruction-container">
             <div id="instruction-text" style="text-align: center;">
                 <h2><span class="highlight-txt">Well done!</span></h2>
-                <p>On average, you pressed <strong>${data.avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
+                <p>On average, you pressed <strong>${avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
                 <p>Press <strong>Continue</strong> to proceed to the first game.</p>
             </div>
         </div>
@@ -148,10 +151,51 @@ const maxPressFeedback = {
     choices: ['Continue']
 };
 
+const maxPressRetakeMessage = {
+    timeline: [{
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function () {
+            const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
+            return `
+        <div id="instruction-container">
+            <div id="instruction-text" style="text-align: center;">
+                <p>On average, you pressed <strong>${avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
+                <p>To ensure the accuracy of the test,</br>we kindly ask you to retake it <span class="highlight-txt">with your best effort as much as possible</span>.</p>
+                <p>Press <strong>Continue</strong> to retake the test.</p>
+            </div>
+        </div>
+        `;
+        },
+        post_trial_gap: 800,
+        choices: ['Continue']
+    }],
+    conditional_function: () => {
+        const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
+        if (avgSpeed < maxPressConfig.minSpeed && maxPressTakes < 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
+const maxPressRetakeLoop = {
+    timeline: [maxPressRateTrial, maxPressRetakeMessage],
+    loop_function: (data) => {
+        if (data.select('avgSpeed').values.reverse()[0] < maxPressConfig.minSpeed && maxPressTakes < 1) {
+            maxPressTakes++;
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
 // Define the timeline
+var maxPressTakes = 0;
 const maxPressTimeline = [
     maxPressInstructions,
-    maxPressRateTrial,
+    maxPressRetakeLoop,
     maxPressFeedback
 ];
 

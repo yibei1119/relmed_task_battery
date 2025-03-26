@@ -83,7 +83,7 @@ function generateTableHTML(extracted_questionnaire) {
 
     let preamble = `<h3>${name}</h3>`
 
-    let table = "<table border='1'><tr><th>Variable Name</th><th>Type</th><th>Item text</th><th>Possible values</th></tr>";
+    let table = "<table border='1'><tr><th>Question ID</th><th>Type</th><th>Question text</th><th>Possible values</th></tr>";
 
     // Add first row separately with row span if cells need to merge
     if (same_values || same_type){
