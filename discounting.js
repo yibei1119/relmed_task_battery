@@ -30,7 +30,14 @@ const dd_sum_delays = [
     { today: 20, later: 55, delay: 7 },
 ]
 
-const dd_choices = dd_sum_delays.map((d) => {return {choices: [`£${d.today}\ntoday`, `£${d.later}\nin ${d.delay} days`]}})
+const dd_choices = dd_sum_delays.map((d) => {
+    return {
+        choices: [`£${d.today}\ntoday`, `£${d.later}\nin ${d.delay} days`],
+        sum_today: d.today,
+        sum_later: d.later,
+        delay: d.delay
+    }
+})
 
 const dd_trial = {
     type: jsPsychHtmlButtonResponse,
@@ -46,6 +53,11 @@ const dd_trial = {
         } else {
             return window.default_long_response_deadline
         }
+    },
+    data: {
+        sum_today: jsPsych.timelineVariable("sum_today"),
+        sum_later: jsPsych.timelineVariable("sum_later"),
+        delay: jsPsych.timelineVariable("delay")
     },
     post_trial_gap: 200,
     on_finish: (data) => {
