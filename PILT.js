@@ -13,7 +13,7 @@ const preload_PILT = {
             "50pence.png", "50pencebroken.png",
             "safe.png","PILT_keys.jpg"
         ].map(s => "imgs/" + s),
-        window.sesssion === "screening" ? [] : [
+        window.session === "screening" ? [] : [
             "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
         ].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
     ],
