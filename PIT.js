@@ -226,7 +226,12 @@ const vigour_PIT_bonus = {
         `;
   },
   on_finish: (data) => {
-    data.vigour_bonus = (window.sampledVigourReward + window.sampledPITreward)/ 100
+
+    const bonus = (window.sampledVigourReward + window.sampledPITreward)/ 100;
+    
+    data.vigour_bonus = bonus;
+
+    postToParent({bonus: bonus});
   },
   simulation_options: {
     simulate: false
