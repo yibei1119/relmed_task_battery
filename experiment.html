@@ -421,6 +421,11 @@
             procedure.push(controlTimeline);
         }
 
+        if (window.task === "dd") {
+            // Add delay discounting timeline
+            procedure = procedure.concat(dd_timeline);
+        }
+
         if (window.task === "quests"){
 
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
