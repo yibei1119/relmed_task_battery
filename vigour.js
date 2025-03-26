@@ -65,7 +65,7 @@ function shakePiggy() {
     'translateX(-1%)',
     'translateX(1%)',
     'translateX(0)'
-  ], { duration: 100, easing: 'linear' });
+  ], { duration: 80, easing: 'linear' });
 }
 
 // Wiggle piggy bank animation
