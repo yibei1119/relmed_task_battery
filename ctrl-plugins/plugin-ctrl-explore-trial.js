@@ -122,6 +122,15 @@ var jsPsychExploreShip = (function (jspsych) {
     }
 
     trial(display_element, trial) {
+
+      // Define base rule mapping
+      this.baseRule = {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      };
+
       // Initialize trial variables
       let selectedKey = null;
       let lastPressTime = 0;
@@ -134,11 +143,18 @@ var jsPsychExploreShip = (function (jspsych) {
       // Generate HTML for the trial
       const generateHTML = () => {
         const far = this.baseRule[trial.near];
+        const other_islands = Object.values(this.baseRule).filter(x => ![trial.near, far].includes(x));
+        const left_island = other_islands[0];
+        const right_island = other_islands[1];
         return `
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <div class="middle-group">
+                <img class="island-middle" src="imgs/simple_island_${left_island}.png" alt="Left island" />
+                <img class="island-middle" src="imgs/simple_island_${right_island}.png" alt="Right island" />
+              </div>
               <div class="overlap-group">
                 <div class="choice-left">
                   <div class="fuel-container-left">
@@ -164,14 +180,6 @@ var jsPsychExploreShip = (function (jspsych) {
             </section>
           </main>
         `;
-      };
-
-      // Define base rule mapping
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
       };
 
       // Display the trial
