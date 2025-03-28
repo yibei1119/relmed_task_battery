@@ -154,7 +154,7 @@
 }
 
 .fuel-animation {
-  animation: fuelAppear 0.5s ease-out forwards;
+  animation: fuelAppear 0.3s ease-out forwards;
 }
 
 @keyframes fuelAppear {
@@ -270,4 +270,35 @@
 .island-choices {
   position: relative;
   top: -5vh;
+}
+
+/* Ship fading animations */
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-90px);
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+    transform: scaleX(-1) translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: scaleX(-1) translateX(-90px);
+  }
+}
+
+.fade-out-left {
+  animation: fadeOutLeft 300ms forwards;
+}
+
+.fade-out-right {
+  animation: fadeOutRight 300ms forwards;
 }
