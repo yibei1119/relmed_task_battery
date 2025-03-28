@@ -219,7 +219,20 @@ var jsPsychExploreShip = (function (jspsych) {
 
           // Start effort phase timer
           this.jsPsych.pluginAPI.setTimeout(() => {
-            endTrial();
+            // Apply fade-out animation to the selected ship
+            this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+            if (selectedKey === 'left') {
+              const leftShip = document.querySelector('.ship-left');
+              leftShip.classList.add('fade-out-left');
+            } else if (selectedKey === 'right') {
+              const rightShip = document.querySelector('.ship-right');
+              rightShip.classList.add('fade-out-right');
+            }
+            
+            // End trial after short animation delay (300ms)
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              endTrial();
+            }, 350);
           }, trial.explore_effort);
         }
       };
