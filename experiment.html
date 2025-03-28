@@ -4,54 +4,6 @@
     <meta charset="UTF-8">
     <title>RELMED</title>
     <script src="jspsych/jspsych.js"></script>
-    <script>
-        window.maxWarnings = 15; // How many warnings before kick out
-        window.interimWarning = 5; // How many missing responses before a please change your ways message
-        window.max_warnings_per_task = 3; // How many times to show no response warning in a task - only for RELMED context
-        window.default_response_deadline = 4000;
-        window.default_long_response_deadline = 6000;
-
-        // Initialize jsPysch object
-        let jsPsych = initJsPsych({
-            display_element: 'display_element',
-            on_trial_finish: (data) => {
-
-                // If there are events
-                if (window.pause_resume_events.length !== 0){
-
-                    // Add to data
-                    data.pause_resume_events = window.pause_resume_events
-
-                    // Clear buffer
-                    window.pause_resume_events = [];
-                }
-            },
-            on_close: saveDataREDCap
-        });
-        
-        // Get condition from URL, all caps are prolific, lowercase are ours
-        window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
-        window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
-        window.debug = window.participantID.includes("debug") || window.participantID.includes("TST");
-        window.demo = window.participantID.includes("DEMO") | window.participantID.includes("STAF");
-        window.azurePID = jsPsych.data.getURLVariable('azure_PID');
-        window.session = jsPsych.data.getURLVariable('session');
-        window.task = jsPsych.data.getURLVariable('task');
-        
-        // Save participant variables to data
-        jsPsych.data.addProperties({
-            participant_id: window.participantID,
-            session: window.session,
-            n_warnings: 0,
-            version: "0.2",
-            task: window.task,
-            pre_kick_out_warned: false
-        })
-
-        // Buffer for experiment start / pause events
-        window.pause_resume_events = [];
-
-    </script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
     <script src="jspsych/plugin-html-button-response.js"></script>
     <script src="jspsych/plugin-browser-check.js"></script>
@@ -101,6 +53,54 @@
     <link href="control_styles.css" rel="stylesheet" type="text/css" />
     <link href="open-text/openText_style.css" rel="stylesheet" type="text/css" />
     <link href="dd.css" rel="stylesheet" type="text/css" />
+    <script>
+        window.maxWarnings = 15; // How many warnings before kick out
+        window.interimWarning = 5; // How many missing responses before a please change your ways message
+        window.max_warnings_per_task = 3; // How many times to show no response warning in a task - only for RELMED context
+        window.default_response_deadline = 4000;
+        window.default_long_response_deadline = 6000;
+
+        // Initialize jsPysch object
+        let jsPsych = initJsPsych({
+            display_element: 'display_element',
+            on_trial_finish: (data) => {
+
+                // If there are events
+                if (window.pause_resume_events.length !== 0){
+
+                    // Add to data
+                    data.pause_resume_events = window.pause_resume_events
+
+                    // Clear buffer
+                    window.pause_resume_events = [];
+                }
+            },
+            on_close: saveDataREDCap
+        });
+        
+        // Get condition from URL, all caps are prolific, lowercase are ours
+        window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
+        window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
+        window.debug = window.participantID.includes("debug") || window.participantID.includes("TST");
+        window.demo = window.participantID.includes("DEMO") | window.participantID.includes("STAF");
+        window.azurePID = jsPsych.data.getURLVariable('azure_PID');
+        window.session = jsPsych.data.getURLVariable('session');
+        window.task = jsPsych.data.getURLVariable('task');
+        
+        // Save participant variables to data
+        jsPsych.data.addProperties({
+            participant_id: window.participantID,
+            session: window.session,
+            n_warnings: 0,
+            version: "0.2",
+            task: window.task,
+            pre_kick_out_warned: false
+        })
+
+        // Buffer for experiment start / pause events
+        window.pause_resume_events = [];
+
+    </script>
 </head>
 <style>
     .jsPsychDE {
