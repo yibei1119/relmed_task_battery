@@ -39,6 +39,14 @@ Data is written to REDCap via a call to an AWS lamda function.
 
 | Session | Task | Status |
 |---------|------|--------|
-| wk52 | quests | ❌ Failed |
+| wk28 | wm | ✅ Success |
+| wk0 | quests | ✅ Success |
+| wk2 | quests | ✅ Success |
+| wk4 | quests | ✅ Success |
+| wk24 | quests | ✅ Success |
+| wk28 | quests | ✅ Success |
+| wk6 | quests | ✅ Success |
+| wk8 | quests | ✅ Success |
+| wk52 | quests | ✅ Success |
 
 <!-- LOADING-TEST-RESULTS -->
