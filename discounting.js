@@ -46,7 +46,7 @@ const dd_trial = {
     button_html: function(choice, choice_index) {
         return `<button class="jspsych-btn dd-btn">${choice}</button>`;
       },
-    enable_button_after: 500,
+    enable_button_after: 300,
     trial_duration: () => {
         if (can_be_warned("dd")){
             return window.default_response_deadline
