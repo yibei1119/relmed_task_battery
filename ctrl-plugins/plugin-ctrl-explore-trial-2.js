@@ -3,7 +3,7 @@ var jsPsychExploreShip = (function (jspsych) {
 
   const info = {
     name: "explore-ship",
-    version: "1.1.0",
+    version: "1.1.1",
     parameters: {
       left: {
         type: jspsych.ParameterType.STRING,
@@ -69,8 +69,8 @@ var jsPsychExploreShip = (function (jspsych) {
   class ExploreShipPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
-
-      // Define base rule mapping
+      
+      // Define base rule mapping - persistent across trials
       this.baseRule = {
         banana: "coconut",
         coconut: "grape",
@@ -79,55 +79,12 @@ var jsPsychExploreShip = (function (jspsych) {
       };
     }
 
-    trial(display_element, trial) {
-      // Initialize trial variables
-      let selectedKey = null;
-      let lastPressTime = 0;
-      let trial_presses = 0;
-      let responseTime = [];
-      let choice = null;
-      let choice_rt = 0;
-      let repeated_listener = null;
-
-      // Generate full HTML upfront
-      display_element.innerHTML = this.generateTrialHTML(trial);
-
-      // Setup initial keyboard listener
-      const firstKey_listener = this.jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: (info) => this.handleInitialKeypress(info, trial),
-        valid_responses: trial.choices,
-        rt_method: 'performance',
-        persist: false,
-        allow_held_key: false,
-        minimum_valid_rt: 100
-      });
-
-      // Start decision phase timer
-      this.jsPsych.pluginAPI.setTimeout(() => {
-        if (!selectedKey) {
-          this.endTrial();
-        }
-      }, trial.explore_decision);
-
-      // Store important elements and variables in instance for access across methods
-      this.display_element = display_element;
-      this.selectedKey = selectedKey;
-      this.lastPressTime = lastPressTime;
-      this.trial_presses = trial_presses;
-      this.responseTime = responseTime;
-      this.choice = choice;
-      this.choice_rt = choice_rt;
-      this.repeated_listener = repeated_listener;
-      this.firstKey_listener = firstKey_listener;
-      this.trial = trial;
-    }
-
     generateTrialHTML(trial) {
       const far = this.baseRule[trial.near];
       const other_islands = Object.values(this.baseRule).filter(x => ![trial.near, far].includes(x));
       const left_island = other_islands[0];
       const right_island = other_islands[1];
-
+      
       return `
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
@@ -174,20 +131,20 @@ var jsPsychExploreShip = (function (jspsych) {
           { top: 55, offset: 30 }
         ]
       };
-
+      
       const currentPositions = positions[level] || positions[3];
-
+      
       // Generate the HTML for currents
       let leftTraces = '', leftLines = '', rightTraces = '', rightLines = '';
-
+      
       currentPositions.forEach(({ top, offset }) => {
         leftTraces += `<div class="current-trace" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
         leftLines += `<div class="current-line" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
-
+        
         rightTraces += `<div class="current-trace" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
         rightLines += `<div class="current-line" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
       });
-
+      
       return `
         <div class="ocean-current">
           <div class="current-group left-currents">
@@ -202,68 +159,6 @@ var jsPsychExploreShip = (function (jspsych) {
       `;
     }
 
-    handleInitialKeypress(info, trial) {
-      if (!this.selectedKey) {
-        if (info.key === 'ArrowLeft') {
-          this.selectedKey = 'left';
-          this.display_element.querySelector('.arrow-left').classList.add('highlight');
-          this.display_element.querySelector('.choice-right').classList.add('hidden');
-          this.display_element.querySelector('.fuel-container-left .fuel-indicator-container').classList.add('visible');
-          this.setupRepeatedKeypress('ArrowLeft');
-        } else if (info.key === 'ArrowRight') {
-          this.selectedKey = 'right';
-          this.display_element.querySelector('.arrow-right').classList.add('highlight');
-          this.display_element.querySelector('.choice-left').classList.add('hidden');
-          this.display_element.querySelector('.fuel-container-right .fuel-indicator-container').classList.add('visible');
-          this.setupRepeatedKeypress('ArrowRight');
-        }
-
-        this.choice = this.selectedKey;
-        this.choice_rt = info.rt;
-        this.jsPsych.pluginAPI.cancelKeyboardResponse(this.firstKey_listener);
-
-        // Start effort phase timer
-        this.jsPsych.pluginAPI.setTimeout(() => {
-          // Cancel all keyboard responses
-          this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
-
-          // Apply fade-out animation to the selected ship
-          if (this.selectedKey === 'left') {
-            this.display_element.querySelector('.ship-left').classList.add('fade-out-left');
-          } else if (this.selectedKey === 'right') {
-            this.display_element.querySelector('.ship-right').classList.add('fade-out-right');
-          }
-
-          // End trial after animation completes
-          this.jsPsych.pluginAPI.setTimeout(() => {
-            this.endTrial();
-          }, 350);
-        }, trial.explore_effort);
-      }
-    }
-
-    handleRepeatedKeypress(info) {
-      this.trial_presses++;
-      this.responseTime.push(info.rt - this.lastPressTime);
-      this.lastPressTime = info.rt;
-
-      // Create fuel animation element
-      const container = this.selectedKey === 'left'
-        ? this.display_element.querySelector('.fuel-container-left')
-        : this.display_element.querySelector('.fuel-container-right');
-
-      this.createFuelAnimation(container);
-
-      // Update fuel indicator bar
-      const fuelBar = container.querySelector('.fuel-indicator-bar');
-      const progress = Math.min((this.trial_presses / 30) * 100, 100);
-      fuelBar.style.width = `${progress}%`;
-
-      if (progress === 100) {
-        fuelBar.classList.add('full');
-      }
-    }
-
     createFuelAnimation(container) {
       const fuelIcon = document.createElement('img');
       fuelIcon.src = 'imgs/fuel.png';
@@ -275,31 +170,128 @@ var jsPsychExploreShip = (function (jspsych) {
       });
     }
 
-    setupRepeatedKeypress(key) {
-      this.repeated_listener = this.jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: (info) => this.handleRepeatedKeypress(info),
-        valid_responses: [key],
-        rt_method: 'performance',
-        persist: true,
-        allow_held_key: false,
-        minimum_valid_rt: 0
-      });
-    }
+    trial(display_element, trial) {
+      // Initialize trial variables (locally scoped to this trial)
+      let selectedKey = null;
+      let lastPressTime = 0;
+      let trial_presses = 0;
+      let responseTime = [];
+      let choice = null;
+      let choice_rt = 0;
+      let repeated_listener = null;
 
-    endTrial() {
-      this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
-      this.display_element.innerHTML = '';
+      // Generate full HTML upfront
+      display_element.innerHTML = this.generateTrialHTML(trial);
 
-      // Save data
-      const trial_data = {
-        trialphase: "control_explore",
-        response: this.choice,
-        rt: this.choice_rt,
-        responseTime: this.responseTime,
-        trial_presses: this.trial_presses
+      // Handle initial ship selection
+      const handleInitialKeypress = (info) => {
+        if (!selectedKey) {
+          if (info.key === 'ArrowLeft') {
+            selectedKey = 'left';
+            display_element.querySelector('.arrow-left').classList.add('highlight');
+            display_element.querySelector('.choice-right').style.visibility = 'hidden';
+            display_element.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
+            setupRepeatedKeypress('ArrowLeft');
+          } else if (info.key === 'ArrowRight') {
+            selectedKey = 'right';
+            display_element.querySelector('.arrow-right').classList.add('highlight');
+            display_element.querySelector('.choice-left').style.visibility = 'hidden';
+            display_element.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
+            setupRepeatedKeypress('ArrowRight');
+          }
+          
+          choice = selectedKey;
+          choice_rt = info.rt;
+          this.jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
+
+          // Start effort phase timer
+          this.jsPsych.pluginAPI.setTimeout(() => {
+            // Cancel all keyboard responses
+            this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+            
+            // Apply fade-out animation to the selected ship
+            if (selectedKey === 'left') {
+              display_element.querySelector('.ship-left').classList.add('fade-out-left');
+            } else if (selectedKey === 'right') {
+              display_element.querySelector('.ship-right').classList.add('fade-out-right');
+            }
+
+            // End trial after animation completes
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              endTrial();
+            }, 350);
+          }, trial.explore_effort);
+        }
       };
 
-      this.jsPsych.finishTrial(trial_data);
+      // Handle repeated keypresses for effort
+      const handleRepeatedKeypress = (info) => {
+        trial_presses++;
+        responseTime.push(info.rt - lastPressTime);
+        lastPressTime = info.rt;
+
+        // Create fuel animation element
+        const container = selectedKey === 'left' 
+          ? display_element.querySelector('.fuel-container-left')
+          : display_element.querySelector('.fuel-container-right');
+        
+        this.createFuelAnimation(container);
+
+        // Update fuel indicator bar
+        const fuelBar = container.querySelector('.fuel-indicator-bar');
+        const progress = Math.min((trial_presses / 30) * 100, 100);
+        fuelBar.style.width = `${progress}%`;
+
+        if (progress === 100) {
+          fuelBar.style.backgroundColor = '#00ff00';
+        }
+      };
+
+      // Setup repeated keypress listener
+      const setupRepeatedKeypress = (key) => {
+        repeated_listener = this.jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: handleRepeatedKeypress,
+          valid_responses: [key],
+          rt_method: 'performance',
+          persist: true,
+          allow_held_key: false,
+          minimum_valid_rt: 0
+        });
+      };
+
+      // Function to end trial
+      const endTrial = () => {
+        this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+        display_element.innerHTML = '';
+
+        // Save data
+        const trial_data = {
+          trialphase: "control_explore",
+          response: choice,
+          rt: choice_rt,
+          responseTime: responseTime,
+          trial_presses: trial_presses
+        };
+
+        this.jsPsych.finishTrial(trial_data);
+      };
+
+      // Initial keyboard listener
+      const firstKey_listener = this.jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: handleInitialKeypress,
+        valid_responses: trial.choices,
+        rt_method: 'performance',
+        persist: false,
+        allow_held_key: false,
+        minimum_valid_rt: 100
+      });
+
+      // Start decision phase timer
+      this.jsPsych.pluginAPI.setTimeout(() => {
+        if (!selectedKey) {
+          endTrial();
+        }
+      }, trial.explore_decision);
     }
 
     // Simulation function
@@ -361,6 +353,7 @@ var jsPsychExploreShip = (function (jspsych) {
   }
 
   ExploreShipPlugin.info = info;
+
   return ExploreShipPlugin;
 })(jsPsychModule);
 
@@ -369,7 +362,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
 
   const info = {
     name: "explore-ship-feedback",
-    version: "1.0.0",
+    version: "1.1.1",
     parameters: {
       feedback_duration: {
         type: jspsych.ParameterType.INT,
@@ -415,7 +408,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
 
-      // Define rule mappings
+      // Define rule mappings - persistent across trials
       this.baseRule = {
         banana: "coconut",
         coconut: "grape",
@@ -444,108 +437,78 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       return Math.random() < prob ? 'control' : 'base';
     }
 
-    trial(display_element, trial) {
-      // Get data from previous trial
-      const lastTrial = this.jsPsych.data.getLastTrialData().values()[0];
-      const choice = lastTrial.response; // 'left' or 'right'
-      const chosenColor = this.jsPsych.evaluateTimelineVariable(choice);
-      const nearIsland = this.jsPsych.evaluateTimelineVariable('near');
-      const currentStrength = this.jsPsych.evaluateTimelineVariable('current');
-      const effortLevel = lastTrial.trial_presses;
-
-      // Determine destination island based on control rule
-      const currentRule = this.chooseControlRule(
-        effortLevel,
-        currentStrength
-      );
-
-      const destinationIsland = currentRule === 'base'
-        ? this.baseRule[nearIsland]
-        : this.controlRule[chosenColor];
-
-      // Clear any existing animation styles
-      const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
-      oldStyles.forEach(style => style.remove());
-
-      // Generate feedback display HTML
-      display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland);
-
-      // Create dynamic animation for the ship
-      setTimeout(() => {
-        this.createShipAnimation(display_element, choice);
-      }, 50);
-
-
-      // Store trial data for end of trial
-      this.trial_data = {
-        trialphase: "control_explore_feedback",
-        destination_island: destinationIsland,
-        control_rule_used: currentRule,
-        effort_level: effortLevel,
-        current_strength: currentStrength,
-        ship_color: chosenColor,
-        near_island: nearIsland,
-        probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
-      };
-
-      // Apply animation classes after a small delay
-      setTimeout(() => {
-        // Find the ship element
-        const feedbackChoice = choice === 'left' ? 'right' : 'left';
-        const shipElement = display_element.querySelector(`.ship-${feedbackChoice}`);
-
-        // Add animation class
-        shipElement.classList.add('ship-animate');
-      }, 100);
-
-      // End trial after duration
-      this.jsPsych.pluginAPI.setTimeout(() => {
-        display_element.innerHTML = '';
-        this.jsPsych.finishTrial(this.trial_data);
-      }, trial.feedback_duration);
-    }
-
-    generateFeedbackHTML(choice, chosenColor, destinationIsland, currentStrength, useBaseRule) {
-      // Invert the choice for correct feedback display
+    generateFeedbackHTML(choice, chosenColor, destinationIsland) {
+      // Invert the choice for feedback display
       const feedbackChoice = choice === 'left' ? 'right' : 'left';
       const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
-
-      // Determine CSS classes for ship orientation
-      const shipClass = `ship-${feedbackChoice} feedback-ship-${feedbackChoice}`;
-
-      // Generate ocean currents HTML if using base rule
-      const currentsHTML = useBaseRule
-        ? this.generateOceanCurrentsHTML(currentStrength, feedbackChoice)
-        : '';
-
+      
       return `
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
             <div class="overlap-group" style="justify-content: space-between;">
               <div class="choice-left">
-                ${feedbackChoice === 'left' ? `<img class="${shipClass}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" />` : ''}
-                ${islandSide === 'left' ? `<img class="island-near feedback-island" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" />` : ''}
+                ${feedbackChoice === 'left' ? 
+                  `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
+                ${islandSide === 'left' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
               </div>
               <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
               <div class="choice-right">
-                ${feedbackChoice === 'right' ? `<img class="${shipClass}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" />` : ''}
-                ${islandSide === 'right' ? `<img class="island-near feedback-island" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" />` : ''}
+                ${feedbackChoice === 'right' ? 
+                  `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
+                ${islandSide === 'right' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
               </div>
             </div>
-            ${currentsHTML}
           </section>
         </main>
       `;
     }
 
-    createShipAnimation(display_element, choice) {
-      // Invert the choice for feedback display
-      const feedbackChoice = choice === 'left' ? 'right' : 'left';
-      
+    generateOceanCurrentsHTML(level, choice) {
+      // Helper function to create current lines based on level and direction
+      const createCurrentLines = (isTrace = false, isLeft = true) => {
+        let lines = '';
+        const positions = {
+          1: [{ top: 80, offset: 20 }],
+          2: [
+            { top: 70, offset: 50 },
+            { top: 90, offset: 30 }
+          ],
+          3: [
+            { top: 70, offset: 50 },
+            { top: 80, offset: 20 },
+            { top: 90, offset: 30 }
+          ]
+        };
+
+        const currentPositions = positions[level] || positions[3];
+
+        currentPositions.forEach(({ top, offset }) => {
+          const position = isLeft ? 'right' : 'left';
+          const styles = `top: ${top}%; ${position}: calc(15% + ${offset}px);`;
+
+          if (isTrace) {
+            lines += `<div class="current-trace" style="${styles}; width: 70%"></div>`;
+          } else {
+            lines += `<div class="current-line" style="${styles}; width: 75%"></div>`;
+          }
+        });
+        return lines;
+      };
+
+      return `
+        <div class="ocean-current">
+          <div class="current-group ${choice}-horizon-currents">
+          ${createCurrentLines(true, choice === 'left')}
+          ${createCurrentLines(false, choice === 'left')}
+        </div>
+      `;
+    }
+
+    createShipAnimation(display_element, feedbackChoice, islandSide) {
       // Get ship and island elements
       const shipImg = display_element.querySelector(`.ship-${feedbackChoice}`);
-      const islandImg = display_element.querySelector(`.island-near`);
+      const islandImg = display_element.querySelector(`.choice-${islandSide} .island-near`);
       
       if (!shipImg || !islandImg) return;
       
@@ -584,44 +547,68 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       shipImg.classList.add('ship-animate');
     }
 
-    generateOceanCurrentsHTML(level, shipSide) {
-      // Create positions based on current strength
-      const positions = {
-        1: [{ top: 80, offset: 20 }],
-        2: [
-          { top: 70, offset: 50 },
-          { top: 90, offset: 30 }
-        ],
-        3: [
-          { top: 70, offset: 50 },
-          { top: 80, offset: 20 },
-          { top: 90, offset: 30 }
-        ]
+    trial(display_element, trial) {
+      // Get data from previous trial
+      const lastTrial = this.jsPsych.data.getLastTrialData().values()[0];
+      const choice = lastTrial.response; // 'left' or 'right'
+      const chosenColor = this.jsPsych.evaluateTimelineVariable(choice);
+      const nearIsland = this.jsPsych.evaluateTimelineVariable('near');
+      const currentStrength = this.jsPsych.evaluateTimelineVariable('current');
+      const effortLevel = lastTrial.trial_presses;
+
+      // Determine destination island based on control rule
+      const currentRule = this.chooseControlRule(
+        effortLevel,
+        currentStrength
+      );
+
+      const destinationIsland = currentRule === 'base'
+        ? this.baseRule[nearIsland]
+        : this.controlRule[chosenColor];
+
+      // Clean up any existing animation styles
+      const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
+      oldStyles.forEach(style => style.remove());
+
+      // Generate feedback display
+      display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland);
+
+      // Determine which side the ship and island are on
+      const feedbackChoice = choice === 'left' ? 'right' : 'left';
+      const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
+
+      // Add ocean currents if using base rule
+      if (currentRule === 'base') {
+        display_element.querySelector('.scene').insertAdjacentHTML(
+          'beforeend', 
+          this.generateOceanCurrentsHTML(currentStrength, feedbackChoice)
+        );
+      }
+
+      // Create dynamic ship animation after DOM is ready
+      setTimeout(() => {
+        this.createShipAnimation(display_element, feedbackChoice, islandSide);
+      }, 50);
+
+      // Save data and end trial after duration
+      const trial_data = {
+        trialphase: "control_explore_feedback",
+        destination_island: destinationIsland,
+        control_rule_used: currentRule,
+        effort_level: effortLevel,
+        current_strength: currentStrength,
+        ship_color: chosenColor,
+        near_island: nearIsland,
+        probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
       };
 
-      const currentPositions = positions[level] || positions[3];
-
-      // Generate currents HTML based on ship position
-      let tracesHTML = '';
-      let linesHTML = '';
-
-      currentPositions.forEach(({ top, offset }) => {
-        const position = shipSide === 'left' ? 'right' : 'left';
-        tracesHTML += `<div class="current-trace feedback-current-trace" style="top: ${top}%; ${position}: calc(15% + ${offset}px);"></div>`;
-        linesHTML += `<div class="current-line feedback-current-line" style="top: ${top}%; ${position}: calc(15% + ${offset}px);"></div>`;
-      });
-
-      return `
-        <div class="ocean-current feedback-ocean-current">
-          <div class="current-group ${shipSide}-horizon-currents">
-            ${tracesHTML}
-            ${linesHTML}
-          </div>
-        </div>
-      `;
+      this.jsPsych.pluginAPI.setTimeout(() => {
+        display_element.innerHTML = '';
+        this.jsPsych.finishTrial(trial_data);
+      }, trial.feedback_duration);
     }
 
-    // Simulation methods remain the same
+    // Simulation function
     simulate(trial, simulation_mode, simulation_options, load_callback) {
       if (simulation_mode == "data-only") {
         load_callback();
