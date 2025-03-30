@@ -76,14 +76,14 @@
 /* Static current trace */
 .current-trace {
   position: absolute;
-  height: 2px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.25);
   width: 25%;
 }
 
 .current-line {
   position: absolute;
-  height: 2px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.95);
   width: 30%;
   transform-origin: left center;
@@ -349,8 +349,8 @@
     opacity: 1;
   }
   100% { 
-    transform: translateX(0%) scaleX(0.5);
-    opacity: 0.5;
+    transform: translateX(0%) scaleX(0.6);
+    opacity: 0.85;
   }
 }
 
@@ -360,12 +360,12 @@
     opacity: 0.15;
   }
   10% { 
-    transform: translateX(5%) scaleX(0.5);
+    transform: translateX(10%) scaleX(0.5);
     opacity: 1;
   }
   100% { 
-    transform: translateX(70%) scaleX(0.5);
-    opacity: 0.5;
+    transform: translateX(60%) scaleX(0.6);
+    opacity: 0.85;
   }}
 
 @keyframes pulse {
