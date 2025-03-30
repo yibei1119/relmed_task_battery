@@ -23,6 +23,12 @@
         window.default_response_deadline = 4000;
         window.default_long_response_deadline = 6000;
 
+        // Print all url parameters to console
+        const urlParams = new URLSearchParams(window.location.search);
+        for (const [key, value] of urlParams.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
             display_element: 'display_element',
