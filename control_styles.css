@@ -296,9 +296,9 @@
 }
 
 .fade-out-left {
-  animation: fadeOutLeft 300ms forwards;
+  animation: fadeOutLeft 300ms ease-in forwards;
 }
 
 .fade-out-right {
-  animation: fadeOutRight 300ms forwards;
+  animation: fadeOutRight 300ms ease-in forwards;
 }
