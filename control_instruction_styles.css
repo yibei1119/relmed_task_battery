@@ -89,11 +89,11 @@
   transform-origin: left center;
 }
 
-.left-currents .current-line {
+.left-currents .current-line, .right-horizon-currents .current-line {
   animation: flowLeftDiagonal 3s infinite linear;
 }
 
-.right-currents .current-line {
+.right-currents .current-line, .left-horizon-currents .current-line {
   animation: flowRightDiagonal 3s infinite linear;
 }
 
