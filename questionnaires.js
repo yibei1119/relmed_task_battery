@@ -203,6 +203,9 @@ var questionnaire_phq = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "PHQ"
+        },
+        on_start: () => {
+            updateState("PHQ_start");
         }
     };
 };
@@ -218,6 +221,9 @@ var questionnaire_gad = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "GAD"
+        },
+        on_start: () => {
+            updateState("GAD_start");
         }
     };
 };
@@ -251,6 +257,9 @@ var questionnaire_WSAS = (i,total) => {
                 text: 'If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here',
                 possible_values: "true<br>false"
             }
+        },
+        on_start: () => {
+            updateState("WSAS_start");
         }
     };
 };
@@ -270,6 +279,9 @@ var questionnaire_ICECAP = (i,total) => {
         scale_width: 700,
         data: {
             trialphase: "ICECAP"
+        },
+        on_start: () => {
+            updateState("ICECAP_start");
         }
     };    
 };
@@ -285,6 +297,9 @@ var questionnaire_BFI = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "BFI"
+        },
+        on_start: () => {
+            updateState("BFI_start");
         }
     };
 };
@@ -327,6 +342,9 @@ var questionnaire_pvss = (i,total) => {
         scale_repeat: 5,
         data: {
             trialphase: "PVSS"
+        },
+        on_start: () => {
+            updateState("pvss_start");
         }
     };
 };
@@ -342,6 +360,9 @@ var questionnaire_BADS = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "BADS"
+        },
+        on_start: () => {
+            updateState("BADS_start");
         }
     };
 };
@@ -358,6 +379,9 @@ var questionnaire_hopelessness = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "Hopelessness"
+        },
+        on_start: () => {
+            updateState("hopelessness_start");
         }
     };
 };
@@ -373,6 +397,9 @@ var questionnaire_RRS_brooding = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "RRS_brooding"
+        },
+        on_start: () => {
+            updateState("RRS_brooding_start");
         }
     };
 }; 
@@ -388,6 +415,9 @@ const questionnaire_PERS_negAct = (i, total) => {
         survey_width: 700,
         data: {
             trialphase: "PERS_negAct"
+        },
+        on_start: () => {
+            updateState("PERS_negAct_start");
         }
     };
 }; 
@@ -403,6 +433,12 @@ let questionnaires_timeline = [
             `<p>Please take your time with each item, and remember that there are no “right” or “wrong” answers. Your honest and thorough responses will help us gather meaningful data.</p>` +
             `<p>Click 'Next' to begin.</p>`
         ],
+        on_start: () => {
+            updateState("quests_start_instructions");
+        },
+        on_finish: () => {
+            updateState("quests_start");
+        },
         show_clickable_nav: true,
         data: {trialphase: "pre_questionnaire_instructions"},
         simulation_options:{
