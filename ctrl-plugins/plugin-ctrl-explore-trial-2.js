@@ -439,81 +439,69 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
 
     generateFeedbackHTML(choice, chosenColor, destinationIsland) {
       // Invert the choice for feedback display
-      const feedbackChoice = choice === 'left' ? 'right' : 'left';
-      const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
       
       return `
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
-            <div class="overlap-group" style="justify-content: space-between;">
-              <div class="choice-left">
-                ${feedbackChoice === 'left' ? 
-                  `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                ${islandSide === 'left' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
-              </div>
-              <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
-              <div class="choice-right">
-                ${feedbackChoice === 'right' ? 
-                  `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                ${islandSide === 'right' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
-              </div>
-            </div>
+            <img class="island-far" src="imgs/simple_island_${destinationIsland}.png" alt="Farther island" />
+            <img class="feedback-ship-${choice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
           </section>
         </main>
       `;
     }
 
-    generateOceanCurrentsHTML(level, choice) {
-      // Helper function to create current lines based on level and direction
-      const createCurrentLines = (isTrace = false, isLeft = true) => {
-        let lines = '';
-        const positions = {
-          1: [{ top: 80, offset: 20 }],
-          2: [
-            { top: 70, offset: 50 },
-            { top: 90, offset: 30 }
-          ],
-          3: [
-            { top: 70, offset: 50 },
-            { top: 80, offset: 20 },
-            { top: 90, offset: 30 }
-          ]
-        };
-
-        const currentPositions = positions[level] || positions[3];
-
-        currentPositions.forEach(({ top, offset }) => {
-          const position = isLeft ? 'right' : 'left';
-          const styles = `top: ${top}%; ${position}: calc(15% + ${offset}px);`;
-
-          if (isTrace) {
-            lines += `<div class="current-trace" style="${styles}; width: 70%"></div>`;
-          } else {
-            lines += `<div class="current-line" style="${styles}; width: 75%"></div>`;
-          }
-        });
-        return lines;
+    generateOceanCurrentsHTML(level) {
+      // Generate positions based on level
+      const positions = {
+        1: [{ top: 49, offset: 20 }],
+        2: [
+          { top: 43, offset: 50 },
+          { top: 55, offset: 30 }
+        ],
+        3: [
+          { top: 43, offset: 50 },
+          { top: 49, offset: 20 },
+          { top: 55, offset: 30 }
+        ]
       };
-
+      
+      const currentPositions = positions[level] || positions[3];
+      
+      // Generate the HTML for currents
+      let leftTraces = '', leftLines = '', rightTraces = '', rightLines = '';
+      
+      currentPositions.forEach(({ top, offset }) => {
+        leftTraces += `<div class="current-trace" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        leftLines += `<div class="current-line" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        
+        rightTraces += `<div class="current-trace" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+        rightLines += `<div class="current-line" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+      });
+      
       return `
         <div class="ocean-current">
-          <div class="current-group ${choice}-horizon-currents">
-          ${createCurrentLines(true, choice === 'left')}
-          ${createCurrentLines(false, choice === 'left')}
+          <div class="current-group left-currents">
+            ${leftTraces}
+            ${leftLines}
+          </div>
+          <div class="current-group right-currents">
+            ${rightTraces}
+            ${rightLines}
+          </div>
         </div>
       `;
     }
 
-    createShipAnimation(display_element, feedbackChoice, islandSide) {
+    createShipAnimation(display_element, feedbackChoice) {
       // Get ship and island elements
-      const shipImg = display_element.querySelector(`.ship-${feedbackChoice}`);
-      const islandImg = display_element.querySelector(`.choice-${islandSide} .island-near`);
+      const shipImg = display_element.querySelector(`.feedback-ship-${feedbackChoice}`);
+      const islandImg = display_element.querySelector(`.island-far`);
       
       if (!shipImg || !islandImg) return;
       
       // Calculate the distance to move the ship
-      const distance = islandImg.offsetWidth + shipImg.offsetWidth / 4;
+      const distance = islandImg.offsetWidth/2 + shipImg.offsetWidth;
       
       // Determine if ship should be flipped based on which side it starts from
       const shouldFlip = feedbackChoice === 'left';
@@ -528,11 +516,11 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         @keyframes moveShip {
           0% { 
             opacity: 0;
-            transform: scaleX(${scaleX}) translateX(0);
+            transform: scaleX(${scaleX}) translateX(${distance}px) translateY(${shipImg.offsetHeight/2}px);
           }
           100% { 
             opacity: 1;
-            transform: scaleX(${scaleX}) translateX(-${distance}px);
+            transform: scaleX(${scaleX * 0.9}) scaleY(0.9) translateX(${shipImg.offsetWidth/3 + islandImg.offsetWidth/2}px);
           }
         }
         
@@ -574,20 +562,18 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland);
 
       // Determine which side the ship and island are on
-      const feedbackChoice = choice === 'left' ? 'right' : 'left';
-      const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
 
       // Add ocean currents if using base rule
       if (currentRule === 'base') {
         display_element.querySelector('.scene').insertAdjacentHTML(
           'beforeend', 
-          this.generateOceanCurrentsHTML(currentStrength, feedbackChoice)
+          this.generateOceanCurrentsHTML(currentStrength)
         );
       }
 
       // Create dynamic ship animation after DOM is ready
       setTimeout(() => {
-        this.createShipAnimation(display_element, feedbackChoice, islandSide);
+        this.createShipAnimation(display_element, choice);
       }, 50);
 
       // Save data and end trial after duration
