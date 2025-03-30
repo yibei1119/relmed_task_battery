@@ -25,8 +25,8 @@
 
         // Print all url parameters to console
         const urlParams = () => {
-            new URLSearchParams(window.location.search);
-            for (const [key, value] of urlParams.entries()) {
+            const params = new URLSearchParams(window.location.search);
+            for (const [key, value] of params.entries()) {
                 console.log(`${key}: ${value}`);
             }
         }
