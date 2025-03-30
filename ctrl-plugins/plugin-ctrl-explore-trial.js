@@ -78,11 +78,11 @@ var jsPsychExploreShip = (function (jspsych) {
         const positions = {
           1: [{ top: 49, offset: 20 }],
           2: [
-            { top: 45, offset: 50 },
+            { top: 43, offset: 50 },
             { top: 55, offset: 30 }
           ],
           3: [
-            { top: 45, offset: 50 },
+            { top: 43, offset: 50 },
             { top: 49, offset: 20 },
             { top: 55, offset: 30 }
           ]
