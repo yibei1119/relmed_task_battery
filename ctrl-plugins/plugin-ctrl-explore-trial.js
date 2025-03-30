@@ -475,7 +475,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
-            <div class="overlap-group">
+            <div class="overlap-group" style="justify-content: space-between;">
               <div class="choice-left">
               </div>
               <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
@@ -493,12 +493,15 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       oldStyles.forEach(style => style.remove());
 
       // Get the choice container
+      // Invert the choice to determine the opposite side for feedback display
+      choice = choice === 'left' ? 'right' : 'left';
       const choiceContainer = display_element.querySelector(`.choice-${choice}`);
       // Clear any existing content
       choiceContainer.innerHTML = '';
       // Create the ship image element
       const shipImg = document.createElement('img');
       shipImg.className = `ship-${choice}`;
+      shipImg.style.opacity = '0';
       shipImg.src = `imgs/simple_ship_${chosenColor}.png`;
       // Add the image to the container
       choiceContainer.appendChild(shipImg);
@@ -512,6 +515,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       const islandImg = document.createElement('img');
       // islandImg.className = `ship-${islandSide}`;  
       islandImg.className = `island-near`;  
+      islandImg.style.top = '-10%';
       islandImg.src = `imgs/simple_island_${destinationIsland}.png`;
       // Add the image to the container
       islandContainer.appendChild(islandImg);
@@ -527,21 +531,23 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       const scaleX = shouldFlip ? '-1' : '1';
       
       // Calculate the distance to move the ship
-      const distance = display_element.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/4;
+      const distance = display_element.querySelector('.island-near').offsetWidth + shipImg.offsetWidth / 4;
 
       // Create the animation CSS with proper scale preservation
       animationStyle.textContent = `
         @keyframes moveShip {
           0% { 
+            opacity: 0;
             transform: scaleX(${scaleX}) translateX(0);
           }
           100% { 
+            opacity: 1;
             transform: scaleX(${scaleX}) translateX(-${distance}px);
           }
         }
         
         .ship-animate {
-          animation: moveShip 0.95s ease-in-out forwards;
+          animation: moveShip 600ms ease-out forwards;
         }
       `;
       document.head.appendChild(animationStyle);
