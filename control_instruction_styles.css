@@ -257,7 +257,7 @@
 }
 
 .fuel-animation {
-  animation: fuelAppear 0.5s ease-out forwards;
+  animation: fuelAppear 0.5s ease-in-out forwards;
 }
 
 .fuel-animation.repeating {
