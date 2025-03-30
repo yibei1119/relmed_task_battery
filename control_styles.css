@@ -29,6 +29,14 @@
   z-index: 2;
 }
 
+.feedback-ship-left, .feedback-ship-right {
+  position: absolute;
+  width: auto;
+  height: 14.7%;
+  top: 16%;
+  z-index: 3;
+}
+
 .quest-scroll {
   position: absolute;
   width: 30%;
@@ -172,71 +180,13 @@
   }
 }
 
-/* Feedback animation styles */
-.destination-island {
-  position: absolute;
-  width: auto;
-  height: 25vh;
-  top: 20%;
-  z-index: 2;
-  opacity: 0;
-  animation: fadeIn 0.1s ease-out forwards;
-  animation-delay: 0.0s;
-}
-.ship-container {
-  position: absolute;
-  top: 40%;
-  height: 60%;
-  width: 50%;
-  z-index: 3;
-}
-
-.ship-feedback {
-  position: relative;
-  width: auto;
-  height: 20vh;
-  top: 100%;
-  animation: moveShipUp 1s ease-out forwards;
-}
-
-@keyframes moveShipUp {
-  0% {
-    transform: scale(1.5);
-  }
-  100% {
-    top: 0%;
-  }
-}
-
-.trajectory-path {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  height: 60%;
-  z-index: 1;
-}
-
-.path-animation {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: fadeInPath 1s ease-in forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeInPath {
-  from { opacity: 1; stroke-dashoffset: 0; }
-  to { opacity: 0; stroke-dashoffset: -1000; }
-}
-
 /* Prediction trial styles */
 .island-choices {
   display: grid;
   grid-template-columns: repeat(4, auto);
   justify-content: center;
+  position: relative;
+  top: -5vh;
   /* gap: 5px; */
 }
 
@@ -265,11 +215,6 @@
   cursor: not-allowed;
   transform: none;
   pointer-events: none; /* Prevents hover effects entirely */
-}
-/* Prediction choice styles */
-.island-choices {
-  position: relative;
-  top: -5vh;
 }
 
 /* Ship fading animations */
