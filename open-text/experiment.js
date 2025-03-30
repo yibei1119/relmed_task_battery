@@ -12,6 +12,8 @@ let openText_welcome_trial = {
     stimulus: welcome_text,
     on_start: function (trial) {
         document.body.className = "open-text";
+
+        updateState("open_text_start_instructions");
     }
 }
 let openText_instructions = {
@@ -27,7 +29,9 @@ let openText_instructions = {
             next_button_element.innerHTML = '<b style="color:red"><u>Start the experiment!</u></b>'
         }
     },
-    show_page_number: true
+    show_page_number: true,
+    on_finish: () => {
+        updateState("open_text_start");
 }
 
 // RELMED open-ended questions
