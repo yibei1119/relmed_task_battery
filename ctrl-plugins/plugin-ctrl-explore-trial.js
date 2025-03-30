@@ -151,10 +151,13 @@ var jsPsychExploreShip = (function (jspsych) {
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <!--Middle group for other islands, if needed-->
+              <!--
               <div class="middle-group">
                 <img class="island-middle" src="imgs/simple_island_${left_island}.png" alt="Left island" />
                 <img class="island-middle" src="imgs/simple_island_${right_island}.png" alt="Right island" />
               </div>
+              -->
               <div class="overlap-group">
                 <div class="choice-left">
                   <div class="fuel-container-left">
@@ -542,6 +545,54 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         }
       `;
       document.head.appendChild(animationStyle);
+
+      // Add ocean currents based on current strength and movement direction
+      const createHorizontalCurrents = (level, choice) => {
+        // Helper function to create current lines based on level and direction
+        const createCurrentLines = (isTrace = false, isLeft = true) => {
+          let lines = '';
+          const positions = {
+            1: [{ top: 80, offset: 20 }],
+            2: [
+              { top: 70, offset: 50 },
+              { top: 90, offset: 30 }
+            ],
+            3: [
+              { top: 70, offset: 50 },
+              { top: 80, offset: 20 },
+              { top: 90, offset: 30 }
+            ]
+          };
+
+          const currentPositions = positions[level] || positions[3];
+
+          currentPositions.forEach(({ top, offset }) => {
+            const position = isLeft ? 'right' : 'left';
+            const styles = `top: ${top}%; ${position}: calc(15% + ${offset}px);`;
+
+            if (isTrace) {
+              lines += `<div class="current-trace" style="${styles}; width: 70%"></div>`;
+            } else {
+              lines += `<div class="current-line" style="${styles}; width: 75%"></div>`;
+            }
+          });
+          return lines;
+        };
+
+        const currentsHTML = `
+          <div class="ocean-current">
+            <div class="current-group ${choice}-horizon-currents">
+            ${createCurrentLines(true, choice === 'left')}
+            ${createCurrentLines(false, choice === 'left')}
+          </div>
+        `
+        return currentsHTML;
+      };
+
+      // Add horizontal currents to the scene if the ship goes to the next island
+      if (destinationIsland === this.baseRule[nearIsland]) {
+        display_element.querySelector('.scene').insertAdjacentHTML('beforeend', createHorizontalCurrents(currentStrength, choice));
+      }
 
       // Apply the animation class after a small delay to ensure DOM is ready
       setTimeout(() => {
