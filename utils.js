@@ -163,7 +163,9 @@ function check_fullscreen(){
 function postToParent(message, fallback = () => {}) {
     try {
         if (window.parent && window.parent.postMessage) {
-            window.parent.postMessage(message, '*');
+            // Send message to localhost and relmed.ac.uk
+            window.parent.postMessage(message, 'http://localhost:3000');
+            window.parent.postMessage(message, 'https://relmed.ac.uk');
         } else {
             throw new Error("Parent window or postMessage is unavailable.");
         }
