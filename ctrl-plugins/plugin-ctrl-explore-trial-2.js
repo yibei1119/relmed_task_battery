@@ -89,6 +89,10 @@ var jsPsychExploreShip = (function (jspsych) {
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
+            <div class="nav-map">
+              <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+              <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+            </div>
             <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
             <div class="overlap-group">
               <div class="choice-left">
@@ -447,6 +451,10 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
+              <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+              </div>
               <img class="island-far" src="imgs/simple_island_${destinationIsland}.png" alt="Farther island" />
               <img class="feedback-ship" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
             </section>
@@ -457,6 +465,10 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
+              <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+            </div>
               <div class="overlap-group" style="justify-content: space-between;">
                 <div class="choice-left">
                   ${feedbackChoice === 'left' ? 
