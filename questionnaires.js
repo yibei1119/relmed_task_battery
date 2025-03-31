@@ -232,7 +232,8 @@ var questionnaire_WSAS = (i,total) => {
         ],
         items: prompt_WSAS,
         scale: likert_WSAS,
-        survey_width: 700,
+        survey_width: 800,
+        item_width: 37,
         data: {
             trialphase: "WSAS"
         },
@@ -339,7 +340,8 @@ var questionnaire_BADS = (i,total) => {
         ],
         items: prompt_BADS,
         scale: likert_BADS,
-        survey_width: 700,
+        survey_width: 800,
+        item_width: 33,
         data: {
             trialphase: "BADS"
         }
@@ -355,7 +357,8 @@ var questionnaire_hopelessness = (i,total) => {
         ],
         items: prompt_hopelessness,
         scale: likert_hopelessness,
-        survey_width: 700,
+        survey_width: 800,
+        item_width: 40,
         data: {
             trialphase: "Hopelessness"
         }
@@ -386,34 +389,37 @@ const questionnaire_PERS_negAct = (i, total) => {
         items: prompt_PERS_negAct,
         scale: likert_PERS_negAct,
         survey_width: 700,
+        item_width: 40,
         data: {
             trialphase: "PERS_negAct"
         }
     };
 }; 
 
-let questionnaires_timeline = [
-    {
-        type: jsPsychInstructions,
-        css_classes: ['instructions'],
-        pages: [
-            `<p>Please answer the following ten questionnaires.</p>` +
-            `<p>Each questionnaire will be presented on a separate page.</p>` +
-            `<p>Your responses are important, and we ask that you carefully read each question and answer as accurately and thoughtfully as possible.</p>` +
-            `<p>Please take your time with each item, and remember that there are no “right” or “wrong” answers. Your honest and thorough responses will help us gather meaningful data.</p>` +
-            `<p>Click 'Next' to begin.</p>`
-        ],
-        show_clickable_nav: true,
-        data: {trialphase: "pre_questionnaire_instructions"},
-        simulation_options:{
-            simulate: false
+let questionnaires_timeline = (total) => {
+    return [
+        {
+            type: jsPsychInstructions,
+            css_classes: ['instructions'],
+            pages: [
+                `<p>Please answer the following ${total} questionnaires.</p>` +
+                `<p>Each questionnaire will be presented on a separate page.</p>` +
+                `<p>Your responses are important, and we ask that you carefully read each question and answer as accurately and thoughtfully as possible.</p>` +
+                `<p>Please take your time with each item, and remember that there are no “right” or “wrong” answers. Your honest and thorough responses will help us gather meaningful data.</p>` +
+                `<p>Click 'Next' to begin.</p>`
+            ],
+            show_clickable_nav: true,
+            data: {trialphase: "pre_questionnaire_instructions"},
+            simulation_options:{
+                simulate: false
+            }
         }
-    }
-];
+    ];
+} 
 
 if (window.session === "screening"){
     // Self-report battery A
-    questionnaires_timeline = questionnaires_timeline.concat(
+    questionnaires_timeline = questionnaires_timeline('four').concat(
         questionnaire_phq(1,4),
         questionnaire_WSAS(2,4),
         questionnaire_ICECAP(3,4),
@@ -421,7 +427,7 @@ if (window.session === "screening"){
     );
 } else if (["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
     // Self-report battery B
-    questionnaires_timeline = questionnaires_timeline.concat(
+    questionnaires_timeline = questionnaires_timeline('seven').concat(
         questionnaire_phq(1,7),
         questionnaire_gad(2,7),
         questionnaire_pvss(3,7),
@@ -432,7 +438,7 @@ if (window.session === "screening"){
     );
 } else {
     // Self-report battery C
-    questionnaires_timeline = questionnaires_timeline.concat(
+    questionnaires_timeline = questionnaires_timeline('nine').concat(
         questionnaire_phq(1,9),
         questionnaire_gad(2,9),
         questionnaire_WSAS(3,9),
