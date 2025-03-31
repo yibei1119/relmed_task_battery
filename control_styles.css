@@ -37,6 +37,30 @@
   z-index: 3;
 }
 
+.nav-map {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  top: 1%;
+  right: 73%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-map-img {
+  position: absolute;
+  height: 100%;
+  z-index: 2;
+}
+
+.nav-map-island {
+  position: absolute;
+  height: 80%;
+  z-index: 2;
+}
+
 .quest-scroll {
   position: absolute;
   width: 30%;
