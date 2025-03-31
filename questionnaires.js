@@ -340,7 +340,8 @@ var questionnaire_BADS = (i,total) => {
         ],
         items: prompt_BADS,
         scale: likert_BADS,
-        survey_width: 700,
+        survey_width: 800,
+        item_width: 33,
         data: {
             trialphase: "BADS"
         }
@@ -356,7 +357,8 @@ var questionnaire_hopelessness = (i,total) => {
         ],
         items: prompt_hopelessness,
         scale: likert_hopelessness,
-        survey_width: 700,
+        survey_width: 800,
+        item_width: 40,
         data: {
             trialphase: "Hopelessness"
         }
@@ -438,10 +440,10 @@ if (window.session === "screening"){
     questionnaires_timeline = questionnaires_timeline('nine').concat(
         // questionnaire_phq(1,9),
         // questionnaire_gad(2,9),
-        questionnaire_WSAS(3,9),
-        questionnaire_ICECAP(4,9),
-        questionnaire_pvss(5,9),
-        questionnaire_BADS(6,9),
+        // questionnaire_WSAS(3,9),
+        // questionnaire_ICECAP(4,9),
+        // questionnaire_pvss(5,9),
+        // questionnaire_BADS(6,9),
         questionnaire_hopelessness(7,9),
         questionnaire_RRS_brooding(8,9),
         questionnaire_PERS_negAct(9,9)
