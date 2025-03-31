@@ -232,7 +232,8 @@ var questionnaire_WSAS = (i,total) => {
         ],
         items: prompt_WSAS,
         scale: likert_WSAS,
-        survey_width: 700,
+        survey_width: 800,
+        item_width: 37,
         data: {
             trialphase: "WSAS"
         },
@@ -435,8 +436,8 @@ if (window.session === "screening"){
 } else {
     // Self-report battery C
     questionnaires_timeline = questionnaires_timeline('nine').concat(
-        questionnaire_phq(1,9),
-        questionnaire_gad(2,9),
+        // questionnaire_phq(1,9),
+        // questionnaire_gad(2,9),
         questionnaire_WSAS(3,9),
         questionnaire_ICECAP(4,9),
         questionnaire_pvss(5,9),
