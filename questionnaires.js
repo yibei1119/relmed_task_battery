@@ -389,6 +389,7 @@ const questionnaire_PERS_negAct = (i, total) => {
         items: prompt_PERS_negAct,
         scale: likert_PERS_negAct,
         survey_width: 700,
+        item_width: 40,
         data: {
             trialphase: "PERS_negAct"
         }
@@ -444,8 +445,8 @@ if (window.session === "screening"){
         // questionnaire_ICECAP(4,9),
         // questionnaire_pvss(5,9),
         // questionnaire_BADS(6,9),
-        questionnaire_hopelessness(7,9),
-        questionnaire_RRS_brooding(8,9),
+        // questionnaire_hopelessness(7,9),
+        // questionnaire_RRS_brooding(8,9),
         questionnaire_PERS_negAct(9,9)
     );
 }
