@@ -29,7 +29,7 @@
   z-index: 2;
 }
 
-.feedback-ship-left, .feedback-ship-right {
+.feedback-ship {
   position: absolute;
   width: auto;
   height: 14.7%;
