@@ -79,6 +79,14 @@ var jsPsychRewardShip = (function (jspsych) {
   class RewardShipPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
+
+      // Define base rule mapping
+      this.baseRule = {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      };
     }
 
     trial(display_element, trial) {
@@ -97,6 +105,10 @@ var jsPsychRewardShip = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
+              <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+              </div>
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
               <div class="quest-scroll">
                 <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
@@ -131,14 +143,7 @@ var jsPsychRewardShip = (function (jspsych) {
         `;
       };
 
-      // Define base rule mapping
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
-      };
-
+      
       display_element.innerHTML = generateHTML();
 
       // Function to create and animate fuel icons
@@ -175,7 +180,20 @@ var jsPsychRewardShip = (function (jspsych) {
 
           // Start effort phase timer
           this.jsPsych.pluginAPI.setTimeout(() => {
-            endTrial();
+            // Cancel all keyboard responses
+            this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+            
+            // Apply fade-out animation to the selected ship
+            if (selectedKey === 'left') {
+              display_element.querySelector('.ship-left').classList.add('fade-out-left');
+            } else if (selectedKey === 'right') {
+              display_element.querySelector('.ship-right').classList.add('fade-out-right');
+            }
+
+            // End trial after animation completes
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              endTrial();
+            }, 350);
           }, trial.reward_effort);
         }
       };
