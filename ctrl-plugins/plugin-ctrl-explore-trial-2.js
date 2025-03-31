@@ -437,12 +437,12 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       return Math.random() < prob ? 'control' : 'base';
     }
 
-    generateFeedbackHTML(choice, chosenColor, destinationIsland, rule) {
+    generateFeedbackHTML(choice, chosenColor, destinationIsland, matchBaseRule) {
       // Invert the choice for feedback display
       const feedbackChoice = choice === 'left' ? 'right' : 'left';
       const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
       
-      if (rule === 'base') {
+      if (matchBaseRule) {
         return `
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
@@ -476,14 +476,14 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       }
     }
 
-    generateOceanCurrentsHTML(level, choice, rule) {
+    generateOceanCurrentsHTML(level, choice, matchBaseRule) {
       // Invert the choice for feedback display
       const feedbackChoice = choice === 'left' ? 'right' : 'left';
 
       // Helper function to create current lines based on level and direction
-      const createCurrentLines = (rule = "base", isTrace = false, isLeft = true) => {
+      const createCurrentLines = (matchBaseRule = true, isTrace = false, isLeft = true) => {
         let lines = '';
-        if (rule === "base") {
+        if (matchBaseRule) {
           // Generate positions based on level
           const positions = {
             1: [{ top: 49, offset: 20 }],
@@ -541,16 +541,16 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         return lines;
       };
 
-      if (rule === 'base') {
+      if (matchBaseRule) {
         return `
           <div class="ocean-current">
             <div class="current-group left-currents">
-              ${createCurrentLines(rule, true, true)}
-              ${createCurrentLines(rule, false, true)}
+              ${createCurrentLines(true, true, true)}
+              ${createCurrentLines(true, false, true)}
             </div>
             <div class="current-group right-currents">
-              ${createCurrentLines(rule, true, false)}
-              ${createCurrentLines(rule, false, false)}
+              ${createCurrentLines(true, true, false)}
+              ${createCurrentLines(true, false, false)}
             </div>
           </div>
         `;
@@ -558,29 +558,29 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         return `
           <div class="ocean-current">
             <div class="current-group ${feedbackChoice}-horizon-currents">
-            ${createCurrentLines(rule, true, feedbackChoice === 'left')}
-            ${createCurrentLines(rule, false, feedbackChoice === 'left')}
+            ${createCurrentLines(false, true, feedbackChoice === 'left')}
+            ${createCurrentLines(false, false, feedbackChoice === 'left')}
           </div>
         `;
       }
     }
 
-    createShipAnimation(display_element, choice, rule) {
+    createShipAnimation(display_element, choice, matchBaseRule) {
       // Invert the choice for feedback display
       const feedbackChoice = choice === 'left' ? 'right' : 'left';
       const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
 
       // Get ship and island elements
-      const shipImg = rule === "base" ? display_element.querySelector(`.feedback-ship`) : display_element.querySelector(`.ship-${feedbackChoice}`);
-      const islandImg = rule === "base" ? display_element.querySelector(`.island-far`) : display_element.querySelector(`.choice-${islandSide} .island-near`);
+      const shipImg = matchBaseRule ? display_element.querySelector(`.feedback-ship`) : display_element.querySelector(`.ship-${feedbackChoice}`);
+      const islandImg = matchBaseRule ? display_element.querySelector(`.island-far`) : display_element.querySelector(`.choice-${islandSide} .island-near`);
       
       if (!shipImg || !islandImg) return;
       
       // Calculate the distance to move the ship
-      const distance = rule === "base" ? islandImg.offsetWidth/2 + shipImg.offsetWidth : islandImg.offsetWidth + shipImg.offsetWidth / 4;
+      const distance = matchBaseRule ? islandImg.offsetWidth/2 + shipImg.offsetWidth : islandImg.offsetWidth + shipImg.offsetWidth / 4;
       
       // Determine if ship should be flipped based on which side it starts from
-      const shouldFlip = (feedbackChoice === 'left' && rule !== 'base') || (feedbackChoice === 'right' && rule === 'base');
+      const shouldFlip = (feedbackChoice === 'left' && !matchBaseRule) || (feedbackChoice === 'right' && matchBaseRule);
       const scaleX = shouldFlip ? '-1' : '1';
       
       // Create the animation style
@@ -588,7 +588,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       animationStyle.setAttribute('data-feedback-animation', 'true');
       
       // Define the animation with the calculated distance
-      animationStyle.textContent = rule === "base" ?`
+      animationStyle.textContent = matchBaseRule ?`
         @keyframes moveShip {
           0% { 
             opacity: 0;
@@ -649,22 +649,25 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
       oldStyles.forEach(style => style.remove());
 
+      // Match base rule island
+      const matchBaseRule = currentRule === 'base' || destinationIsland === this.baseRule[nearIsland];
+      
       // Generate feedback display
-      display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland, currentRule);
+      display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland, matchBaseRule);
 
-      // Determine which side the ship and island are on
-
-      // Add ocean currents if using base rule
-      if (currentRule === 'base') {
-        display_element.querySelector('.scene').insertAdjacentHTML(
-          'beforeend', 
-          this.generateOceanCurrentsHTML(currentStrength, choice, currentRule)
-        );
+      // Add ocean currents only if using base rule
+      // But this way also allows flexibility for future changes
+      display_element.querySelector('.scene').insertAdjacentHTML(
+        'beforeend', 
+        this.generateOceanCurrentsHTML(currentStrength, choice, matchBaseRule)
+      );
+      if (!matchBaseRule) {
+        display_element.querySelector(".ocean-current").style.visibility = "hidden";
       }
 
       // Create dynamic ship animation after DOM is ready
       setTimeout(() => {
-        this.createShipAnimation(display_element, choice, currentRule);
+        this.createShipAnimation(display_element, choice, matchBaseRule);
       }, 50);
 
       // Save data and end trial after duration
