@@ -1,52 +1,91 @@
 // Helper functions for creating instruction page elements
-const createOceanCurrents = (level = 3) => {
+const createOceanCurrents = (level = 3, choice = "right", matchBaseRule = true) => {
+    // Invert the choice for feedback display
+    const feedbackChoice = choice === 'left' ? 'right' : 'left';
+
     // Helper function to create current lines based on level and direction
-    const createCurrentLines = (isTrace = false, isLeft = true) => {
+    const createCurrentLines = (matchBaseRule = true, isTrace = false, isLeft = true) => {
         let lines = '';
-        const positions = {
-            1: [{ top: 49, offset: 20 }],
-            2: [
-                { top: 45, offset: 50 },
-                { top: 55, offset: 30 }
-            ],
-            3: [
-                { top: 45, offset: 50 },
-                { top: 49, offset: 20 },
-                { top: 55, offset: 30 }
-            ]
-        };
+        if (matchBaseRule) {
+            // Generate positions based on level
+            const positions = {
+                1: [{ top: 49, offset: 20 }],
+                2: [
+                    { top: 43, offset: 50 },
+                    { top: 55, offset: 30 }
+                ],
+                3: [
+                    { top: 43, offset: 50 },
+                    { top: 49, offset: 20 },
+                    { top: 55, offset: 30 }
+                ]
+            };
 
-        const currentPositions = positions[level] || positions[3];
+            const currentPositions = positions[level] || positions[3];
 
-        currentPositions.forEach(({ top, offset }) => {
-            const position = isLeft ? 'right' : 'left';
-            const styles = `top: ${top}%; ${position}: calc(5% + ${offset}px);`;
+            currentPositions.forEach(({ top, offset }) => {
+                const position = isLeft ? 'right' : 'left';
+                const styles = `top: ${top}%; ${position}: calc(5% + ${offset}px);`;
 
-            if (isTrace) {
-                lines += `<div class="current-trace" style="${styles}"></div>`;
-            } else {
-                lines += `<div class="current-line" style="${styles}"></div>`;
-            }
-        });
+                if (isTrace) {
+                    lines += `<div class="current-trace" style="${styles};"></div>`;
+                } else {
+                    lines += `<div class="current-line" style="${styles};"></div>`;
+                }
+            });
+        } else {
+            const positions = {
+                1: [{ top: 80, offset: 20 }],
+                2: [
+                    { top: 70, offset: 50 },
+                    { top: 90, offset: 30 }
+                ],
+                3: [
+                    { top: 70, offset: 50 },
+                    { top: 80, offset: 20 },
+                    { top: 90, offset: 30 }
+                ]
+            };
+
+            const currentPositions = positions[level] || positions[3];
+
+            currentPositions.forEach(({ top, offset }) => {
+                const position = isLeft ? 'right' : 'left';
+                const styles = `top: ${top}%; ${position}: calc(15% + ${offset}px);`;
+
+                if (isTrace) {
+                    lines += `<div class="current-trace" style="${styles}; width: 70%"></div>`;
+                } else {
+                    lines += `<div class="current-line" style="${styles}; width: 75%"></div>`;
+                }
+            });
+        }
+
         return lines;
     };
 
-    return `
+    if (matchBaseRule) {
+        return `
         <div class="ocean-current">
             <div class="current-group left-currents">
-                <!-- Static traces -->
-                ${createCurrentLines(true, true)}
-                <!-- Animated lines -->
-                ${createCurrentLines(false, true)}
+                ${createCurrentLines(true, true, true)}
+                ${createCurrentLines(true, false, true)}
             </div>
             <div class="current-group right-currents">
-                <!-- Static traces -->
-                ${createCurrentLines(true, false)}
-                <!-- Animated lines -->
-                ${createCurrentLines(false, false)}
+                ${createCurrentLines(true, true, false)}
+                ${createCurrentLines(true, false, false)}
             </div>
-        </div>
-    `;
+            </div>
+        `;
+    } else {
+        return `
+        <div class="ocean-current">
+            <div class="current-group ${feedbackChoice}-horizon-currents">
+            ${createCurrentLines(false, true, feedbackChoice === 'left')}
+            ${createCurrentLines(false, false, feedbackChoice === 'left')}
+            </div>
+        `;
+    }
 };
 const createInstructionDialog = (content) => {
     return `
@@ -151,16 +190,24 @@ function setupFuelTrial(config) {
         // When finishCondition returns true, finish the trial.
         if (config.finishCondition(trialPresses, progress)) {
             jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
+
+            // Apply fade-out animation to the selected ship
+            if (selectedKey === 'left') {
+                display_element.querySelector('.ship-left').classList.add('fade-out-left');
+            } else if (selectedKey === 'right') {
+                display_element.querySelector('.ship-right').classList.add('fade-out-right');
+            }
+
             document.querySelector('.instruction-content').innerHTML = config.finishMessage;
             jsPsych.pluginAPI.setTimeout(() => {
                 document.getElementById("jspsych-instructions-next").disabled = false;
-            }, config.finishDelay || 1000);
+            }, config.finishDelay || 350);
         }
     }
 }
 
 // Main instruction pages configuration
-const nPages = 16;
+const nPages = 13;
 const controlInstructionPages = [
     // Page 0: Initial Welcome
     {
@@ -168,78 +215,118 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
+            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
+                <div class="choice-left">
+                    <div class="fuel-container-left" style="visibility: hidden;">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
+                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="arrow-left" style="visibility: hidden;" src="imgs/left.png" alt="Left arrow" />
+                </div>
                 <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <div class="choice-right">
+                    <div class="fuel-container-right">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
+                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="arrow-right" style="visibility: hidden;" src="imgs/left.png" alt="right arrow" />
+                </div>
             </div>
             ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
-                <h2>Welcome to the Island Explorer Game!</h2>
-                <p>You are an explorer of tropical islands, each famous for the unique fruit that grows there.</p>
-                <p>In this game, you'll sail from island to island, with the goal of discovering how the islands and the shipping routes connecting them are arranged.</p>
+                <h2>Welcome to your new position as Fruit Shipping Manager!</h2>
+                <p>You're responsible for the transportation of valuable fruit cargo between islands.</p>
+                <p>With proper training, you'll earn rewards and become a skilled manager.</p>
                 `)}
             ${createProgressBar(1, nPages)}
         </div>
         `
     },
 
-    // Page 1: You start on this coconut island
+    // Page 1: Main responsibility
     {
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <div class="overlap-group">
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
-                <div class="island-indicator near-indicator">
-                    <span class="selection-dot"></span>
-                    <div class="selection-label">Current Island</div>
+            <div class="icon-container" style="display: flex; flex-direction: column; align-items: left; justify-content: center; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px; width: 60%; max-width: 500px;">
+                <h3>As a manager, you have three duties:</h3>
+                <div class="icon-row" style="display: flex; align-items: center; margin: 10px 0;">
+                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 50px; height: 50px; margin-right: 15px;"><p style="text-align: left;"><strong>Training Voyages</strong></br><span style="font-size: 18px;">Practice runs to learn how ships and ocean currents behave</span></p>
+                </div>
+                <div class="icon-row" style="display: flex; align-items: center; margin: 10px 0;">
+                    <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 50px; height: 50px; margin-right: 15px;"><p style="text-align: left;"><strong>Reward Missions</strong></br><span style="font-size: 18px;">Official cargo deliveries where you'll earn rewards by sending the ship to the target island</span></p>
+                </div>
+                <div class="icon-row" style="display: flex; align-items: center; margin: 10px 0;">
+                    <img src="imgs/icon-predict.png" alt="Knowledge Assessments:" style="width: 50px; height: 50px; margin-right: 15px;"><p style="text-align: left;"><strong>Knowledge Assessments</strong></br><span style="font-size: 18px;">Brief tests to confirm your understanding of shipping routes</span></p>
                 </div>
             </div>
-            ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
-                <p>As an explorer, you choose which ship to take and how much fuel to provide it.</p>
-                <p>You will start each turn from one of four islands.</p>
-                <p>Currently, you're starting on <span style="color: gold">Banana Island</span>🍌...</p>
+                <p>These duties will appear throughout your work as manager.</p>
+                <p>Let's start with <strong>Training Voyages</strong> so you can learn the basics before taking on real assignments.</p>
             `)}
             ${createProgressBar(2, nPages)}
         </div>
         `
     },
 
-    // Page 2: The ships are docked at the island.
+    // Page 2: The Training Voyages
     {
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
+            <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+            </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
+            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="selection-indicator">
-                        <div class="selection-label">The green ship...</div>
+                        <div class="selection-label">Green Ship</div>
                         <span class="selection-dot"></span>
                     </div>
+                    <div class="fuel-container-left" style="visibility: hidden;">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
                     <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
-                    <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
+                    <img class="arrow-left" style="visibility: hidden;" src="imgs/left.png" alt="Left arrow" />
                 </div>
                 <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
                 <div class="choice-right">
-                    <div class="selection-indicator">
-                        <div class="selection-label">...and blue ship</div>
+                    <div class="selection-indicator"">
+                        <div class="selection-label">Blue Ship</div>
                         <span class="selection-dot"></span>
                     </div>
+                    <div class="fuel-container-right">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
                     <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
-                    <img class="arrow-right" src="imgs/left.png" alt="right arrow" />
+                    <img class="arrow-right" style="visibility: hidden;" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
             ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
-                <p>Now, two ships are docked here:</p>
+                <p>Every ship in our fleet has two important properties:</p>
                 <ul>
-                    <li>A <span style="color: ForestGreen">green ship</span> on the left</li>
-                    <li>A <span style="color: royalblue">blue ship</span> on the right</li>
+                    <li>A <strong>Home Base</strong> island where it returns when properly fueled</li>
+                    <li>The ability to navigate against ocean currents when given enough fuel</li>
                 </ul>
             `)}
             ${createProgressBar(3, nPages)}
@@ -247,14 +334,88 @@ const controlInstructionPages = [
         `
     },
 
-    // Page 3: Start trying with the ship on the right
+    // Page 3: Without fuel...
     {
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
+            <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+            </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
+            <div class="selection-indicator" style="top: 32%;left: 12%;">
+                <span class="selection-dot"></span>
+                <div class="selection-label">Drift Map</div>
+            </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
+            <div class="selection-indicator" style="top: 20%;left: 65%;flex-direction: row-reverse;">
+                <div class="selection-label">Drift Destination</div>
+                <span class="selection-dot"></span>
+            </div>
+            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
+                    <div class="fuel-container-left" style="visibility: hidden;">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
+                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="arrow-left" style="visibility: hidden;" src="imgs/left.png" alt="Left arrow" />
+                </div>
+                <div class="selection-indicator" style="top: -30%">
+                    <div class="selection-label">Departure Island</div>
+                    <span class="selection-dot"></span>
+                </div>
+                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <div class="choice-right">
+                    <div class="fuel-container-right">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
+                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="arrow-right" style="visibility: hidden;" src="imgs/left.png" alt="right arrow" />
+                </div>
+            </div>
+            ${createOceanCurrents(3)}
+            </section>
+            ${createInstructionDialog(`
+                <p>Without enough fuel, ships simply drift with the current from the <strong>Departure Island</strong> to the <strong>Drift Destination</strong> you can see in the distance.</p>
+                <p>You can also check the Drift Map to see where ships will end up.</p>
+            `)}
+            ${createProgressBar(4, nPages)}
+        </div>
+        `
+    },
+
+    // Page 4: Let's try that out...
+    {
+        content: `
+        <div class="instruction-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+            <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+            </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
+            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <div class="overlap-group">
+                <div class="choice-left">
+                    <div class="fuel-container-left" style="visibility: hidden;">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
                     <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
                     <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
@@ -265,9 +426,9 @@ const controlInstructionPages = [
                         <span class="selection-dot"></span>
                     </div>
                     <div class="fuel-container-right">
-                    <div class="fuel-indicator-container">
-                        <div class="fuel-indicator-bar"></div>
-                    </div>
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
                     </div>
                     <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
                     <img class="arrow-right" src="imgs/left.png" alt="right arrow" />
@@ -276,51 +437,37 @@ const controlInstructionPages = [
             ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
-                <p>Each ship has a specific home island. If you provide enough fuel, the ship will take you directly to its home island.</p>
-                <p>Let's try it out! <strong>Select the blue ship by pressing the right arrow key.</strong></p>
+                <p><strong>Let's try it! Send the blue ship by pressing the right arrow key.</strong></p>
             `)}
-            ${createProgressBar(4, nPages)}
-        </div>
-        `
-    },
-
-    // Page 4: Ending up on the next island
-    {
-        content: `
-        <div class="instruction-stage">
-            <img class="background" src="imgs/ocean.png" alt="Background"/>
-            <section class="scene">
-                <div class="overlap-group">
-                    <div class="choice-left">
-                        <img class="island-near" src="imgs/simple_island_coconut.png">
-                    </div>
-                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
-                    <div class="choice-right">
-                        <img class="ship-right" src="imgs/simple_ship_blue.png">
-                    </div>
-                </div>
-            </section>
-            ${createInstructionDialog(`
-                <p>The ship didn't have enough fuel and ran out of fuel midway. Luckily, the ocean currents tend to carry ships with insufficient fuel to the next island.</p>
-                <p>So the ship just drifted from the <span style="color: gold">banana island</span>🍌 to the <span style="color: brown">coconut island</span>🥥, which is the next island.</p>`)}
             ${createProgressBar(5, nPages)}
         </div>
         `
     },
 
-    // Page 5: Islands in the Chain
+    // Page 5: Ending up on the next island
     {
         content: `
         <div class="instruction-stage">
-            <img class="background" src="imgs/default_islands.png" alt="Background"/>
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+                <div class="nav-map">
+                    <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                    <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+                </div>
+                <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                </div>
+                <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+                <img class="feedback-ship" src="imgs/simple_ship_blue.png" alt="Ship" style="opacity: 0;" />
+            ${createOceanCurrents(3)}
+            </section>
             ${createInstructionDialog(`
-                <p>Thanks to many former explorers, this is a map of the four islands in the network. The arrows show how the ocean currents work.</p>
-                <p><strong>When a ship does not have sufficient fuel, the current carries it to the next island along the arrows.</strong></p>
-                <p>For example, without fuel, a ship leaving the <span style="color: orange">orange island</span>🍊 will end up on the <span style="color: gold">banana island</span>🍌.</p>
-            `)}
+                <p>The ship ran out of fuel midway.</p>
+                <p>It drifted from <span style="color: gold">Banana Island</span>🍌 to <span style="color: brown">Coconut Island</span>🥥.</p>
+                `)}
             ${createProgressBar(6, nPages)}
         </div>
-    `
+        `
     },
 
     // Page 6: Let's try again
@@ -329,11 +476,14 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
-            <div class="island-indicator far-indicator">
-                <span class="selection-dot"></span>
-                <div class="selection-label">This is the next island<br>(and will always be visible)</div>
+            <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
+            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
@@ -357,9 +507,8 @@ const controlInstructionPages = [
             ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
-                <p>Let's try it again. <strong>In the distance, you can see the next island is <span style="color: brown">Coconut Island</span>🥥.</strong> This is where you'll end up if you don't provide enough fuel.</p>
-                <p>Now, try to fully fuel the ship by rapidly pressing the arrow key repeatedly.</p>
-                <p>Don't worry! We'll give you some extra time.</p>
+                <p>Let's try again. This time, add more fuel by rapidly pressing the arrow key multiple times.</p>
+                <p>Don't worry! We'll give you extra time.</p>
             `)}
             ${createProgressBar(7, nPages)}
         </div>
@@ -372,21 +521,27 @@ const controlInstructionPages = [
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
-            <section class="scene">
-                <div class="overlap-group">
+                <section class="scene">
+                    <div class="nav-map">
+                    <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                    <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+                </div>
+                <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                </div>
+                <div class="overlap-group" style="justify-content: space-between;">
                     <div class="choice-left">
-                        <img class="island-near" src="imgs/simple_island_grape.png">
+                        <img class="ship-left" src="imgs/simple_ship_blue.png" alt="Ship" style="opacity: 0;" />
                     </div>
-                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
+                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
                     <div class="choice-right">
-                        <img class="ship-right" src="imgs/simple_ship_blue.png">
+                        <img class="island-near" src="imgs/simple_island_grape.png" alt="Destination island" style="top: -10%;" />
                     </div>
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, the ship had enough fuel this time! When a ship have enough fuel, it will try to return to its home base.</p>
-                <p>This <span style="color: royalblue">blue ship</span> has a <span style="color: purple">grape island</span>🍇 as the home base. Because it's fueled up this time, it went to its home base island instead of drifting with the current to the next island.</p>
-                <p><strong>Note that the ships can also start from and sail back to their home bases.</strong></p>
+                <p>Great job! With enough fuel, the <span style="color: royalblue">blue ship</span> reached its <strong>Home Base</strong> at <span style="color: purple">Grape Island</span>🍇.</p>
+                <p><strong>Remember: Ships can start from and return to their home base, which might sometimes be the same as a drift destination.</strong></p>
             `)}
             ${createProgressBar(8, nPages)}
         </div>
@@ -400,11 +555,11 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(1)}
             <div class="current-indicator">
-                <div class="label"><strong>Low current</strong>:<br> a little fuel needed</div>
+                <div class="label"><strong>Low current</strong>:<br> Only a little fuel needed</div>
             </div>
             ${createInstructionDialog(`
-                <p>But how much fuel is enough? This depends on the ocean current. You can check the current strength each day:</p>
-                <p>One stripe means low current: only a little fuel is needed...</p>
+                <p>The fuel needed depends on ocean current strength:</p>
+                <p>One stripe means low current - you'll need just a little fuel.</p>
             `)}
             ${createProgressBar(9, nPages)}
         </div>
@@ -418,10 +573,10 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(2)}
             <div class="current-indicator">
-                <div class="label"><strong>Medium current</strong>:<br> a moderate amount of fuel needed</div>
+                <div class="label"><strong>Medium current</strong>:<br> Moderate fuel needed</div>
             </div>
             ${createInstructionDialog(`
-                <p>Two stripes mean medium current: a moderate amount of fuel is needed...</p>
+                <p>Two stripes mean medium current - you'll need a moderate amount of fuel.</p>
             `)}
             ${createProgressBar(10, nPages)}
         </div>
@@ -435,75 +590,63 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(3)}
             <div class="current-indicator">
-                <div class="label"><strong>Strong current</strong>:<br> a lot of fuel needed</div>
+                <div class="label"><strong>Strong current</strong>:<br> A lot of fuel needed</div>
             </div>
             ${createInstructionDialog(`
-                <p>Three stripes indicate a strong current: you will need a lot of fuel.</p>
-                <p>The stronger the current, the more fuel you'll have to fuel the ship <strong>if you want it to go to its home base</strong>.</p>
+                <p>Three stripes mean strong current - you'll need a lot of fuel.</p>
+                <p>Current strength is always shown. <strong>Stronger currents require more fuel to reach a ship's home base!</strong></p>
             `)}
             ${createProgressBar(11, nPages)}
         </div>
         `
     },
 
-    // Page 11: Quest trial explanation
+    // Page 11: Managing your energy
     {
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
-            <section class="scene">
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
-            <div class="quest-scroll">
-                <p style="position: absolute; text-align: center; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
-                <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
-                <img class="island-target" src="imgs/island_icon_grape.png" alt="Target island" />
-                <p style="position: absolute; text-align: center; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
-            </div>
-            <div class="overlap-group">
-                <div class="choice-left">
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
-                </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
-                <div class="choice-right">
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+            <div class="instruction-dialog" style="bottom:40%; min-width: 600px;">
+                <div class="instruction-content" style="font-size: 1.2em; text-align: center;">
+                    <p>Careful! Adding fuel requires repeated key presses, which can be tiring...</p>
+                    <p>Be strategic - use the fuel you think is necessary, based on your destination and the current strength.</p>
                 </div>
             </div>
-            ${createOceanCurrents(3)}
-            </section>
-            ${createInstructionDialog(`
-                <p>Once in a while in your job, you will receive rewarded quests like this.</p>
-                <p>When you see a quest scroll, use your knowledge of the shipping network to choose the appropriate ship and decide how much fuel to provide.</p>
-                <p>Successfully completing quests earns you extra money!</p>
-            `)}
             ${createProgressBar(12, nPages)}
         </div>
         `
     },
 
-    // Page 12: Quest trial tryout
+    // Page 12: Recap
     {
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
-            <div class="quest-scroll">
-                <p style="position: absolute; text-align: center; z-index: 4; top: 15px; font-size: 18px; color: maroon">Target Island</p>
-                <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
-                <img class="island-target" src="imgs/island_icon_grape.png" alt="Target island" />
-                <p style="position: absolute; text-align: center; z-index: 4; top: 125px; font-size: 18px; color: maroon">Quest reward: 5p</p>
+            <div class="nav-map">
+                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
+                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
+            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
+                    <div class="fuel-container-left" style="visibility: hidden;">
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
+                    </div>
                     <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
                     <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
                 <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="fuel-container-right">
-                    <div class="fuel-indicator-container">
-                        <div class="fuel-indicator-bar"></div>
-                    </div>
+                        <div class="fuel-indicator-container">
+                            <div class="fuel-indicator-bar"></div>
+                        </div>
                     </div>
                     <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
                     <img class="arrow-right" src="imgs/left.png" alt="right arrow" />
@@ -512,69 +655,29 @@ const controlInstructionPages = [
             ${createOceanCurrents(3)}
             </section>
             ${createInstructionDialog(`
-                <p>Let's give it a try!</p>
-                <p>Remember, you've already learned that <strong>the <span style="color: royalblue">blue ship</span>'s home base is <span style="color: purple">grape island</span>🍇</strong>. So, if you provide it with enough fuel, it will take you directly to the target island.</p>
-                <p>Now, try the blue ship and fuel it up to reach the target island.</p>
+                <p>To recap, during <strong>Training Voyages</strong>, you will:</p>
+                <ul>
+                    <li>Select ships using arrow keys</li>
+                    <li>Add fuel by repeatedly pressing the same key</li>
+                    <li>Learn each ship's home base and fuel requirements for different current strengths</li>
+                </ul>
+                <p><strong>This training will help you succeed in Reward Missions and Knowledge Assessments.</strong></p>
             `)}
             ${createProgressBar(13, nPages)}
         </div>
         `
     },
 
-    // Page 13: Quest trial outcome
-    {
-        content: `
-        <div class="instruction-stage">
-            <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-            <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
-                <div class="instruction-content" style="font-size: 24px; text-align: center;">
-                <p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p>
-                </div>
-            </div>
-            ${createInstructionDialog(`
-                <p>Great job! You've successfully completed the quest and earned a reward of 5p.</p>
-                <p>The more quests you complete, the more money you'll earn!</p>
-            `)}
-            ${createProgressBar(14, nPages)}
-        </div>
-        `
-    },
-
-    // Page 14: Other types of questions
+    // Page 13: End of instructions
     {
         content: `
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
-            <section class="scene">
-                <div class="overlap-group">
-                    <div class="choice-left">
-                        <div class="selection-indicator" style="top: 50%;">
-                            <div class="selection-label">What's the home base of this ship?</div>
-                            <span class="selection-dot"></span>
-                        </div>
-                        <img class="island-near" src="imgs/simple_island_banana.png" style="visibility:hidden;" alt="Nearer island" />
-                        <img class="ship-left" src="imgs/simple_ship_blue.png" style="top:-20%" alt="Prediction ship" />
-                    </div>
-                </div>
-            </section>
-            ${createInstructionDialog(`
-                <p>Sometimes we'll also check your knowledge directly. We'll show you a ship and simply ask you to identify its home island.</p>
-            `)}
-            ${createProgressBar(15, nPages)}
-        </div>
-        `
-    },
-
-    // Page 15: End of instructions
-    {
-        content: `
-        <div class="instruction-stage">
-            <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-            <div class="instruction-dialog" style="bottom:30%; min-width: 600px;">
+            <div class="instruction-dialog" style="bottom:40%; min-width: 600px;">
                 <div class="instruction-content" style="font-size: 1.2em; text-align: center;">
-                    <p>😊 <strong>Perfect!</strong> You've successfully completed the instructions.</p>
-                    <p>You're now ready to start managing the shipping network.</p>
-                    <p>Press <span class="spacebar-icon">Next</span> to continue, or press <span class="spacebar-icon">Restart</span> if you'd like to review the instructions again.</p>
+                    <p>😊 <strong>Well done!</strong> You've completed the instructions and are ready to start.</p>
+                    <p>Training voyages will begin soon, followed by reward missions and knowledge tests.</p>
+                    <p>Press <span class="spacebar-icon">Next</span> to continue or <span class="spacebar-icon">Restart</span> to review these instructions again.</p>
                 </div>
             </div>
         </div>
@@ -595,7 +698,7 @@ controlInstructionTrial = {
     data: {trialphase: "control_instructions"},
     simulation_options: {simulate: false},
     on_page_change: function(current_page) {
-        if (current_page === 3) {
+        if (current_page === 4) {
             setupFuelTrial({
                 initialMessage: `<p>You can now load up fuel by <strong>pressing the same arrow key again and again.</strong> The fuel gauge will fill up as you press the key.</p>
                 <p>Give it a try!</p>`,
@@ -606,44 +709,55 @@ controlInstructionTrial = {
             });
         }
 
-        if (current_page === 4 || current_page === 7) {
-            // Add animation styles
-            const animationStyle = document.createElement('style');
-            animationStyle.setAttribute('data-feedback-animation', 'true');
+        if (current_page === 5) {
+            const choice = 'right';
 
-            const shipImg = document.querySelector('.ship-right');
+            // Add animation styles
+            const shipImg = display_element.querySelector(`.feedback-ship`);
+            const islandImg = display_element.querySelector(`.island-far`);
             
+            // Calculate the distance to move the ship
+            const distance = islandImg.offsetWidth/2 + shipImg.offsetWidth;
+
             // Determine if ship should be flipped based on which side it starts from
             // Ships on the left are already flipped with scaleX(-1) in the CSS
             // As long as it's flipped here, it will move in the correct direction
-            const choice = 'right';
             const shouldFlip = choice === 'left';
             const scaleX = shouldFlip ? '-1' : '1';
+
+            // Remove any existing animation style elements
+            const existingAnimationStyle = document.querySelector('style[data-feedback-animation="true"]');
+            if (existingAnimationStyle) {
+                existingAnimationStyle.remove();
+            }
             
-            // Calculate the distance to move the ship
-            const distance = document.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/2;
+            const animationStyle = document.createElement('style');
+            animationStyle.setAttribute('data-feedback-animation', 'true');
+
 
             // Create the animation CSS with proper scale preservation
             animationStyle.textContent = `
                 @keyframes moveShip {
-                0% { 
-                    transform: scaleX(${scaleX}) translateX(0);
-                }
-                100% { 
-                    transform: scaleX(${scaleX}) translateX(-${distance}px);
-                }
-                }
-                
-                .ship-animate {
-                animation: moveShip 0.95s ease-in-out forwards;
-                }
+                    0% { 
+                        opacity: 0;
+                        transform: scaleX(${scaleX}) translateX(${distance}px) translateY(${shipImg.offsetHeight/2}px);
+                    }
+                    100% { 
+                        opacity: 1;
+                        transform: scaleX(${scaleX * 0.9}) scaleY(0.9) translateX(${shipImg.offsetWidth/3 + islandImg.offsetWidth/2}px);
+                    }
+                    }
+                    
+                    .ship-animate {
+                    animation: moveShip 600ms ease-out forwards;
+                    }
             `;
             document.head.appendChild(animationStyle);
 
             // Apply the animation class after a small delay to ensure DOM is ready
             setTimeout(() => {
                 shipImg.classList.add('ship-animate');
-            }, 50);
+            }, 100);
         }
 
         if (current_page === 6) {
@@ -657,18 +771,54 @@ controlInstructionTrial = {
             });
         }
 
-        if (current_page === 12) {
-            setupFuelTrial({
-                initialMessage: `<p>Keep adding fuel to the ship until it's full just in case!</p>`,
-                // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
-                progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
-                // Finish trial when the fuel bar reaches 100% width.
-                finishCondition: (trialPresses, progress) => progress >= 100,
-                finishMessage: `<p>The ship is now fully fueled and ready to depart! Let’s see if you successfully complete this quest!</p>`
-            });
+        if (current_page === 7) {
+            const choice = 'right';
+            const feedbackChoice = choice === 'left' ? 'right' : 'left';
+            const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
+
+            // Add animation styles
+            const shipImg = display_element.querySelector(`.ship-${feedbackChoice}`);
+            const islandImg = display_element.querySelector(`.choice-${islandSide} .island-near`);
+            
+            // Calculate the distance to move the ship
+            const distance = islandImg.offsetWidth + shipImg.offsetWidth / 4;
+
+            // Determine if ship should be flipped based on which side it starts from
+            // Ships on the left are already flipped with scaleX(-1) in the CSS
+            // As long as it's flipped here, it will move in the correct direction
+            const shouldFlip = feedbackChoice === 'left';
+            const scaleX = shouldFlip ? '-1' : '1';
+
+            const animationStyle = document.createElement('style');
+            animationStyle.setAttribute('data-feedback-animation', 'true');
+
+
+            // Create the animation CSS with proper scale preservation
+            animationStyle.textContent = `
+                @keyframes moveShip {
+                    0% { 
+                        opacity: 0;
+                        transform: scaleX(${scaleX}) translateX(0);
+                    }
+                    100% { 
+                        opacity: 1;
+                        transform: scaleX(${scaleX}) translateX(-${distance}px);
+                    }
+                }
+                    
+                .ship-animate {
+                animation: moveShip 600ms ease-out forwards;
+                }
+            `;
+            document.head.appendChild(animationStyle);
+
+            // Apply the animation class after a small delay to ensure DOM is ready
+            setTimeout(() => {
+                shipImg.classList.add('ship-animate');
+            }, 100);
         }
 
-        if (current_page === 15) {
+        if (current_page === 13) {
             const navigationElement = document.querySelector('.jspsych-instructions-nav');
             const firstButton = navigationElement.querySelector('button:first-child');
             const newButton = document.createElement('button');
@@ -680,7 +830,6 @@ controlInstructionTrial = {
                 jsPsych.finishTrial({restart: true});
             });
             navigationElement.insertBefore(newButton, firstButton.nextSibling);
-
         }
     }
 };
@@ -693,32 +842,32 @@ controlIntroComprehension.push({
     data: {trialphase: "control_instruction_quiz"},
     questions: [
         {
-            prompt: "My main task is to learn each ship’s home island and the amount of fuel required at each current level.",
-            name: "objective",
+            prompt: "Blue ship uses Grape island as the home base.",
+            name: "blue_homebase",
             options: ["True", "False"],
             required: true
         },
         {
-            prompt: "From time to time, my knowledge of the shipping task will be tested, and I can earn rewards for correct answers and completing quests.",
-            name: "reward",
+            prompt: "As a shipping network manager, I have three main duties: Training Voyages, Knowledge Assessments, and Reward Missions.",
+            name: "duties",
             options: ["True", "False"],
             required: true
         },
         {
-            prompt: "Grape island is the home base for the blue ship.",
-            name: "homebase",
-            options: ["True", "False"],
-            required: true
-        },
-        {
-            prompt: "Different current levels require different amounts of fuel for a ship to reach its home base.",
-            name: "currents",
-            options: ["True", "False"],
-            required: true
-        },
-        {
-            prompt: "If a ship lacks sufficient fuel, the currents will carry it to the next island.",
+            prompt: "When a ship doesn't have enough fuel, it will drift to the destination following the ocean current.",
             name: "drift",
+            options: ["True", "False"],
+            required: true
+        },
+        {
+            prompt: "The amount of fuel needed to reach a ship's home base depends on the ocean current strength level.",
+            name: "current_fuel",
+            options: ["True", "False"],
+            required: true
+        },
+        {
+            prompt: "In Reward Missions, I need to select the proper ship and provide appropriate fuel to deliver cargo to specific target islands.",
+            name: "reward",
             options: ["True", "False"],
             required: true
         }
@@ -730,33 +879,50 @@ controlIntroComprehension.push({
                 Q1: `True`,
                 Q2: `True`,
                 Q3: `True`,
-                Q4: `True`,
+                Q4: `True`
             }
         }
     }
 });
 
 controlIntroComprehension.push(
-    {
+    {   
         type: jsPsychInstructions,
         css_classes: ['instructions'],
-        timeline: [
-            {
-                pages: [
-                `<p>You did not answer all the quiz questions correctly.</p>
-                <p>Please read the instructions again before you continue.</p>`
-                ]
-            }
-        ],
-        conditional_function: () => {
-            const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
-
-            return !Object.values(data).every(value => value === "True");
-        },
+        allow_keys: false,
+        show_page_number: false,
         show_clickable_nav: true,
         simulation_options: {simulate: false},
         data: {
             trialphase: "control_instruction_quiz_failure"
+        },
+        timeline: [
+            {
+                pages: [
+                `
+                <p>You did not answer all the quiz questions correctly.</p>
+                <p>Press <span class="spacebar-icon">Next</span> to re-take the questions</br>or</br><span class="spacebar-icon">Restart</span> to review the full instructions again.</p>
+                `
+                ]
+            }
+        ],
+        on_load: function() {
+            const navigationElement = document.querySelector('.jspsych-instructions-nav');
+            const firstButton = navigationElement.querySelector('button:first-child');
+            const newButton = document.createElement('button');
+            newButton.id = 'jspsych-instructions-restart';
+            newButton.textContent = 'Restart';
+            newButton.className = 'jspsych-btn';
+            newButton.style.backgroundColor = '#ff7875';
+            newButton.addEventListener('click', () => {
+                jsPsych.finishTrial({restart: true});
+            });
+            navigationElement.insertBefore(newButton, firstButton.nextSibling);
+        },
+        conditional_function: () => {
+            const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
+
+            return !Object.values(data).every(value => value === "True");
         }
     }
 )
@@ -770,12 +936,22 @@ const controlInstructions = {
     }
 };
 
-const controlInstructionsLoop = {
-    timeline: [controlInstructions, controlIntroComprehension],
+const controlComprehensionLoop = {
+    timeline: [controlIntroComprehension],
     loop_function: () => {
         const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
+        const restart = jsPsych.data.get().filter({trialphase: "control_instruction_quiz_failure"}).last(1).select('restart').values[0];
 
-        return !Object.values(data).every(value => value === "True");
+        return !Object.values(data).every(value => value === "True") && !restart;
+    }
+}
+
+const controlInstructionsLoop = {
+    timeline: [controlInstructions, controlComprehensionLoop],
+    loop_function: () => {
+        const restart = jsPsych.data.get().filter({trialphase: "control_instruction_quiz_failure"}).last(1).select('restart').values[0];
+
+        return restart;
     },
     on_timeline_start: () => {
         updateState(`control_start_instructions`)
