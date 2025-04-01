@@ -78,9 +78,9 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       // Generate trial HTML
       const html = `
         <div class="instruction-stage" style="transform: unset;">
-          <img class="background" src="imgs/ocean.png" alt="Background"/>
+          <img class="background" style="top: -5vh;" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
-            <div class="overlap-group" style="transform: translateY(-10vh);">
+            <div class="overlap-group">
               <div class="choice-left">
                 <img class="island-near" src="imgs/simple_island_banana.png" style="visibility:hidden;" alt="Nearer island" />
                 <img class="ship-left" src="imgs/simple_ship_${trial.ship}.png" style="top:-10%" alt="Prediction ship" />
@@ -88,7 +88,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
             </div>
           </section>
         </div>
-        <p style="position: relative; top: -10vh;"><strong><span class="highlight-txt">Which island is the home base of this ship?</span></strong><br>Use the mouse to click the button below to choose.</p>
+        <p style="position: relative; top: -5vh;"><strong><span class="highlight-txt">Which island is the home base of this ship?</span></strong><br>Use the mouse to click the button below to choose.</p>
         <div class="island-choices">
         </div>
         <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%; transform: translateX(-50%); left: 50%;">
