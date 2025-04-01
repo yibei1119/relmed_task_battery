@@ -40,8 +40,8 @@
 .nav-map {
   position: absolute;
   width: 30%;
-  height: 30%;
-  top: 1%;
+  height: 32.5%;
+  top: 2%;
   right: 73%;
   z-index: 2;
   display: flex;
