@@ -78,22 +78,22 @@ var jsPsychExploreShip = (function (jspsych) {
         const positions = {
           1: [{ top: 49, offset: 20 }],
           2: [
-            { top: 45, offset: 50 },
+            { top: 43, offset: 50 },
             { top: 55, offset: 30 }
           ],
           3: [
-            { top: 45, offset: 50 },
+            { top: 43, offset: 50 },
             { top: 49, offset: 20 },
             { top: 55, offset: 30 }
           ]
         };
 
         const currentPositions = positions[level] || positions[3];
-        
+
         currentPositions.forEach(({ top, offset }) => {
           const position = isLeft ? 'right' : 'left';
           const styles = `top: ${top}%; ${position}: calc(5% + ${offset}px);`;
-          
+
           if (isTrace) {
             lines += `<div class="current-trace" style="${styles}"></div>`;
           } else {
@@ -122,6 +122,15 @@ var jsPsychExploreShip = (function (jspsych) {
     }
 
     trial(display_element, trial) {
+
+      // Define base rule mapping
+      this.baseRule = {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      };
+
       // Initialize trial variables
       let selectedKey = null;
       let lastPressTime = 0;
@@ -134,11 +143,21 @@ var jsPsychExploreShip = (function (jspsych) {
       // Generate HTML for the trial
       const generateHTML = () => {
         const far = this.baseRule[trial.near];
+        const other_islands = Object.values(this.baseRule).filter(x => ![trial.near, far].includes(x));
+        const left_island = other_islands[0];
+        const right_island = other_islands[1];
         return `
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <!--Middle group for other islands, if needed-->
+              <!--
+              <div class="middle-group">
+                <img class="island-middle" src="imgs/simple_island_${left_island}.png" alt="Left island" />
+                <img class="island-middle" src="imgs/simple_island_${right_island}.png" alt="Right island" />
+              </div>
+              -->
               <div class="overlap-group">
                 <div class="choice-left">
                   <div class="fuel-container-left">
@@ -164,14 +183,6 @@ var jsPsychExploreShip = (function (jspsych) {
             </section>
           </main>
         `;
-      };
-
-      // Define base rule mapping
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
       };
 
       // Display the trial
@@ -211,7 +222,20 @@ var jsPsychExploreShip = (function (jspsych) {
 
           // Start effort phase timer
           this.jsPsych.pluginAPI.setTimeout(() => {
-            endTrial();
+            // Apply fade-out animation to the selected ship
+            this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+            if (selectedKey === 'left') {
+              const leftShip = document.querySelector('.ship-left');
+              leftShip.classList.add('fade-out-left');
+            } else if (selectedKey === 'right') {
+              const rightShip = document.querySelector('.ship-right');
+              rightShip.classList.add('fade-out-right');
+            }
+
+            // End trial after short animation delay (300ms)
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              endTrial();
+            }, 350);
           }, trial.explore_effort);
         }
       };
@@ -222,10 +246,10 @@ var jsPsychExploreShip = (function (jspsych) {
         responseTime.push(info.rt - lastPressTime);
         lastPressTime = info.rt;
 
-        const container = selectedKey === 'left' ? 
+        const container = selectedKey === 'left' ?
           document.querySelector('.fuel-container-left') :
           document.querySelector('.fuel-container-right');
-        
+
         createFuelIcon(container);
 
         const fuelBar = container.querySelector('.fuel-indicator-bar');
@@ -296,7 +320,7 @@ var jsPsychExploreShip = (function (jspsych) {
     }
 
     create_simulation_data(trial, simulation_options) {
-      const keyToChoice = {"ArrowLeft": "left", "ArrowRight": "right"};
+      const keyToChoice = { "ArrowLeft": "left", "ArrowRight": "right" };
       const trial_presses = this.jsPsych.randomization.randomInt(2, 20);
       const default_data = {
         trialphase: "control_explore",
@@ -317,7 +341,7 @@ var jsPsychExploreShip = (function (jspsych) {
     }
 
     simulate_visual(trial, simulation_options, load_callback) {
-      const choiceToKey = {"left": "ArrowLeft", "right": "ArrowRight"};
+      const choiceToKey = { "left": "ArrowLeft", "right": "ArrowRight" };
       const data = this.create_simulation_data(trial, simulation_options);
       const display_element = this.jsPsych.getDisplayElement();
 
@@ -331,7 +355,7 @@ var jsPsychExploreShip = (function (jspsych) {
       this.trial(display_element, trial);
       load_callback();
 
-      if (data.rt!== null) {
+      if (data.rt !== null) {
         let t = data.rt;
         this.jsPsych.pluginAPI.pressKey(choiceToKey[data.response], t);
         data.responseTime.forEach((rt, i) => {
@@ -430,7 +454,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     trial(display_element, trial) {
       // Get data from previous trial
       const lastTrial = this.jsPsych.data.getLastTrialData().values()[0];
-      const choice = lastTrial.response; // 'left' or 'right'
+      let choice = lastTrial.response; // 'left' or 'right'
       const chosenColor = this.jsPsych.evaluateTimelineVariable(choice);
       const nearIsland = this.jsPsych.evaluateTimelineVariable('near');
       const currentStrength = this.jsPsych.evaluateTimelineVariable('current');
@@ -438,11 +462,11 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
 
       // Determine destination island based on control rule
       const currentRule = this.chooseControlRule(
-        effortLevel, 
+        effortLevel,
         currentStrength
       );
 
-      const destinationIsland = currentRule === 'base' 
+      const destinationIsland = currentRule === 'base'
         ? this.baseRule[nearIsland]
         : this.controlRule[chosenColor];
 
@@ -451,7 +475,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
-            <div class="overlap-group">
+            <div class="overlap-group" style="justify-content: space-between;">
               <div class="choice-left">
               </div>
               <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
@@ -469,12 +493,15 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       oldStyles.forEach(style => style.remove());
 
       // Get the choice container
+      // Invert the choice to determine the opposite side for feedback display
+      choice = choice === 'left' ? 'right' : 'left';
       const choiceContainer = display_element.querySelector(`.choice-${choice}`);
       // Clear any existing content
       choiceContainer.innerHTML = '';
       // Create the ship image element
       const shipImg = document.createElement('img');
       shipImg.className = `ship-${choice}`;
+      shipImg.style.opacity = '0';
       shipImg.src = `imgs/simple_ship_${chosenColor}.png`;
       // Add the image to the container
       choiceContainer.appendChild(shipImg);
@@ -487,7 +514,8 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       // Create the island image element
       const islandImg = document.createElement('img');
       // islandImg.className = `ship-${islandSide}`;  
-      islandImg.className = `island-near`;  
+      islandImg.className = `island-near`;
+      islandImg.style.top = '-10%';
       islandImg.src = `imgs/simple_island_${destinationIsland}.png`;
       // Add the image to the container
       islandContainer.appendChild(islandImg);
@@ -495,37 +523,87 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       // Add animation styles
       const animationStyle = document.createElement('style');
       animationStyle.setAttribute('data-feedback-animation', 'true');
-      
+
       // Determine if ship should be flipped based on which side it starts from
       // Ships on the left are already flipped with scaleX(-1) in the CSS
       // As long as it's flipped here, it will move in the correct direction
       const shouldFlip = choice === 'left';
       const scaleX = shouldFlip ? '-1' : '1';
-      
+
       // Calculate the distance to move the ship
-      const distance = display_element.querySelector('.island-near').offsetWidth - shipImg.offsetWidth/4;
+      const distance = display_element.querySelector('.island-near').offsetWidth + shipImg.offsetWidth / 4;
 
       // Create the animation CSS with proper scale preservation
       animationStyle.textContent = `
         @keyframes moveShip {
           0% { 
+            opacity: 0;
             transform: scaleX(${scaleX}) translateX(0);
           }
           100% { 
+            opacity: 1;
             transform: scaleX(${scaleX}) translateX(-${distance}px);
           }
         }
         
         .ship-animate {
-          animation: moveShip 0.95s ease-in-out forwards;
+          animation: moveShip 600ms ease-out forwards;
         }
       `;
       document.head.appendChild(animationStyle);
 
+      // Add ocean currents based on current strength and movement direction
+      const createHorizontalCurrents = (level, choice) => {
+        // Helper function to create current lines based on level and direction
+        const createCurrentLines = (isTrace = false, isLeft = true) => {
+          let lines = '';
+          const positions = {
+            1: [{ top: 80, offset: 20 }],
+            2: [
+              { top: 70, offset: 50 },
+              { top: 90, offset: 30 }
+            ],
+            3: [
+              { top: 70, offset: 50 },
+              { top: 80, offset: 20 },
+              { top: 90, offset: 30 }
+            ]
+          };
+
+          const currentPositions = positions[level] || positions[3];
+
+          currentPositions.forEach(({ top, offset }) => {
+            const position = isLeft ? 'right' : 'left';
+            const styles = `top: ${top}%; ${position}: calc(15% + ${offset}px);`;
+
+            if (isTrace) {
+              lines += `<div class="current-trace" style="${styles}; width: 70%"></div>`;
+            } else {
+              lines += `<div class="current-line" style="${styles}; width: 75%"></div>`;
+            }
+          });
+          return lines;
+        };
+
+        const currentsHTML = `
+          <div class="ocean-current">
+            <div class="current-group ${choice}-horizon-currents">
+            ${createCurrentLines(true, choice === 'left')}
+            ${createCurrentLines(false, choice === 'left')}
+          </div>
+        `
+        return currentsHTML;
+      };
+
+      // Add horizontal currents to the scene if the ship goes to the next island
+      if (destinationIsland === this.baseRule[nearIsland]) {
+        display_element.querySelector('.scene').insertAdjacentHTML('beforeend', createHorizontalCurrents(currentStrength, choice));
+      }
+
       // Apply the animation class after a small delay to ensure DOM is ready
       setTimeout(() => {
         shipImg.classList.add('ship-animate');
-      }, 50);
+      }, 100);
 
       // Save data and end trial after duration
       const trial_data = {
@@ -567,11 +645,11 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
 
       // Determine destination island based on control rule
       const currentRule = this.chooseControlRule(
-        effortLevel, 
+        effortLevel,
         currentStrength
       );
 
-      const destinationIsland = currentRule === 'base' 
+      const destinationIsland = currentRule === 'base'
         ? this.baseRule[nearIsland]
         : this.controlRule[chosenColor];
 
@@ -585,7 +663,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         near_island: nearIsland,
         probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
       };
-      
+
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
       this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
       return data;

@@ -42,6 +42,7 @@ explore_sequence.forEach(trial => {
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
         explore_decision: 4000,
+        explore_effort: 3000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
@@ -69,6 +70,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
+          feedback_duration: 3000,
           post_trial_gap: 0
         }],
         conditional_function: function () {
@@ -94,7 +96,7 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 8000,
+        predict_decision: 6000*1000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
@@ -134,7 +136,7 @@ reward_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
         reward_amount: "5p",
-        reward_decision: 4000,
+        reward_decision: 6000*1000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
