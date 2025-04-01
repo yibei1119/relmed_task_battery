@@ -105,10 +105,6 @@ var jsPsychRewardShip = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <div class="nav-map">
-                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
-                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
-              </div>
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
               <div class="quest-scroll">
                 <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
