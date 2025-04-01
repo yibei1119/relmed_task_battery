@@ -93,6 +93,9 @@ var jsPsychExploreShip = (function (jspsych) {
               <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
               <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
+            <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+            </div>
             <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
             <div class="overlap-group">
               <div class="choice-left">
@@ -454,6 +457,9 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
               <div class="nav-map">
                 <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
                 <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
+              </div>
+              <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                  <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
               </div>
               <img class="island-far" src="imgs/simple_island_${destinationIsland}.png" alt="Farther island" />
               <img class="feedback-ship" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />

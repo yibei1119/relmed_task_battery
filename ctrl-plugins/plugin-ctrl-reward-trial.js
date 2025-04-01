@@ -106,6 +106,9 @@ var jsPsychRewardShip = (function (jspsych) {
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
+              </div>
               <div class="quest-scroll">
                 <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
@@ -470,6 +473,9 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const html = `
         <main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
+              </div>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
               ${msg}
