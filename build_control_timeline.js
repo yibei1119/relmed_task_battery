@@ -42,6 +42,7 @@ explore_sequence.forEach(trial => {
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
         explore_decision: 4000,
+        explore_effort: 3000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
@@ -69,6 +70,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
+          feedback_duration: 3000,
           post_trial_gap: 0
         }],
         conditional_function: function () {
