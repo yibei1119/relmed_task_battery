@@ -137,7 +137,7 @@ var jsPsychRewardShip = (function (jspsych) {
                   <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
                 </div>
               </div>
-              ${this.createOceanCurrents(trial.current)}
+              ${this.generateOceanCurrentsHTML(trial.current)}
             </section>
           </main>
         `;
@@ -269,47 +269,43 @@ var jsPsychRewardShip = (function (jspsych) {
       };
     }
 
-    createOceanCurrents(level) {
-      // Same createOceanCurrents function as before
-      const createCurrentLines = (isTrace = false, isLeft = true) => {
-        let lines = '';
-        const positions = {
-          1: [{ top: 49, offset: 20 }],
-          2: [
-            { top: 45, offset: 50 },
-            { top: 55, offset: 30 }
-          ],
-          3: [
-            { top: 45, offset: 50 },
-            { top: 49, offset: 20 },
-            { top: 55, offset: 30 }
-          ]
-        };
-
-        const currentPositions = positions[level] || positions[3];
-        
-        currentPositions.forEach(({ top, offset }) => {
-          const position = isLeft ? 'right' : 'left';
-          const styles = `top: ${top}%; ${position}: calc(5% + ${offset}px);`;
-          
-          if (isTrace) {
-            lines += `<div class="current-trace" style="${styles}"></div>`;
-          } else {
-            lines += `<div class="current-line" style="${styles}"></div>`;
-          }
-        });
-        return lines;
+    generateOceanCurrentsHTML(level) {
+      // Generate positions based on level
+      const positions = {
+        1: [{ top: 49, offset: 20 }],
+        2: [
+          { top: 43, offset: 50 },
+          { top: 55, offset: 30 }
+        ],
+        3: [
+          { top: 43, offset: 50 },
+          { top: 49, offset: 20 },
+          { top: 55, offset: 30 }
+        ]
       };
-
+      
+      const currentPositions = positions[level] || positions[3];
+      
+      // Generate the HTML for currents
+      let leftTraces = '', leftLines = '', rightTraces = '', rightLines = '';
+      
+      currentPositions.forEach(({ top, offset }) => {
+        leftTraces += `<div class="current-trace" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        leftLines += `<div class="current-line" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        
+        rightTraces += `<div class="current-trace" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+        rightLines += `<div class="current-line" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+      });
+      
       return `
         <div class="ocean-current">
           <div class="current-group left-currents">
-            ${createCurrentLines(true, true)}
-            ${createCurrentLines(false, true)}
+            ${leftTraces}
+            ${leftLines}
           </div>
           <div class="current-group right-currents">
-            ${createCurrentLines(true, false)}
-            ${createCurrentLines(false, false)}
+            ${rightTraces}
+            ${rightLines}
           </div>
         </div>
       `;
