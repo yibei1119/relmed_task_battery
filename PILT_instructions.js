@@ -36,7 +36,7 @@ function prepare_PILT_instructions() {
                 <p>At the end of the game, you will draw one coin from your safe, and that will be your bonus payment.</p>
                 <p>Your goal is to add valuable coins to your safe${window.task == "screening" ? "" : " while avoid losing the valuable coins already in it"}.</p>`,
             `<p>On each turn of this game, you will see two cards.
-                You have three seconds to flip one of the two cards.</p>
+                You have ${window.context === "relmed" ? "four" : "three"} seconds to flip one of the two cards.</p>
                 <p>This will reveal the coin you collect: either 1 pound, 50 pence, or 1 penny.</p>
                 <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
                 <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
@@ -50,7 +50,7 @@ function prepare_PILT_instructions() {
                 <td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>
-                <p>This means that such a coin was broken from your safe.</p>`);
+                <p>This means that you lost one such coin, as it was broken in your safe.</p>`);
         }
 
         return pages

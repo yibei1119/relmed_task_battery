@@ -20,7 +20,8 @@
         window.maxWarnings = 15; // How many warnings before kick out
         window.interimWarning = 5; // How many missing responses before a please change your ways message
         window.max_warnings_per_task = 3; // How many times to show no response warning in a task - only for RELMED context
-        window.default_response_deadline = 4000;
+        window.relemd_default_response_deadline = 4000;
+        window.prolific_default_response_deadline = 3000;
         window.default_long_response_deadline = 6000;
 
         // Print all url parameters to console
@@ -57,6 +58,9 @@
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
+
+        // Context specific response deadline
+        window.default_response_deadline = window.context === "relmed" ? window.relemd_default_response_deadline : window.prolific_default_response_deadline;
         
         // Save participant variables to data
         jsPsych.data.addProperties({
