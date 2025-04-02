@@ -64,9 +64,9 @@
 .quest-scroll {
   position: absolute;
   width: 30%;
-  height: 40%;
+  height: 50%;
   top: 1%;
-  left: 73%;
+  left: 70%;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -80,8 +80,10 @@
 
 .island-target {
   position: absolute;
-  top: 23%;
-  height: 38%;
+  top: 14%;
+  height: 55%;
+  border: 8px solid #FFF;
+  border-radius: 20px;
   z-index: 3;
 }
 
@@ -270,4 +272,24 @@
 
 .fade-out-right {
   animation: fadeOutRight 300ms ease-in forwards;
+}
+
+/* Glowing border animation for target island */
+.glowing-border {
+  animation: glowingBorder 1s ease-in-out infinite;
+}
+
+@keyframes glowingBorder {
+  0% {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    border-color: rgb(57, 255, 20);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.5);
+  }
+  100% {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
 }
