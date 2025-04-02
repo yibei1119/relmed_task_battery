@@ -459,7 +459,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
                     const block = jsPsych.evaluateTimelineVariable('block');
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
-                        updateState(`${task_name}_start_block_${block}`)
+                        updateState(`${task_name}_block_${block}_start`)
                     }
                 }
             }
