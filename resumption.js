@@ -68,6 +68,8 @@ const pilt_to_test_order = [
     "vigour_task_start",
     "pit_instructions_start",
     "pit_task_start",
+    "vigour_pit_bonus_start",
+    `vigour_test_task_start`,
     "pilt_test_instructions_start",
     "pilt_test_task_start",
 ];
