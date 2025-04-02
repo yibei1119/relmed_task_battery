@@ -59,3 +59,15 @@ const wm_order = [
     "open_text_instructions_start",
     "open_text_task_start"
 ]
+
+const pilt_to_test_order = [
+    "pilt_instructions_start",
+    "pilt_task_start",
+    "pilt_last_block_start",
+    "vigour_instructions_start",
+    "vigour_task_start",
+    "pit_instructions_start",
+    "pit_task_start",
+    "pilt_test_instructions_start",
+    "pilt_test_task_start",
+];
