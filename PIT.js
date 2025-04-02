@@ -164,7 +164,7 @@ PITtrialList.forEach(trial => {
 
 PITtrials[0]["on_timeline_start"] = () => {
   updateState(`no_resume_10_minutes`);
-  updateState(`pit_start_task`);
+  updateState(`pit_task_start`);
 };
 
 function getSelectedPITtrial() {

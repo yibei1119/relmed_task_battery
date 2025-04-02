@@ -30,7 +30,7 @@ const reversal_preload = {
         postToParent({message: "load_successful"})
 
         updateState(`no_resume`)
-        updateState(`reversal_start_task`)
+        updateState(`reversal_task_start`)
     }
 }
 
