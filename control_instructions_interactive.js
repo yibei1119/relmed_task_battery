@@ -288,7 +288,7 @@ const controlInstructionPages = [
                 <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
@@ -345,14 +345,14 @@ const controlInstructionPages = [
                 <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <div class="selection-indicator" style="top: 32%;left: 12%;">
                 <span class="selection-dot"></span>
                 <div class="selection-label">Drift Map</div>
             </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <div class="selection-indicator" style="top: 20%;left: 65%;flex-direction: row-reverse;">
                 <div class="selection-label">Drift Destination</div>
@@ -406,7 +406,7 @@ const controlInstructionPages = [
                 <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
@@ -455,7 +455,7 @@ const controlInstructionPages = [
                     <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
                 </div>
                 <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
                 </div>
                 <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
                 <img class="feedback-ship" src="imgs/simple_ship_blue.png" alt="Ship" style="opacity: 0;" />
@@ -481,7 +481,7 @@ const controlInstructionPages = [
                 <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
@@ -527,7 +527,7 @@ const controlInstructionPages = [
                     <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
                 </div>
                 <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                    <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
                 </div>
                 <div class="overlap-group" style="justify-content: space-between;">
                     <div class="choice-left">
@@ -628,7 +628,7 @@ const controlInstructionPages = [
                 <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
             </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
             <div class="overlap-group">
