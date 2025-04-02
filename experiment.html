@@ -383,7 +383,7 @@
                 ]);
             }
 
-            if (resumptionRule(wm_order, window.last_state, "ltm_post_test_task_start")) {
+            if (resumptionRule(wm_order, window.last_state, "ltm_test_task_start")) {
                 // Add post-LTM test
                 console.log("Adding post-LTM test");
                 procedure.push(PILT_tasks.LTM_test_procedure);
@@ -399,7 +399,7 @@
                 ]);
             }
 
-            if (resumptionRule(wm_order, window.last_state, "ltm_post_test_task_start")) {
+            if (resumptionRule(wm_order, window.last_state, "wm_test_task_start")) {
                 // Add post-WM test
                 console.log("Adding post-WM test");
                 procedure.push(PILT_tasks.WM_test_procedure);
