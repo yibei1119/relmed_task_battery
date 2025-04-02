@@ -151,5 +151,11 @@ const postVigourInstructions = {
   post_trial_gap: 400,
   simulation_options: {
     simulate: false
+  },
+  on_start: () => {
+    updateState(`vigour_test_instructions_start`);
+  },
+  on_finish: () => {
+    updateState(`vigour_test_task_start`);
   }
 };
