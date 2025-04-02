@@ -460,6 +460,11 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
                         updateState(`${task_name}_block_${block}_start`)
+
+                        // Add last block message
+                        if (i === structure.length - 1){
+                            updateState(`${task_name}_last_block_start`)
+                        }
                     }
                 }
             }
