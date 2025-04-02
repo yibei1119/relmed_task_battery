@@ -453,6 +453,12 @@ let questionnaires_instructions = (total) => {
     ];
 } 
 
+// Function to instantiate questionnaires
+// This function takes an array of questionnaire functions and returns an array of instantiated questionnaires
+// Each questionnaire function is called with the current index and the total number of questionnaires
+// The instantiated questionnaires are then pushed into the questionnaire_timeline array
+// The last questionnaire's on_start function is modified to include updateState("no_resume") before calling the original on_start function
+// The function returns the questionnaire_timeline array
 const instantiate_questionnaires = (questionnaires) => {
     let questionnaire_timeline = [];
     questionnaires.forEach((questionnaire, i) => {
