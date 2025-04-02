@@ -57,7 +57,7 @@ function prepare_PILT_instructions() {
     },
         show_clickable_nav: true,
         data: {trialphase: "pilt_instruction"},
-        on_start: () => {updateState("pilt_start_instructions")}
+        on_start: () => {updateState("pilt_instructions_start")}
     }
     ];
 
@@ -426,7 +426,7 @@ const test_instructions = (task) => {
         ],
         show_clickable_nav: true,
         on_start: () => {
-            updateState(`${task}_test_start_instructions`);
+            updateState(`${task}_test_instructions_start`);
         },
         data: {trialphase: `post-${task}_test_instructions`},
         on_finish: () => {

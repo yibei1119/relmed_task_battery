@@ -395,6 +395,6 @@ const PITinstructions = {
     }
   },
   on_timeline_start: () => {
-    updateState(`pit_start_instructions`);
+    updateState(`pit_instructions_start`);
   }
 }

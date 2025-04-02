@@ -83,7 +83,7 @@ const dd_instructions = {
     ],
     show_clickable_nav: true,
     on_start: () => {
-        updateState("dd_start_instructions");
+        updateState("dd_instructions_start");
     },
     on_finish: () => {
         jsPsych.data.addProperties({

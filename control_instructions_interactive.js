@@ -954,7 +954,7 @@ const controlInstructionsLoop = {
         return restart;
     },
     on_timeline_start: () => {
-        updateState(`control_start_instructions`)
+        updateState(`control_instructions_start`)
     }
 };
 

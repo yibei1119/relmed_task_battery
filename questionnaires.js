@@ -439,7 +439,7 @@ let questionnaires_instructions = (total) => {
                 `<p>Click 'Next' to begin.</p>`
             ],
             on_start: () => {
-                updateState("quests_start_instructions");
+                updateState("quests_instructions_start");
             },
             on_finish: () => {
                 updateState("quests_start");

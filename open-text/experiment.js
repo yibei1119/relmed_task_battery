@@ -13,7 +13,7 @@ let openText_welcome_trial = {
     on_start: function (trial) {
         document.body.className = "open-text";
 
-        updateState("open_text_start_instructions");
+        updateState("open_text_instructions_start");
     }
 }
 let openText_instructions = {

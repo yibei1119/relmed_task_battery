@@ -131,7 +131,7 @@ const reversal_instructions = [
         show_clickable_nav: true,
         data: {trialphase: "reversal_instruction"},
         on_start: () => {
-            updateState(`reversal_start_instructions`)
+            updateState(`reversal_instructions_start`)
         }
     },
     {
