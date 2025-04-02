@@ -79,6 +79,14 @@ var jsPsychRewardShip = (function (jspsych) {
   class RewardShipPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
+
+      // Define base rule mapping
+      this.baseRule = {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      };
     }
 
     trial(display_element, trial) {
@@ -98,6 +106,9 @@ var jsPsychRewardShip = (function (jspsych) {
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
+              </div>
               <div class="quest-scroll">
                 <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
@@ -125,20 +136,13 @@ var jsPsychRewardShip = (function (jspsych) {
                   <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
                 </div>
               </div>
-              ${this.createOceanCurrents(trial.current)}
+              ${this.generateOceanCurrentsHTML(trial.current)}
             </section>
           </main>
         `;
       };
 
-      // Define base rule mapping
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
-      };
-
+      
       display_element.innerHTML = generateHTML();
 
       // Function to create and animate fuel icons
@@ -175,7 +179,20 @@ var jsPsychRewardShip = (function (jspsych) {
 
           // Start effort phase timer
           this.jsPsych.pluginAPI.setTimeout(() => {
-            endTrial();
+            // Cancel all keyboard responses
+            this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
+            
+            // Apply fade-out animation to the selected ship
+            if (selectedKey === 'left') {
+              display_element.querySelector('.ship-left').classList.add('fade-out-left');
+            } else if (selectedKey === 'right') {
+              display_element.querySelector('.ship-right').classList.add('fade-out-right');
+            }
+
+            // End trial after animation completes
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              endTrial();
+            }, 350);
           }, trial.reward_effort);
         }
       };
@@ -251,47 +268,43 @@ var jsPsychRewardShip = (function (jspsych) {
       };
     }
 
-    createOceanCurrents(level) {
-      // Same createOceanCurrents function as before
-      const createCurrentLines = (isTrace = false, isLeft = true) => {
-        let lines = '';
-        const positions = {
-          1: [{ top: 49, offset: 20 }],
-          2: [
-            { top: 45, offset: 50 },
-            { top: 55, offset: 30 }
-          ],
-          3: [
-            { top: 45, offset: 50 },
-            { top: 49, offset: 20 },
-            { top: 55, offset: 30 }
-          ]
-        };
-
-        const currentPositions = positions[level] || positions[3];
-        
-        currentPositions.forEach(({ top, offset }) => {
-          const position = isLeft ? 'right' : 'left';
-          const styles = `top: ${top}%; ${position}: calc(5% + ${offset}px);`;
-          
-          if (isTrace) {
-            lines += `<div class="current-trace" style="${styles}"></div>`;
-          } else {
-            lines += `<div class="current-line" style="${styles}"></div>`;
-          }
-        });
-        return lines;
+    generateOceanCurrentsHTML(level) {
+      // Generate positions based on level
+      const positions = {
+        1: [{ top: 49, offset: 20 }],
+        2: [
+          { top: 43, offset: 50 },
+          { top: 55, offset: 30 }
+        ],
+        3: [
+          { top: 43, offset: 50 },
+          { top: 49, offset: 20 },
+          { top: 55, offset: 30 }
+        ]
       };
-
+      
+      const currentPositions = positions[level] || positions[3];
+      
+      // Generate the HTML for currents
+      let leftTraces = '', leftLines = '', rightTraces = '', rightLines = '';
+      
+      currentPositions.forEach(({ top, offset }) => {
+        leftTraces += `<div class="current-trace" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        leftLines += `<div class="current-line" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        
+        rightTraces += `<div class="current-trace" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+        rightLines += `<div class="current-line" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+      });
+      
       return `
         <div class="ocean-current">
           <div class="current-group left-currents">
-            ${createCurrentLines(true, true)}
-            ${createCurrentLines(false, true)}
+            ${leftTraces}
+            ${leftLines}
           </div>
           <div class="current-group right-currents">
-            ${createCurrentLines(true, false)}
-            ${createCurrentLines(false, false)}
+            ${rightTraces}
+            ${rightLines}
           </div>
         </div>
       `;
@@ -460,6 +473,9 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const html = `
         <main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
+              </div>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
               ${msg}

@@ -42,6 +42,7 @@ explore_sequence.forEach(trial => {
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
         explore_decision: 4000,
+        explore_effort: 3000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
@@ -52,6 +53,8 @@ explore_sequence.forEach(trial => {
         },
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          data.n_control_trials = n_trials;
+          
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
             saveDataREDCap(retry = 3);
@@ -69,6 +72,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
+          feedback_duration: 3000,
           post_trial_gap: 0
         }],
         conditional_function: function () {
@@ -94,11 +98,13 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 8000,
+        predict_decision: 6000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          data.n_control_trials = n_trials;
+
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
             saveDataREDCap(retry = 3);
@@ -121,61 +127,83 @@ predict_sequence.forEach(trial => {
 });
 
 const controlRewardTimeline = [];
-reward_sequence.forEach(trial => {
-  controlRewardTimeline.push({
-    timeline: [
-      kick_out,
-      fullscreen_prompt,
-      {
-        type: jsPsychRewardShip,
-        target: jsPsych.timelineVariable('target'),
-        near: jsPsych.timelineVariable('near'),
-        left: jsPsych.timelineVariable('left'),
-        right: jsPsych.timelineVariable('right'),
-        current: jsPsych.timelineVariable('current'),
-        reward_amount: "5p",
-        reward_decision: 4000,
-        post_trial_gap: 0,
-        save_timeline_variables: true,
-        on_start: function (trial) {
-          const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
-          if (last_trialphase === "control_controllability") {
-            trial.reward_decision += 2000;
-          }
-        },
-        on_finish: function (data) {
-          const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
-          if (n_trials % 24 === 0) {
-            console.log("n_trials: " + n_trials);
-            saveDataREDCap(retry = 3);
-          }
+reward_sequence.forEach((trial, index) => {
+  const timelineItems = [
+    kick_out,
+    fullscreen_prompt
+  ];
+  
+  // Add prompt before the first reward trial
+  if (index === 0) {
+    timelineItems.push({
+      type: jsPsychRewardPrompt,
+      target: jsPsych.timelineVariable('target'),
+      near: jsPsych.timelineVariable('near'),
+      left: jsPsych.timelineVariable('left'),
+      right: jsPsych.timelineVariable('right'),
+      current: jsPsych.timelineVariable('current'),
+      reward_amount: "5p"
+    });
+  }
+  
+  timelineItems.push({
+    type: jsPsychRewardShip,
+    target: jsPsych.timelineVariable('target'),
+    near: jsPsych.timelineVariable('near'),
+    left: jsPsych.timelineVariable('left'),
+    right: jsPsych.timelineVariable('right'),
+    current: jsPsych.timelineVariable('current'),
+    reward_amount: "5p",
+    reward_decision: 6000,
+    post_trial_gap: 0,
+    save_timeline_variables: true,
+    on_start: function (trial) {
+      const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
+      if (last_trialphase === "control_controllability" || last_trialphase === "control_reward_prompt") {
+        trial.reward_decision += 2000;
+      }
+    },
+    on_finish: function (data) {
+      const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+      data.n_control_trials = n_trials;
 
-          if (data.response === null) {
-            var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-            console.log("n_warnings: " + up_to_now);
-            jsPsych.data.addProperties({
-                n_warnings: up_to_now + 1
-            });
-          }
-        }
-      },
-      {
-        timeline: [{
-          type: jsPsychRewardShipFeedback,
-          target_island: jsPsych.timelineVariable('target'),
-          post_trial_gap: 0
-        }],
-        conditional_function: function () {
-          const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
-          return lastTrialChoice !== null;
-        }
-      },
-      noChoiceWarning("response",
-        `<main class="main-stage">
-          <img class="background" src="imgs/ocean.png" alt="Background"/>
-        </main>`
-      )
-    ],
+      if (n_trials % 24 === 0) {
+        console.log("n_trials: " + n_trials);
+        saveDataREDCap(retry = 3);
+      }
+
+      if (data.response === null) {
+        var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+        console.log("n_warnings: " + up_to_now);
+        jsPsych.data.addProperties({
+            n_warnings: up_to_now + 1
+        });
+      }
+    }
+  });
+  
+  timelineItems.push({
+    timeline: [{
+      type: jsPsychRewardShipFeedback,
+      target_island: jsPsych.timelineVariable('target'),
+      post_trial_gap: 0
+    }],
+    conditional_function: function () {
+      const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
+      return lastTrialChoice !== null;
+    }
+  });
+  
+  timelineItems.push(
+    noChoiceWarning("response",
+      `<main class="main-stage">
+        <img class="background" src="imgs/ocean.png" alt="Background"/>
+      </main>`
+    )
+  );
+  
+  controlRewardTimeline.push({
+    timeline: timelineItems,
     timeline_variables: [trial]
   });
 });

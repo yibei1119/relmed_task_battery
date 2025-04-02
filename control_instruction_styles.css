@@ -15,13 +15,12 @@
   margin: 0 auto;
   position: relative;
   overflow: visible;
-  transform: translateY(-5%); /* Move everything up slightly */
 }
 
 /* Background elements positioning */
 .instruction-stage .background {
   position: absolute;
-  top: -5vh;
+  top: -10vh;
   left: 0;
   width: 100%;
   height: 100%;
@@ -31,15 +30,13 @@
 
 /* Scene layout and positioning */
 .instruction-stage .scene {
-  position: absolute;
-  top: -5vh;
+  top: -10vh;
   left: 0;
   width: 100%;
   height: 70%; /* Increased height for more space */
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 2;
   overflow: visible;
 }
 
@@ -76,76 +73,25 @@
 /* Static current trace */
 .current-trace {
   position: absolute;
-  height: 2px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.25);
   width: 25%;
 }
 
 .current-line {
   position: absolute;
-  height: 2px;
+  height: 4px;
   background: rgba(255, 255, 255, 0.95);
   width: 30%;
   transform-origin: left center;
 }
 
-.left-currents .current-line {
+.left-currents .current-line, .right-horizon-currents .current-line {
   animation: flowLeftDiagonal 3s infinite linear;
 }
 
-.right-currents .current-line {
+.right-currents .current-line, .left-horizon-currents .current-line {
   animation: flowRightDiagonal 3s infinite linear;
-}
-
-/* Island positioning and styling */
-.instruction-stage .island-far {
-  position: absolute;
-  width: auto;
-  height: 18.75%;
-  top: 12.5%; /* Moved up slightly */
-  z-index: 2;
-}
-
-.instruction-stage .overlap-group {
-  position: absolute;
-  width: 100%;
-  top: 35%; /* Moved up slightly */
-  height: 46.875%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  z-index: 3;
-}
-
-.instruction-stage .island-near {
-  position: relative;
-  width: auto;
-  height: 100%;
-  margin: 0 -22%;
-  z-index: 3;
-}
-
-/* Ship elements styling */
-.instruction-stage .choice-left,
-.instruction-stage .choice-right {
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.instruction-stage .ship-left,
-.instruction-stage .ship-right {
-  position: relative;
-  width: auto;
-  height: 42%;
-  top: 44.25%;
-  z-index: 4;
-}
-
-.instruction-stage .ship-left {
-  transform: scaleX(-1);
 }
 
 /* Label styling */
@@ -211,27 +157,9 @@
 }
 
 /* Fuel container and animation */
-.instruction-stage .fuel-container-left,
-.instruction-stage .fuel-container-right {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: -12.5%;
-  height: 40%;
-  z-index: 5;
-}
-
 .instruction-stage .fuel-indicator-container {
-  top: 110%;
-  width: 13.5vh;
-  height: 1.75vh;
-}
-
-.instruction-stage .arrow-left,
-.instruction-stage .arrow-right {
-  height: 4.5vh;
-  width: 4.5vh;
+  width: 9vh;
+  height: 1vh;
 }
 
 .fuel-icon {
@@ -241,23 +169,13 @@
 }
 
 .instruction-stage .fuel-icon {
-  width: 6vh;
-  height: 6vh;
+  width: 4vh;
+  height: 4vh;
   position: absolute;
 }
 
-.instruction-stage .destination-island {
-  height: 17.5vh;
-  bottom: 55%;
-  top: auto;
-}
-
-.instruction-stage .ship-feedback {
-  height: 15vh;
-}
-
 .fuel-animation {
-  animation: fuelAppear 0.5s ease-out forwards;
+  animation: fuelAppear 0.5s ease-in-out forwards;
 }
 
 .fuel-animation.repeating {
@@ -267,7 +185,7 @@
 /* Instruction dialog styling */
 .instruction-dialog {
   position: absolute;
-  bottom: -40px; /* Moved down further */
+  bottom: -5px; /* Moved down further */
   left: 50%;
   transform: translateX(-50%);
   width: 85%;
@@ -285,7 +203,7 @@
   text-align: left;
   color: #2C3E50;
   font-size: 16px;
-  line-height: 1.2;
+  line-height: 1.25;
   margin: 0;
 }
 
@@ -321,7 +239,7 @@
 /* Progress bar styling */
 .progress-bar-container {
   position: absolute;
-  top: 113%;
+  top: 108%;
   left: 50%;
   transform: translateX(-50%);
   width: 400px;
@@ -349,8 +267,8 @@
     opacity: 1;
   }
   100% { 
-    transform: translateX(0%) scaleX(0.5);
-    opacity: 0.5;
+    transform: translateX(0%) scaleX(0.6);
+    opacity: 0.85;
   }
 }
 
@@ -360,12 +278,12 @@
     opacity: 0.15;
   }
   10% { 
-    transform: translateX(5%) scaleX(0.5);
+    transform: translateX(10%) scaleX(0.5);
     opacity: 1;
   }
   100% { 
-    transform: translateX(70%) scaleX(0.5);
-    opacity: 0.5;
+    transform: translateX(60%) scaleX(0.6);
+    opacity: 0.85;
   }}
 
 @keyframes pulse {
@@ -464,7 +382,7 @@
 /* Selection indicator styling */
 .selection-indicator {
   position: absolute;
-  top: 20%; /* Position above the ship */
+  top: 0%; /* Position above the ship */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -481,16 +399,6 @@
   align-items: center;
   gap: 12px;
   z-index: 6;
-}
-
-.far-indicator {
-  top: 15%;
-  right: 20%;
-}
-
-.near-indicator {
-  top: 22%;
-  right: 28%;
 }
 
 /* Shared dot and label styles */
