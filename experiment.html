@@ -373,35 +373,49 @@
             // Preload
             procedure.push(preload_wm_ltm);
 
-            // Add LTM block
-            procedure.push(PILT_tasks.LTM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_ltm
-            ]);
+            if (resumptionRule(wm_order, window.last_state, "ltm_task_start")) {
+                // Add LTM block
+                console.log("Adding LTM");
+                procedure.push(PILT_tasks.LTM_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_ltm
+                ]);
+            }
 
-            // Add post-LTM test
-            procedure.push(PILT_tasks.LTM_test_procedure);
+            if (resumptionRule(wm_order, window.last_state, "ltm_post_test_task_start")) {
+                // Add post-LTM test
+                console.log("Adding post-LTM test");
+                procedure.push(PILT_tasks.LTM_test_procedure);
+            }
+            
+            if (resumptionRule(wm_order, window.last_state, "wm_task_start")) {
+                // Add WM block
+                console.log("Adding WM");
+                procedure.push(PILT_tasks.WM_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_wm
+                ]);
+            }
 
-            // Add WM block
-            procedure.push(PILT_tasks.WM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_wm
-            ]);
-
-            // Add post-WM test
-            procedure.push(PILT_tasks.WM_test_procedure);
+            if (resumptionRule(wm_order, window.last_state, "ltm_post_test_task_start")) {
+                // Add post-WM test
+                console.log("Adding post-WM test");
+                procedure.push(PILT_tasks.WM_test_procedure);
+            }
 
             if (["wk24", "wk28"].includes(window.session)) {
                 
-                if (resumptionRule(quests_order, window.last_state, "dd_task_start")) {
+                if (resumptionRule(wm_order, window.last_state, "dd_task_start")) {
                     // Add delay discounting timeline
+                    console.log("Adding delay discounting");
                     procedure = procedure.concat(dd_timeline);
                 }
                 
-                if (resumptionRule(quests_order, window.last_state, "open_text_task_start")) {
+                if (resumptionRule(wm_order, window.last_state, "open_text_task_start")) {
                     // Free text
+                    console.log("Adding open text");
                     procedure.push(openTextTimeline);
                 }
             }
