@@ -254,6 +254,9 @@ const vigour_PIT_bonus2 = {
             <p>With the cloudy version and the no-cloud version combined, you will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
         `;
   },
+  on_start: () => {
+    updateState(`vigour_pit_bonus_start`);
+  },
   on_finish: (data) => {
     data.vigour_bonus = getFracVigourReward() + getFracPITReward();
   },
