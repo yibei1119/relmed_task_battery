@@ -107,55 +107,6 @@
   font-weight: 500;
 }
 
-/* Pulse highlight for ships */
-.pulse-highlight {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: rgba(255, 215, 0, 0.2);
-  animation: pulse 2s infinite;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.pulse-highlight .label {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Key press animation */
-.key-animation {
-  position: absolute;
-  top: 60%;
-  z-index: 6;
-}
-
-.key-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  animation: keyPress 2s infinite;
-}
-
-.press-animation {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
-  animation: pressRipple 2s infinite;
-}
-
 /* Fuel container and animation */
 .instruction-stage .fuel-indicator-container {
   width: 9vh;
@@ -322,17 +273,6 @@
   }
   50% {
       transform: translateY(36px);
-  }
-}
-
-@keyframes pressRipple {
-  0% {
-      transform: scale(1);
-      opacity: 0.5;
-  }
-  100% {
-      transform: scale(2);
-      opacity: 0;
   }
 }
 
