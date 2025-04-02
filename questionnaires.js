@@ -476,7 +476,7 @@ const instantiate_questionnaires = (questionnaires) => {
     return questionnaire_timeline;
 }
 
-questionnaires_timeline = [];
+let questionnaires_timeline = [];
 
 if (window.session === "screening"){
     // Self-report battery A
@@ -501,17 +501,44 @@ if (window.session === "screening"){
     questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
         instantiate_questionnaires(included_questionnaires)
     );
+
 } else if (["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
     // Self-report battery B
-    questionnaires_timeline = questionnaires_timeline('seven').concat(
-        questionnaire_phq(1,7),
-        questionnaire_gad(2,7),
-        questionnaire_pvss(3,7),
-        questionnaire_BADS(4,7),
-        questionnaire_hopelessness(5,7),
-        questionnaire_RRS_brooding(6,7),
-        questionnaire_PERS_negAct(7,7)
+
+    let included_questionnaires = [];
+
+    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+        included_questionnaires.push(questionnaire_phq);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
+        included_questionnaires.push(questionnaire_gad);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
+        included_questionnaires.push(questionnaire_pvss);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "BADS_start")){
+        included_questionnaires.push(questionnaire_BADS);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
+        included_questionnaires.push(questionnaire_hopelessness);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
+        included_questionnaires.push(questionnaire_RRS_brooding);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
+        included_questionnaires.push(questionnaire_PERS_negAct);
+    }
+
+    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+        instantiate_questionnaires(included_questionnaires)
     );
+
 } else {
     // Self-report battery C
     questionnaires_timeline = questionnaires_timeline('nine').concat(
