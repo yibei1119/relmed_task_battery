@@ -31,7 +31,7 @@ let openText_instructions = {
     },
     show_page_number: true,
     on_finish: () => {
-        updateState("open_text_start");
+        updateState("open_text_task_start");
     }
 }
 

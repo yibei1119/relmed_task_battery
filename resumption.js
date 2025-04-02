@@ -30,7 +30,7 @@ const quests_order = [
     "dd_start_instructions",
     "dd_task_start",
     "open_text_start_instructions",
-    "open_text_start",
+    "open_text_task_start",
     "quests_start_instructions",
     "quests_start",
     "PHQ9_start",
