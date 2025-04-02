@@ -686,7 +686,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       // Create dynamic ship animation after DOM is ready
       setTimeout(() => {
         this.createShipAnimation(display_element, choice, matchBaseRule);
-      }, 50);
+      }, 100);
 
       // Save data and end trial after duration
       const trial_data = {
