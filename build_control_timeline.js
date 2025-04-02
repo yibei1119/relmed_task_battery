@@ -53,6 +53,8 @@ explore_sequence.forEach(trial => {
         },
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          data.n_control_trials = n_trials;
+          
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
             saveDataREDCap(retry = 3);
@@ -101,6 +103,8 @@ predict_sequence.forEach(trial => {
         save_timeline_variables: true,
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+          data.n_control_trials = n_trials;
+
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
             saveDataREDCap(retry = 3);
@@ -161,6 +165,8 @@ reward_sequence.forEach((trial, index) => {
     },
     on_finish: function (data) {
       const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+      data.n_control_trials = n_trials;
+
       if (n_trials % 24 === 0) {
         console.log("n_trials: " + n_trials);
         saveDataREDCap(retry = 3);
