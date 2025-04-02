@@ -140,7 +140,7 @@ const vigourInstructions = {
       return false;
     }
   },
-  on_timeline_start: () => {updateState(`vigour_start_instructions`)}
+  on_timeline_start: () => {updateState(`vigour_instructions_start`)}
 }
 
 // Function to generate stimulus HTML

@@ -402,7 +402,7 @@ vigourTrials.forEach(trial => {
 
 experimentTimeline[0]["on_timeline_start"] = () => {
   updateState("no_resume_10_minutes");
-  updateState(`vigour_start_task`);
+  updateState(`vigour_task_start`);
   createPersistentCoinContainer();
 }
 

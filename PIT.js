@@ -164,7 +164,7 @@ PITtrialList.forEach(trial => {
 
 PITtrials[0]["on_timeline_start"] = () => {
   updateState(`no_resume_10_minutes`);
-  updateState(`pit_start_task`);
+  updateState(`pit_task_start`);
 };
 
 function getSelectedPITtrial() {
@@ -225,6 +225,9 @@ const vigour_PIT_bonus = {
             <p>The computer selected piggy bank number ${selected_trial.trial_number} of the no-cloud version and number ${selected_PIT_trial.pit_trial_number} of the cloudy version, which means you will earn ${((window.sampledVigourReward + window.sampledPITreward)/ 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
         `;
   },
+  on_start: () => {
+    updateState(`vigour_pit_bonus_start`);
+  },
   on_finish: (data) => {
 
     const bonus = (window.sampledVigourReward + window.sampledPITreward)/ 100;
@@ -250,6 +253,9 @@ const vigour_PIT_bonus2 = {
             <p>It is time to reveal your total bonus payment for the Piggy-Bank Game.</p>
             <p>With the cloudy version and the no-cloud version combined, you will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
         `;
+  },
+  on_start: () => {
+    updateState(`vigour_pit_bonus_start`);
   },
   on_finish: (data) => {
     data.vigour_bonus = getFracVigourReward() + getFracPITReward();
@@ -395,6 +401,6 @@ const PITinstructions = {
     }
   },
   on_timeline_start: () => {
-    updateState(`pit_start_instructions`);
+    updateState(`pit_instructions_start`);
   }
 }

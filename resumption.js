@@ -27,11 +27,11 @@ function resumptionRule(order, last_state, task) {
 }
 
 const quests_order = [
-    "dd_start_instructions",
+    "dd_instructions_start",
     "dd_task_start",
-    "open_text_start_instructions",
+    "open_text_instructions_start",
     "open_text_task_start",
-    "quests_start_instructions",
+    "quests_instructions_start",
     "quests_start",
     "PHQ9_start",
     "GAD7_start",
@@ -46,12 +46,30 @@ const quests_order = [
 ]
 
 const wm_order = [
-    "ltm_start_instructions",
+    "ltm_instructions_start",
     "ltm_task_start",
-    "wm_start_instructions",
+    "ltm_test_instructions_start",
+    "ltm_test_task_start",
+    "wm_instructions_start",
     "wm_task_start",
-    "dd_start_instructions",
+    "wm_test_instructions_start",
+    "wm_test_task_start",
+    "dd_instructions_start",
     "dd_task_start",
-    "open_text_start_instructions",
+    "open_text_instructions_start",
     "open_text_task_start"
 ]
+
+const pilt_to_test_order = [
+    "pilt_instructions_start",
+    "pilt_task_start",
+    "pilt_last_block_start",
+    "vigour_instructions_start",
+    "vigour_task_start",
+    "pit_instructions_start",
+    "pit_task_start",
+    "vigour_pit_bonus_start",
+    `vigour_test_task_start`,
+    "pilt_test_instructions_start",
+    "pilt_test_task_start",
+];

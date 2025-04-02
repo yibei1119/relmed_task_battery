@@ -439,7 +439,7 @@ let questionnaires_instructions = (total) => {
                 `<p>Click 'Next' to begin.</p>`
             ],
             on_start: () => {
-                updateState("quests_start_instructions");
+                updateState("quests_instructions_start");
             },
             on_finish: () => {
                 updateState("quests_start");
@@ -519,7 +519,7 @@ if (window.session === "screening"){
         instantiate_questionnaires(included_questionnaires)
     );
 
-} else if (["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
+} else if (task === "quests" && ["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
     // Self-report battery B
 
     let included_questionnaires = [];
@@ -557,7 +557,7 @@ if (window.session === "screening"){
         instantiate_questionnaires(included_questionnaires)
     );
 
-} else {
+} else if (task === "quests"){
 
     let included_questionnaires = [];
 

@@ -250,47 +250,68 @@
                 data: {trialphase: "instruction"}
             });
 
-            // Add max press rate test
-            procedure = procedure.concat(maxPressTimeline);
+            // Add max pres rate only if vigour / PIT included
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pit_task_start")) {
+                // Add max press rate test
+                console.log("Adding max press rate");
+                procedure = procedure.concat(maxPressTimeline);
+            }
+            
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pilt_last_block_start")) {
+                // Add PILT task timeline
+                console.log("Adding PILT");
+                procedure = procedure.concat(PILT_tasks.PILT_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_PILT
+                ]);
+            }
 
-            procedure = procedure.concat(PILT_tasks.PILT_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_PILT
-            ]);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "vigour_task_start")) {
+                // Add vigour task timeline
+                console.log("Adding vigour");
+                const vigourTimeline = [
+                    preload_vigour,
+                    vigourInstructions,
+                    ...experimentTimeline,
+                ];
+                procedure = procedure.concat(vigourTimeline);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_vigour
+                ]);
+            }
 
-            // Add vigour task timeline
-            const vigourTimeline = [
-                preload_vigour,
-                vigourInstructions,
-                ...experimentTimeline,
-            ];
-            procedure = procedure.concat(vigourTimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_vigour
-            ]);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pit_task_start")) {
+                // Add PIT timeline: instructions, trials, bonus
+                console.log("Adding PIT");
+                const PITtimeline = [
+                    PITinstructions,
+                    PITtrials
+                ];
+                procedure = procedure.concat(PITtimeline);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_PIT
+                ]);
+            }
 
-            // Add PIT timeline: instructions, trials, bonus
-            const PITtimeline = [
-                PITinstructions,
-                PITtrials
-            ];
-            procedure = procedure.concat(PITtimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_PIT
-            ]);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "vigour_pit_bonus_start")) {
+                // Add vigour bonus message
+                console.log("Adding vigour bonus");
+                procedure.push(vigour_PIT_bonus2);
+            }
 
-            // Add post-vigour test
-            procedure = procedure.concat(postVigourInstructions);
-            procedure = procedure.concat(postVigourTrials);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "vigour_test_task_start")) {
+                // Add post-vigour test
+                console.log("Adding post-vigour test");
+                procedure = procedure.concat(postVigourInstructions);
+                procedure = procedure.concat(postVigourTrials);
+            }
 
-            // // PILT & Pavlovian test /// PUT Pavlovian first!!!
+            // PILT & Pavlovian test 
+            console.log("Adding PILT test");
             procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
-
-            // Add vigour bonus message
-            procedure.push(vigour_PIT_bonus);
 
             // Add coin lottery
             procedure.push(lottery_instructions);
@@ -368,39 +389,54 @@
             procedure.push(PILT_tasks.LTM_test_procedure);
         }
         
+        // This is a module used by relemd.ac.uk. For WM only, see wm_only
         if (window.task === "wm") {
             // Preload
             procedure.push(preload_wm_ltm);
 
-            // Add LTM block
-            procedure.push(PILT_tasks.LTM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_ltm
-            ]);
+            if (resumptionRule(wm_order, window.last_state, "ltm_task_start")) {
+                // Add LTM block
+                console.log("Adding LTM");
+                procedure.push(PILT_tasks.LTM_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_ltm
+                ]);
+            }
 
-            // Add post-LTM test
-            procedure.push(PILT_tasks.LTM_test_procedure);
+            if (resumptionRule(wm_order, window.last_state, "ltm_test_task_start")) {
+                // Add post-LTM test
+                console.log("Adding post-LTM test");
+                procedure.push(PILT_tasks.LTM_test_procedure);
+            }
+            
+            if (resumptionRule(wm_order, window.last_state, "wm_task_start")) {
+                // Add WM block
+                console.log("Adding WM");
+                procedure.push(PILT_tasks.WM_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_wm
+                ]);
+            }
 
-            // Add WM block
-            procedure.push(PILT_tasks.WM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_wm
-            ]);
-
-            // Add post-WM test
-            procedure.push(PILT_tasks.WM_test_procedure);
+            if (resumptionRule(wm_order, window.last_state, "wm_test_task_start")) {
+                // Add post-WM test
+                console.log("Adding post-WM test");
+                procedure.push(PILT_tasks.WM_test_procedure);
+            }
 
             if (["wk24", "wk28"].includes(window.session)) {
                 
-                if (resumptionRule(quests_order, window.last_state, "dd_task_start")) {
+                if (resumptionRule(wm_order, window.last_state, "dd_task_start")) {
                     // Add delay discounting timeline
+                    console.log("Adding delay discounting");
                     procedure = procedure.concat(dd_timeline);
                 }
                 
-                if (resumptionRule(quests_order, window.last_state, "open_text_task_start")) {
+                if (resumptionRule(wm_order, window.last_state, "open_text_task_start")) {
                     // Free text
+                    console.log("Adding open text");
                     procedure.push(openTextTimeline);
                 }
             }

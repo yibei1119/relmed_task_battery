@@ -57,7 +57,7 @@ function prepare_PILT_instructions() {
     },
         show_clickable_nav: true,
         data: {trialphase: "pilt_instruction"},
-        on_start: () => {updateState("pilt_start_instructions")}
+        on_start: () => {updateState("pilt_instructions_start")}
     }
     ];
 
@@ -425,6 +425,9 @@ const test_instructions = (task) => {
                 <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
         ],
         show_clickable_nav: true,
+        on_start: () => {
+            updateState(`${task}_test_instructions_start`);
+        },
         data: {trialphase: `post-${task}_test_instructions`},
         on_finish: () => {
             
