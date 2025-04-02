@@ -134,8 +134,11 @@ reward_sequence.forEach((trial, index) => {
     timelineItems.push({
       type: jsPsychRewardPrompt,
       target: jsPsych.timelineVariable('target'),
-      prompt_duration: 8000,
-      post_trial_gap: 400
+      near: jsPsych.timelineVariable('near'),
+      left: jsPsych.timelineVariable('left'),
+      right: jsPsych.timelineVariable('right'),
+      current: jsPsych.timelineVariable('current'),
+      reward_amount: "5p"
     });
   }
   

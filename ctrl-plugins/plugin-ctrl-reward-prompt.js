@@ -10,18 +10,48 @@ var jsPsychRewardPrompt = (function (jspsych) {
         default: undefined,
         description: "Target island for delivery"
       },
-      prompt_duration: {
+      near: {
+        type: jspsych.ParameterType.STRING,
+        default: undefined,
+        description: "Type of the near island"
+      },
+      left: {
+        type: jspsych.ParameterType.STRING,
+        default: undefined,
+        description: "Color/type of the left ship"
+      },
+      right: {
+        type: jspsych.ParameterType.STRING,
+        default: undefined,
+        description: "Color/type of the right ship"
+      },
+      current: {
         type: jspsych.ParameterType.INT,
-        default: 8000,
-        description: "Duration to show the prompt (ms)"
+        default: 1,
+        description: "Strength of ocean current (1-3)"
+      },
+      reward_amount: {
+        type: jspsych.ParameterType.STRING,
+        default: "",
+        description: "Amount of reward shown in the quest scroll"
+      },
+      choices: {
+        type: jspsych.ParameterType.KEYS,
+        default: ["ArrowLeft", "ArrowRight"]
       },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
-        default: 800,
+        default: 0,
         description: "Gap between trials (ms)"
       }
     },
     data: {
+      response: {
+        type: jspsych.ParameterType.STRING
+      },
+      rt: {
+        type: jspsych.ParameterType.INT
+      },
       trialphase: {
         type: jspsych.ParameterType.STRING,
         default: "control_reward_prompt"
@@ -29,47 +59,152 @@ var jsPsychRewardPrompt = (function (jspsych) {
     }
   };
 
-  class RewardPromptPlugin {
+  class RewardPromptShipPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
+
+      // Define base rule mapping
+      this.baseRule = {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      };
     }
 
     trial(display_element, trial) {
-      // Generate prompt display
-      const html = `
-        <main class="main-stage">
-          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-          <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-            <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
-          </div>
-          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 60%;">
-            <div class="instruction-content" style="font-size: 20px; text-align: center;">
-              <h2 style="color: #0F52BA;">First Reward Mission!</h2>
-              <p>In this mission, you'll need to:</p>
-              <ul style="text-align: left; padding-left: 20px;">
-                <li>Focus on the <strong>target island</strong> shown in the quest scroll at the top-right</li>
-                <li>Choose the appropriate ship</li>
-                <li>Press keys rapidly to fuel the ship</li>
-                <li>Reach the target island to win the reward</li>
-              </ul>
-              <p>Remember, ocean currents affect ship destinations!</p>
+      // Initialize trial variables
+      var response = {
+        rt: null,
+        key: null
+      };
+
+      // Generate trial HTML
+      const generateHTML = () => {
+        const far = this.baseRule[trial.near];
+        return `
+          <main class="main-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <section class="scene">
+              <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
+                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
+              </div>
+              <div class="quest-scroll">
+                <p style="position: absolute; z-index: 4; top: 9%; font-size: 2.5vh; color: maroon">Target Island</p>
+                <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" />
+                <img class="island-target" src="imgs/island_icon_${trial.target}.png" alt="Target island" />
+                <p style="position: absolute; z-index: 4; top: 55%; font-size: 2.5vh; color: maroon">Quest reward: ${trial.reward_amount}</p>
+              </div>
+              <div class="overlap-group">
+                <div class="choice-left">
+                  <div class="fuel-container-left">
+                    <div class="fuel-indicator-container">
+                      <div class="fuel-indicator-bar"></div>
+                    </div>
+                  </div>
+                  <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
+                  <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
+                </div>
+                <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <div class="choice-right">
+                  <div class="fuel-container-right">
+                    <div class="fuel-indicator-container">
+                      <div class="fuel-indicator-bar"></div>
+                    </div>
+                  </div>
+                  <img class="ship-right" src="imgs/simple_ship_${trial.right}.png" alt="Right ship" />
+                  <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
+                </div>
+              </div>
+              ${this.generateOceanCurrentsHTML(trial.current)}
+            </section>
+            <div class="instruction-dialog" style="bottom:20%; min-width: 600px;">
+                <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
+                    <h3>You're about to take the first <strong>Reward Mission</strong></h3>
+                    <p>Focus on the target island on the quest scroll in these missions</p>
+                    <p>Choose the right ship and add the appropriate amount of fuel</br> to deliver cargo to the target island and win the prize!</p>
+                    <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
+                </div>
             </div>
+          </main>
+        `;
+      };
+
+      
+      display_element.innerHTML = generateHTML();
+
+      const end_trial = () => {
+        if (typeof keyboardListener !== "undefined") {
+          this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+        }
+        var trial_data = {
+          rt: response.rt,
+          response: response.key,
+          trialphase: "control_reward_prompt"
+        };
+        this.jsPsych.finishTrial(trial_data);
+      };
+
+      var after_response = (info2) => {
+        if (response.key == null) {
+          response = info2;
+        }
+        end_trial();
+      };
+
+      // Initial keyboard listener
+      if (trial.choices != "NO_KEYS") {
+        var keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: after_response,
+          valid_responses: trial.choices,
+          rt_method: "performance",
+          persist: false,
+          allow_held_key: false
+        });
+      }
+    }
+
+    generateOceanCurrentsHTML(level) {
+      // Generate positions based on level
+      const positions = {
+        1: [{ top: 49, offset: 20 }],
+        2: [
+          { top: 43, offset: 50 },
+          { top: 55, offset: 30 }
+        ],
+        3: [
+          { top: 43, offset: 50 },
+          { top: 49, offset: 20 },
+          { top: 55, offset: 30 }
+        ]
+      };
+      
+      const currentPositions = positions[level] || positions[3];
+      
+      // Generate the HTML for currents
+      let leftTraces = '', leftLines = '', rightTraces = '', rightLines = '';
+      
+      currentPositions.forEach(({ top, offset }) => {
+        leftTraces += `<div class="current-trace" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        leftLines += `<div class="current-line" style="top: ${top}%; right: calc(5% + ${offset}px);"></div>`;
+        
+        rightTraces += `<div class="current-trace" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+        rightLines += `<div class="current-line" style="top: ${top}%; left: calc(5% + ${offset}px);"></div>`;
+      });
+      
+      return `
+        <div class="ocean-current">
+          <div class="current-group left-currents">
+            ${leftTraces}
+            ${leftLines}
           </div>
-          <div class="quest-scroll" style="position: absolute; top: 10px; right: 10px; width: 120px; height: 120px; z-index: 10;">
-            <p style="position: absolute; z-index: 4; top: 9%; font-size: 2vh; color: maroon">Target Island</p>
-            <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll" style="width: 100%; height: 100%;" />
-            <img class="island-target" src="imgs/island_icon_${trial.target}.png" alt="Target island" style="position: absolute; width: 50px; height: 50px; top: 30%; left: 50%; transform: translate(-50%, -50%);" />
+          <div class="current-group right-currents">
+            ${rightTraces}
+            ${rightLines}
           </div>
-        </main>
+        </div>
       `;
-
-      display_element.innerHTML = html;
-
-      // End trial after duration
-      this.jsPsych.pluginAPI.setTimeout(() => {
-        display_element.innerHTML = '';
-        this.jsPsych.finishTrial();
-      }, trial.prompt_duration);
     }
 
     // Simulation function
@@ -85,9 +220,11 @@ var jsPsychRewardPrompt = (function (jspsych) {
 
     create_simulation_data(trial, simulation_options) {
       const default_data = {
-        trialphase: "control_reward_prompt"
+        trialphase: "control_reward_prompt",
+        response: this.jsPsych.pluginAPI.getValidKey(trial.choices),
+        rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true))
       };
-      
+
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
       this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
       return data;
@@ -101,19 +238,24 @@ var jsPsychRewardPrompt = (function (jspsych) {
     simulate_visual(trial, simulation_options, load_callback) {
       const data = this.create_simulation_data(trial, simulation_options);
       const display_element = this.jsPsych.getDisplayElement();
-
+      
       // Faster visual simulation
       if (simulation_options.speed_up) {
-        trial.prompt_duration = trial.prompt_duration / simulation_options.speed_up_factor;
+        trial.reward_decision = trial.reward_decision / simulation_options.speed_up_factor;
+        trial.reward_effort = trial.reward_effort / simulation_options.speed_up_factor; 
         trial.post_trial_gap = trial.post_trial_gap / simulation_options.speed_up_factor;
       }
-
+      
       this.trial(display_element, trial);
       load_callback();
+
+      if (data.rt !== null) {
+        this.jsPsych.pluginAPI.pressKey(data.response, data.rt);
+      }
     }
   }
 
-  RewardPromptPlugin.info = info;
+  RewardPromptShipPlugin.info = info;
 
-  return RewardPromptPlugin;
+  return RewardPromptShipPlugin;
 })(jsPsychModule);
