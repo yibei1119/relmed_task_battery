@@ -426,7 +426,7 @@ const questionnaire_PERS_negAct = (i, total) => {
     };
 }; 
 
-let questionnaires_timeline = (total) => {
+let questionnaires_instructions = (total) => {
     return [
         {
             type: jsPsychInstructions,
@@ -453,13 +453,53 @@ let questionnaires_timeline = (total) => {
     ];
 } 
 
+const instantiate_questionnaires = (questionnaires) => {
+    let questionnaire_timeline = [];
+    questionnaires.forEach((questionnaire, i) => {
+        questionnaire_timeline.push(questionnaire(i+1, questionnaires.length));
+    });
+
+    // Add updateState("no_resume") to the on_start function of the last questionnaire
+    if (questionnaire_timeline.length > 0) {
+        const lastQuestionnaireIndex = questionnaire_timeline.length - 1;
+        const originalOnStart = questionnaire_timeline[lastQuestionnaireIndex].on_start;
+        
+        questionnaire_timeline[lastQuestionnaireIndex].on_start = () => {
+            updateState("no_resume");
+            if (originalOnStart) {
+                originalOnStart();
+            }
+        };
+    }
+    
+
+    return questionnaire_timeline;
+}
+
+questionnaires_timeline = [];
+
 if (window.session === "screening"){
     // Self-report battery A
-    questionnaires_timeline = questionnaires_timeline('four').concat(
-        questionnaire_phq(1,4),
-        questionnaire_WSAS(2,4),
-        questionnaire_ICECAP(3,4),
-        questionnaire_BFI(4,4),
+    let included_questionnaires = [];
+
+    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+        included_questionnaires.push(questionnaire_phq);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "WSAS_start")){
+        included_questionnaires.push(questionnaire_WSAS);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "ICECAP_start")){
+        included_questionnaires.push(questionnaire_ICECAP);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "BFI_start")){
+        included_questionnaires.push(questionnaire_BFI);
+    }
+
+    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+        instantiate_questionnaires(included_questionnaires)
     );
 } else if (["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
     // Self-report battery B
