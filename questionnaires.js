@@ -203,6 +203,9 @@ var questionnaire_phq = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "PHQ"
+        },
+        on_start: () => {
+            updateState("PHQ_start");
         }
     };
 };
@@ -218,6 +221,9 @@ var questionnaire_gad = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "GAD"
+        },
+        on_start: () => {
+            updateState("GAD_start");
         }
     };
 };
@@ -252,6 +258,9 @@ var questionnaire_WSAS = (i,total) => {
                 text: 'If you\'re retired or choose not to have a job for reasons unrelated to your problem, tick here',
                 possible_values: "true<br>false"
             }
+        },
+        on_start: () => {
+            updateState("WSAS_start");
         }
     };
 };
@@ -271,6 +280,9 @@ var questionnaire_ICECAP = (i,total) => {
         scale_width: 700,
         data: {
             trialphase: "ICECAP"
+        },
+        on_start: () => {
+            updateState("ICECAP_start");
         }
     };    
 };
@@ -286,6 +298,9 @@ var questionnaire_BFI = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "BFI"
+        },
+        on_start: () => {
+            updateState("BFI_start");
         }
     };
 };
@@ -328,6 +343,9 @@ var questionnaire_pvss = (i,total) => {
         scale_repeat: 5,
         data: {
             trialphase: "PVSS"
+        },
+        on_start: () => {
+            updateState("pvss_start");
         }
     };
 };
@@ -344,6 +362,9 @@ var questionnaire_BADS = (i,total) => {
         item_width: 33,
         data: {
             trialphase: "BADS"
+        },
+        on_start: () => {
+            updateState("BADS_start");
         }
     };
 };
@@ -361,6 +382,9 @@ var questionnaire_hopelessness = (i,total) => {
         item_width: 40,
         data: {
             trialphase: "Hopelessness"
+        },
+        on_start: () => {
+            updateState("hopelessness_start");
         }
     };
 };
@@ -376,6 +400,9 @@ var questionnaire_RRS_brooding = (i,total) => {
         survey_width: 700,
         data: {
             trialphase: "RRS_brooding"
+        },
+        on_start: () => {
+            updateState("RRS_brooding_start");
         }
     };
 }; 
@@ -392,11 +419,14 @@ const questionnaire_PERS_negAct = (i, total) => {
         item_width: 40,
         data: {
             trialphase: "PERS_negAct"
+        },
+        on_start: () => {
+            updateState("PERS_negAct_start");
         }
     };
 }; 
 
-let questionnaires_timeline = (total) => {
+let questionnaires_instructions = (total) => {
     return [
         {
             type: jsPsychInstructions,
@@ -408,6 +438,12 @@ let questionnaires_timeline = (total) => {
                 `<p>Please take your time with each item, and remember that there are no “right” or “wrong” answers. Your honest and thorough responses will help us gather meaningful data.</p>` +
                 `<p>Click 'Next' to begin.</p>`
             ],
+            on_start: () => {
+                updateState("quests_start_instructions");
+            },
+            on_finish: () => {
+                updateState("quests_start");
+            },
             show_clickable_nav: true,
             data: {trialphase: "pre_questionnaire_instructions"},
             simulation_options:{
@@ -417,38 +453,156 @@ let questionnaires_timeline = (total) => {
     ];
 } 
 
+/**
+ * Creates a timeline of questionnaires and configures the last questionnaire to update the state to "no_resume".
+ * 
+ * @param {Array<Function>} questionnaires - An array of questionnaire functions, each of which when called with 
+ * a number and total, returns a jsPsych trial object.
+ * @returns {Array<Object>} questionnaire_timeline - An array of jsPsych trial objects representing the questionnaires.
+ * 
+ * @description
+ * Each questionnaire function is called with two parameters:
+ * 1. Its position in the sequence (1-indexed)
+ * 2. The total number of questionnaires
+ * 
+ * The last questionnaire in the timeline is modified to call `updateState("no_resume")` when it starts,
+ * which prevents the experiment from being resumed after the questionnaires are completed.
+ */
+const instantiate_questionnaires = (questionnaires) => {
+    let questionnaire_timeline = [];
+    questionnaires.forEach((questionnaire, i) => {
+        questionnaire_timeline.push(questionnaire(i+1, questionnaires.length));
+    });
+
+    // Add updateState("no_resume") to the on_start function of the last questionnaire
+    if (questionnaire_timeline.length > 0) {
+        const lastQuestionnaireIndex = questionnaire_timeline.length - 1;
+        const originalOnStart = questionnaire_timeline[lastQuestionnaireIndex].on_start;
+        
+        questionnaire_timeline[lastQuestionnaireIndex].on_start = () => {
+            updateState("no_resume");
+            if (originalOnStart) {
+                originalOnStart();
+            }
+        };
+    }
+    
+
+    return questionnaire_timeline;
+}
+
+// Build questionnaires timeline
+let questionnaires_timeline = [];
+
 if (window.session === "screening"){
     // Self-report battery A
-    questionnaires_timeline = questionnaires_timeline('four').concat(
-        questionnaire_phq(1,4),
-        questionnaire_WSAS(2,4),
-        questionnaire_ICECAP(3,4),
-        questionnaire_BFI(4,4),
+    let included_questionnaires = [];
+
+    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+        included_questionnaires.push(questionnaire_phq);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "WSAS_start")){
+        included_questionnaires.push(questionnaire_WSAS);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "ICECAP_start")){
+        included_questionnaires.push(questionnaire_ICECAP);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "BFI_start")){
+        included_questionnaires.push(questionnaire_BFI);
+    }
+
+    // Instantiate timeline
+    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+        instantiate_questionnaires(included_questionnaires)
     );
+
 } else if (["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
     // Self-report battery B
-    questionnaires_timeline = questionnaires_timeline('seven').concat(
-        questionnaire_phq(1,7),
-        questionnaire_gad(2,7),
-        questionnaire_pvss(3,7),
-        questionnaire_BADS(4,7),
-        questionnaire_hopelessness(5,7),
-        questionnaire_RRS_brooding(6,7),
-        questionnaire_PERS_negAct(7,7)
+
+    let included_questionnaires = [];
+
+    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+        included_questionnaires.push(questionnaire_phq);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
+        included_questionnaires.push(questionnaire_gad);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
+        included_questionnaires.push(questionnaire_pvss);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "BADS_start")){
+        included_questionnaires.push(questionnaire_BADS);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
+        included_questionnaires.push(questionnaire_hopelessness);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
+        included_questionnaires.push(questionnaire_RRS_brooding);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
+        included_questionnaires.push(questionnaire_PERS_negAct);
+    }
+
+    // Instantiate timeline
+    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+        instantiate_questionnaires(included_questionnaires)
     );
+
 } else {
+
+    let included_questionnaires = [];
+
     // Self-report battery C
-    questionnaires_timeline = questionnaires_timeline('nine').concat(
-        questionnaire_phq(1,9),
-        questionnaire_gad(2,9),
-        questionnaire_WSAS(3,9),
-        questionnaire_ICECAP(4,9),
-        questionnaire_pvss(5,9),
-        questionnaire_BADS(6,9),
-        questionnaire_hopelessness(7,9),
-        questionnaire_RRS_brooding(8,9),
-        questionnaire_PERS_negAct(9,9)
+    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+        included_questionnaires.push(questionnaire_phq);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
+        included_questionnaires.push(questionnaire_gad);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "WSAS_start")){
+        included_questionnaires.push(questionnaire_WSAS);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "ICECAP_start")){
+        included_questionnaires.push(questionnaire_ICECAP);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
+        included_questionnaires.push(questionnaire_pvss);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "BADS_start")){
+        included_questionnaires.push(questionnaire_BADS);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
+        included_questionnaires.push(questionnaire_hopelessness);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
+        included_questionnaires.push(questionnaire_RRS_brooding);
+    }
+
+    if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
+        included_questionnaires.push(questionnaire_PERS_negAct);
+    }
+
+    // Instantiate timeline
+    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+        instantiate_questionnaires(included_questionnaires)
     );
+
 }
 
 

@@ -24,6 +24,14 @@
         window.prolific_default_response_deadline = 3000;
         window.default_long_response_deadline = 6000;
 
+        // Print all url parameters to console
+        const urlParams = () => {
+            const params = new URLSearchParams(window.location.search);
+            for (const [key, value] of params.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+        }
+
         // Initialize jsPysch object
         let jsPsych = initJsPsych({
             display_element: 'display_element',
@@ -50,6 +58,7 @@
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
+        window.last_state = jsPsych.data.getURLVariable('state') || "none";
 
         // Context specific response deadline
         window.default_response_deadline = window.context === "relmed" ? window.relemd_default_response_deadline : window.prolific_default_response_deadline;
@@ -68,6 +77,7 @@
         window.pause_resume_events = [];
 
     </script>
+    <script src="resumption.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-explore-trial-2.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-reward-trial.js"></script>
@@ -383,12 +393,16 @@
             procedure.push(PILT_tasks.WM_test_procedure);
 
             if (["wk24", "wk28"].includes(window.session)) {
-                // Add delay discounting timeline
-                procedure = procedure.concat(dd_timeline);
-
-                // Free text
-                procedure.push(openTextTimeline);
-
+                
+                if (resumptionRule(quests_order, window.last_state, "dd_task_start")) {
+                    // Add delay discounting timeline
+                    procedure = procedure.concat(dd_timeline);
+                }
+                
+                if (resumptionRule(quests_order, window.last_state, "open_text_task_start")) {
+                    // Free text
+                    procedure.push(openTextTimeline);
+                }
             }
         }
 
@@ -450,11 +464,16 @@
             });
 
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
-                // Add delay discounting timeline
-                procedure = procedure.concat(dd_timeline);
 
-                // Free text
-                procedure.push(openTextTimeline);
+                if (resumptionRule(quests_order, window.last_state, "dd_task_start")) {
+                    // Add delay discounting timeline
+                    procedure = procedure.concat(dd_timeline);
+                }
+                
+                if (resumptionRule(quests_order, window.last_state, "open_text_task_start")) {
+                    // Free text
+                    procedure.push(openTextTimeline);
+                }
             }
 
             // Add questionnaire timeline

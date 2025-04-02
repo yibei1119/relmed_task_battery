@@ -82,10 +82,15 @@ const dd_instructions = {
         "<p>For each of the next 27 choices, please indicate which reward you would prefer: the smaller reward today, or the larger reward in the specified number of days.</p>"
     ],
     show_clickable_nav: true,
+    on_start: () => {
+        updateState("dd_start_instructions");
+    },
     on_finish: () => {
         jsPsych.data.addProperties({
             dd_n_warnings: 0
         });
+
+        updateState("dd_task_start");
     },
     data: {
         trialphase: "dd_instructions"

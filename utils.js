@@ -193,13 +193,13 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     if (window.context === "relmed") {
         postToParent(
             {
-                ...{ 
+                ...{
                     record_id: window.participantID + "_" + window.module_start_time,
                     participant_id: window.participantID,
                     sitting_start_time: window.module_start_time,
                     session: window.session,
                     module: window.task,
-                    data: jspsych_data 
+                    array: jspsych_data 
                 },
                 ...extra_fields
         },

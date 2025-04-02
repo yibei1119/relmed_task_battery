@@ -26,20 +26,22 @@ test.describe("Website Load Test", () => {
         test(`Loading ${BASE_URL}${param}`, async ({ page }) => {
             let messageReceived = false;
 
-            // Set up event listener for postMessage
-            page.on('console', msg => {
-                if (msg.text().includes("load_successful")) {
-                    messageReceived = true;
-                }
-            });
-
             // Navigate to the page with the URL parameter
             const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 5000 });
 
             let passed = response.ok();
             if (passed) {
-                await page.waitForTimeout(3000);  // Allow time for the message to be sent
-                passed = messageReceived;  // Check if the message was received
+                const messagePromise = new Promise(resolve => {
+                    page.on('console', msg => {
+                        if (msg.text().includes("load_successful")) {
+                            resolve(true);
+                        }
+                    });
+                });
+
+                const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(false), 3000));
+
+                passed = await Promise.race([messagePromise, timeoutPromise]);
             }
 
             // Extract parameters from the URL

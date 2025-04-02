@@ -595,7 +595,10 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
             procedure.push(test_instructions(name));
             let test_blocks = build_post_PILT_test(structure, name);
             test_blocks[0]["on_start"] = () => {
-                updateState("no_resume");
+
+                if (!(["wk24", "wk28"].includes(window.session))) {
+                    updateState("no_resume");
+                }
                 updateState(`${name}_post_test_task_start`);
             };
             procedure = procedure.concat(test_blocks);    
@@ -613,7 +616,11 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     if (WM_structure != null){
         let WM_blocks = build_PILT_task(WM_structure, true, "wm");
         WM_blocks[0]["on_start"] = () => {
-            updateState("no_resume_10_minutes");
+
+            if (!(["wk24", "wk28"].includes(window.session))) {
+                updateState("no_resume_10_minutes");
+            }
+            
             updateState("wm_task_start");
         };
         WM_procedure = WM_instructions.concat(WM_blocks);    
