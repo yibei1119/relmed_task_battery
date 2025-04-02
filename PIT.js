@@ -225,6 +225,9 @@ const vigour_PIT_bonus = {
             <p>The computer selected piggy bank number ${selected_trial.trial_number} of the no-cloud version and number ${selected_PIT_trial.pit_trial_number} of the cloudy version, which means you will earn ${((window.sampledVigourReward + window.sampledPITreward)/ 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
         `;
   },
+  on_start: () => {
+    updateState(`vigour_pit_bonus_start`);
+  },
   on_finish: (data) => {
 
     const bonus = (window.sampledVigourReward + window.sampledPITreward)/ 100;
