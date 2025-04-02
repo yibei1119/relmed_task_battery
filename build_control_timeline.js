@@ -71,7 +71,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
-          feedback_duration: 3000,
+          feedback_duration: 4000,
           post_trial_gap: 0
         }],
         conditional_function: function () {
