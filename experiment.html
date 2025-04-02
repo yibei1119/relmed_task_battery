@@ -392,12 +392,16 @@
             procedure.push(PILT_tasks.WM_test_procedure);
 
             if (["wk24", "wk28"].includes(window.session)) {
-                // Add delay discounting timeline
-                procedure = procedure.concat(dd_timeline);
-
-                // Free text
-                procedure.push(openTextTimeline);
-
+                
+                if (resumptionRule(quests_order, window.last_state, "dd_task_start")) {
+                    // Add delay discounting timeline
+                    procedure = procedure.concat(dd_timeline);
+                }
+                
+                if (resumptionRule(quests_order, window.last_state, "open_text_task_start")) {
+                    // Free text
+                    procedure.push(openTextTimeline);
+                }
             }
         }
 

@@ -31,6 +31,9 @@ let openText_instructions = {
     },
     show_page_number: true,
     on_finish: () => {
+        if (["wk24", "wk28"].includes(window.session)){
+            updateState("no_resume");
+        }
         updateState("open_text_task_start");
     }
 }

@@ -44,3 +44,14 @@ const quests_order = [
     "PERS_negAct_start",
     "BFI_start"
 ]
+
+const wm_order = [
+    "ltm_start_instructions",
+    "ltm_task_start",
+    "wm_start_instructions",
+    "wm_task_start",
+    "dd_start_instructions",
+    "dd_task_start",
+    "open_text_start_instructions",
+    "open_text_task_start"
+]
