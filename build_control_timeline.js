@@ -98,7 +98,7 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 6000*1000,
+        predict_decision: 6000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
@@ -154,7 +154,7 @@ reward_sequence.forEach((trial, index) => {
     right: jsPsych.timelineVariable('right'),
     current: jsPsych.timelineVariable('current'),
     reward_amount: "5p",
-    reward_decision: 6000*1000,
+    reward_decision: 6000,
     post_trial_gap: 0,
     save_timeline_variables: true,
     on_start: function (trial) {
