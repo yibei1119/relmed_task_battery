@@ -121,7 +121,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
             </section>
             <div class="instruction-dialog" style="bottom:20%; min-width: 600px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
-                    <h3>You're about to take the first <strong>Reward Mission</strong></h3>
+                    <h3>You're about to take your first <strong>Reward Mission</strong></h3>
                     <p>Focus on the target island on the quest scroll in these missions</p>
                     <p>Choose the right ship and add the appropriate amount of fuel</br> to deliver cargo to the target island and win the prize!</p>
                     <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>

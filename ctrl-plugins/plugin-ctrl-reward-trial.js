@@ -553,7 +553,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const display_element = this.jsPsych.getDisplayElement();
 
       const msg = data.correct 
-        ? "<p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p>"
+        ? "<p>🎉Congratulations!</p><p>You've successfully transported the cargo to the target island.</p>"
         : "<p>Sorry!</p><p>The cargo has been transported to the wrong island.<br>But don't worry, maybe next time.</p>";
 
       // Generate feedback display
