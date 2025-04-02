@@ -393,16 +393,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       control_rule_used: {
         type: jspsych.ParameterType.STRING
       },
-      effort_level: {
-        type: jspsych.ParameterType.INT
-      },
-      current_strength: {
-        type: jspsych.ParameterType.INT
-      },
       ship_color: {
-        type: jspsych.ParameterType.STRING
-      },
-      near_island: {
         type: jspsych.ParameterType.STRING
       },
       probability_control: {
@@ -693,10 +684,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         trialphase: "control_explore_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
-        effort_level: effortLevel,
-        current_strength: currentStrength,
         ship_color: chosenColor,
-        near_island: nearIsland,
         probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
       };
 
@@ -740,10 +728,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         trialphase: "control_explore_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
-        effort_level: effortLevel,
-        current_strength: currentStrength,
         ship_color: chosenColor,
-        near_island: nearIsland,
         probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
       };
 
