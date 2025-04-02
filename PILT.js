@@ -391,6 +391,24 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
     let PILT_task = [];
     for (let i = 0; i < structure.length; i++) {
 
+        // Skip this block if task is pilt, and was relaunched
+        if (task_name === "pilt"){
+            // Extract the block number from the state string
+            const state_match = window.last_state.match(/pilt_block_(\d+)_start/);
+
+            if (state_match){
+                const last_block = parseInt(state_match[1]);
+                const this_block = structure[i][0]["block"];
+
+                if (typeof this_block === "number" && this_block <= last_block){
+                    continue;
+                }
+            }
+        }
+
+        // Print adding block
+        console.log(`Adding block ${structure[i][0]["block"]} of ${task_name} to the timeline.`);
+
         // Get list of unique images in block to preload
         let preload_images = structure[i].flatMap(item => [item.stimulus_right, item.stimulus_left]);
         preload_images = [...new Set(preload_images)].map(value => `imgs/PILT_stims/${value}`);
