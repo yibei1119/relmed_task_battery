@@ -491,6 +491,7 @@ const instantiate_questionnaires = (questionnaires) => {
     return questionnaire_timeline;
 }
 
+// Build questionnaires timeline
 let questionnaires_timeline = [];
 
 if (window.session === "screening"){
