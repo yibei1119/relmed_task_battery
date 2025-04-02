@@ -15,12 +15,11 @@ const controlPreload = {
     "island_icon_coconut.png",
     "island_icon_grape.png",
     "island_icon_orange.png",
-    "simple_ship_icon_blue.png",
-    "simple_ship_icon_green.png",
-    "simple_ship_icon_red.png",
-    "simple_ship_icon_yellow.png",
     "left.png",
-
+    "map.png",
+    "map_islands.png",
+    "fuel.png",
+    "scroll.png"
   ].map(s => "imgs/" + s),
   post_trial_gap: 800,
   continue_after_error: true,
