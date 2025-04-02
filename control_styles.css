@@ -40,9 +40,9 @@
 .nav-map {
   position: absolute;
   width: 30%;
-  height: 32.5%;
+  height: 35%;
   top: 2%;
-  right: 73%;
+  right: 70%;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -57,7 +57,7 @@
 
 .nav-map-island {
   position: absolute;
-  height: 80%;
+  height: 90%;
   z-index: 2;
 }
 
