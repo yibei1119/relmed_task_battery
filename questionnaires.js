@@ -453,12 +453,21 @@ let questionnaires_instructions = (total) => {
     ];
 } 
 
-// Function to instantiate questionnaires
-// This function takes an array of questionnaire functions and returns an array of instantiated questionnaires
-// Each questionnaire function is called with the current index and the total number of questionnaires
-// The instantiated questionnaires are then pushed into the questionnaire_timeline array
-// The last questionnaire's on_start function is modified to include updateState("no_resume") before calling the original on_start function
-// The function returns the questionnaire_timeline array
+/**
+ * Creates a timeline of questionnaires and configures the last questionnaire to update the state to "no_resume".
+ * 
+ * @param {Array<Function>} questionnaires - An array of questionnaire functions, each of which when called with 
+ * a number and total, returns a jsPsych trial object.
+ * @returns {Array<Object>} questionnaire_timeline - An array of jsPsych trial objects representing the questionnaires.
+ * 
+ * @description
+ * Each questionnaire function is called with two parameters:
+ * 1. Its position in the sequence (1-indexed)
+ * 2. The total number of questionnaires
+ * 
+ * The last questionnaire in the timeline is modified to call `updateState("no_resume")` when it starts,
+ * which prevents the experiment from being resumed after the questionnaires are completed.
+ */
 const instantiate_questionnaires = (questionnaires) => {
     let questionnaire_timeline = [];
     questionnaires.forEach((questionnaire, i) => {
