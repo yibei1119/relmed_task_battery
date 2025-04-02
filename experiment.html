@@ -58,6 +58,7 @@
         window.azurePID = jsPsych.data.getURLVariable('azure_PID');
         window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
+        window.last_state = jsPsych.data.getURLVariable('state') || "none";
 
         // Context specific response deadline
         window.default_response_deadline = window.context === "relmed" ? window.relemd_default_response_deadline : window.prolific_default_response_deadline;
@@ -104,6 +105,7 @@
     <script src="open-text/tasks/questions.js"></script>
     <script src="open-text/tasks/instructions.js"></script>
     <script src="open-text/experiment.js"></script>
+    <script src="resumption.js"></script>
     <link href="jspsych/jspsych.css" rel="stylesheet" type="text/css" />
     <link href="vigour_styles.css" rel="stylesheet" type="text/css" />
     <link href="PIT_styles.css" rel="stylesheet" type="text/css" />
@@ -457,11 +459,16 @@
             });
 
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
-                // Add delay discounting timeline
-                procedure = procedure.concat(dd_timeline);
 
-                // Free text
-                procedure.push(openTextTimeline);
+                if (resumptionRule(quests_order, window.last_state, "dd_start")) {
+                    // Add delay discounting timeline
+                    procedure = procedure.concat(dd_timeline);
+                }
+                
+                if (resumptionRule(quests_order, window.last_state, "open_text_start")) {
+                    // Free text
+                    procedure.push(openTextTimeline);
+                }
             }
 
             // Add questionnaire timeline
