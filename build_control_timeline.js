@@ -75,7 +75,7 @@ explore_sequence.forEach(trial => {
       {
         timeline: [{
           type: jsPsychExploreShipFeedback,
-          feedback_duration: 4000,
+          feedback_duration: 3000,
           post_trial_gap: 0
         }],
         conditional_function: function () {
@@ -191,6 +191,7 @@ reward_sequence.forEach((trial, index) => {
     timeline: [{
       type: jsPsychRewardShipFeedback,
       target_island: jsPsych.timelineVariable('target'),
+      feedback_duration: 2000,
       post_trial_gap: 0
     }],
     conditional_function: function () {
