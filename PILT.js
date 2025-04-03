@@ -158,21 +158,34 @@ const test_trial = (task) => {
                 timeline: [
                     {
                         type: jsPsychHtmlButtonResponse,
-                        stimulus: '<p>How confident are you that your last choice was correct?</p>',
+                        stimulus: `<p><strong><span class="highlight-txt">How confident are you that your last choice was correct?</span></strong></p>`,
                         choices: ["1<br>Not at all", "2", "3", "4", "5<br>Very confident"],
+                        trial_duration: 10000,
+                        post_trial_gap: 800,                    
                         data: {
                             trialphase: "pilt_confidence"
-                        }
-                    }
+                        },
+                        on_finish: function (data) {
+                            if (data.response === null) {
+                              var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+                              console.log("n_warnings: " + up_to_now);
+                              jsPsych.data.addProperties({
+                                  n_warnings: up_to_now + 1
+                              });
+                            }
+                         }
+                    },
+                    noChoiceWarning("response")
                 ],
                 conditional_function: () => {
                     let missed = jsPsych.data.get().last(1).select("response").values[0] == null
     
                     let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
+
+                    console.log(n_trials);
     
                     return !missed && ((n_trials % window.pilt_test_confidence_every) === (window.pilt_test_confidence_every - 1))
-                },
-                post_trial_gap: 800
+                }
             }
         ]
     };
@@ -202,7 +215,7 @@ function build_post_PILT_test(structure, task_name = "pilt") {
         // Push block                
         test.push({
             timeline: [
-                test_trial(task)
+                test_trial(task_name)
             ],
             timeline_variables: structure[i]
         });
