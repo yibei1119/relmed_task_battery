@@ -19,7 +19,10 @@ const controlPreload = {
     "map.png",
     "map_islands.png",
     "fuel.png",
-    "scroll.png"
+    "scroll.png",
+    "icon-reward.png",
+    "icon-predict.png",
+    "icon-explore.png"
   ].map(s => "imgs/" + s),
   post_trial_gap: 800,
   continue_after_error: true,
@@ -53,6 +56,7 @@ explore_sequence.forEach(trial => {
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           data.n_control_trials = n_trials;
+          console.log("Trial number: " + n_trials + " (explore)");
           
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
@@ -103,6 +107,7 @@ predict_sequence.forEach(trial => {
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           data.n_control_trials = n_trials;
+          console.log("Trial number: " + n_trials + " (predict)");
 
           if (n_trials % 24 === 0) {
             console.log("n_trials: " + n_trials);
@@ -165,6 +170,7 @@ reward_sequence.forEach((trial, index) => {
     on_finish: function (data) {
       const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
       data.n_control_trials = n_trials;
+      console.log("Trial number: " + n_trials + " (reward)");
 
       if (n_trials % 24 === 0) {
         console.log("n_trials: " + n_trials);
@@ -265,7 +271,7 @@ for (let i = 0; i < explore_sequence.length; i++) {
     } else {
       // Add the reward trials after trial 12, 24, 36...
       controlTimeline.push(controlRating);
-      indx = [0, 2].map(num => num + num_miniblock - 1);
+      indx = [0, 8].map(num => num + num_miniblock - 1);
       controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
     }
   }
