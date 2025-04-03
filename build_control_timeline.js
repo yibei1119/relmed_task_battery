@@ -266,7 +266,7 @@ for (let i = 0; i < explore_sequence.length; i++) {
     num_miniblock = Math.floor(i / 6)
     if (num_miniblock % 2 === 0) {
       // Add the prediction trials after trial 6, 18, 30...
-      indx = [0, 2].map(num => num + num_miniblock);
+      indx = [0, 4].map(num => num + num_miniblock);
       controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
     } else {
       // Add the reward trials after trial 12, 24, 36...
