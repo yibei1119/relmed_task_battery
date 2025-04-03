@@ -181,8 +181,6 @@ const test_trial = (task) => {
                     let missed = jsPsych.data.get().last(1).select("response").values[0] == null
     
                     let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
-
-                    console.log(n_trials);
     
                     return !missed && ((n_trials % window.pilt_test_confidence_every) === (window.pilt_test_confidence_every - 1))
                 }
