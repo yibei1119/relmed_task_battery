@@ -173,6 +173,18 @@
                 `;
     }
 
+    const resumption_msg = {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: [
+            `<p>Welcome back to this module!</p>
+            <p>It seems that your participation has been interrupted. Don't worry, you can continue from where you left off.</p>
+            <p>Please try to complete the module in one go, without interruption.</p>`
+        ],
+        show_clickable_nav: true,
+        data: {trialphase: "resumption_instructions"}
+    }
+
     const welcome_msgs = {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
@@ -225,6 +237,11 @@
         // Fullscreen prompt
         if (window.context === "prolific"){
             procedure.push(enter_fullscreen);
+        }
+
+        // Resumption message
+        if (window.last_state !== "none" && window.context === "relmed") {
+            procedure.push(resumption_msg);
         }
 
         // Create card choosing timelines
@@ -464,7 +481,9 @@
             procedure.push(reversal_preload);
             
             // Welcome message
-            procedure.push(welcome_msgs);
+            if (window.last_state === "none"){
+                procedure.push(welcome_msgs);
+            }
 
             // Add reversal timeline
             procedure = procedure.concat(reversal_instructions);
