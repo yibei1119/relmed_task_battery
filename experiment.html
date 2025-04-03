@@ -245,7 +245,7 @@
         }
 
         // Create card choosing timelines
-        if (["pilt-to-test", "pilt", "wm", "ltm", "wm_only", "screening"].includes(window.task)){
+        if (["pilt-to-test", "pilt", "pilt_test", "wm", "ltm", "wm_only", "screening"].includes(window.task)){
             PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure);
         }
 
@@ -356,6 +356,13 @@
                 acceptability_intro,
                 acceptability_PILT
             ]);
+        }
+
+        if (window.task == "pilt_test") {
+            // Preload
+            procedure.push(preload_PILT);
+
+            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
         }
 
         if (window.task == "vigour") {
