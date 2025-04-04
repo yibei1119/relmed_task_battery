@@ -14,7 +14,7 @@ let openText_instructions = {
     on_page_change: function (current_page) {
         let next_button_element = document.querySelector('button#jspsych-instructions-next')
         if (current_page === instr_pages.length - 1) {
-            next_button_element.innerHTML = '<b style="color:red"><u>Start the experiment!</u></b>'
+            next_button_element.innerHTML = '<b><u>Start answering questions</u></b>'
         }
     },
     show_page_number: true,
