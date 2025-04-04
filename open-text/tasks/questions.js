@@ -13,10 +13,10 @@ let question_preamble = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Questi
     </div>`
 
 // Checkbox to skip a question -> would result in returned submission
-let avoid_label = "If you'd rather not say, check this box and return your submission."
+let avoid_label = window.context === "prolific" ? "If you'd rather not say, check this box and return your submission." : ""
 let avoid_answer = `<div id="qs_avoid">
         <label>
-            <input type="checkbox" id="qs_preamble_na_check">
+            <input type="checkbox" id="qs_preamble_na_check" ${window.context === "relmed" ? "disabled style='visibility: hidden'" : ""}>
                 <span>` + avoid_label + `</span> 
         </label>
     </div>
