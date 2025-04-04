@@ -239,11 +239,6 @@
             procedure.push(enter_fullscreen);
         }
 
-        // Resumption message
-        if (window.last_state !== "none" && window.context === "relmed") {
-            procedure.push(resumption_msg);
-        }
-
         // Create card choosing timelines
         if (["pilt-to-test", "pilt", "pilt_test", "wm", "ltm", "wm_only", "screening"].includes(window.task)){
             PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure);
@@ -253,6 +248,11 @@
 
             // Preload
             procedure.push(preload_PILT);
+
+            // Resumption message
+            if (window.last_state !== "none" && window.context === "relmed") {
+                procedure.push(resumption_msg);
+            }
 
             // Welcome message
             procedure.push({
@@ -418,6 +418,11 @@
             // Preload
             procedure.push(preload_wm_ltm);
 
+            // Resumption message
+            if (window.last_state !== "none" && window.context === "relmed") {
+                procedure.push(resumption_msg);
+            }
+
             if (resumptionRule(wm_order, window.last_state, "ltm_task_start")) {
                 // Add LTM block
                 console.log("Adding LTM");
@@ -529,6 +534,12 @@
                 }
             });
 
+             // Resumption message
+            if (window.last_state !== "none" && window.context === "relmed") {
+                procedure.push(resumption_msg);
+            }
+
+
             if (["wk0", "wk2", "wk4"].includes(window.session)) {
 
                 if (resumptionRule(quests_order, window.last_state, "dd_task_start")) {
@@ -549,6 +560,11 @@
         if (window.task === "screening") {
             // Preload
             procedure.push(reversal_preload);
+
+            // Resumption message
+            if (window.last_state !== "none" && window.context === "relmed") {
+                procedure.push(resumption_msg);
+            }
 
             // Welcome message
             procedure.push(welcome_msgs);
