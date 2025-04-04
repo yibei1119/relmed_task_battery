@@ -66,11 +66,11 @@ let instr_page4 = `
 `
 
 // Page 5
-let instr_page5 = `
+const instr_page5 = `
     <p>You may notice that some questions appear to be similar or repetitive. This is intentional - <b>please answer each question carefully and thoroughly.</b></p>
-    ` + window.context === "prolific" ?     `<p>Since all questions have a time limit, it's important to manage your time effectively.</p>
+    ` + (window.context === "prolific" ?  `<p>Since all questions have a time limit, it's important to manage your time effectively.</p>
     <p>The experiment will end and you'll be asked to return your submission if you <b>exceed the time limit</b> or <b>fail to provide complete responses</b> more than <b>${max_timeout} times</b> in total.</p>
-    <p>To prevent this, always <b>click the submit button before the timer runs out</b>!</p>` : ""
+    <p>To prevent this, always <b>click the submit button before the timer runs out</b>!</p>` : "")
 
 
 // All pages
