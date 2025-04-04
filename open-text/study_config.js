@@ -101,11 +101,10 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
 
 function startTimer_sec(duration, display, warning_time, min_instr = null) {
     /**
-     * Starts a countdown timer that updates the display and manages visibility of UI elements.
+     * Shows a timeout soon warning.
      *
      * @param {number} duration - The total countdown duration in seconds.
      * @param {HTMLElement} display - The element showing the remaining time.
-     * @param {HTMLElement} time_left - The element where the countdown time left is displayed.
      * @param {number} warning_time - The time left (in seconds) before which the countdown should become visible.
      * @param {HTMLElement|null} [min_instr=null] - An optional instruction element that gets hidden when the countdown starts.
      */
