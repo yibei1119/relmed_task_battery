@@ -140,7 +140,7 @@
     border-radius: 1vw;
     margin-top: 5.5vh;
     /*font-size: 20.5vw;*/
-    font-size: 1.2vw;
+    font-size: large;
     padding: 1vw;
 }
 
@@ -163,7 +163,7 @@
 
 #qs_preamble_disclosure {
     margin-top: -20px;
-    font-size: 1vw;
+    font-size: medium;
     font-weight: normal;
 }
 
@@ -186,7 +186,7 @@
 }
 
 #qs_avoid label {
-    font-size: 1vw;
+    font-size: small;
 }
 
 #qs_avoid_qsn {
@@ -208,16 +208,15 @@
 
 #qs_words {
     margin-top: -3vh;
-    color: red
+    color: cornflowerblue
 }
 
 #qs_timeleft {
     text-decoration: underline;
     font-weight: bold;
-    color: red;
     margin-bottom: -2vh;
     margin-top: -2vh;
-    font-size: 1.05vw;
+    font-size: medium;
 }
 
 /* Style for open-ended question class*/
