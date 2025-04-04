@@ -4,10 +4,10 @@
 let min_words = 30 // Minimum number of words required to write <=================== CHANGE FOR LIVE (def: 30)
 let qs_ans_required = false // obsolete boolean for requiring response
 let prevent_paste = true // prevent pasting text into box <=================== CHANGE FOR LIVE to TRUE (def: true)
-let writing_time = 90 // time in seconds to write a response (def: 90)
-let warning_time = 60 // warning X seconds before the time runs out (def: 30)
+let writing_time = 120 // time in seconds to write a response (def: 90)
+let warning_time = 90 // warning X seconds before the time runs out (def: 30)
 let qs_read_time = 7 // extra time to read the question on top of the writing time (def: 7)
-let oq_timelimit_text = '1.5 minutes' // display the initial time to answer a question
+let oq_timelimit_text = 'two minutes' // display the initial time to answer a question
 
 // Boolean values
 let console_debug = true // whether to print to console
