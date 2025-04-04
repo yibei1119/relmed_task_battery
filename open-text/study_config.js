@@ -99,7 +99,7 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
     }
 };
 
-function startTimer_sec(duration, display, time_left, warning_time, min_instr = null) {
+function startTimer_sec(duration, display, warning_time, min_instr = null) {
     /**
      * Starts a countdown timer that updates the display and manages visibility of UI elements.
      *
@@ -114,16 +114,13 @@ function startTimer_sec(duration, display, time_left, warning_time, min_instr = 
         seconds = parseInt(timer, 10);
 
         if (seconds <= warning_time && seconds > 0) {
-            time_left.innerHTML = seconds
             display.style.visibility = 'visible'
             if (min_instr != null) {
                 min_instr.style.visibility = "hidden"
             }
         } else if (seconds > warning_time && seconds > 0) {
-            time_left.innerHTML = ''
             display.style.visibility = 'hidden'
         } else {
-            time_left.innerHTML = ''
             display.style.visibility = 'hidden'
         }
 

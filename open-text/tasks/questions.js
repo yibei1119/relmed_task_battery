@@ -5,10 +5,10 @@ Question preamble with instructions for the specific question
 Displays: question counter (q out of Q); time limit and time remaining
 */
 let question_preamble = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
-    <h4><u>` + "Please answer the following question in detail by writing text in the box below." + `</u></h4>
+    <h4><u>` + "Please type your answer in detail in the box below." + `</u></h4>
     <p id="qs_preamble_disclosure">(You have <b>` + oq_timelimit_text + `</b> to answer)</p>
     <div id="qs_timeleft">
-    You have <span id="qs_timeleft_sec">` + warning_time.toString() + `</span> seconds left.
+    Your time will soon be over. Don't forget to submit your answer!
     </div>
     </div>`
 
@@ -118,10 +118,9 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
 
                 // start timer count down
                 let time_display = document.querySelector('#qs_timeleft')
-                let time_left = document.querySelector('#qs_timeleft_sec')
                 time_display.style.visibility = 'hidden'
                 let minute_instr = document.getElementById('qs_preamble_disclosure')
-                startTimer_sec(writing_time, time_display, time_left, warning_time, minute_instr)
+                startTimer_sec(writing_time, time_display, warning_time, minute_instr)
 
                 // get elements to adjust
                 let preamble = document.getElementById("qs_preamble").clientHeight
