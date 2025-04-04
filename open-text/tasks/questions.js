@@ -5,18 +5,18 @@ Question preamble with instructions for the specific question
 Displays: question counter (q out of Q); time limit and time remaining
 */
 let question_preamble = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
-    <h4><u>` + "Please answer the following question in detail by writing text in the box below." + `</u></h4>
+    <h4>` + "Please type your answer in detail in the box below." + `</h4>
     <p id="qs_preamble_disclosure">(You have <b>` + oq_timelimit_text + `</b> to answer)</p>
     <div id="qs_timeleft">
-    You have <span id="qs_timeleft_sec">` + warning_time.toString() + `</span> seconds left.
+    Your time will soon be over. Don't forget to submit your answer!
     </div>
     </div>`
 
 // Checkbox to skip a question -> would result in returned submission
-let avoid_label = "If you'd rather not say, check this box and return your submission."
+let avoid_label = window.context === "prolific" ? "If you'd rather not say, check this box and return your submission." : ""
 let avoid_answer = `<div id="qs_avoid">
         <label>
-            <input type="checkbox" id="qs_preamble_na_check">
+            <input type="checkbox" id="qs_preamble_na_check" ${window.context === "relmed" ? "disabled style='visibility: hidden'" : ""}>
                 <span>` + avoid_label + `</span> 
         </label>
     </div>
@@ -28,15 +28,15 @@ let time_word = `<div id="qs_words">
     </div>
     `
 // Once the minimum number of words is reached, display submit button
-let lvl_x_question_button_label = "Click here once you are happy with your answer"
+let lvl_x_question_button_label = "Submit answer"
 
 // ------------> RELMED open-ended questions <---------------
-let relmed_q1 = "<p>What <b>rewarding experiences</b> have you had in the last week?</p><p>How have they influenced you?</p>"
-let relmed_q2 = "<p>Tell us about the times when things turned out <b>better than you expected</b>?</p>"
-let relmed_q3 = "<p>How much were you <b>encouraged to pursue</b> them further?</p><p>How has this affected your energy levels?</p>"
-let relmed_q4 = "<p>Tell us about the times when things turned out <b>worse than you expected</b>?</p>"
-let relmed_q5 = "<p>How much were you <b>discouraged from pursuing</b> them further?</p><p>How has this affected your energy levels?</p>"
-let relmed_q6 = "<p>What <b>meaningful goals</b> have you been motivated to pursue?</p>"
+let relmed_q1 = "<p>Please describe any <b>rewarding experiences</b> you've had during the past week.</p><p>How have these experiences affected you personally?</p>"
+let relmed_q2 = "<p>Describe specific instances when things turned out <b>better than you expected</b> during the past week.</p>"
+let relmed_q3 = "<p>How did this experience affect your energy and motivation levels?</p>"
+let relmed_q4 = "<p>Describe specific instances when things turned out <b>worse than you expected</b> during the past week.</p>"
+let relmed_q5 = "<p>How did this experience affect your energy and motivation levels?</p>"
+let relmed_q6 = "<p>What <b>meaningful goals</b> have you been motivated to pursue in the past week?</p>"
 let relmed_q7 = "<p>How did you find answering these questions?</p>"
 
 let relmed_qs = [relmed_q1, relmed_q2, relmed_q3, relmed_q4, relmed_q5, relmed_q6, relmed_q7]
@@ -118,10 +118,9 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
 
                 // start timer count down
                 let time_display = document.querySelector('#qs_timeleft')
-                let time_left = document.querySelector('#qs_timeleft_sec')
                 time_display.style.visibility = 'hidden'
                 let minute_instr = document.getElementById('qs_preamble_disclosure')
-                startTimer_sec(writing_time, time_display, time_left, warning_time, minute_instr)
+                startTimer_sec(writing_time, time_display, warning_time, minute_instr)
 
                 // get elements to adjust
                 let preamble = document.getElementById("qs_preamble").clientHeight

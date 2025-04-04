@@ -1,6 +1,6 @@
 // ------------> Trigger texts <---------------
 
-let trigger_text = `<div class="instr_stim trigger">
+let trigger_text = `<div>
 <p>If you become upset at any point when answering these questions, or are concerned about your mental health for any other reason, we recommend the below resources for further information.</p>
 <p>You may also wish to discuss any concerns with your family doctor.</p>
     <ul style="list-style: none;">
@@ -13,7 +13,7 @@ let trigger_text = `<div class="instr_stim trigger">
     </div>
 `
 
-let trigger_text_end = `<div class="instr_stim trigger">
+let trigger_text_end = `<div>
 <p>If you became upset at any point when answering these questions, or are concerned about your mental health for any other reason, we recommend the below resources for further information.</p>
 <p>You may also wish to discuss any concerns with your family doctor.</p>
     <ul style="list-style: none;">
@@ -28,31 +28,14 @@ let trigger_text_end = `<div class="instr_stim trigger">
 
 // ------------> Instruction texts <---------------
 
-// Page - Welcome
-let welcome_text = `
-    <div class="instr_stim">
-    <h2><b>Well done!</b></h2>
-    <p>Thank you for your participation and efforts so far.</p>
-    <h4>Before we begin the very last part of the study, please carefully go through the following instruction screens.</h4>
-    <br>
-    <p class="next_page">Press <b>n</b> to proceed.</p>
-    </div>
-`
 
 // Page 2
-let instr_page2_main = `
-    <h4>In this task, you will have to answer questions by writing text.</h4>
-    <p>The questions will be about yourself, your feelings, background, attitudes and behaviour in your everyday life.</p>
-    <p>You will have <b>`+oq_timelimit_text+`</b> to write a response of at <b>least `+min_words.toString()+` words</b> for each question.</p>
+const instr_page2 = `
+    <p><b>Next, you'll be answering questions by typing text responses.</b></p>
+    <p>These questions will ask about yourself, your feelings, background, attitudes, and everyday behaviors.</p>
+    <p>For each question, you'll have <b>`+oq_timelimit_text+`</b> to write a response containing <b>at least `+min_words.toString()+` words</b>.</p>
 `
 
-let instr_page2 = `
-    <div class="instr_stim">` +
-    instr_page2_main
-    + `<br>
-        <p class="next_page"></p>
-    </div>
-`
 // Page 3
 let instr_page3_main = `
     <h4>In addition to open-ended questions, we will sometimes ask you multiple-choice questions.</h4>
@@ -83,30 +66,19 @@ let instr_page4 = `
 `
 
 // Page 5
-let instr_page5_main = `
-    <div id='instr_req_warning'>
-    <b>All the questions are required</b>.
-    </div>
-    <br>
-    &#8213;
-    <p>You may notice that some questions look similar and appear to repeat themselves. <br>This is intentional, <b>please respond to all questions carefully and thoroughly.</b></p>
-    &#8213;
-    <p>As all the questions require a response within a time-limit, you will have to manage your time well.</p>
-    <p>If you <b>exceed a time-limit</b> for a given question or do <b>not provide a full set of responses</b> more than <b>` + max_timeout + ` times</b> in total, <br>the experiment will stop and you will be asked to return your submission.</p>
-    <p>To avoid this, be sure to <b>click the submit button before time runs out</b>!</p>
-    `
+const instr_page5 = `
+    <p>You may notice that some questions appear to be similar or repetitive. This is intentional - <b>please answer each question carefully and thoroughly.</b></p>
+    ` + (window.context === "prolific" ?  `<p>Since all questions have a time limit, it's important to manage your time effectively.</p>
+    <p>The experiment will end and you'll be asked to return your submission if you <b>exceed the time limit</b> or <b>fail to provide complete responses</b> more than <b>${max_timeout} times</b> in total.</p>
+    <p>To prevent this, always <b>click the submit button before the timer runs out</b>!</p>` : "")
 
-let instr_page5 = `
-    <div class="instr_stim">` +
-    instr_page5_main
-    + `<br>
-        <p class="next_page"></p>
-    </div>
-`
 
 // All pages
-// let instr_pages = [instr_page2, instr_page3, instr_page4, instr_page5, trigger_text]
-let instr_pages = [instr_page2, instr_page5, trigger_text]
+let instr_pages = [instr_page2, instr_page5]
+
+if (window.context === "prolific") {
+    instr_pages.push(trigger_text);
+}
 
 // ------------> Study start texts <---------------
 let begin_study_text = `

@@ -3,30 +3,18 @@ const currentUser = new User()
 // const jsPsych = my_jsPsych_init(); // Should be already defined in experiment.html
 let openTextTimeline = []
 
-// Welcome and instructions
-let openText_welcome_trial = {
-    type: jsPsychHtmlKeyboardResponse,
-    // trial_duration: debug_mode,
-    post_trial_gap: 500,
-    choices: ['n'],
-    stimulus: welcome_text,
-    on_start: function (trial) {
-        document.body.className = "open-text";
-
-        updateState("open_text_instructions_start");
-    }
-}
 let openText_instructions = {
     type: jsPsychInstructions,
     pages: instr_pages,
+    css_classes: ['instructions'],
     show_clickable_nav: true,
-    button_label_previous: 'Go to the previous page',
-    button_label_next: 'Go to the next page',
+    button_label_previous: 'Back',
+    button_label_next: 'Next',
     allow_keys: false,
     on_page_change: function (current_page) {
         let next_button_element = document.querySelector('button#jspsych-instructions-next')
         if (current_page === instr_pages.length - 1) {
-            next_button_element.innerHTML = '<b style="color:red"><u>Start the experiment!</u></b>'
+            next_button_element.innerHTML = '<b><u>Start answering questions</u></b>'
         }
     },
     show_page_number: true,
@@ -55,9 +43,6 @@ let relmed_open_timeline = {
 }
 
 // Assemble timeline
-// Welcome trial
-openTextTimeline.push(openText_welcome_trial) // <--------
-
 // Instructions timeline
 openTextTimeline.push(openText_instructions) // <--------
 openTextTimeline.push(relmed_open_timeline); // <--------

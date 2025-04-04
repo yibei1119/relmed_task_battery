@@ -4,10 +4,10 @@
 let min_words = 30 // Minimum number of words required to write <=================== CHANGE FOR LIVE (def: 30)
 let qs_ans_required = false // obsolete boolean for requiring response
 let prevent_paste = true // prevent pasting text into box <=================== CHANGE FOR LIVE to TRUE (def: true)
-let writing_time = 90 // time in seconds to write a response (def: 90)
-let warning_time = 60 // warning X seconds before the time runs out (def: 30)
+let writing_time = 120 // time in seconds to write a response (def: 90)
+let warning_time = 90 // warning X seconds before the time runs out (def: 30)
 let qs_read_time = 7 // extra time to read the question on top of the writing time (def: 7)
-let oq_timelimit_text = '1.5 minutes' // display the initial time to answer a question
+let oq_timelimit_text = 'two minutes' // display the initial time to answer a question
 
 // Boolean values
 let console_debug = true // whether to print to console
@@ -99,13 +99,12 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
     }
 };
 
-function startTimer_sec(duration, display, time_left, warning_time, min_instr = null) {
+function startTimer_sec(duration, display, warning_time, min_instr = null) {
     /**
-     * Starts a countdown timer that updates the display and manages visibility of UI elements.
+     * Shows a timeout soon warning.
      *
      * @param {number} duration - The total countdown duration in seconds.
      * @param {HTMLElement} display - The element showing the remaining time.
-     * @param {HTMLElement} time_left - The element where the countdown time left is displayed.
      * @param {number} warning_time - The time left (in seconds) before which the countdown should become visible.
      * @param {HTMLElement|null} [min_instr=null] - An optional instruction element that gets hidden when the countdown starts.
      */
@@ -114,16 +113,13 @@ function startTimer_sec(duration, display, time_left, warning_time, min_instr = 
         seconds = parseInt(timer, 10);
 
         if (seconds <= warning_time && seconds > 0) {
-            time_left.innerHTML = seconds
             display.style.visibility = 'visible'
             if (min_instr != null) {
                 min_instr.style.visibility = "hidden"
             }
         } else if (seconds > warning_time && seconds > 0) {
-            time_left.innerHTML = ''
             display.style.visibility = 'hidden'
         } else {
-            time_left.innerHTML = ''
             display.style.visibility = 'hidden'
         }
 
