@@ -74,8 +74,11 @@ const instr_page5 = `
 
 
 // All pages
-// let instr_pages = [instr_page2, instr_page3, instr_page4, instr_page5, trigger_text]
-let instr_pages = [instr_page2, instr_page5, trigger_text]
+let instr_pages = [instr_page2, instr_page5]
+
+if (window.context === "prolific") {
+    instr_pages.push(trigger_text);
+}
 
 // ------------> Study start texts <---------------
 let begin_study_text = `
