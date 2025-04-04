@@ -30,19 +30,12 @@ let trigger_text_end = `<div class="instr_stim trigger">
 
 
 // Page 2
-let instr_page2_main = `
+const instr_page2 = `
     <p><b>Next, you'll be answering questions by typing text responses.</b></p>
     <p>These questions will ask about yourself, your feelings, background, attitudes, and everyday behaviors.</p>
     <p>For each question, you'll have <b>`+oq_timelimit_text+`</b> to write a response containing <b>at least `+min_words.toString()+` words</b>.</p>
 `
 
-let instr_page2 = `
-    <div class="instr_stim">` +
-    instr_page2_main
-    + `<br>
-        <p class="next_page"></p>
-    </div>
-`
 // Page 3
 let instr_page3_main = `
     <h4>In addition to open-ended questions, we will sometimes ask you multiple-choice questions.</h4>
