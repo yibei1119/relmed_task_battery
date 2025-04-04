@@ -5,7 +5,7 @@ Question preamble with instructions for the specific question
 Displays: question counter (q out of Q); time limit and time remaining
 */
 let question_preamble = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
-    <h4><u>` + "Please type your answer in detail in the box below." + `</u></h4>
+    <h4>` + "Please type your answer in detail in the box below." + `</h4>
     <p id="qs_preamble_disclosure">(You have <b>` + oq_timelimit_text + `</b> to answer)</p>
     <div id="qs_timeleft">
     Your time will soon be over. Don't forget to submit your answer!
