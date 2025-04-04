@@ -1,9 +1,9 @@
 const confidenceRating = {
   timeline: [{
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p><strong><span class="highlight-txt">How confident are you that your last choice was correct?</span></strong></p>`,
+    stimulus: `<p><span class="highlight-txt">How <strong>confident</strong> are you that your last choice was correct?</span></p>`,
     choices: ["1<br>Not at all", "2", "3", "4", "5<br>Very confident"],
-    trial_duration: 30000,
+    trial_duration: 10000,
     post_trial_gap: 400,
     data: {
         trialphase: "control_confidence"
@@ -27,9 +27,9 @@ const confidenceRating = {
 const controlRating = {
   timeline: [{
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p><strong><span class="highlight-txt">How in control do you feel at this moment?</span></strong></p>`,
+    stimulus: `<p><span class="highlight-txt">How <strong>in control</strong> do you feel at this moment?</span></p>`,
     choices: ["1<br>Not at all", "2", "3<br>I don't know", "4", "5<br>Completely in control"],
-    trial_duration: 30000,
+    trial_duration: 10000,
     post_trial_gap: 400,
     data: {
       trialphase: "control_controllability"

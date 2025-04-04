@@ -355,7 +355,7 @@ const controlInstructionPages = [
                 <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
             <div class="selection-indicator" style="top: 20%;left: 65%;flex-direction: row-reverse;">
-                <div class="selection-label">Drift Destination</div>
+                <div class="selection-label">Drift Island</div>
                 <span class="selection-dot"></span>
             </div>
             <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
@@ -387,7 +387,7 @@ const controlInstructionPages = [
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
-                <p>Without enough fuel, ships simply drift with the current from the <strong>Departure Island</strong> to the <strong>Drift Destination</strong> you can always see in the distance.</p>
+                <p>Without enough fuel, ships simply drift with the current from the <strong>Departure Island</strong> to the <strong>Drift Island</strong> you can always see in the distance.</p>
                 <p>You can also check the Ocean Map to see where ships will end up.</p>
             `)}
             ${createProgressBar(4, nPages)}
@@ -463,7 +463,7 @@ const controlInstructionPages = [
             </section>
             ${createInstructionDialog(`
                 <p>The ship ran out of fuel midway.</p>
-                <p>It drifted from <span style="color: gold">Banana Island</span>🍌 to <span style="color: brown">Coconut Island</span>🥥.</p>
+                <p>As you can see, it drifted from <span style="color: gold">Banana Island</span>🍌 to <span style="color: brown">Coconut Island</span>🥥 with the currents.</p>
                 `)}
             ${createProgressBar(6, nPages)}
         </div>
@@ -540,7 +540,8 @@ const controlInstructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great job! With enough fuel, the <span style="color: royalblue">blue ship</span> reached its <strong>Home Base</strong> at <span style="color: purple">Grape Island</span>🍇.</p>
+                <p>Great job!</p>
+                <p>As you can see, with enough fuel, the <span style="color: royalblue">blue ship</span> reached its <strong>Home Base</strong> at <span style="color: purple">Grape Island</span>🍇 against the currents.</p>
             `)}
             ${createProgressBar(8, nPages)}
         </div>
@@ -571,7 +572,7 @@ const controlInstructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p><strong>Remember: Ships can start from their home base, in which case they would sail back to their home base.</strong></p>
+                <p><strong>Remember: Ships can start from their home base, in which case they would sail back to their home base if fueled enough.</strong></p>
             `)}
             ${createProgressBar(8, nPages)}
         </div>
@@ -589,7 +590,7 @@ const controlInstructionPages = [
                 <div class="label"><strong>Low current</strong>:<br> Only a little fuel needed</div>
             </div>
             ${createInstructionDialog(`
-                <p>The fuel needed depends on ocean current strength:</p>
+                <p>The fuel needed to reach the home base depends on ocean current strength:</p>
                 <p>One stripe means low current - you'll need just a little fuel.</p>
             `)}
             ${createProgressBar(9, nPages)}
@@ -654,7 +655,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <div class="instruction-dialog" style="bottom:40%; min-width: 600px;">
                 <div class="instruction-content" style="font-size: 1.2em; text-align: center;">
-                    <p>The drift destination may be the home base of one of the two ships.</p>
+                    <p>The Drift Island may be the home base of one of the two ships.</p>
                     <p>When it is, the ship can actually reach its home base simply by drifting in the currents.</p>
                 </div>
             </div>
@@ -705,9 +706,9 @@ const controlInstructionPages = [
                 <ul>
                     <li>Select ships using arrow keys</li>
                     <li>Add fuel by repeatedly pressing the same key</li>
-                    <li>Learn each ship's home base and fuel requirements for different current strengths</li>
+                    <li><strong>Learn each ship's home base and fuel requirements for different current strengths</strong></li>
                 </ul>
-                <p><strong>This training will help you succeed in Reward Missions and Knowledge Assessments.</strong></p>
+                <p><span class="highlight-txt">This training will help you succeed in Reward Missions and Knowledge Assessments.</span></p>
             `)}
             ${createProgressBar(11, nPages)}
         </div>
