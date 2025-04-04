@@ -28,16 +28,6 @@ let trigger_text_end = `<div class="instr_stim trigger">
 
 // ------------> Instruction texts <---------------
 
-// Page - Welcome
-let welcome_text = `
-    <div class="instr_stim">
-    <h2><b>Well done!</b></h2>
-    <p>Thank you for your participation and efforts so far.</p>
-    <h4>Before we begin the very last part of the study, please carefully go through the following instruction screens.</h4>
-    <br>
-    <p class="next_page">Press <b>n</b> to proceed.</p>
-    </div>
-`
 
 // Page 2
 let instr_page2_main = `
