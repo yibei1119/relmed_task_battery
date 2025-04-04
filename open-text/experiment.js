@@ -8,8 +8,8 @@ let openText_instructions = {
     pages: instr_pages,
     css_classes: ['instructions'],
     show_clickable_nav: true,
-    button_label_previous: 'Go to the previous page',
-    button_label_next: 'Go to the next page',
+    button_label_previous: 'Back',
+    button_label_next: 'Next',
     allow_keys: false,
     on_page_change: function (current_page) {
         let next_button_element = document.querySelector('button#jspsych-instructions-next')
