@@ -31,9 +31,9 @@ let trigger_text_end = `<div class="instr_stim trigger">
 
 // Page 2
 let instr_page2_main = `
-    <h4>In this task, you will have to answer questions by writing text.</h4>
-    <p>The questions will be about yourself, your feelings, background, attitudes and behaviour in your everyday life.</p>
-    <p>You will have <b>`+oq_timelimit_text+`</b> to write a response of at <b>least `+min_words.toString()+` words</b> for each question.</p>
+    <p><b>Next, you'll be answering questions by typing text responses.</b></p>
+    <p>These questions will ask about yourself, your feelings, background, attitudes, and everyday behaviors.</p>
+    <p>For each question, you'll have <b>`+oq_timelimit_text+`</b> to write a response containing <b>at least `+min_words.toString()+` words</b>.</p>
 `
 
 let instr_page2 = `
