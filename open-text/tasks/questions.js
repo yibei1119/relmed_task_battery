@@ -31,12 +31,12 @@ let time_word = `<div id="qs_words">
 let lvl_x_question_button_label = "Click here once you are happy with your answer"
 
 // ------------> RELMED open-ended questions <---------------
-let relmed_q1 = "<p>What <b>rewarding experiences</b> have you had in the last week?</p><p>How have they influenced you?</p>"
-let relmed_q2 = "<p>Tell us about the times when things turned out <b>better than you expected</b>?</p>"
-let relmed_q3 = "<p>How much were you <b>encouraged to pursue</b> them further?</p><p>How has this affected your energy levels?</p>"
-let relmed_q4 = "<p>Tell us about the times when things turned out <b>worse than you expected</b>?</p>"
-let relmed_q5 = "<p>How much were you <b>discouraged from pursuing</b> them further?</p><p>How has this affected your energy levels?</p>"
-let relmed_q6 = "<p>What <b>meaningful goals</b> have you been motivated to pursue?</p>"
+let relmed_q1 = "<p>Please describe any <b>rewarding experiences</b> you've had during the past week.</p><p>How have these experiences affected you personally?</p>"
+let relmed_q2 = "<p>Describe specific instances when things turned out <b>better than you expected</b> during the past week.</p>"
+let relmed_q3 = "<p>How did this experience affect your energy and motivation levels?</p>"
+let relmed_q4 = "<p>Describe specific instances when things turned out <b>worse than you expected</b> during the past week.</p>"
+let relmed_q5 = "<p>How did this experience affect your energy and motivation levels?</p>"
+let relmed_q6 = "<p>What <b>meaningful goals</b> have you been motivated to pursue in the past week?</p>"
 let relmed_q7 = "<p>How did you find answering these questions?</p>"
 
 let relmed_qs = [relmed_q1, relmed_q2, relmed_q3, relmed_q4, relmed_q5, relmed_q6, relmed_q7]
