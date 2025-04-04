@@ -363,16 +363,22 @@ const PILT_trial = (task) => {
 const coin_lottery = {
     type: jsPsychCoinLottery,
     coins: () => {
-        const coins_from_data = get_coins_from_data();
 
-        return createProportionalArray(coins_from_data, 35).sort()
+        // Get the updates safe
+        const updated_safe = updateSafeFrequencies();
+
+        // Compute the coin proportions
+        const coin_proportions = computeCoinProportions(updated_safe);
+
+        return createProportionalArray(coin_proportions, 35).sort()
     },
     props: () => {
 
-        // Compute data proportion
-        const coins_from_data = get_coins_from_data();
+        // Get the updates safe
+        const updated_safe = updateSafeFrequencies();
 
-        let raw_props = computeCategoryProportions(coins_from_data);
+        // Compute the coin proportions
+        const coin_proportions = computeCoinProportions(updated_safe);
 
         raw_props = [raw_props[0.01], raw_props[0.5], raw_props[1], raw_props["-0.01"], raw_props["-0.5"], raw_props["-1"]]
 
@@ -393,6 +399,8 @@ const coin_lottery = {
         const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
 
         postToParent({bonus: bonus});
+
+        updateState("coin_lottery_end");
     }
 }
 

@@ -395,33 +395,86 @@ function get_coins_from_data() {
     return coins_for_lottery
 }
 
-function computeCategoryProportions(originalArray){
-    // Step 1: Calculate the frequency of each unique float value
+// Calculate the frequency of each unique value in the array
+function calculateFrequencies(array) {
     const frequencyMap = {};
-    originalArray.forEach(value => {
+    array.forEach(value => {
         if (frequencyMap[value]) {
             frequencyMap[value]++;
         } else {
             frequencyMap[value] = 1;
         }
     });
+    return frequencyMap;
+}
 
-    // Step 2: Calculate the proportions
-    const totalSize = originalArray.length;
+// Function that adds up two frequency objects
+function addFrequencyVectors(freq1, freq2) {
+    const result = { ...freq1 };
+
+    for (const key in freq2) {
+        if (result[key]) {
+            result[key] += freq2[key];
+        } else {
+            result[key] = freq2[key];
+        }
+    }
+
+    return result;
+}
+
+// Function to calculate proportions from a frequency map
+function calculateProportions(frequencyMap, totalSize) {
+    // Convert frequencies to proportions
     const proportionMap = {};
     for (let value in frequencyMap) {
         proportionMap[value] = frequencyMap[value] / totalSize;
     }
-
-    return proportionMap
+    return proportionMap;
 }
 
-// Create a represantative array of coins of n length
-function createProportionalArray(originalArray, newSize) {
-    
-    // Steps 1 and 2: Compute proportions
-    const proportionMap = computeCategoryProportions(originalArray);
+// Function to compute the proportions of each category in an array of coins
+function computeCategoryProportions(originalArray) {
+    const frequencyMap = calculateFrequencies(originalArray);
+    return calculateProportions(frequencyMap, originalArray.length);
+}
 
+// Get the current safe state and update it with new data
+function updateSafeFrequencies() {
+    // Get the state of safe from the URL variable, or set it to an empty object if not present
+    const last_safe_state = jsPsych.data.getURLVariable('safe') || '{}';
+
+    // Parse the last safe state from JSON string to an object
+    const last_safe_state_obj = JSON.parse(last_safe_state);
+
+    // Get the current state of the safe from the data
+    const current_safe = calculateFrequencies(get_coins_from_data());
+
+    // Add the current state to the last state
+    return addFrequencyVectors(last_safe_state_obj, current_safe);
+}
+
+const updateSafe = {
+    type: jsPsychCallFunction,
+    func: function() {
+
+        // Call the function to update the safe state
+        const updated_safe = updateSafeFrequencies();
+
+        // Convert the updated state back to a JSON string
+        const updated_safe_string = JSON.stringify(updated_safe);
+
+        // Send the updated state back to the parent window
+        postToParent({
+            safe: updated_safe_string
+        });
+    }
+}
+
+
+// Create a represantative array of coins of n length
+function createProportionalArray(proportionMap, newSize) {
+    
     // Step 3: Calculate the counts for the new array
     const newCounts = {};
     let sumCounts = 0;

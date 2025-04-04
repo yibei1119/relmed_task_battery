@@ -330,9 +330,9 @@
             console.log("Adding PILT test");
             procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
 
-            // Add coin lottery
-            procedure.push(lottery_instructions);
-            procedure.push(coin_lottery);
+            // Update safe
+            procedure.push(updateSafe);
+
         }
 
         if (window.task == "pilt") {
@@ -468,7 +468,15 @@
                     console.log("Adding open text");
                     procedure.push(openTextTimeline);
                 }
+
             }
+
+            // Add coin lottery
+            if (resumptionRule(wm_order, window.last_state, "coin_lottery_end")) {
+                procedure.push(lottery_instructions);
+                procedure.push(coin_lottery);
+            }
+
         }
 
         if (window.task === "wm_only") {
@@ -504,6 +512,9 @@
                 acceptability_intro,
                 acceptability_reversal
             ]);
+
+            // Update safe
+            procedure.push(updateSafe);
         }
 
         if (window.task === "open_text"){
@@ -513,6 +524,9 @@
         if (window.task == "control") {
             // Control
             procedure.push(controlTimeline);
+
+            // Update safe
+            procedure.push(updateSafe);
         }
 
         if (window.task === "dd") {
