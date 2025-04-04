@@ -1,6 +1,6 @@
 // ------------> Trigger texts <---------------
 
-let trigger_text = `<div class="instr_stim trigger">
+let trigger_text = `<div>
 <p>If you become upset at any point when answering these questions, or are concerned about your mental health for any other reason, we recommend the below resources for further information.</p>
 <p>You may also wish to discuss any concerns with your family doctor.</p>
     <ul style="list-style: none;">
@@ -13,7 +13,7 @@ let trigger_text = `<div class="instr_stim trigger">
     </div>
 `
 
-let trigger_text_end = `<div class="instr_stim trigger">
+let trigger_text_end = `<div>
 <p>If you became upset at any point when answering these questions, or are concerned about your mental health for any other reason, we recommend the below resources for further information.</p>
 <p>You may also wish to discuss any concerns with your family doctor.</p>
     <ul style="list-style: none;">
