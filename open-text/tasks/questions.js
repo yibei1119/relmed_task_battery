@@ -28,7 +28,7 @@ let time_word = `<div id="qs_words">
     </div>
     `
 // Once the minimum number of words is reached, display submit button
-let lvl_x_question_button_label = "Click here once you are happy with your answer"
+let lvl_x_question_button_label = "Submit answer"
 
 // ------------> RELMED open-ended questions <---------------
 let relmed_q1 = "<p>Please describe any <b>rewarding experiences</b> you've had during the past week.</p><p>How have these experiences affected you personally?</p>"
