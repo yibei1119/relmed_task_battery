@@ -66,26 +66,12 @@ let instr_page4 = `
 `
 
 // Page 5
-let instr_page5_main = `
-    <div id='instr_req_warning'>
-    <b>All the questions are required</b>.
-    </div>
-    <br>
-    &#8213;
-    <p>You may notice that some questions look similar and appear to repeat themselves. <br>This is intentional, <b>please respond to all questions carefully and thoroughly.</b></p>
-    &#8213;
-    <p>As all the questions require a response within a time-limit, you will have to manage your time well.</p>
-    <p>If you <b>exceed a time-limit</b> for a given question or do <b>not provide a full set of responses</b> more than <b>` + max_timeout + ` times</b> in total, <br>the experiment will stop and you will be asked to return your submission.</p>
-    <p>To avoid this, be sure to <b>click the submit button before time runs out</b>!</p>
-    `
-
 let instr_page5 = `
-    <div class="instr_stim">` +
-    instr_page5_main
-    + `<br>
-        <p class="next_page"></p>
-    </div>
-`
+    <p>You may notice that some questions appear to be similar or repetitive. This is intentional - <b>please answer each question carefully and thoroughly.</b></p>
+    ` + window.context === "prolific" ?     `<p>Since all questions have a time limit, it's important to manage your time effectively.</p>
+    <p>The experiment will end and you'll be asked to return your submission if you <b>exceed the time limit</b> or <b>fail to provide complete responses</b> more than <b>${max_timeout} times</b> in total.</p>
+    <p>To prevent this, always <b>click the submit button before the timer runs out</b>!</p>` : ""
+
 
 // All pages
 // let instr_pages = [instr_page2, instr_page3, instr_page4, instr_page5, trigger_text]
