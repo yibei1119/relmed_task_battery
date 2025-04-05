@@ -166,11 +166,19 @@
                 <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
                 `;
     } else {
-        welcome_txt = `<p><b>Thank you for taking part in this RELMED session!</b></p>
-                <p>The purpose of this session is to examine how people learn from positive and negative feedback while playing games.
-                <p>You will play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
+        if (window.session === "screening") {
+            welcome_txt = `<p><b>Welcome to the first RELMED training session!</b></p>
+                <p>Over the next twenty minutes, you will try out the main tasks comprising the home assessments in the RELMED study.
+                <p>You will start by playing a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
                 <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
                 `;
+        } else {
+            welcome_txt = `<p><b>Thank you for taking part in this RELMED session!</b></p>
+                    <p>The purpose of this session is to examine how people learn from positive and negative feedback while playing games.
+                    <p>You will play a few simple trial-and-error learning games. Your goal in each game is to win as many coins as possible.</p>
+                    <p>The games may feel a bit fast-paced because we're interested in your quick, intuitive decisions. Since they're designed around learning from experience, making mistakes is completely expected. Over time, you'll figure out better choices and improve your performance.</p>
+                    `; + (window.session === "wk0" ?  `<h3>Please read the instructions carefully. They are not exactly the same as the training session.</h3>` : "")
+        }
     }
 
     const resumption_msg = {
