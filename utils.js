@@ -442,7 +442,7 @@ function calculateProportions(frequencyMap) {
 // Get the current safe state and update it with new data
 function updateSafeFrequencies() {
     // Get the state of safe from the URL variable, or set it to an empty object if not present
-    const last_safe_state = jsPsych.data.getURLVariable('safe') || '{}';
+    const last_safe_state = jsPsych.data.getURLVariable('session_state') || '{}';
 
     // Parse the last safe state from JSON string to an object
     const last_safe_state_obj = JSON.parse(last_safe_state);
@@ -466,7 +466,7 @@ const updateSafe = {
 
         // Send the updated state back to the parent window
         postToParent({
-            safe: updated_safe_string
+            session_state: updated_safe_string
         });
     }
 }
