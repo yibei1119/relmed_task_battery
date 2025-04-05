@@ -424,19 +424,19 @@ function addFrequencyVectors(freq1, freq2) {
 }
 
 // Function to calculate proportions from a frequency map
-function calculateProportions(frequencyMap, totalSize) {
+function calculateProportions(frequencyMap) {
+    // Calculate the total size from the sum of all frequencies
+    let totalSize = 0;
+    for (let value in frequencyMap) {
+        totalSize += frequencyMap[value];
+    }
+    
     // Convert frequencies to proportions
     const proportionMap = {};
     for (let value in frequencyMap) {
         proportionMap[value] = frequencyMap[value] / totalSize;
     }
     return proportionMap;
-}
-
-// Function to compute the proportions of each category in an array of coins
-function computeCategoryProportions(originalArray) {
-    const frequencyMap = calculateFrequencies(originalArray);
-    return calculateProportions(frequencyMap, originalArray.length);
 }
 
 // Get the current safe state and update it with new data

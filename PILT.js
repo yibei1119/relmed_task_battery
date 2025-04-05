@@ -368,7 +368,7 @@ const coin_lottery = {
         const updated_safe = updateSafeFrequencies();
 
         // Compute the coin proportions
-        const coin_proportions = computeCoinProportions(updated_safe);
+        const coin_proportions = calculateProportions(updated_safe);
 
         return createProportionalArray(coin_proportions, 35).sort()
     },
@@ -378,7 +378,7 @@ const coin_lottery = {
         const updated_safe = updateSafeFrequencies();
 
         // Compute the coin proportions
-        const coin_proportions = computeCoinProportions(updated_safe);
+        let raw_props = calculateProportions(updated_safe);
 
         raw_props = [raw_props[0.01], raw_props[0.5], raw_props[1], raw_props["-0.01"], raw_props["-0.5"], raw_props["-1"]]
 
