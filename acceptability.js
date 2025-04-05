@@ -39,9 +39,6 @@ const acceptability_PILT = {
     ],
     data: {
         trialphase: "acceptability_pilt"
-    },
-    simulation_options: {
-        simulate: false
     }
 };
 
