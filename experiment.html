@@ -589,40 +589,47 @@
             // Resumption message
             if (window.last_state !== "none" && window.context === "relmed") {
                 procedure.push(resumption_msg);
+            } else {
+                // Welcome message
+                procedure.push(welcome_msgs);
             }
 
-            // Welcome message
-            procedure.push(welcome_msgs);
+            if (resumptionRule(screening_order, window.last_state, "reversal_task_start")) {
+                // Add reversal timeline
+                console.log("Adding reversal");
+                procedure = procedure.concat(reversal_instructions);
+                procedure = procedure.concat(reversal_blocks);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_reversal
+                ]);
+            }
 
-            // Add reversal timeline
-            procedure = procedure.concat(reversal_instructions);
-            procedure = procedure.concat(reversal_blocks);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_reversal
-            ]);
+            if (resumptionRule(screening_order, window.last_state, "pilt_task_start")) {
+                console.log("Adding PILT");
+                // Preload
+                procedure.push(preload_PILT);
 
-            // Preload
-            procedure.push(preload_PILT);
+                procedure.push({
+                    type: jsPsychInstructions,
+                    css_classes: ['instructions'],
+                    pages:  [
+                    `<p>You will now play another game of trial and error learning.</p>
+                    <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
+                    ],
+                    show_clickable_nav: true,
+                    data: {trialphase: "instruction"}
+                });
 
-            procedure.push({
-                type: jsPsychInstructions,
-                css_classes: ['instructions'],
-                pages:  [
-                `<p>You will now play another game of trial and error learning.</p>
-                <p>Like before, these are fast paced and everyone is expected to make more than a few mistakes.</p>`,
-                ],
-                show_clickable_nav: true,
-                data: {trialphase: "instruction"}
-            });
-
-            procedure = procedure.concat(PILT_tasks.PILT_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_PILT
-            ]);
+                procedure = procedure.concat(PILT_tasks.PILT_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_PILT
+                ]);
+            }
 
             // Add questionnaire timeline
+            console.log("Adding questionnaires");
             procedure = procedure.concat(questionnaires_timeline);
         }
 
