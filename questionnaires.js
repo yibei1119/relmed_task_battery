@@ -491,120 +491,6 @@ const instantiate_questionnaires = (questionnaires) => {
     return questionnaire_timeline;
 }
 
-// Build questionnaires timeline
-let questionnaires_timeline = [];
-
-if (window.session === "screening"){
-    // Self-report battery A
-    let included_questionnaires = [];
-
-    if (resumptionRule(screening_order, window.last_state, "PHQ9_start")){
-        included_questionnaires.push(questionnaire_phq);
-    }
-
-    if (resumptionRule(screening_order, window.last_state, "WSAS_start")){
-        included_questionnaires.push(questionnaire_WSAS);
-    }
-
-    if (resumptionRule(screening_order, window.last_state, "ICECAP_start")){
-        included_questionnaires.push(questionnaire_ICECAP);
-    }
-
-    if (resumptionRule(screening_order, window.last_state, "BFI_start")){
-        included_questionnaires.push(questionnaire_BFI);
-    }
-
-    // Instantiate timeline
-    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
-        instantiate_questionnaires(included_questionnaires)
-    );
-
-} else if (window.task === "quests" && ["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
-    // Self-report battery B
-
-    let included_questionnaires = [];
-
-    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
-        included_questionnaires.push(questionnaire_phq);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
-        included_questionnaires.push(questionnaire_gad);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
-        included_questionnaires.push(questionnaire_pvss);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "BADS_start")){
-        included_questionnaires.push(questionnaire_BADS);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
-        included_questionnaires.push(questionnaire_hopelessness);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
-        included_questionnaires.push(questionnaire_RRS_brooding);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
-        included_questionnaires.push(questionnaire_PERS_negAct);
-    }
-
-    // Instantiate timeline
-    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
-        instantiate_questionnaires(included_questionnaires)
-    );
-
-} else if (window.task === "quests"){
-
-    let included_questionnaires = [];
-
-    // Self-report battery C
-    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
-        included_questionnaires.push(questionnaire_phq);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
-        included_questionnaires.push(questionnaire_gad);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "WSAS_start")){
-        included_questionnaires.push(questionnaire_WSAS);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "ICECAP_start")){
-        included_questionnaires.push(questionnaire_ICECAP);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
-        included_questionnaires.push(questionnaire_pvss);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "BADS_start")){
-        included_questionnaires.push(questionnaire_BADS);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
-        included_questionnaires.push(questionnaire_hopelessness);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
-        included_questionnaires.push(questionnaire_RRS_brooding);
-    }
-
-    if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
-        included_questionnaires.push(questionnaire_PERS_negAct);
-    }
-
-    // Instantiate timeline
-    questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
-        instantiate_questionnaires(included_questionnaires)
-    );
-
-}
-
 
 // Export if run by node.js, for generating requirement document
 if (typeof module !== 'undefined' && module.exports) {
@@ -621,4 +507,118 @@ if (typeof module !== 'undefined' && module.exports) {
         PERS_negAct: questionnaire_PERS_negAct,
         BFI: questionnaire_BFI
     };
+} else {
+    // Build questionnaires timeline
+    let questionnaires_timeline = [];
+
+    if (window.session === "screening"){
+        // Self-report battery A
+        let included_questionnaires = [];
+
+        if (resumptionRule(screening_order, window.last_state, "PHQ9_start")){
+            included_questionnaires.push(questionnaire_phq);
+        }
+
+        if (resumptionRule(screening_order, window.last_state, "WSAS_start")){
+            included_questionnaires.push(questionnaire_WSAS);
+        }
+
+        if (resumptionRule(screening_order, window.last_state, "ICECAP_start")){
+            included_questionnaires.push(questionnaire_ICECAP);
+        }
+
+        if (resumptionRule(screening_order, window.last_state, "BFI_start")){
+            included_questionnaires.push(questionnaire_BFI);
+        }
+
+        // Instantiate timeline
+        questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+            instantiate_questionnaires(included_questionnaires)
+        );
+
+    } else if (window.task === "quests" && ["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
+        // Self-report battery B
+
+        let included_questionnaires = [];
+
+        if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+            included_questionnaires.push(questionnaire_phq);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
+            included_questionnaires.push(questionnaire_gad);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
+            included_questionnaires.push(questionnaire_pvss);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "BADS_start")){
+            included_questionnaires.push(questionnaire_BADS);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
+            included_questionnaires.push(questionnaire_hopelessness);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
+            included_questionnaires.push(questionnaire_RRS_brooding);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
+            included_questionnaires.push(questionnaire_PERS_negAct);
+        }
+
+        // Instantiate timeline
+        questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+            instantiate_questionnaires(included_questionnaires)
+        );
+
+    } else if (window.task === "quests"){
+
+        let included_questionnaires = [];
+
+        // Self-report battery C
+        if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+            included_questionnaires.push(questionnaire_phq);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "GAD7_start")){
+            included_questionnaires.push(questionnaire_gad);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "WSAS_start")){
+            included_questionnaires.push(questionnaire_WSAS);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "ICECAP_start")){
+            included_questionnaires.push(questionnaire_ICECAP);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "PVSS_start")){
+            included_questionnaires.push(questionnaire_pvss);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "BADS_start")){
+            included_questionnaires.push(questionnaire_BADS);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "hopelessness_start")){
+            included_questionnaires.push(questionnaire_hopelessness);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "RRS_brooding_start")){
+            included_questionnaires.push(questionnaire_RRS_brooding);
+        }
+
+        if (resumptionRule(quests_order, window.last_state, "PERS_negAct_start")){
+            included_questionnaires.push(questionnaire_PERS_negAct);
+        }
+
+        // Instantiate timeline
+        questionnaires_timeline = questionnaires_instructions(included_questionnaires.length).concat(
+            instantiate_questionnaires(included_questionnaires)
+        );
+
+    }
 }
