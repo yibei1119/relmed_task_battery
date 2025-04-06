@@ -365,7 +365,7 @@ function get_coins_from_data() {
         }
 
         // Worst outcome for missed response
-        if (response === "noresp"){
+        if (response[i] === "noresp"){
             const worst = Math.min(...[feedback_right[i], feedback_left[i], feedback_middle[i]].filter(item => typeof item === 'number'));
 
             coins_for_lottery.push(worst);
@@ -391,7 +391,7 @@ function get_coins_from_data() {
     for (i=0; i<response.length; i++){
 
         // Worst outcome for missed response
-        if ((response !== "right") & (response !== "left")){
+        if ((response[i] !== "right") & (response[i] !== "left")){
             const worst = Math.min(feedback_right[i], feedback_left[i]);
 
             coins_for_lottery.push(worst);
