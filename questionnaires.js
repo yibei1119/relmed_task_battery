@@ -300,6 +300,7 @@ var questionnaire_BFI = (i,total) => {
             trialphase: "BFI"
         },
         on_start: () => {
+            updateState("no_resume");
             updateState("BFI_start");
         }
     };
@@ -498,19 +499,19 @@ if (window.session === "screening"){
     // Self-report battery A
     let included_questionnaires = [];
 
-    if (resumptionRule(quests_order, window.last_state, "PHQ9_start")){
+    if (resumptionRule(screening_order, window.last_state, "PHQ9_start")){
         included_questionnaires.push(questionnaire_phq);
     }
 
-    if (resumptionRule(quests_order, window.last_state, "WSAS_start")){
+    if (resumptionRule(screening_order, window.last_state, "WSAS_start")){
         included_questionnaires.push(questionnaire_WSAS);
     }
 
-    if (resumptionRule(quests_order, window.last_state, "ICECAP_start")){
+    if (resumptionRule(screening_order, window.last_state, "ICECAP_start")){
         included_questionnaires.push(questionnaire_ICECAP);
     }
 
-    if (resumptionRule(quests_order, window.last_state, "BFI_start")){
+    if (resumptionRule(screening_order, window.last_state, "BFI_start")){
         included_questionnaires.push(questionnaire_BFI);
     }
 
