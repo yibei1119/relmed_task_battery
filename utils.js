@@ -199,7 +199,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
                     sitting_start_time: window.module_start_time,
                     session: window.session,
                     module: window.task,
-                    array: jspsych_data 
+                    data: jspsych_data 
                 },
                 ...extra_fields
         },
@@ -220,7 +220,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
             sitting_start_time: window.module_start_time,
             session: window.session,
             module: window.task,
-            array: jspsych_data
+            data: jspsych_data
         }])
     
         fetch('https://h6pgstm0f9.execute-api.eu-north-1.amazonaws.com/prod/submit', {
