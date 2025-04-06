@@ -519,7 +519,7 @@ if (window.session === "screening"){
         instantiate_questionnaires(included_questionnaires)
     );
 
-} else if (task === "quests" && ["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
+} else if (window.task === "quests" && ["wk0", "wk2", "wk4", "wk28"].includes(window.session)) {
     // Self-report battery B
 
     let included_questionnaires = [];
@@ -557,7 +557,7 @@ if (window.session === "screening"){
         instantiate_questionnaires(included_questionnaires)
     );
 
-} else if (task === "quests"){
+} else if (window.task === "quests"){
 
     let included_questionnaires = [];
 
