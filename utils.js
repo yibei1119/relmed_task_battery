@@ -184,6 +184,9 @@ function updateState(state) {
         saveDataREDCap();
     }
 
+    // Update safe state
+    updateSafeFun();
+
     console.log(state);
     postToParent({
         state: state
@@ -460,23 +463,25 @@ function updateSafeFrequencies() {
     return addFrequencyVectors(last_safe_state_obj, current_safe);
 }
 
-const updateSafe = {
-    type: jsPsychCallFunction,
-    func: function() {
+// Function to update the safe state and send it back to the parent window
+function updateSafeFun() {
 
-        // Call the function to update the safe state
-        const updated_safe = updateSafeFrequencies();
+    // Call the function to update the safe state
+    const updated_safe = updateSafeFrequencies();
 
-        // Convert the updated state back to a JSON string
-        const updated_safe_string = JSON.stringify(updated_safe);
+    // Convert the updated state back to a JSON string
+    const updated_safe_string = JSON.stringify(updated_safe);
 
-        // Send the updated state back to the parent window
-        postToParent({
-            session_state: updated_safe_string
-        });
-    }
+    // Send the updated state back to the parent window
+    postToParent({
+        session_state: updated_safe_string
+    });
 }
 
+const updateSafe = {
+    type: jsPsychCallFunction,
+    func: updateSafeFun
+}
 
 // Create a represantative array of coins of n length
 function createProportionalArray(proportionMap, newSize) {
