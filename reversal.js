@@ -28,9 +28,6 @@ const reversal_preload = {
 
         // Report to relmed.ac.uk
         postToParent({message: "load_successful"})
-
-        updateState(`no_resume`)
-        updateState(`reversal_task_start`)
     }
 }
 
@@ -132,6 +129,12 @@ const reversal_instructions = [
         data: {trialphase: "reversal_instruction"},
         on_start: () => {
             updateState(`reversal_instructions_start`)
+        },
+        on_finish: () => {
+            if (window.session !== "screening") {
+                updateState(`no_resume`)
+            }
+            updateState(`reversal_task_start`)    
         }
     },
     {
