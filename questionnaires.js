@@ -422,6 +422,7 @@ const questionnaire_PERS_negAct = (i, total) => {
             trialphase: "PERS_negAct"
         },
         on_start: () => {
+            updateState("no_resume");
             updateState("PERS_negAct_start");
         }
     };
