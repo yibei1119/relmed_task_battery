@@ -453,6 +453,8 @@ function updateSafeFrequencies() {
     // Get the state of safe from the URL variable, or set it to an empty object if not present
     const last_safe_state = jsPsych.data.getURLVariable('session_state') || '{}';
 
+    console.log("Last safe state:", last_safe_state);
+
     // Parse the last safe state from JSON string to an object
     const last_safe_state_obj = JSON.parse(last_safe_state);
 
@@ -471,6 +473,8 @@ function updateSafeFun() {
 
     // Convert the updated state back to a JSON string
     const updated_safe_string = JSON.stringify(updated_safe);
+
+    console.log("Updated safe state:", updated_safe_string);
 
     // Send the updated state back to the parent window
     postToParent({
