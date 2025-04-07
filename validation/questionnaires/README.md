@@ -182,4 +182,4 @@
             <td>BFI_Q8</td><td>I see myself as someone who gets nervous easily</td>
         </tr><tr>
             <td>BFI_Q9</td><td>I see myself as someone who has an active imagination</td>
-        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
+        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
