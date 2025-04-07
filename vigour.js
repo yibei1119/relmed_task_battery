@@ -319,6 +319,7 @@ const piggyBankTrial = {
     data.trial_number = vigourTrialCounter;
     if (vigourTrialCounter % (vigourTrials.length / 3) == 0 || vigourTrialCounter == vigourTrials.length) {
       saveDataREDCap(retry = 3);
+      updateVigourBonus();
     }
 
     // No response
@@ -332,6 +333,31 @@ const piggyBankTrial = {
     }
   }
 };
+
+// Function to update relemd.ac.uk with PIT bonus in case of module interruption
+const updateVigourBonus = () => {
+
+  if (isNaN(getFracVigourReward())) {
+    console.log("Vigour bonus is NaN");
+    return;
+  }
+
+  // Retrieve the previous bonus from the session state
+  const previous_bonus = window.session_state["vigour"];
+
+  console.log("Previous vigour bonus: ", previous_bonus);
+
+  // Update the session state with the new bonus
+  window.session_state["vigour"] = getFracVigourReward();
+
+  console.log("Updated bonus: ", window.session_state["vigour"]);
+
+  // Send the updated state back to the parent window
+  postToParent({
+    session_state: JSON.stringify(window.session_state)
+  });
+}
+
 
 const noPressWarning = {
   timeline: [{

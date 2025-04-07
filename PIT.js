@@ -123,6 +123,8 @@ const PITtrial = {
     data.pit_trial_number = PITtrialCounter;
     if (PITtrialCounter % (PITtrials.length / 3) == 0 || PITtrialCounter == PITtrials.length) {
       saveDataREDCap(retry = 3);
+
+      updatePITBonus();
     }
 
     // No response
@@ -152,6 +154,30 @@ const PITtrial = {
     }
   }
 };
+
+// Function to update relemd.ac.uk with PIT bonus in case of module interruption
+const updatePITBonus = () => {
+
+  if (isNaN(getFracPITReward())) {
+    console.log("PIT bonus is NaN");
+    return;
+  }
+
+  // Retrieve the previous bonus from the session state
+  const previous_bonus = window.session_state["PIT"];
+
+  console.log("Previous PIT bonus: ", previous_bonus);
+
+  // Update the session state with the new bonus
+  window.session_state["PIT"] = getFracPITReward();
+
+  console.log("Updated bonus: ", window.session_state["vigour_PIT"]);
+
+  // Send the updated state back to the parent window
+  postToParent({
+    session_state: JSON.stringify(window.session_state)
+  });
+}
 
 // Create timeline for PIT task
 const PITtrials = [];
@@ -248,7 +274,32 @@ const vigour_PIT_bonus2 = {
   choices: ['Finish'],
   data: { trialphase: 'vigour_bonus' },
   on_start: function (trial) {
-    const total_bonus = getFracVigourReward() + getFracPITReward();
+    let vigour_reward = getFracVigourReward();
+    let pit_reward = getFracPITReward();
+    
+    // Check for NaN values and try to replace them
+    if (isNaN(vigour_reward) && window.session_state && window.session_state["vigour"] !== undefined) {
+      vigour_reward = window.session_state["vigour"];
+      console.log("Using stored vigour reward:", vigour_reward);
+    }
+    
+    if (isNaN(pit_reward) && window.session_state && window.session_state["PIT"] !== undefined) {
+      pit_reward = window.session_state["PIT"];
+      console.log("Using stored PIT reward:", pit_reward);
+    }
+    
+    // Final check for NaN values
+    if (isNaN(vigour_reward)) {
+      console.error("Vigour reward is NaN and no fallback available");
+      vigour_reward = 0;
+    }
+    
+    if (isNaN(pit_reward)) {
+      console.error("PIT reward is NaN and no fallback available");
+      pit_reward = 0;
+    }
+    
+    const total_bonus = vigour_reward + pit_reward;
     trial.stimulus = `
             <p>It is time to reveal your total bonus payment for the Piggy-Bank Game.</p>
             <p>With the cloudy version and the no-cloud version combined, you will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
