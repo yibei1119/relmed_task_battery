@@ -491,6 +491,7 @@ const instantiate_questionnaires = (questionnaires) => {
     return questionnaire_timeline;
 }
 
+let questionnaires_timeline = [];
 
 // Export if run by node.js, for generating requirement document
 if (typeof module !== 'undefined' && module.exports) {
@@ -508,9 +509,8 @@ if (typeof module !== 'undefined' && module.exports) {
         BFI: questionnaire_BFI
     };
 } else {
+    console.log("Not running in Node.js, not exporting questionnaires.");
     // Build questionnaires timeline
-    let questionnaires_timeline = [];
-
     if (window.session === "screening"){
         // Self-report battery A
         let included_questionnaires = [];

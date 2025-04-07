@@ -199,19 +199,23 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     // Get data, remove stimulus string
     let jspsych_data = jsPsych.data.get().ignore('stimulus').json();
 
+    const data_message = {
+        data: {
+            record_id: window.participantID + "_" + window.module_start_time,
+            participant_id: window.participantID,
+            sitting_start_time: window.module_start_time,
+            session: window.session,
+            module: window.task,
+            data: jspsych_data 
+        },
+        ...extra_fields
+    };
+
+    console.log("Data to be sent:", data_message);
+
     if (window.context === "relmed") {
         postToParent(
-            {
-                ...{
-                    record_id: window.participantID + "_" + window.module_start_time,
-                    participant_id: window.participantID,
-                    sitting_start_time: window.module_start_time,
-                    session: window.session,
-                    module: window.task,
-                    data: jspsych_data 
-                },
-                ...extra_fields
-        },
+            data_message,
             () => {
                 setTimeout(function () {
                     saveDataREDCap(retry - 1);
