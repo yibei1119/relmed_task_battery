@@ -208,6 +208,9 @@ function setupFuelTrial(config) {
 
 // Main instruction pages configuration
 const nPages = 13;
+const leftShip = "green";
+const rightShip = "blue";
+const departIsland = "grape";
 const controlInstructionPages = [
     // Page 0: Initial Welcome
     {
@@ -215,7 +218,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -223,17 +226,17 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${leftShip}.png" alt="Left ship" />
                     <img class="arrow-left" style="visibility: hidden;" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island_${departIsland}.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="fuel-container-right">
                         <div class="fuel-indicator-container">
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="ship-right" src="imgs/simple_ship_${rightShip}.png" alt="Right ship" />
                     <img class="arrow-right" style="visibility: hidden;" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
@@ -290,11 +293,11 @@ const controlInstructionPages = [
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                 <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="selection-indicator">
-                        <div class="selection-label">Green Ship</div>
+                        <div class="selection-label">${leftShip} Ship</div>
                         <span class="selection-dot"></span>
                     </div>
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -302,13 +305,13 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${leftShip}.png" alt="Left ship" />
                     <img class="arrow-left" style="visibility: hidden;" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island_${departIsland}.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="selection-indicator"">
-                        <div class="selection-label">Blue Ship</div>
+                        <div class="selection-label">${rightShip} Ship</div>
                         <span class="selection-dot"></span>
                     </div>
                     <div class="fuel-container-right">
@@ -316,7 +319,7 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="ship-right" src="imgs/simple_ship_${rightShip}.png" alt="Right ship" />
                     <img class="arrow-right" style="visibility: hidden;" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
@@ -358,7 +361,7 @@ const controlInstructionPages = [
                 <div class="selection-label">Drift Island</div>
                 <span class="selection-dot"></span>
             </div>
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -366,21 +369,21 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${leftShip}.png" alt="Left ship" />
                     <img class="arrow-left" style="visibility: hidden;" src="imgs/left.png" alt="Left arrow" />
                 </div>
                 <div class="selection-indicator" style="top: -30%">
                     <div class="selection-label">Departure Island</div>
                     <span class="selection-dot"></span>
                 </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island_${departIsland}.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="fuel-container-right">
                         <div class="fuel-indicator-container">
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="ship-right" src="imgs/simple_ship_${rightShip}.png" alt="Right ship" />
                     <img class="arrow-right" style="visibility: hidden;" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
@@ -408,7 +411,7 @@ const controlInstructionPages = [
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                 <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -416,10 +419,10 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${leftShip}.png" alt="Left ship" />
                     <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island_${departIsland}.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="selection-indicator">
                         <div class="selection-label">Press ➡️ to select</div>
@@ -430,14 +433,14 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="ship-right" src="imgs/simple_ship_${rightShip}.png" alt="Right ship" />
                     <img class="arrow-right" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
-                <p><strong>Let's try it! Send the blue ship by pressing the right arrow key.</strong></p>
+                <p><strong>Let's try it! Send the ${rightShip} ship by pressing the right arrow key.</strong></p>
             `)}
             ${createProgressBar(5, nPages)}
         </div>
@@ -457,13 +460,13 @@ const controlInstructionPages = [
                 <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                     <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
                 </div>
-                <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
-                <img class="feedback-ship" src="imgs/simple_ship_blue.png" alt="Ship" style="opacity: 0;" />
+                <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
+                <img class="feedback-ship" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
                 <p>The ship ran out of fuel midway.</p>
-                <p>As you can see, it drifted from <span style="color: gold">Banana Island</span>🍌 to <span style="color: brown">Coconut Island</span>🥥 with the currents.</p>
+                <p>As you can see, it drifted from the <strong>${departIsland} island</strong> to the <strong>${CONTROL_CONFIG.baseRule[departIsland]} island</strong> with the currents.</p>
                 `)}
             ${createProgressBar(6, nPages)}
         </div>
@@ -483,13 +486,13 @@ const controlInstructionPages = [
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                 <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${leftShip}.png" alt="Left ship" />
                     <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island_${departIsland}.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="selection-indicator">
                         <div class="selection-label">Press ➡️ to select</div>
@@ -500,7 +503,7 @@ const controlInstructionPages = [
                         <div class="fuel-indicator-bar"></div>
                     </div>
                     </div>
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="ship-right" src="imgs/simple_ship_${rightShip}.png" alt="Right ship" />
                     <img class="arrow-right" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
@@ -531,17 +534,17 @@ const controlInstructionPages = [
                 </div>
                 <div class="overlap-group" style="justify-content: space-between;">
                     <div class="choice-left">
-                        <img class="ship-left" src="imgs/simple_ship_blue.png" alt="Ship" style="opacity: 0;" />
+                        <img class="ship-left" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
                     </div>
                     <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
                     <div class="choice-right">
-                        <img class="island-near" src="imgs/simple_island_grape.png" alt="Destination island" style="top: -10%;" />
+                        <img class="island-near" src="imgs/simple_island_${CONTROL_CONFIG.controlRule[rightShip]}.png" alt="Destination island" style="top: -10%;" />
                     </div>
                 </div>
             </section>
             ${createInstructionDialog(`
                 <p>Great job!</p>
-                <p>As you can see, with enough fuel, the <span style="color: royalblue">blue ship</span> reached its <strong>Home Base</strong> at <span style="color: purple">Grape Island</span>🍇 against the currents.</p>
+                <p>As you can see, with enough fuel, the ${rightShip} ship reached its <strong>Home Base</strong> at ${CONTROL_CONFIG.controlRule[rightShip]} island against the currents.</p>
             `)}
             ${createProgressBar(8, nPages)}
         </div>
@@ -563,11 +566,11 @@ const controlInstructionPages = [
                 </div>
                 <div class="overlap-group" style="justify-content: space-between;">
                     <div class="choice-left">
-                        <img class="ship-left" src="imgs/simple_ship_blue.png" alt="Ship" style="opacity: 0;" />
+                        <img class="ship-left" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
                     </div>
                     <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
                     <div class="choice-right">
-                        <img class="island-near" src="imgs/simple_island_grape.png" alt="Destination island" style="top: -10%;" />
+                        <img class="island-near" src="imgs/simple_island_${CONTROL_CONFIG.controlRule[rightShip]}.png" alt="Destination island" style="top: -10%;" />
                     </div>
                 </div>
             </section>
@@ -677,7 +680,7 @@ const controlInstructionPages = [
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                 <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="width: auto; text-align: left; color: #0F52BA;">Training Voyage</p>
             </div>
-            <img class="island-far" src="imgs/simple_island_coconut.png" alt="Farther island" />
+            <img class="island-far" src="imgs/simple_island_${CONTROL_CONFIG.baseRule[departIsland]}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -685,17 +688,17 @@ const controlInstructionPages = [
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-left" src="imgs/simple_ship_green.png" alt="Left ship" />
+                    <img class="ship-left" src="imgs/simple_ship_${leftShip}.png" alt="Left ship" />
                     <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_banana.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island_${departIsland}.png" alt="Nearer island" />
                 <div class="choice-right">
                     <div class="fuel-container-right">
                         <div class="fuel-indicator-container">
                             <div class="fuel-indicator-bar"></div>
                         </div>
                     </div>
-                    <img class="ship-right" src="imgs/simple_ship_blue.png" alt="Right ship" />
+                    <img class="ship-right" src="imgs/simple_ship_${rightShip}.png" alt="Right ship" />
                     <img class="arrow-right" src="imgs/left.png" alt="right arrow" />
                 </div>
             </div>
@@ -913,7 +916,7 @@ controlIntroComprehension.push({
             required: true
         },
         {
-            prompt: "Blue ship uses Grape island as the home base.",
+            prompt: `The ${rightShip} ship uses ${CONTROL_CONFIG.controlRule[rightShip]} island as its home base.`,
             name: "blue_homebase",
             options: ["True", "False"],
             required: true
