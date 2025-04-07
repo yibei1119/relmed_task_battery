@@ -95,13 +95,14 @@
   
   controlTestingTimeline.push(controlPreload);
 
-  controlTestingTimeline.push(controlInstructionsTimeline);
+  // controlTestingTimeline.push(controlInstructionsTimeline);
   
   // controlTestingTimeline.push(controlExploreTimeline);
 
   // controlTestingTimeline.push(controlPredTimeline);
 
-  // controlTestingTimeline.push(controlRewardTimeline);
+  controlTestingTimeline.push(controlRewardTimeline);
+  controlTestingTimeline.push(controlTotalReward);
   // controlTestingTimeline.push([controlRating]);
 
   // controlTestingTimeline.push(controlDebriefing);
@@ -117,9 +118,9 @@
       }
     }
   }
-  jsPsych.run(controlTestingTimeline);
+  // jsPsych.run(controlTestingTimeline);
   // jsPsych.simulate(controlTestingTimeline, "visual");
-  // jsPsych.simulate(controlTestingTimeline, "visual", simulation_options);
+  jsPsych.simulate(controlTestingTimeline, "visual", simulation_options);
 </script>
 
 </html>

@@ -234,8 +234,10 @@ let controlTotalReward = {
   response_ends_trial: true,
   post_trial_gap: 400,
   data: { 
-    trialphase: 'control_bonus',
-    control_bonus: jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('correct').sum() * 5 / 100
+    trialphase: 'control_bonus'
+  },
+  on_finish: function (data) {
+    data.control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback', correct: true }).count() * 5 / 100;
   }
 };
 
