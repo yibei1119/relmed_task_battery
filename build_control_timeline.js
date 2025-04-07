@@ -1,3 +1,24 @@
+const CONTROL_CONFIG = {
+      // Define rule mappings - persistent across trials
+      baseRule: {
+        banana: "coconut",
+        coconut: "grape",
+        grape: "orange",
+        orange: "banana"
+      },
+
+      controlRule: {
+        red: "coconut",
+        yellow: "grape",
+        green: "orange",
+        blue: "banana"
+      },
+
+      effort_threshold: [6, 12, 18],
+
+      scale: 2
+}
+
 const controlPreload = {
   type: jsPsychPreload,
   images: [

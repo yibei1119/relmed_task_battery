@@ -124,12 +124,7 @@ var jsPsychExploreShip = (function (jspsych) {
     trial(display_element, trial) {
 
       // Define base rule mapping
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
-      };
+      this.baseRule = CONTROL_CONFIG.baseRule;
 
       // Initialize trial variables
       let selectedKey = null;
@@ -423,22 +418,12 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       this.jsPsych = jsPsych;
 
       // Define rule mappings
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
-      };
+      this.baseRule = CONTROL_CONFIG.baseRule;
 
-      this.controlRule = {
-        green: "coconut",
-        blue: "grape",
-        red: "orange",
-        yellow: "banana"
-      };
+      this.controlRule = CONTROL_CONFIG.controlRule;
 
-      this.effort_threshold = [6, 12, 18];
-      this.scale = 2;
+      this.effort_threshold = CONTROL_CONFIG.effort_threshold;
+      this.scale = CONTROL_CONFIG.scale;
     }
 
     sigmoid(x) {
