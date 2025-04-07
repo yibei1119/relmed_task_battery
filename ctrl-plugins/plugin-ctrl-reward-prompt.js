@@ -64,12 +64,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
       this.jsPsych = jsPsych;
 
       // Define base rule mapping
-      this.baseRule = {
-        banana: "coconut",
-        coconut: "grape",
-        grape: "orange",
-        orange: "banana"
-      };
+      this.baseRule = CONTROL_CONFIG.baseRule;
     }
 
     trial(display_element, trial) {

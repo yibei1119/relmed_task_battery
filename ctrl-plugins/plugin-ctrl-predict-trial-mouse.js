@@ -60,12 +60,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       this.jsPsych = jsPsych;
 
       // Home base answers
-      this.controlRule = {
-        green: "coconut",
-        blue: "grape",
-        red: "orange",
-        yellow: "banana"
-      };
+      this.controlRule = CONTROL_CONFIG.controlRule;
     }
 
     trial(display_element, trial) {
