@@ -472,13 +472,14 @@ function updateSafeFun() {
     // Call the function to update the safe state
     const updated_safe = updateSafeFrequencies();
 
-    window.session_state["safe"] = updated_safe;
+    console.log("Updated safe state:", updated_safe);
 
-    console.log("Updated safe state:", window.session_state["safe"]);
+    let updated_session_state_obj = window.session_state || {};
+    updated_session_state_obj["safe"] = updated_safe;
 
     // Send the updated state back to the parent window
     postToParent({
-        session_state: JSON.stringify(window.session_state)
+        session_state: JSON.stringify(updated_session_state_obj)
     });
 }
 
