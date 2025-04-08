@@ -59,7 +59,7 @@
         window.session = jsPsych.data.getURLVariable('session');
         window.task = jsPsych.data.getURLVariable('task');
         window.last_state = jsPsych.data.getURLVariable('state') || "none";
-        window.session_state = JSON.parse(jsPsych.data.getURLVariable('session_state'));
+        window.session_state = JSON.parse(jsPsych.data.getURLVariable('session_state') || "{}");
 
         // Context specific response deadline
         window.default_response_deadline = window.context === "relmed" ? window.relemd_default_response_deadline : window.prolific_default_response_deadline;
