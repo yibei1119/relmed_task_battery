@@ -108,7 +108,7 @@ var jsPsychRewardShip = (function (jspsych) {
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
                 <img class="island-target glowing-border" src="imgs/simple_island_${trial.target}.png" alt="Target island">
-                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;">Quest reward: ${trial.reward_amount}</p>
+                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;">Quest reward: <strong>${trial.reward_amount}</strong></p>
               </div>
               <div class="overlap-group">
                 <div class="choice-left">
