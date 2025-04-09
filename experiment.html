@@ -15,7 +15,6 @@
     <script src="jspsych/plugin-survey-text.js"></script>
     <script src="jspsych/plugin-fullscreen.js"></script>
     <script src="jspsych/plugin-call-function.js"></script>
-    <script src="utils.js"></script>
     <script>
         window.maxWarnings = 15; // How many warnings before kick out
         window.interimWarning = 5; // How many missing responses before a please change your ways message
@@ -47,7 +46,7 @@
                     window.pause_resume_events = [];
                 }
             },
-            on_close: saveDataREDCap
+            on_close: () => {saveDataREDCap()}
         });
         
         // Get condition from URL, all caps are prolific, lowercase are ours
@@ -78,6 +77,7 @@
         window.pause_resume_events = [];
 
     </script>
+    <script src="utils.js"></script>
     <script src="resumption.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-explore-trial-2.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
