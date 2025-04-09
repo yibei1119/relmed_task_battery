@@ -232,7 +232,7 @@ function prepare_PILT_instructions() {
         ]);
     
         let hammer_on_right = shuffleArray([false, true, false, true, false, false], window.session);
-        let punishment_magnitude = shuffleArray([-0.01, -0.5, -0.5, -0.01, -0.01, -0.5], window.session + "c");
+        let punishment_magnitude = shuffleArray([-1, -0.5, -0.5, -1, -1, -0.5], window.session + "c");
     
     
         inst.push(
@@ -249,8 +249,8 @@ function prepare_PILT_instructions() {
                                 pavlovian_images: pavlovian_images_f(),
                                 n_stimuli: 2,
                                 optimal_side: "",
-                                feedback_left: e ? -1 : punishment_magnitude[i],
-                                feedback_right: e ? punishment_magnitude[i] : -1,
+                                feedback_left: e ? -0.01 : punishment_magnitude[i],
+                                feedback_right: e ? punishment_magnitude[i] : -0.01,
                                 optimal_right: e,
                                 block: "practice3",
                                 trial: i,
