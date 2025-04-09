@@ -625,10 +625,16 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     // Add PILT
     if (PILT_structure != null){
         let PILT_blocks = build_PILT_task(PILT_structure);
-        PILT_blocks[0]["on_start"] = () => {
-            updateState("pilt_task_start")
-        };
-        PILT_procedure = PILT_procedure.concat(PILT_blocks);    
+        console.log(PILT_blocks)
+        if (PILT_blocks.length === 0){
+            console.log("No blocks to add");
+            PILT_procedure = []
+        } else { 
+            PILT_blocks[0]["on_start"] = () => {
+                updateState("pilt_task_start")
+            };
+            PILT_procedure = PILT_procedure.concat(PILT_blocks);  
+        }  
     } else {
        PILT_procedure = []
     }
