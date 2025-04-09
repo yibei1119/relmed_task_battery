@@ -80,5 +80,6 @@ const screening_order = [
     "reversal_instructions_start",
     "pilt_instructions_start",
     "pilt_task_start",
+    "pilt_block_1_start",
     "pilt_last_block_start",
 ].concat(quests_order);
