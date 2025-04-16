@@ -67,6 +67,7 @@ const pre_kick_out_warning = {
 
 let kick_out_warning = {}
 if (window.context == "relmed") {
+    console.log("Relmed context detected");
     kick_out_warning = {
         type: jsPsychHtmlKeyboardResponse,
         conditional_function: function() {
@@ -93,6 +94,9 @@ if (window.context == "relmed") {
         }
     }    
 } else {
+    console.log("Prolific context detected");
+    console.log(window.context)
+
     kick_out_warning = {
         type: jsPsychHtmlKeyboardResponse,
         conditional_function: function() {

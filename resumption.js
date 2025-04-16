@@ -48,10 +48,12 @@ const quests_order = [
 const wm_order = [
     "ltm_instructions_start",
     "ltm_task_start",
+    "ltm_block_1_start",
     "ltm_test_instructions_start",
     "ltm_test_task_start",
     "wm_instructions_start",
     "wm_task_start",
+    "wm_block_1_start",
     "wm_test_instructions_start",
     "wm_test_task_start",
     "dd_instructions_start",
@@ -61,9 +63,15 @@ const wm_order = [
     "coin_lottery_end"
 ]
 
-const pilt_to_test_order = [
+let pilt_to_test_order = [
     "pilt_instructions_start",
-    "pilt_task_start",
+    "pilt_task_start"];
+
+for (i=1; i<=20; i++){
+    pilt_to_test_order.push(`pilt_block_${i}_start`);
+}
+
+pilt_to_test_order = pilt_to_test_order.concat([
     "pilt_last_block_start",
     "vigour_instructions_start",
     "vigour_task_start",
@@ -73,12 +81,13 @@ const pilt_to_test_order = [
     `vigour_test_task_start`,
     "pilt_test_instructions_start",
     "pilt_test_task_start",
-];
+]);
 
 const screening_order = [
     "reversal_task_start",
     "reversal_instructions_start",
     "pilt_instructions_start",
     "pilt_task_start",
+    "pilt_block_1_start",
     "pilt_last_block_start",
 ].concat(quests_order);

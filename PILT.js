@@ -491,7 +491,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
                     PILT_trial(task_name)
                 ],
                 timeline_variables: structure[i],
-                on_start: () => {
+                on_start: (i === (structure.length - 1)) ? () => {
 
                     const block = jsPsych.evaluateTimelineVariable('block');
 
@@ -499,9 +499,14 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
                         updateState(`${task_name}_block_${block}_start`)
 
                         // Add last block message
-                        if (i === structure.length - 1){
-                            updateState(`${task_name}_last_block_start`)
-                        }
+                        updateState(`${task_name}_last_block_start`)
+                    }
+                } : () => {
+
+                    const block = jsPsych.evaluateTimelineVariable('block');
+
+                    if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
+                        updateState(`${task_name}_block_${block}_start`)
                     }
                 }
             }
@@ -620,10 +625,16 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     // Add PILT
     if (PILT_structure != null){
         let PILT_blocks = build_PILT_task(PILT_structure);
-        PILT_blocks[0]["on_start"] = () => {
-            updateState("pilt_task_start")
-        };
-        PILT_procedure = PILT_procedure.concat(PILT_blocks);    
+        console.log(PILT_blocks)
+        if (PILT_blocks.length === 0){
+            console.log("No blocks to add");
+            PILT_procedure = []
+        } else { 
+            PILT_blocks[0]["on_start"] = () => {
+                updateState("pilt_task_start")
+            };
+            PILT_procedure = PILT_procedure.concat(PILT_blocks);  
+        }  
     } else {
        PILT_procedure = []
     }

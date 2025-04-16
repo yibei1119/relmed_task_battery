@@ -28,6 +28,13 @@ const controlPreload = {
   continue_after_error: true,
   data: {
     trialphase: "control_preload"
+  },
+  on_finish: () => {
+    // Report to tests
+    console.log("load_successful")
+
+    // Report to relmed.ac.uk
+    postToParent({message: "load_successful"})
   }
 };
 

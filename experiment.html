@@ -15,7 +15,6 @@
     <script src="jspsych/plugin-survey-text.js"></script>
     <script src="jspsych/plugin-fullscreen.js"></script>
     <script src="jspsych/plugin-call-function.js"></script>
-    <script src="utils.js"></script>
     <script>
         window.maxWarnings = 15; // How many warnings before kick out
         window.interimWarning = 5; // How many missing responses before a please change your ways message
@@ -47,7 +46,7 @@
                     window.pause_resume_events = [];
                 }
             },
-            on_close: saveDataREDCap
+            on_close: () => {saveDataREDCap()}
         });
         
         // Get condition from URL, all caps are prolific, lowercase are ours
@@ -78,6 +77,7 @@
         window.pause_resume_events = [];
 
     </script>
+    <script src="utils.js"></script>
     <script src="resumption.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-explore-trial-2.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
@@ -221,13 +221,13 @@
     if (window.context === "relmed") {
         end_exp_msg_content = [
             `<p>Thank you for completing this module!</p>
-            <p>When you click continue, your data will be uploaded to the secure server. This may take up to two minutes. Please don't close or refresh your browser at this time.</p>
+            <p>When you click next, your data will be uploaded to the secure server. This may take up to two minutes. Please don't close or refresh your browser at this time.</p>
             <p>When data upload is complete, you will be redirected back to My RELMED.</p>`];
     } else {
         end_exp_msg_content = [
             `<p>Thank you for participating in this study!</p>
             <p>The purpose of this study is to develop games that can measure people's individual learning tendencies. In the future, these games will be used to facilitate mental health research ongoing at UCL.</p>`,
-            `<p>When you click continue, your data will be uploaded to the server. This may take up to two minutes.Please don't close or refresh your browser at this time.</p>
+            `<p>When you click next, your data will be uploaded to the server. This may take up to two minutes.Please don't close or refresh your browser at this time.</p>
             <p>When data upload is complete, you will be rediredted to Prolific to complete your submission</p>`];
     }
     const end_experiment_msgs = [
