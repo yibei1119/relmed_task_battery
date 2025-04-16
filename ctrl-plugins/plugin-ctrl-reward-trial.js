@@ -448,6 +448,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const nearIsland = this.jsPsych.evaluateTimelineVariable('near');
       const currentStrength = this.jsPsych.evaluateTimelineVariable('current');
       const effortLevel = lastTrial.trial_presses;
+      const reward_amount = this.jsPsych.evaluateTimelineVariable('reward_amount');
 
       // Determine destination island based on control rule
       const currentRule = this.chooseControlRule(
@@ -461,8 +462,8 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
 
       const correct = trial.target_island === destinationIsland;
       const msg = correct 
-        ? "<p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p>"
-        : "<p>Sorry!</p><p>The cargo has been transported to the wrong island.<br>But don't worry, maybe next time.</p>";
+        ? `<p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p><p>You have won <strong>${reward_amount}</strong> for this round of mission!</p>`
+        : `<p>Sorry!</p><p>The cargo has been transported to the wrong island.<br>But don't worry, maybe next time.</p>`;
 
       // Generate feedback display
       const html = `
