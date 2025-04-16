@@ -100,7 +100,7 @@ var jsPsychRewardShip = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <img class="island-far" style="visibility: hidden;" src="imgs/simple_island_${far}.png" alt="Farther island" />
               <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                   <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
               </div>
@@ -120,7 +120,7 @@ var jsPsychRewardShip = (function (jspsych) {
                   <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
                   <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <img class="island-near" style="visibility: visible;" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
                 <div class="choice-right">
                   <div class="fuel-container-right">
                     <div class="fuel-indicator-container">
@@ -155,22 +155,32 @@ var jsPsychRewardShip = (function (jspsych) {
       // Handle initial ship selection
       const handleKeypress = (info) => {
         if (!selectedKey) {
+
+          this.jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
           if (info.key === 'ArrowLeft') {
             selectedKey = 'left';
             document.querySelector('.arrow-left').classList.add('highlight');
             document.querySelector('.choice-right').style.visibility = 'hidden';
-            document.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
-            setupRepeatedKeypress('ArrowLeft');
           } else if (info.key === 'ArrowRight') {
             selectedKey = 'right';
             document.querySelector('.arrow-right').classList.add('highlight');
             document.querySelector('.choice-left').style.visibility = 'hidden';
-            document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
-            setupRepeatedKeypress('ArrowRight');
           }
+          this.jsPsych.pluginAPI.setTimeout(() => {
+            if (selectedKey === 'left') {
+              document.querySelector('.fuel-container-left .fuel-indicator-container').style.opacity = '1';
+              setupRepeatedKeypress('ArrowLeft');
+            } else if (selectedKey === 'right') {
+              document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
+              setupRepeatedKeypress('ArrowRight');
+            }
+            document.querySelector('.island-near').style.visibility = 'visible';
+            document.querySelector('.island-far').style.visibility = 'visible';
+            document.querySelector('.ocean-current').style.visibility = 'visible';
+          }, 100);
+
           choice = selectedKey;
           choice_rt = info.rt;
-          this.jsPsych.pluginAPI.cancelKeyboardResponse(firstKey_listener);
 
           // Start effort phase timer
           this.jsPsych.pluginAPI.setTimeout(() => {
@@ -188,7 +198,7 @@ var jsPsychRewardShip = (function (jspsych) {
             this.jsPsych.pluginAPI.setTimeout(() => {
               endTrial();
             }, 350);
-          }, trial.reward_effort);
+          }, trial.reward_effort + 100); // Adding 100ms to ensure smooth transition and animation completion
         }
       };
 
@@ -292,7 +302,7 @@ var jsPsychRewardShip = (function (jspsych) {
       });
       
       return `
-        <div class="ocean-current">
+        <div class="ocean-current" style="visibility: hidden;">
           <div class="current-group left-currents">
             ${leftTraces}
             ${leftLines}
