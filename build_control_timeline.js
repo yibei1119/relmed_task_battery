@@ -258,9 +258,9 @@ controlTimeline.push(controlPreload);
 controlTimeline.push(controlInstructionsTimeline);
 
 // Add the explore, predict, reward trials
-controlExploreTimeline[0]["on_timeline_start"] = () => {
-  updateState("no_resume");
-  updateState("control_task_start");
+controlTimeline[0]["on_timeline_start"] = () => {
+  updateState(`no_resume`);
+  updateState(`control_task_start`);
 };
 for (let i = 0; i < explore_sequence.length; i++) {
   // Add the explore trials
