@@ -1002,9 +1002,6 @@ const controlInstructionsLoop = {
         const restart = jsPsych.data.get().filter({trialphase: "control_instruction_quiz_failure"}).last(1).select('restart').values[0];
 
         return restart;
-    },
-    on_timeline_start: () => {
-        updateState(`control_instructions_start`)
     }
 };
 
