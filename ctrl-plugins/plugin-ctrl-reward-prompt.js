@@ -46,9 +46,6 @@ var jsPsychRewardPrompt = (function (jspsych) {
       }
     },
     data: {
-      response: {
-        type: jspsych.ParameterType.STRING
-      },
       rt: {
         type: jspsych.ParameterType.INT
       },
@@ -69,10 +66,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
 
     trial(display_element, trial) {
       // Initialize trial variables
-      var response = {
-        rt: null,
-        key: null
-      };
+      const startTime = performance.now();
 
       // Generate trial HTML
       const generateHTML = () => {
@@ -81,7 +75,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <img class="island-far" style="visibility: hidden;" src="imgs/simple_island_${far}.png" alt="Farther island" />
               <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                   <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
               </div>
@@ -101,7 +95,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
                   <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
                   <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <img class="island-near" style="visibility: visible;" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
                 <div class="choice-right">
                   <div class="fuel-container-right">
                     <div class="fuel-indicator-container">
@@ -117,9 +111,8 @@ var jsPsychRewardPrompt = (function (jspsych) {
             <div class="instruction-dialog" style="bottom:20%; min-width: 600px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
                     <h3>You're about to take your first <strong>Reward Mission</strong></h3>
-                    <p>Focus on the target island on the quest scroll in these missions</p>
-                    <p>Choose the right ship and add the appropriate amount of fuel</br> to deliver cargo to the target island and win the reward!</p>
-                    <p>At the end of the game, we will pay you the rewards you have earned from all the Reward Missions</p>
+                    <p>In this mission, select the correct ship and fuel it appropriately to deliver cargo to the target island for your reward!</p>
+                    <p>We will now give you a short guide on reward missions.</p>
                     <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
                 </div>
             </div>
@@ -131,34 +124,92 @@ var jsPsychRewardPrompt = (function (jspsych) {
       display_element.innerHTML = generateHTML();
 
       const end_trial = () => {
-        if (typeof keyboardListener !== "undefined") {
-          this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+        if (typeof lastKeyListener !== "undefined") {
+          this.jsPsych.pluginAPI.cancelKeyboardResponse(lastKeyListener);
         }
         var trial_data = {
-          rt: response.rt,
-          response: response.key,
+          rt: performance.now() - startTime,
           trialphase: "control_reward_prompt"
         };
         this.jsPsych.finishTrial(trial_data);
       };
 
-      var after_response = (info2) => {
-        if (response.key == null) {
-          response = info2;
-        }
-        end_trial();
-      };
+      // var lastKeyListener = this.jsPsych.pluginAPI.getKeyboardResponse({
+      //   callback_function: end_trial,
+      //   valid_responses: trial.choices,
+      //   rt_method: "performance",
+      //   persist: false,
+      //   allow_held_key: false
+      // });
+
+      // Change the instruction dialog text
+      const instructionContent = display_element.querySelector('.instruction-content');
 
       // Initial keyboard listener
       if (trial.choices != "NO_KEYS") {
-        var keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
-          callback_function: after_response,
+        this.jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: () => {
+            // Change the content
+            instructionContent.innerHTML = `
+              <p><span class="highlight-txt">Notice the quest scroll on the top right!</span> It shows the target and reward for this round.</p>
+              <p>Think about what you have seen and learned about the homebase of the ships.</p>
+              <p>Then, choose the ship that can reach the <strong>target island</strong> shown in the scroll.</p>
+              <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
+            `;
+            // Set up the next keyboard listener for the next screen
+            this.jsPsych.pluginAPI.getKeyboardResponse({
+              callback_function: () => {
+                // Show the currents and the drift island
+                document.querySelector('.island-near').style.visibility = 'visible';
+                document.querySelector('.island-far').style.visibility = 'visible';
+                document.querySelector('.ocean-current').style.visibility = 'visible';
+                // Change the content again
+                instructionContent.innerHTML = `
+                  <p><span class="highlight-txt">After choosing the ship, now you see the current strength and the drift island.</span></p>
+                  <p>Think about the fuel level required for each current strength and plan your effort accordingly.</p>
+                  <p>Then, press the same arrow key repeatedly to provide appropriate amount of fuel in <strong>3 seconds</strong>.</p>
+                  <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>`;
+                  // Set up next keyboard listener
+                  this.jsPsych.pluginAPI.getKeyboardResponse({
+                    callback_function: () => {
+                      // Change the content again
+                      instructionContent.innerHTML = `
+                      <p>To recap, during <strong>Reward Missions</strong>, you will:</p>
+                      <ul>
+                          <li>1. Select ships based on the target island</li>
+                          <li>2. Add fuel wisely and properly based on the current strength and the drift island</li>
+                          <li><strong>Successfully transport the cargo to the target and win the quest reward!</strong></li>
+                      </ul>
+                      <p>Now, press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to officially enter your first Reward Mission.</p>
+                      `;
+                      this.jsPsych.pluginAPI.getKeyboardResponse({
+                        callback_function: end_trial,
+                        valid_responses: trial.choices,
+                        rt_method: "performance",
+                        persist: false,
+                        allow_held_key: false
+                      })
+                    },
+                    valid_responses: trial.choices,
+                    rt_method: "performance",
+                    persist: false,
+                    allow_held_key: false
+                  })
+              },
+              valid_responses: trial.choices,
+              rt_method: "performance",
+              persist: false,
+              allow_held_key: false
+            });
+          },
           valid_responses: trial.choices,
           rt_method: "performance",
           persist: false,
           allow_held_key: false
         });
       }
+
+
     }
 
     generateOceanCurrentsHTML(level) {
@@ -190,7 +241,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
       });
       
       return `
-        <div class="ocean-current">
+        <div class="ocean-current" style="visibility: hidden;">
           <div class="current-group left-currents">
             ${leftTraces}
             ${leftLines}
