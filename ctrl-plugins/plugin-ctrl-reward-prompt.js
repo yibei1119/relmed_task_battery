@@ -149,18 +149,17 @@ var jsPsychRewardPrompt = (function (jspsych) {
         const pages = [
           {
             html: `
-              <p><span class="highlight-txt">Notice the quest scroll on the top right!</span> It shows the target and reward for this round.</p>
-              <p>Think about what you have seen and learned about the homebase of the ships.</p>
-              <p>Then, choose the ship that can reach the <strong>target island</strong> shown in the scroll.</p>
+              <p><span class="highlight-txt">Notice the quest scroll on the top right!</span> It shows the target island and reward for this mission.</p>
+              <p>Think about what you've learned about each ship's homebase - you need to select a ship that can reach the <strong>target island</strong> shown in the scroll.</p>
               <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
             `,
             showExtra: false
           },
           {
             html: `
-              <p><span class="highlight-txt">After choosing the ship, now you see the current strength and the drift island.</span></p>
-              <p>Think about the fuel level required for each current strength and plan your effort accordingly.</p>
-              <p>Then, press the same arrow key repeatedly to provide appropriate amount of fuel in <strong>3 seconds</strong>.</p>
+              <p><span class="highlight-txt">After having choosen your ship, note the current strength level and drift island shown.</span></p>
+              <p>Remember: stronger currents require more fuel to reach the target instead of drifting.</p>
+              <p>You'll have <strong>3 seconds</strong> to add fuel by rapidly pressing the same arrow key. Add enough fuel to reach the target island!</p>
               <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
             `,
             showExtra: true
@@ -169,11 +168,11 @@ var jsPsychRewardPrompt = (function (jspsych) {
             html: `
               <p>To recap, during <strong>Reward Missions</strong>, you will:</p>
               <ol style="list-style-position: inside; padding-left:0; margin-left: 0;">
-                  <li>Select ships based on the target island</li>
+                  <li>Select the ship whose homebase matches your target island</li>
                   <li>Add fuel wisely and properly based on the current strength and the drift island</li>
-                  <li><strong>Successfully transport the cargo to the target and win the quest reward!</strong></li>
+                  <li><strong>Successfully deliver cargo to the target island and earn your reward!</strong></li>
               </ol>
-              <p>Now, press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to <span class="highlight-txt">end this instruction and officially enter your first Reward Mission.</span></p>
+              <p>Now, press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to <span class="highlight-txt">begin your first Reward Mission.</span></p>
             `,
             showExtra: true
           }
