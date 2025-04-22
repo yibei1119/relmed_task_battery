@@ -110,10 +110,6 @@ var jsPsychRewardPrompt = (function (jspsych) {
             </section>
             <div class="instruction-dialog" style="bottom:20%; min-width: 600px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
-                    <h3>You're about to take your first <strong>Reward Mission</strong></h3>
-                    <p>In this mission, select the correct ship and fuel it appropriately to deliver cargo to the target island for your reward!</p>
-                    <p>We will now give you a short guide on reward missions.</p>
-                    <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
                 </div>
             </div>
           </main>
@@ -147,6 +143,15 @@ var jsPsychRewardPrompt = (function (jspsych) {
 
       if (trial.choices !== "NO_KEYS") {
         const pages = [
+          {
+            html: `
+              <h3>You're about to take your first <strong>Reward Mission</strong>!</h3>
+              <p>In this mission, select the correct ship and fuel it appropriately to deliver cargo to the target island and earn your reward!</p>
+              <p>We will now give you a short guide on how Reward Missions work.</p>
+              <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
+            `,
+            showExtra: false
+          },
           {
             html: `
               <p><span class="highlight-txt">Notice the quest scroll on the top right!</span> It shows the target island and reward for this mission.</p>
