@@ -22,7 +22,7 @@ const reversal_preload = {
         trialphase: "reversal_preload"
     },
     continue_after_error: true,
-    on_finish: () => {
+    on_start: () => {
         // Report to tests
         console.log("load_successful")
 

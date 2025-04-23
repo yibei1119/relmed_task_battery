@@ -35,7 +35,7 @@ const preload_vigour = {
   data: {
       trialphase: "preload_PILT"
   },
-  on_finish: () => {
+  on_start: () => {
 
       // Report to tests
       console.log("load_successful")
