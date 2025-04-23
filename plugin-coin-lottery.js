@@ -446,7 +446,7 @@ var jsPsychCoinLottery = (function(jspsych) {
             
             // Add text
             const prompt = document.createElement('div');
-            prompt.innerHTML = "<p>These are the coins you collected in the challenge.</p>\
+            prompt.innerHTML = "<p>This is a sample of the coins in your safe (with the same mix of coin types).</p>\
                 <p>Press this button to hide and shuffle them: </p>";
             prompt.className = "instructions";
             prompt.id = "prompt";
