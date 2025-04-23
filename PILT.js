@@ -359,50 +359,6 @@ const PILT_trial = (task) => {
     }
 }
 
-// Coin lottery trial
-const coin_lottery = {
-    type: jsPsychCoinLottery,
-    coins: () => {
-
-        // Get the updates safe
-        const updated_safe = updateSafeFrequencies();
-
-        // Compute the coin proportions
-        const coin_proportions = calculateProportions(updated_safe);
-
-        return createProportionalArray(coin_proportions, 35).sort()
-    },
-    props: () => {
-
-        // Get the updates safe
-        const updated_safe = updateSafeFrequencies();
-
-        // Compute the coin proportions
-        let raw_props = calculateProportions(updated_safe);
-
-        raw_props = [raw_props[0.01], raw_props[0.5], raw_props[1], raw_props["-0.01"], raw_props["-0.5"], raw_props["-1"]]
-
-        const prior = [0.1, 0.3, 0.5, 0.1 / 3, 0.1 / 3, 0.1 / 3];
-
-        // Take weighted average
-        const weight_data = 0.6;
-
-        let weightedSum = raw_props.map((value, index) => {
-            return (value * weight_data) + (prior[index] * (1 - weight_data));
-        });
-
-        // Normalize and return
-        let sum = weightedSum.reduce((acc, value) => acc + value, 0);
-        return weightedSum.map(value => value / sum);
-    },
-    on_finish: (data) => {
-        const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
-
-        postToParent({bonus: bonus});
-
-        updateState("coin_lottery_end");
-    }
-}
 
 // Build PILT task block
 function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {

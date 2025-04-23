@@ -404,11 +404,11 @@ const lottery_instructions = {
     type: jsPsychInstructions,
     css_classes: ['instructions'],
     pages: [
-        '<p>You have completed the card choosing game!</p>\
-            <p>Next, your bonus payment will be determined.</p>\
-            <p>On the next page, you will be presented with a representative sample of the conents \
-            your safe. After flipping the cards and shuffling, you will get to chose one card, and reveal the coin that will be paid to you as a bonus.</p>\
-            <p>If you select a broken coin, no bonus payment will be paid to you today.</p>'
+        `<p>You have almost completed this session!</p>
+            <p>Next, we will add to your bonus payment.</p>
+            <p>On the next page, you will be presented with a representative sample of the conents 
+            your safe. After flipping the cards and shuffling, you will get to chose ${window.context === "relmed" ? "four cards" : "one card"}, which will be added to your bonus.</p>
+            <p>Note that broken coins are worth £0.</p>`
     ],
     show_clickable_nav: true,
     data: {trialphase: "lottery_instructions"}

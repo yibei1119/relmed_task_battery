@@ -44,10 +44,17 @@ var jsPsychCoinLottery = (function(jspsych) {
                 default: undefined,
                 description: "Coin values to show"
             },
+            // Coins can be drawn within plugin according to the distribution defined by props
             props: {
                 type: jspsych.ParameterType.COMPLEX,
                 default: undefined,
                 description: "Proportions of coin values"
+            },
+            // Or the drawn coins can be fed in as a parameter
+            bonus_coins: {
+                type: jspsych.ParameterType.INT,
+                default: undefined,
+                description: "Actual coins to present"
             },
             values: {
                 type: jspsych.ParameterType.COMPLEX,
@@ -100,8 +107,12 @@ var jsPsychCoinLottery = (function(jspsych) {
                 throw new Error("The length of coins cannot be smaller than num_cards")
             }
 
-            if (trial.props.length !== trial.values.length){
+            if (trial.props.length > 0 && (trial.props.length !== trial.values.length)){
                 throw new Error("Lengths of props and values don't match.")
+            }
+
+            if (trial.props.length === 0 && trial.bonus_coins.length === 0) {
+                throw new Error("Either props or bonus_coins must be provided.")
             }
             
             // Placeholder for choices
@@ -290,23 +301,33 @@ var jsPsychCoinLottery = (function(jspsych) {
                 data.choices.push(choice);
                 data.rts.push(rt);
 
-                // Call after_last_response if last response
-                if (data.choices.length >= trial.n_flips){
-                    after_last_response(data);
-                }
-
                 // Add coin
-                var draw = sampleCategorical(trial.props);
+                let draw;
+                if (trial.props.length > 0) {
+                    draw = trial.values[sampleCategorical(trial.props)];
+                }
+                else {
+                    // Find out index of coin to present
+                    const click_index = data.outcomes.length;
+
+                    // Get coin
+                    draw = trial.bonus_coins[click_index];
+                }
                 console.log(draw);
                 
                 const coin = document.createElement('img');
                 coin.className = 'coin';
-                coin.src = "imgs/" + coin_names[trial.values[draw]] + ".png"
+                coin.src = "imgs/" + coin_names[draw] + ".png"
 
                 rect.children[0].appendChild(coin);
 
                 // Save drawn outcome to data
-                data.outcomes.push(trial.values[draw]);
+                data.outcomes.push(draw);
+
+                // Call after_last_response if last response
+                if (data.choices.length >= trial.n_flips){
+                    after_last_response(data);
+                }
 
                 // Flip
                 rect.classList.toggle('flipped');
@@ -338,7 +359,9 @@ var jsPsychCoinLottery = (function(jspsych) {
                 });
 
                 // Change message
-                var prompt_txt = trial.n_flips > 1 ? "<p>The coins above" : "<p>This coin" + ` will be added to your bonus payment.</p>`
+                // Calculate bonus, treating negative values as 0
+                const bonus = data.outcomes.reduce((sum, val) => sum + (val > 0 ? val : 0), 0);
+                var prompt_txt = `<p>You get £${bonus.toFixed(2)} extra!</p>`
 
                 if (data.outcomes.some(item => item < 0)){
                     prompt_txt += "<p>(Broken coins are worth £0)</p>"
@@ -350,7 +373,7 @@ var jsPsychCoinLottery = (function(jspsych) {
                 const endButton = document.createElement('button');
                 endButton.innerHTML = 'Continue';
                 endButton.onclick = end_trial;
-                prompt.children[1].appendChild(endButton);
+                prompt.appendChild(endButton);
             }
 
             // End trial function
@@ -397,8 +420,6 @@ var jsPsychCoinLottery = (function(jspsych) {
                 }
                 prompt.innerHTML = msg;
 
-                // Remove flip button
-                prompt.children[1].removeChild(flipButton);
             }
 
             // Sample from categorical distribution
@@ -425,7 +446,7 @@ var jsPsychCoinLottery = (function(jspsych) {
             
             // Add text
             const prompt = document.createElement('div');
-            prompt.innerHTML = "<p>These are the coins you collected in the challenge.</p>\
+            prompt.innerHTML = "<p>This is a sample of the coins in your safe (with the same mix of coin types).</p>\
                 <p>Press this button to hide and shuffle them: </p>";
             prompt.className = "instructions";
             prompt.id = "prompt";
