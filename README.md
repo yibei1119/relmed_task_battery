@@ -40,12 +40,12 @@ Data is written to REDCap via a call to an AWS lamda function.
 | Session | Task | Chromium | Firefox | WebKit |
 |---------|------|----------|---------|--------|
 | screening | screening | ✅ Success | ✅ Success | ✅ Success |
-| wk0 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
+| wk0 | pilt-to-test | ✅ Success | ❌ Failed | ✅ Success |
 | wk0 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | reversal | ✅ Success | ✅ Success | ✅ Success |
+| wk2 | reversal | ❌ Failed | ✅ Success | ✅ Success |
 | wk2 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
