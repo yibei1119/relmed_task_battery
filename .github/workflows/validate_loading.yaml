@@ -19,6 +19,9 @@ jobs:
         run: npm install
 
       - name: Run Playwright tests
+        # Set HOME to /root for Firefox to work properly
+        env:
+          HOME: /root
         run: npx playwright test validation/playwright || true # Continue even if error
       
       - name: Generate README Update
