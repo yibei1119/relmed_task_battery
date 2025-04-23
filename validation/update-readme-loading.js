@@ -13,10 +13,12 @@ if (!fs.existsSync(resultsFile)) {
 const results = JSON.parse(fs.readFileSync(resultsFile, "utf8"));
 
 // Format results into a Markdown table
-let resultTable = "| Session | Task | Status |\n|---------|------|--------|\n";
-results.forEach(({ session, task, passed }) => {
-    const status = passed ? "✅ Success" : "❌ Failed";
-    resultTable += `| ${session} | ${task} | ${status} |\n`;
+let resultTable = "| Session | Task | Chromium | Firefox | WebKit |\n|---------|------|----------|---------|--------|\n";
+results.forEach(({ session, task, chromium, webkit, firefox }) => {
+    const chromiumStatus = chromium ? "✅ Success" : "❌ Failed";
+    const firefoxStatus = firefox ? "✅ Success" : "❌ Failed";
+    const webkitStatus = webkit ? "✅ Success" : "❌ Failed";
+    resultTable += `| ${session} | ${task} | ${chromiumStatus} | ${firefoxStatus} | ${webkitStatus} |\n`;
 });
 
 // Read current README
