@@ -44,10 +44,17 @@ var jsPsychCoinLottery = (function(jspsych) {
                 default: undefined,
                 description: "Coin values to show"
             },
+            // Coins can be drawn within plugin according to the distribution defined by props
             props: {
                 type: jspsych.ParameterType.COMPLEX,
                 default: undefined,
                 description: "Proportions of coin values"
+            },
+            // Or the drawn coins can be fed in as a parameter
+            bonus_coins: {
+                type: jspsych.ParameterType.INT,
+                default: undefined,
+                description: "Actual coins to present"
             },
             values: {
                 type: jspsych.ParameterType.COMPLEX,
@@ -100,8 +107,12 @@ var jsPsychCoinLottery = (function(jspsych) {
                 throw new Error("The length of coins cannot be smaller than num_cards")
             }
 
-            if (trial.props.length !== trial.values.length){
+            if (trial.props && (trial.props.length !== trial.values.length)){
                 throw new Error("Lengths of props and values don't match.")
+            }
+
+            if (!trial.props && !trial.bonus_coins) {
+                throw new Error("Either props or bonus_coins must be provided.")
             }
             
             // Placeholder for choices
@@ -296,17 +307,27 @@ var jsPsychCoinLottery = (function(jspsych) {
                 }
 
                 // Add coin
-                var draw = sampleCategorical(trial.props);
+                let draw;
+                if (trial.props) {
+                    draw = trial.values[sampleCategorical(trial.props)];
+                }
+                else {
+                    // Find out index of coin to present
+                    const click_index = data.outcomes.length;
+
+                    // Get coin
+                    draw = trial.bonus_coins[click_index];
+                }
                 console.log(draw);
                 
                 const coin = document.createElement('img');
                 coin.className = 'coin';
-                coin.src = "imgs/" + coin_names[trial.values[draw]] + ".png"
+                coin.src = "imgs/" + coin_names[draw] + ".png"
 
                 rect.children[0].appendChild(coin);
 
                 // Save drawn outcome to data
-                data.outcomes.push(trial.values[draw]);
+                data.outcomes.push(draw);
 
                 // Flip
                 rect.classList.toggle('flipped');
