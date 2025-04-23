@@ -42,6 +42,7 @@ const coin_lottery = {
     coins: getCoins,
     props: window.context === "relmed" ? [] : getCoinProportions,
     bonus_coins: window.context === "relmed" ? relmedSafeBonus : [],
+    n_flips: window.context === "relmed" ? 4 : 1,
     on_finish: (data) => {
         const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
     
