@@ -36,7 +36,7 @@ const coin_lottery = {
 
         return createProportionalArray(coin_proportions, 35).sort()
     },
-    props: ,
+    props: getCoinProportions,
     on_finish: (data) => {
         const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
 
