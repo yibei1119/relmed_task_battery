@@ -29,7 +29,7 @@ const controlPreload = {
   data: {
     trialphase: "control_preload"
   },
-  on_finish: () => {
+  on_start: () => {
     // Report to tests
     console.log("load_successful")
 

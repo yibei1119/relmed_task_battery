@@ -21,7 +21,7 @@ const preload_PILT = {
     data: {
         trialphase: "preload_PILT"
     },
-    on_finish: () => {
+    on_start: () => {
 
         // Report to tests
         console.log("load_successful")
@@ -43,7 +43,7 @@ const preload_wm_ltm = {
     data: {
         trialphase: "preload_WM_LTM"
     },
-    on_finish: () => {
+    on_start: () => {
 
         // Report to tests
         console.log("load_successful")
