@@ -301,11 +301,6 @@ var jsPsychCoinLottery = (function(jspsych) {
                 data.choices.push(choice);
                 data.rts.push(rt);
 
-                // Call after_last_response if last response
-                if (data.choices.length >= trial.n_flips){
-                    after_last_response(data);
-                }
-
                 // Add coin
                 let draw;
                 if (trial.props.length > 0) {
@@ -328,6 +323,11 @@ var jsPsychCoinLottery = (function(jspsych) {
 
                 // Save drawn outcome to data
                 data.outcomes.push(draw);
+
+                // Call after_last_response if last response
+                if (data.choices.length >= trial.n_flips){
+                    after_last_response(data);
+                }
 
                 // Flip
                 rect.classList.toggle('flipped');
@@ -359,7 +359,9 @@ var jsPsychCoinLottery = (function(jspsych) {
                 });
 
                 // Change message
-                var prompt_txt = trial.n_flips > 1 ? "<p>The coins above" : "<p>This coin" + ` will be added to your bonus payment.</p>`
+                // Calculate bonus, treating negative values as 0
+                const bonus = data.outcomes.reduce((sum, val) => sum + (val > 0 ? val : 0), 0);
+                var prompt_txt = `<p>You get £${bonus.toFixed(2)} extra!</p>`
 
                 if (data.outcomes.some(item => item < 0)){
                     prompt_txt += "<p>(Broken coins are worth £0)</p>"
@@ -371,7 +373,7 @@ var jsPsychCoinLottery = (function(jspsych) {
                 const endButton = document.createElement('button');
                 endButton.innerHTML = 'Continue';
                 endButton.onclick = end_trial;
-                prompt.children[1].appendChild(endButton);
+                prompt.appendChild(endButton);
             }
 
             // End trial function
@@ -418,8 +420,6 @@ var jsPsychCoinLottery = (function(jspsych) {
                 }
                 prompt.innerHTML = msg;
 
-                // Remove flip button
-                prompt.children[1].removeChild(flipButton);
             }
 
             // Sample from categorical distribution
