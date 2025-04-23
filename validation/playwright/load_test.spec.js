@@ -2,12 +2,11 @@ const { test, expect } = require('@playwright/test');
 const fs = require('fs');
 const url = require('url');
 
+const BASE_URL = "https://huyslab.github.io/relmed_trial1/experiment.html?RELMED_PID=test";
 
-const BASE_URL = "https://huyslab.github.io/relmed_trial1/experiment.html?RELMED_PID=test";  // Update with your URL
-
-const task_sessions = ["wk0", "wk2", "wk4", "wk24", "wk28"]
-const quest_sessions = ["wk6", "wk8", "wk52"]
-const task_tasks = ["pilt-to-test", "reversal", 'control', "wm"]
+const task_sessions = ["wk0", "wk2", "wk4", "wk24", "wk28"];
+const quest_sessions = ["wk6", "wk8", "wk52"];
+const task_tasks = ["pilt-to-test", "reversal", 'control', "wm"];
 
 const PARAMS = [
     "&session=screening&task=screening",
@@ -19,42 +18,76 @@ const PARAMS = [
     quest_sessions.map(s => `&session=${s}&task=quests`)
 );
 
-let results = [];
+// Define browsers to test with
+const browsers = ['chromium', 'firefox', 'webkit'];
 
-test.describe("Website Load Test", () => {
-    for (const param of PARAMS) {
-        test(`Loading ${BASE_URL}${param}`, async ({ page }) => {
-            let messageReceived = false;
+// Initialize combined results array
+let combinedResults = [];
 
-            // Navigate to the page with the URL parameter
-            const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 5000 });
+// Initialize results array
+for (const param of PARAMS) {
+    const params = new URLSearchParams(param);
+    const session = params.get("session") || "N/A";
+    const task = params.get("task") || "N/A";
+    combinedResults.push({
+        session,
+        task,
+        chromium: null,
+        firefox: null,
+        webkit: null
+    });
+}
 
-            let passed = response.ok();
-            if (passed) {
-                const messagePromise = new Promise(resolve => {
-                    page.on('console', msg => {
-                        if (msg.text().includes("load_successful")) {
-                            resolve(true);
-                        }
-                    });
-                });
+// Save the results function
+function saveResults() {
+    fs.writeFileSync('loading-test-results.json', JSON.stringify(combinedResults, null, 2));
+}
 
-                const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(false), 3000));
+// Initialize empty file
+saveResults();
 
-                passed = await Promise.race([messagePromise, timeoutPromise]);
-            }
-
-            // Extract parameters from the URL
+for (const browserType of browsers) {
+    // Create a test fixture for this browser type at the top level
+    const browserTest = test.extend({ browserName: browserType });
+    
+    browserTest.describe(`Website Load Test in ${browserType}`, () => {
+        for (let i = 0; i < PARAMS.length; i++) {
+            const param = PARAMS[i];
             const params = new URLSearchParams(param);
             const session = params.get("session") || "N/A";
             const task = params.get("task") || "N/A";
+            
+            browserTest(`Loading ${session}/${task} in ${browserType}`, async ({ page }) => {
+                // Navigate to the page with the URL parameter
+                const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 5000 });
 
-            results.push({ session, task, passed });
+                let passed = response.ok();
+                if (passed) {
+                    const messagePromise = new Promise(resolve => {
+                        page.on('console', msg => {
+                            if (msg.text().includes("load_successful")) {
+                                resolve(true);
+                            }
+                        });
+                    });
 
-            // Save results after each test
-            fs.writeFileSync("loading-test-results.json", JSON.stringify(results, null, 2));
+                    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(false), 3000));
 
-            expect(passed).toBeTruthy();
-        });
-    }
-});
+                    passed = await Promise.race([messagePromise, timeoutPromise]);
+                }
+
+                // Update the combined results
+                const resultIndex = combinedResults.findIndex(
+                    item => item.session === session && item.task === task
+                );
+                
+                if (resultIndex !== -1) {
+                    combinedResults[resultIndex][browserType] = passed;
+                    saveResults();
+                }
+
+                expect(passed).toBeTruthy();
+            });
+        }
+    });
+}
