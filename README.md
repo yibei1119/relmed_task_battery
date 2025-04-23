@@ -39,34 +39,34 @@ Data is written to REDCap via a call to an AWS lamda function.
 
 | Session | Task | Status |
 |---------|------|--------|
-| screening | screening | ✅ Success |
-| wk0 | pilt-to-test | ✅ Success |
-| wk0 | reversal | ✅ Success |
-| wk0 | control | ✅ Success |
-| wk0 | wm | ✅ Success |
-| wk2 | pilt-to-test | ✅ Success |
-| wk2 | reversal | ✅ Success |
-| wk2 | control | ✅ Success |
-| wk2 | wm | ✅ Success |
-| wk4 | pilt-to-test | ✅ Success |
-| wk4 | reversal | ✅ Success |
-| wk4 | control | ✅ Success |
-| wk4 | wm | ✅ Success |
-| wk24 | pilt-to-test | ✅ Success |
-| wk24 | reversal | ✅ Success |
-| wk24 | control | ✅ Success |
-| wk24 | wm | ✅ Success |
-| wk28 | pilt-to-test | ✅ Success |
-| wk28 | reversal | ✅ Success |
-| wk28 | control | ✅ Success |
-| wk28 | wm | ✅ Success |
-| wk0 | quests | ✅ Success |
-| wk2 | quests | ✅ Success |
-| wk4 | quests | ✅ Success |
-| wk24 | quests | ✅ Success |
-| wk28 | quests | ✅ Success |
-| wk6 | quests | ✅ Success |
-| wk8 | quests | ✅ Success |
-| wk52 | quests | ✅ Success |
+| screening | screening | ❌ Failed |
+| wk0 | pilt-to-test | ❌ Failed |
+| wk0 | reversal | ❌ Failed |
+| wk0 | control | ❌ Failed |
+| wk0 | wm | ❌ Failed |
+| wk2 | pilt-to-test | ❌ Failed |
+| wk2 | reversal | ❌ Failed |
+| wk2 | control | ❌ Failed |
+| wk2 | wm | ❌ Failed |
+| wk4 | pilt-to-test | ❌ Failed |
+| wk4 | reversal | ❌ Failed |
+| wk4 | control | ❌ Failed |
+| wk4 | wm | ❌ Failed |
+| wk24 | pilt-to-test | ❌ Failed |
+| wk24 | reversal | ❌ Failed |
+| wk24 | control | ❌ Failed |
+| wk24 | wm | ❌ Failed |
+| wk28 | pilt-to-test | ❌ Failed |
+| wk28 | reversal | ❌ Failed |
+| wk28 | control | ❌ Failed |
+| wk28 | wm | ❌ Failed |
+| wk0 | quests | ❌ Failed |
+| wk2 | quests | ❌ Failed |
+| wk4 | quests | ❌ Failed |
+| wk24 | quests | ❌ Failed |
+| wk28 | quests | ❌ Failed |
+| wk6 | quests | ❌ Failed |
+| wk8 | quests | ❌ Failed |
+| wk52 | quests | ❌ Failed |
 
 <!-- LOADING-TEST-RESULTS -->
