@@ -308,7 +308,7 @@ var jsPsychCoinLottery = (function(jspsych) {
 
                 // Add coin
                 let draw;
-                if (trial.props) {
+                if (trial.props.length > 0) {
                     draw = trial.values[sampleCategorical(trial.props)];
                 }
                 else {
