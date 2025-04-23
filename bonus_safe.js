@@ -1,4 +1,4 @@
-// Get proportions of coins in safe
+// Get the proportion of coins in safe, reweighted by a generous prior
 const getCoinProportions = () => {
 
     // Get the updates safe
@@ -23,26 +23,40 @@ const getCoinProportions = () => {
     return weightedSum.map(value => value / sum);
 }
 
+// Get the list of coins in the safe
+const getCoins = () => {
+
+    // Get the updates safe
+    const updated_safe = updateSafeFrequencies();
+
+    // Compute the coin proportions
+    const coin_proportions = calculateProportions(updated_safe);
+
+    return createProportionalArray(coin_proportions, 35).sort()
+};
+
+
 // Coin lottery trial
-const coin_lottery = {
-    type: jsPsychCoinLottery,
-    coins: () => {
+let coin_lottery;
 
-        // Get the updates safe
-        const updated_safe = updateSafeFrequencies();
-
-        // Compute the coin proportions
-        const coin_proportions = calculateProportions(updated_safe);
-
-        return createProportionalArray(coin_proportions, 35).sort()
-    },
-    props: getCoinProportions,
-    on_finish: (data) => {
-        const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
-
-        postToParent({bonus: bonus});
-
-        updateState("coin_lottery_end");
+if (window.context === "relmed") {
+    coin_lottery = {
+        type: jsPsychCoinLottery,
+        coins: getCoins,
+        bonus_coins: relmedSafeBonus,
+        on_finish: (data) => {
+            const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
+        
+            postToParent({bonus: bonus});
+        
+            updateState("coin_lottery_end");
+        }
+    };
+} else {
+    coin_lottery = {
+        type: jsPsychCoinLottery,
+        coins: getCoins,
+        props: getCoinProportions
     }
 }
 
