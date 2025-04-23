@@ -1,3 +1,9 @@
+// Placeholder for jsPsychCoinLottery
+global.jsPsychCoinLottery = {}; 
+global.window = {
+    context : "relmed"
+}; // Mock window context
+
 const {
     getCoinProportions,
     findCoinCombinations,
@@ -5,7 +11,8 @@ const {
     convertToLogProbabilities,
     drawCombinationFromDistribution,
     relmedSafeBonus
-} = require('./bonus_safe');
+} = require('../../bonus_safe');
+
 
 describe('bonus_safe.js Tests', () => {
     test('getCoinProportions should return normalized proportions', () => {

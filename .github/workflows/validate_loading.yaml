@@ -19,7 +19,7 @@ jobs:
         run: npm install
 
       - name: Run Playwright tests
-        run: npx playwright test || true # Continue even if error
+        run: npx playwright test validation/playwright || true # Continue even if error
       
       - name: Generate README Update
         run: node validation/update-readme-loading.js
