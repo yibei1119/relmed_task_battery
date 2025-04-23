@@ -107,11 +107,11 @@ var jsPsychCoinLottery = (function(jspsych) {
                 throw new Error("The length of coins cannot be smaller than num_cards")
             }
 
-            if (trial.props && (trial.props.length !== trial.values.length)){
+            if (trial.props.length > 0 && (trial.props.length !== trial.values.length)){
                 throw new Error("Lengths of props and values don't match.")
             }
 
-            if (!trial.props && !trial.bonus_coins) {
+            if (trial.props.length === 0 && trial.bonus_coins.length === 0) {
                 throw new Error("Either props or bonus_coins must be provided.")
             }
             

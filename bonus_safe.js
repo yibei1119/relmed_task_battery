@@ -37,26 +37,17 @@ const getCoins = () => {
 
 
 // Coin lottery trial
-let coin_lottery;
-
-if (window.context === "relmed") {
-    coin_lottery = {
-        type: jsPsychCoinLottery,
-        coins: getCoins,
-        bonus_coins: relmedSafeBonus,
-        on_finish: (data) => {
-            const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
-        
-            postToParent({bonus: bonus});
-        
-            updateState("coin_lottery_end");
-        }
-    };
-} else {
-    coin_lottery = {
-        type: jsPsychCoinLottery,
-        coins: getCoins,
-        props: getCoinProportions
+const coin_lottery = {
+    type: jsPsychCoinLottery,
+    coins: getCoins,
+    props: window.context === "relmed" ? [] : getCoinProportions,
+    bonus_coins: window.context === "relmed" ? relmedSafeBonus : [],
+    on_finish: (data) => {
+        const bonus = data.outcomes.reduce((acc, num) => acc + num, 0);
+    
+        postToParent({bonus: bonus});
+    
+        updateState("coin_lottery_end");
     }
 }
 
@@ -172,11 +163,11 @@ function relmedSafeBonus(numCoins = 4, range = [2, 3]) {
     const logProbabilities = convertToLogProbabilities(coinProportions);
 
     // Find all possible combinations of coins that sum within the range and shuffle them
-    const all_cobms = jsPsych.shuffle(findCoinCombinations(Object.keys(coinProportions).map(Number), numCoins, range));
+    const all_cobms = jsPsych.randomization.shuffle(findCoinCombinations(Object.keys(coinProportions).map(Number), numCoins, range));
 
     // Draw a combination from the distribution based on the log probabilities
     const drawnCombination = drawCombinationFromDistribution(all_cobms, logProbabilities);
 
     // Shuffle the drawn combination and return it
-    return jsPsych.shuffle(drawnCombination);
+    return jsPsych.randomization.shuffle(drawnCombination);
 }
