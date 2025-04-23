@@ -170,6 +170,7 @@ function postToParent(message, fallback = () => {}) {
             // Send message to localhost and relmed.ac.uk
             window.parent.postMessage(message, 'http://localhost:3000');
             window.parent.postMessage(message, 'https://relmed.ac.uk');
+            window.parent.postMessage(message, 'https://www.relmed.ac.uk');
         } else {
             throw new Error("Parent window or postMessage is unavailable.");
         }
