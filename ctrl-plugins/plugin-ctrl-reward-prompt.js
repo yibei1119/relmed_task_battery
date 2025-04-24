@@ -177,6 +177,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
                   <li>Add fuel wisely and properly based on the current strength and the drift island</li>
                   <li><strong>Successfully deliver cargo to the target island and earn your reward!</strong></li>
               </ol>
+              <p>At the end of the game, we will pay you a proportion of the total amount of rewards you earn.</p>
               <p>Now, press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to <span class="highlight-txt">begin your first Reward Mission.</span></p>
             `,
             showExtra: true
