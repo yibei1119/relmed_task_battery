@@ -3,7 +3,7 @@ var jsPsychRewardShip = (function (jspsych) {
 
   const info = {
     name: "reward-ship",
-    version: "1.0.0",
+    version: "1.1.0",
     parameters: {
       target: {
         type: jspsych.ParameterType.STRING,
@@ -414,6 +414,9 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       },
       correct: {
         type: jspsych.ParameterType.BOOL
+      },
+      reward: {
+        type: jspsych.ParameterType.FLOAT
       }
     }
   };
@@ -461,6 +464,8 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         : this.controlRule[chosenColor];
 
       const correct = trial.target_island === destinationIsland;
+      const reward = correct ? this.jsPsych.evaluateTimelineVariable('reward_number') : 0;
+      
       const msg = correct 
         ? `<p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p><p>You have won <strong>${reward_amount}</strong> for this round of mission!</p>`
         : `<p>Sorry!</p><p>The cargo has been transported to the wrong island.<br>But don't worry, maybe next time.</p>`;
@@ -487,7 +492,8 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         trialphase: "control_reward_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
-        correct: correct
+        correct: correct,
+        reward: reward
       };
 
       this.jsPsych.pluginAPI.setTimeout(() => {
@@ -527,11 +533,14 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         : this.controlRule[chosenColor];
 
       const correct = trial.target_island === destinationIsland;
+      const reward = correct ? this.jsPsych.evaluateTimelineVariable('reward_number') : 0;
+
       const default_data = {
         trialphase: "control_reward_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
-        correct: correct
+        correct: correct,
+        reward: reward
       };
       
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
