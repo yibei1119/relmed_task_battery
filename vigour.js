@@ -230,6 +230,8 @@ function generateTrialStimulus(magnitude, ratio) {
 
 // Box shaking trial
 let vigourTrialCounter = 0;
+let fsChangeHandler = null;
+
 const piggyBankTrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
@@ -307,10 +309,21 @@ const piggyBankTrial = {
     });
   },
   on_load: function () {
-    updatePiggyTails(jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio'));
+    const currentMag = jsPsych.evaluateTimelineVariable('magnitude');
+    const currentRatio = jsPsych.evaluateTimelineVariable('ratio');
+    updatePiggyTails(currentMag, currentRatio);
     // console.log([jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio')]);
     updatePersistentCoinContainer(); // Update the persistent coin container
     observeResizing('coin-container', updatePersistentCoinContainer);
+
+    // Add fullscreen change listener to re-update piggy tails
+    fsChangeHandler = () => {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        updatePiggyTails(currentMag, currentRatio);
+      }
+    };
+    document.addEventListener('fullscreenchange', fsChangeHandler);
+    document.addEventListener('webkitfullscreenchange', fsChangeHandler);
   },
   on_finish: function (data) {
     // Clean up listener
@@ -320,6 +333,11 @@ const piggyBankTrial = {
     if (vigourTrialCounter % (vigourTrials.length / 3) == 0 || vigourTrialCounter == vigourTrials.length) {
       saveDataREDCap(retry = 3);
       updateVigourBonus();
+    }
+    if (fsChangeHandler) {
+      document.removeEventListener('fullscreenchange', fsChangeHandler);
+      document.removeEventListener('webkitfullscreenchange', fsChangeHandler);
+      fsChangeHandler = null;
     }
 
     // No response
