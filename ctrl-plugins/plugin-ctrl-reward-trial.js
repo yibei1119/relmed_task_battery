@@ -467,8 +467,8 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const reward = correct ? this.jsPsych.evaluateTimelineVariable('reward_number') : 0;
       
       const msg = correct 
-        ? `<p>🎉Congratulations!</p><p>You successfully transport the cargo to the target island.</p><p>You have won <strong>${reward_amount}</strong> for this round of mission!</p>`
-        : `<p>Sorry!</p><p>The cargo has been transported to the wrong island.<br>But don't worry, maybe next time.</p>`;
+        ? `<p>🎉Congratulations!</p><p>You successfully reach the target island.</p><p>You have won <strong>${reward_amount}</strong>!</p>`
+        : `<p>❌Sorry!</p><p>The ship didn't reach the target island.<br>But don't worry, maybe next time.</p>`;
 
       // Generate feedback display
       const html = `
