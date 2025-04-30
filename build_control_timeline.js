@@ -3,6 +3,7 @@ const controlPreload = {
   images: [
     "ocean.png",
     "ocean_above.png",
+    "simple_island.png",
     "simple_island_banana.png",
     "simple_island_coconut.png",
     "simple_island_grape.png",
