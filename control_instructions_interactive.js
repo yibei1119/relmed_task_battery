@@ -846,7 +846,7 @@ controlIntroComprehension.push(
 // Add looping functionality to the instruction trial
 const controlInstructions = {
     timeline: [
-        // controlInstructionTrial, 
+        controlInstructionTrial, 
         controlInstructionTestTrials, 
         controlInstructionLastPage
     ],
