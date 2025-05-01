@@ -704,7 +704,7 @@ const controlInstructionLastPage = {
     allow_keys: false,
     show_clickable_nav: true,
     show_page_number: false,
-    data: {trialphase: "control_instruction_prediction"},
+    data: {trialphase: "control_instructions"},
     simulation_options: {simulate: false},
     on_load: function() {
         const navigationElement = document.querySelector('.jspsych-instructions-nav');
@@ -869,9 +869,9 @@ const controlComprehensionLoop = {
 const controlInstructionsLoop = {
     timeline: [controlInstructions, controlComprehensionLoop],
     loop_function: () => {
+        const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
         const restart = jsPsych.data.get().filter({trialphase: "control_instruction_quiz_failure"}).last(1).select('restart').values[0];
-
-        return restart;
+        return !Object.values(data).every(value => value === "True") && restart;
     }
 };
 
