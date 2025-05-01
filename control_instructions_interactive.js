@@ -390,7 +390,7 @@ const controlInstructionPages = [
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, so with enough fuel, this ${rightShip} ship can overcome the ocean current to reach its home fruit island - ${CONTROL_CONFIG.controlRule[rightShip]} island.</p>
+                <p>Great, so with enough fuel, this ${rightShip} ship can overcome the ocean currents to reach its home fruit island - ${CONTROL_CONFIG.controlRule[rightShip]} island.</p>
                 `)}
             ${createProgressBar(5, nPages)}
         </div>
@@ -501,7 +501,7 @@ const controlInstructionPages = [
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             ${createOceanCurrents(1)}
             <div class="current-indicator">
-                <div class="label"><strong>Low current</strong>:<br> Only a little fuel needed</div>
+                <div class="label"><strong>Weak current</strong>:<br> Only a little fuel needed</div>
             </div>
             ${createInstructionDialog(`
                 <p>One line means the currents are weak. You don't have to put a lot of effort into fuelling up the ship.</p>
@@ -570,7 +570,7 @@ controlInstructionTrial = {
                 progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
                 // Finish trial when the fuel bar reaches 100% width.
                 finishCondition: (trialPresses, progress) => progress >= 75,
-                finishMessage: `<p>Now the fuel is sufficient for this ship, and it's about to leave now!</p>`
+                finishMessage: `<p>Now the fuel is sufficient for this ship, and it's leaving now!</p>`
             });
         }
 
@@ -627,7 +627,7 @@ controlInstructionTrial = {
                 progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
                 // Finish trial when 5 fuel presses have been recorded.
                 finishCondition: (trialPresses, progress) => trialPresses >= 5,
-                finishMessage: `<p>Fueling time is limited. The ship has to leave now!</p>`
+                finishMessage: `<p>Fueling time is limited. The ship has gone now!</p>`
             });
         }
 
@@ -695,6 +695,8 @@ const controlInstructionLastPage = {
                     <div class="instruction-content" style="font-size: 1.2em; text-align: center;">
                         <p>😊 Well done! You've completed the instructions and are ready to start.</p>
                         <p>First <strong>learning</strong> period will begin soon.</p>
+                        <p>Before you start playing, you'll answer a few questions about the instructions you just read.</p>
+                        <p>You must answer all questions correctly to begin the game.</p>
                         <p>Press <span class="spacebar-icon">Next</span> to continue or <span class="spacebar-icon">Restart</span> to review these instructions again.</p>
                     </div>
                 </div>
@@ -722,8 +724,8 @@ const controlInstructionLastPage = {
 };
 
 // Prediction trial
-let controlInstructionTestTrials = [];
-controlInstructionTestTrials.push({
+let controlInstructionPredTrials = [];
+controlInstructionPredTrials.push({
     type: jsPsychPredictHomeBase,
     ship: "blue",
     predict_decision: null,
@@ -801,6 +803,70 @@ controlIntroComprehension.push({
     }
 });
 
+const controlQuizExplanation = [
+    {
+        prompt: "During <strong>learning</strong> periods, I need to learn about the home fruit island for each ship and how much to fuel for different current strengths.",
+        explanation: "Learning the home fruit island for each ship and the fuel to overcome different current strengths is the main goal during learning periods."
+    },
+    {
+        prompt: "When a ship doesn't have enough fuel, it will drift to the island at the top of the screen following ocean currents.",
+        explanation: "Ships that are not fueled enough to overcome the currents will drift to the island at the top of the screen."
+    },
+    {
+        prompt: "The amount of fuel needed to reach a ship's home fruit island depends on the ocean current strength.",
+        explanation: "Stronger currents (indicated by more lines) require more fuel to reach the home fruit island."
+    },
+    {
+        prompt: `The ${rightShip} ship has ${CONTROL_CONFIG.controlRule[rightShip]} island as its home fruit island.`,
+        explanation: `The ${rightShip} ship's home fruit island in this game is ${CONTROL_CONFIG.controlRule[rightShip]}.`
+    }
+]
+
+
+
+controlIntroComprehension.push(
+    {   
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        allow_keys: false,
+        show_page_number: false,
+        show_clickable_nav: true,
+        simulation_options: {simulate: false},
+        data: {
+            trialphase: "control_instruction_quiz_review"
+        },
+        timeline: [
+            {
+                pages: [
+                `
+                <p>You did not answer all the quiz questions correctly.</p>
+                <p>Press <span class="spacebar-icon">Next</span> to review the questions answered wrong.</p>
+                `
+                ]
+            },
+            {
+                pages: () => {
+                    const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
+                    console.log(data);
+                    return controlQuizExplanation.filter((item, index) => {
+                        return Object.values(data)[index] !== "True";
+                    }).map(item => `
+                        <p>You've answered wrong for the following question:</p>
+                        <h3 style="color: darkred;">Question: ${item.prompt}</h3>
+                        <p><strong>Your answer:</strong> False</p>
+                        <p><strong>Explanation:</strong> ${item.explanation}</p>
+                    `);
+                }
+            }
+        ],
+        conditional_function: () => {
+            const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
+            console.log(data);
+            return !Object.values(data).every(value => value === "True");
+        }
+    }
+)
+
 controlIntroComprehension.push(
     {   
         type: jsPsychInstructions,
@@ -816,8 +882,8 @@ controlIntroComprehension.push(
             {
                 pages: [
                 `
-                <p>You did not answer all the quiz questions correctly.</p>
-                <p>Press <span class="spacebar-icon">Next</span> to re-take the questions</br>or</br><span class="spacebar-icon">Restart</span> to review the full instructions again.</p>
+                <p>Press <span class="spacebar-icon">Next</span> to re-take the quiz questions</p>
+                <p>or <span class="spacebar-icon">Restart</span> to review the full instructions again.</p>
                 `
                 ]
             }
@@ -847,7 +913,7 @@ controlIntroComprehension.push(
 const controlInstructions = {
     timeline: [
         controlInstructionTrial, 
-        controlInstructionTestTrials, 
+        controlInstructionPredTrials, 
         controlInstructionLastPage
     ],
     loop_function: () => {
