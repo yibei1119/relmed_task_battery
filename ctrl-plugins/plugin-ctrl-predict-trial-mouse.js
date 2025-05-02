@@ -3,7 +3,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
 
   const info = {
     name: "predict-home-base",
-    version: "1.0.0",
+    version: "1.0.1",
     parameters: {
       ship: {
         type: jspsych.ParameterType.STRING,
@@ -77,7 +77,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
           <section class="scene">
             <div class="overlap-group">
               <div class="choice-left">
-                <img class="island-near" src="imgs/simple_island_banana.png" style="visibility:hidden;" alt="Nearer island" />
+                <img class="island-near" src="imgs/simple_island.png" style="visibility:hidden;" alt="Nearer island" />
                 <img class="ship-left" src="imgs/simple_ship_${trial.ship}.png" style="top:-10%" alt="Prediction ship" />
               </div>
             </div>
@@ -87,7 +87,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         <div class="island-choices">
         </div>
         <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%; transform: translateX(-50%); left: 50%;">
-            <img src="imgs/icon-predict.png" alt="Knowledge Assessments" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Knowledge Assessment</p>
+            <img src="imgs/icon-predict.png" alt="Test" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Test</p>
         </div>
       `;
 
