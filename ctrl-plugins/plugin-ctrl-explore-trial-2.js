@@ -84,12 +84,8 @@ var jsPsychExploreShip = (function (jspsych) {
         <main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
           <section class="scene">
-            <div class="nav-map">
-              <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
-              <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
-            </div>
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                <img src="imgs/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
             </div>
             <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
             <div class="overlap-group">
@@ -102,7 +98,7 @@ var jsPsychExploreShip = (function (jspsych) {
                 <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
                 <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
               </div>
-              <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+              <img class="island-near" src="imgs/simple_island.png" alt="Nearer island" />
               <div class="choice-right">
                 <div class="fuel-container-right">
                   <div class="fuel-indicator-container">
@@ -429,12 +425,8 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <div class="nav-map">
-                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
-                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
-              </div>
               <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                  <img src="imgs/icon-explore.png" alt="Training Voyages" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Training Voyage</p>
+                  <img src="imgs/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
               </div>
               <img class="island-far" src="imgs/simple_island_${destinationIsland}.png" alt="Farther island" />
               <img class="feedback-ship" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
@@ -446,17 +438,13 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <div class="nav-map">
-                <img class="nav-map-img" src="imgs/map.png" alt="Navigation map" />
-                <img class="nav-map-island" src="imgs/map_islands.png" alt="Map islands" />
-            </div>
               <div class="overlap-group" style="justify-content: space-between;">
                 <div class="choice-left">
                   ${feedbackChoice === 'left' ? 
                     `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
                   ${islandSide === 'left' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
                 </div>
-                <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
+                <img class="island-near" style="visibility: hidden;" src="imgs/simple_island.png" alt="Hidden island" />
                 <div class="choice-right">
                   ${feedbackChoice === 'right' ? 
                     `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
