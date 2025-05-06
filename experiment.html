@@ -698,6 +698,7 @@
 
         // Run
         if (window.participantID.includes("simulate")) {
+            window.simulating = true;
             jsPsych.simulate(procedure, "visual", simulation_options);
         } else if (window.participantID.includes("TST")) {
             // Create simulation options interface
@@ -720,6 +721,7 @@
 
             document.getElementById('run-simulate').addEventListener('click', function() {
                 document.getElementById('display_element').innerHTML = '';
+                window.simulating = true;
                 jsPsych.simulate(procedure, "visual", simulation_options);
             });
 

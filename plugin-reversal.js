@@ -113,7 +113,7 @@ var jsPsychReversal = (function (jspsych) {
             };
 
             // Check whether in simulation mode
-            var simulating = window.participantID.includes("simulate");
+            var simulating = window.simulating || false;
         
             // Create stimuli
             display_element.innerHTML = this.create_stimuli(trial);
