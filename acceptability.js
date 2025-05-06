@@ -7,10 +7,7 @@ const acceptability_intro =
         `<p>Please answer the following short questions.</p>`
     ],
     show_clickable_nav: true,
-    data: { trialphase: "pre_debrief_instructions" },
-    simulation_options: {
-        simulate: false
-    }
+    data: { trialphase: "pre_debrief_instructions" }
 };
 
 
