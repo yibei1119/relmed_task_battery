@@ -680,9 +680,8 @@
 
         }
 
-        // Run
-        if (window.participantID.includes("simulate")) {
-            const simulation_options = {
+        // Simulation options
+        let simulation_options = {
                 default: {
                     speed_up: true,
                     speed_up_factor: 10,
@@ -691,13 +690,39 @@
                     }
                 }
             }
+        if (window.participantID.includes("SLOW")) {
+            simulation_options.default.speed_up = false;
+            simulation_options.default.speed_up_factor = 1;
+        }
 
-            if (window.participantID.includes("SLOW")) {
-                simulation_options.default.speed_up = false;
-                simulation_options.default.speed_up_factor = 1;
-            }
 
+        // Run
+        if (window.participantID.includes("simulate")) {
             jsPsych.simulate(procedure, "visual", simulation_options);
+        } else if (window.participantID.includes("TST")) {
+            // Create simulation options interface
+            const simulationOptionsDiv = document.createElement('div');
+            simulationOptionsDiv.innerHTML = `
+                <div style="width: 600px; margin: 100px auto; text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 5px;">
+                    <h2>Experiment Mode Selection</h2>
+                    <p>This screen is only visible to test participants. Choose how to run the experiment:</p>
+                    <button id="run-normal" style="margin: 10px; padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Participate Normally</button>
+                    <button id="run-simulate" style="margin: 10px; padding: 10px 20px; font-size: 16px; background-color: #2196F3; color: white; border: none; border-radius: 5px; cursor: pointer;">Run Simulation</button>
+                </div>
+            `;
+
+            document.getElementById('display_element').appendChild(simulationOptionsDiv);
+
+            document.getElementById('run-normal').addEventListener('click', function() {
+                document.getElementById('display_element').innerHTML = '';
+                jsPsych.run(procedure);
+            });
+
+            document.getElementById('run-simulate').addEventListener('click', function() {
+                document.getElementById('display_element').innerHTML = '';
+                jsPsych.simulate(procedure, "visual", simulation_options);
+            });
+
         } else {
             jsPsych.run(procedure);
         }
