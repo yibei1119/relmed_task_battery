@@ -169,6 +169,7 @@ reward_sequence.forEach((trial, index) => {
     right: jsPsych.timelineVariable('right'),
     current: jsPsych.timelineVariable('current'),
     reward_amount: jsPsych.timelineVariable('reward_amount'),
+    reward_number: jsPsych.timelineVariable('reward_number'),
     reward_decision: 4000,
     post_trial_gap: 0,
     save_timeline_variables: true,
