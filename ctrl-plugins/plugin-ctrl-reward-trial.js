@@ -101,14 +101,11 @@ var jsPsychRewardShip = (function (jspsych) {
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" style="visibility: hidden;" src="imgs/simple_island_${far}.png" alt="Farther island" />
-              <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
-              </div>
               <div class="quest-scroll">
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
                 <img class="island-target glowing-border" src="imgs/simple_island_${trial.target}.png" alt="Target island">
-                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;">Quest reward: <strong>${trial.reward_amount}</strong></p>
+                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
               </div>
               <div class="overlap-group">
                 <div class="choice-left">
@@ -120,7 +117,7 @@ var jsPsychRewardShip = (function (jspsych) {
                   <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
                   <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" style="visibility: visible;" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <img class="island-near" style="visibility: visible;" src="imgs/simple_island.png" alt="Nearer island" />
                 <div class="choice-right">
                   <div class="fuel-container-right">
                     <div class="fuel-indicator-container">
@@ -467,20 +464,22 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const reward = correct ? this.jsPsych.evaluateTimelineVariable('reward_number') : 0;
       
       const msg = correct 
-        ? `<p>🎉Congratulations!</p><p>You successfully reach the target island.</p><p>You have won <strong>${reward_amount}</strong>!</p>`
-        : `<p>❌Sorry!</p><p>The ship didn't reach the target island.<br>But don't worry, maybe next time.</p>`;
+        ? `<p>🎉Congratulations!</p><p>You have won <strong>${reward_amount}</strong>!</p>`
+        : `<p>❌Sorry!</p><p>The ship didn't reach the target island.<br>Maybe next time.</p>`;
 
       // Generate feedback display
       const html = `
         <main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-          <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
-              </div>
-          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
-            <div class="instruction-content" style="font-size: 32px; text-align: center;">
+          <div class="instruction-dialog" style="top:20%; height: auto; max-height:50%; min-width: 400px; width: 50%;">
+            <div class="instruction-content" style="font-size: 42px; text-align: center;">
               ${msg}
             </div>
+            ${
+              correct
+              ? `<img style="width: 150px" src="imgs/${reward_amount === "£1" ? `1pound.png`: `50pence.png`}">`
+              : ''
+            }
           </div>
         </main>
       `;
