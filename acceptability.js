@@ -36,6 +36,9 @@ const acceptability_PILT = {
     ],
     data: {
         trialphase: "acceptability_pilt"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
@@ -64,6 +67,9 @@ const acceptability_vigour = {
     ],
     data: {
         trialphase: "acceptability_vigour"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
@@ -92,6 +98,9 @@ const acceptability_PIT = {
     ],
     data: {
         trialphase: "acceptability_pit"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
@@ -120,6 +129,9 @@ const acceptability_ltm = {
     ],
     data: {
         trialphase: "acceptability_ltm"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
@@ -148,6 +160,9 @@ const acceptability_wm = {
     ],
     data: {
         trialphase: "acceptability_wm"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
@@ -177,6 +192,9 @@ const acceptability_reversal = {
     ],
     data: {
         trialphase: "acceptability_reversal"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
