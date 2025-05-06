@@ -169,9 +169,11 @@ const reversal_instructions = [
 
             // Automatically press both keys if in simulation mode
             if (window.simulating === true) {
+                multiKeysListener.cleanup();
                 setTimeout(() => {
                     callback();
                 }, 200);
+                
             }
         }
     },
