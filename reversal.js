@@ -155,16 +155,24 @@ const reversal_instructions = [
         simulation_options: {simulate: false},
         on_load: function() {
             const start = performance.now();
+            const callback = function() {
+                jsPsych.finishTrial({
+                    rt: Math.floor(performance.now() - start)
+                });
+                // Clean up the event listeners to prevent persistining into the next trial
+                multiKeysListener.cleanup();
+            }
             const multiKeysListener = setupMultiKeysListener(
                 ['ArrowRight', 'ArrowLeft'], 
-                function() {
-                    jsPsych.finishTrial({
-                        rt: Math.floor(performance.now() - start)
-                    });
-                    // Clean up the event listeners to prevent persistining into the next trial
-                    multiKeysListener.cleanup();
-                }
+                callback
             );
+
+            // Automatically press both keys if in simulation mode
+            if (window.simulating === true) {
+                setTimeout(() => {
+                    callback();
+                }, 200);
+            }
         }
     },
 ]
