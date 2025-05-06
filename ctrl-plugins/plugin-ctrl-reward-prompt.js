@@ -76,14 +76,11 @@ var jsPsychRewardPrompt = (function (jspsych) {
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
               <img class="island-far" style="visibility: hidden;" src="imgs/simple_island_${far}.png" alt="Farther island" />
-              <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                  <img src="imgs/icon-reward.png" alt="Reward Missions" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Reward Mission</p>
-              </div>
               <div class="quest-scroll">
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
                 <img class="island-target glowing-border" src="imgs/simple_island_${trial.target}.png" alt="Target island">
-                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;">Quest reward: <strong>${trial.reward_amount}</strong></p>
+                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
               </div>
               <div class="overlap-group">
                 <div class="choice-left">
@@ -95,7 +92,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
                   <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
                   <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" style="visibility: visible;" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <img class="island-near" style="visibility: visible;" src="imgs/simple_island.png" alt="Nearer island" />
                 <div class="choice-right">
                   <div class="fuel-container-right">
                     <div class="fuel-indicator-container">
@@ -108,8 +105,12 @@ var jsPsychRewardPrompt = (function (jspsych) {
               </div>
               ${this.generateOceanCurrentsHTML(trial.current)}
             </section>
-            <div class="instruction-dialog" style="bottom:20%; min-width: 600px;">
+            <div class="instruction-dialog" style="bottom:20%; width: 50%; min-width: 400px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
+                  <p>From now on, we will give you a target fruit island</p>
+                  <p>If you manage to reach it, the reward will be added to your safe</p>
+                  <p>Use what you learned about home fruit islands and ocean currents</p>
+                  <p><strong>When you are ready, press <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</strong></p>
                 </div>
             </div>
           </main>
@@ -145,73 +146,55 @@ var jsPsychRewardPrompt = (function (jspsych) {
         const pages = [
           {
             html: `
-              <h3>You're about to take your first <strong>Reward Mission</strong>!</h3>
-              <p>In this mission, select the correct ship and fuel it appropriately to deliver cargo to the target island and earn your reward!</p>
-              <p>We will now give you a short guide on how Reward Missions work.</p>
-              <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
+              <p>From now on, we will give you a target fruit island</p>
+              <p>If you manage to reach it, the reward will be added to your safe</p>
+              <p>Use what you learned about home fruit islands and ocean currents</p>
+              <p><strong>When you are ready, press <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</strong></p>
             `,
             showExtra: false
-          },
-          {
-            html: `
-              <p><span class="highlight-txt">Notice the quest scroll on the top right!</span> It shows the target island and reward for this mission.</p>
-              <p>Think about what you've learned about each ship's homebase - you need to select a ship that can reach the <strong>target island</strong> shown in the scroll.</p>
-              <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
-            `,
-            showExtra: false
-          },
-          {
-            html: `
-              <p><span class="highlight-txt">After having choosen your ship, note the current strength level and drift island shown.</span></p>
-              <p>Remember: stronger currents require more fuel to reach the target instead of drifting.</p>
-              <p>You'll have <strong>3 seconds</strong> to add fuel by rapidly pressing the same arrow key. Add enough fuel to reach the target island!</p>
-              <p>Press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</p>
-            `,
-            showExtra: true
-          },
-          {
-            html: `
-              <p>To recap, during <strong>Reward Missions</strong>, you will:</p>
-              <ol style="list-style-position: inside; padding-left:0; margin-left: 0;">
-                  <li>Select the ship whose homebase matches your target island</li>
-                  <li>Add fuel wisely and properly based on the current strength and the drift island</li>
-                  <li><strong>Successfully deliver cargo to the target island and earn your reward!</strong></li>
-              </ol>
-              <p>At the end of the game, we will pay you a proportion of the total amount of rewards you earn.</p>
-              <p>Now, press <span class="spacebar-icon">&nbsp;←&nbsp;</span> or <span class="spacebar-icon">&nbsp;→&nbsp;</span> to <span class="highlight-txt">begin your first Reward Mission.</span></p>
-            `,
-            showExtra: true
           }
         ];
       
         const showElements = (yes) => {
-          ['island-near','island-far','ocean-current']
+          ['island-far','ocean-current']
             .forEach(sel => document.querySelector(`.${sel}`).style.visibility = yes ? 'visible' : 'hidden');
         };
-      
+
+        // navigation: allow left/right arrows to move back and forth
         let idx = 0;
-        const nextPage = () => {
-          if (idx === pages.length) {
-            end_trial();
-            return;
-          }
-          // render this page
+        const renderPage = () => {
           instructionContent.innerHTML = pages[idx].html;
           showElements(pages[idx].showExtra);
-          idx++;
-      
-          // wait for a key to show the next page
-          this.jsPsych.pluginAPI.getKeyboardResponse({
-            callback_function: nextPage,
-            valid_responses: trial.choices,
-            rt_method: "performance",
-            persist: false,
-            allow_held_key: false
-          });
         };
-      
-        // kick off the sequence
-        nextPage();
+        const handleKey = (info) => {
+          if (info.key === trial.choices[1]) {
+            idx++;
+          } else if (info.key === trial.choices[0]) {
+            idx = Math.max(0, idx - 1);
+          }
+          if (idx >= pages.length) {
+            end_trial();
+          } else {
+            renderPage();
+            this.jsPsych.pluginAPI.getKeyboardResponse({
+              callback_function: handleKey,
+              valid_responses: trial.choices,
+              rt_method: "performance",
+              persist: false,
+              allow_held_key: false
+            });
+          }
+        };
+        // start navigation
+        renderPage();
+        this.jsPsych.pluginAPI.getKeyboardResponse({
+          callback_function: handleKey,
+          valid_responses: trial.choices,
+          rt_method: "performance",
+          persist: false,
+          allow_held_key: false,
+          minimum_valid_rt: 1000
+        });
       }
 
     }
