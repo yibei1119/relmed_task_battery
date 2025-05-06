@@ -248,12 +248,12 @@ reward_sequence.forEach((trial, index) => {
 let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
-    let total_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
+    let total_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() / 50;
     return `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
-              <p>You final bonus from all the successful Reward Missions is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
+              <p>Your final bonus from all the successful Reward Missions is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
               <p>Thank you for playing the game!</p>
               <p>Now press any key to continue.</p>
             </div>
