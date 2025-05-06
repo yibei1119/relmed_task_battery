@@ -113,7 +113,7 @@ var jsPsychReversal = (function (jspsych) {
             };
 
             // Check whether in simulation mode
-            var simulating = window.participantID.includes("simulate");
+            var simulating = window.simulating || false;
         
             // Create stimuli
             display_element.innerHTML = this.create_stimuli(trial);
@@ -169,7 +169,7 @@ var jsPsychReversal = (function (jspsych) {
 
                 coin_left.style.opacity = '0';
 
-                this.jsPsych.pluginAPI.setTimeout(end_trial, simulating ? 2 : trial.ITI);
+                this.jsPsych.pluginAPI.setTimeout(end_trial, simulating ? 20 : trial.ITI);
             }
 
             // Post response procedure
@@ -184,7 +184,7 @@ var jsPsychReversal = (function (jspsych) {
                 
                 this.triggerCoinAnimation(chosen_side);
                 
-                this.jsPsych.pluginAPI.setTimeout(ITI, simulating ? 2 : trial.animation_duration);
+                this.jsPsych.pluginAPI.setTimeout(ITI, simulating ? 80 : trial.animation_duration);
 
             };
 

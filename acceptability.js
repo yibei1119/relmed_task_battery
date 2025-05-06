@@ -7,10 +7,7 @@ const acceptability_intro =
         `<p>Please answer the following short questions.</p>`
     ],
     show_clickable_nav: true,
-    data: { trialphase: "pre_debrief_instructions" },
-    simulation_options: {
-        simulate: false
-    }
+    data: { trialphase: "pre_debrief_instructions" }
 };
 
 
@@ -39,6 +36,9 @@ const acceptability_PILT = {
     ],
     data: {
         trialphase: "acceptability_pilt"
+    },
+    simulation_options: {
+        mode: 'data-only'
     }
 };
 
@@ -69,7 +69,7 @@ const acceptability_vigour = {
         trialphase: "acceptability_vigour"
     },
     simulation_options: {
-        simulate: false
+        mode: 'data-only'
     }
 };
 
@@ -100,7 +100,7 @@ const acceptability_PIT = {
         trialphase: "acceptability_pit"
     },
     simulation_options: {
-        simulate: false
+        mode: 'data-only'
     }
 };
 
@@ -131,7 +131,7 @@ const acceptability_ltm = {
         trialphase: "acceptability_ltm"
     },
     simulation_options: {
-        simulate: false
+        mode: 'data-only'
     }
 };
 
@@ -162,7 +162,7 @@ const acceptability_wm = {
         trialphase: "acceptability_wm"
     },
     simulation_options: {
-        simulate: false
+        mode: 'data-only'
     }
 };
 
@@ -194,7 +194,7 @@ const acceptability_reversal = {
         trialphase: "acceptability_reversal"
     },
     simulation_options: {
-        simulate: false
+        mode: 'data-only'
     }
 };
 
@@ -212,8 +212,5 @@ const debrief = {
     ],
     data: {
         trialphase: 'debrief_instructions'
-    },
-    simulation_options: {
-        simulate: false
     }
 };
