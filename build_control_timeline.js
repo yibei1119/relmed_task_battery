@@ -58,7 +58,7 @@ explore_sequence.forEach(trial => {
         on_start: function (trial) {
           const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
           if (last_trialphase === "control_confidence") {
-            trial.explore_decision += 2000;
+            trial.explore_decision += 0;
           }
         },
         on_finish: function (data) {
@@ -109,7 +109,7 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 6000,
+        predict_decision: 4000,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
@@ -169,13 +169,13 @@ reward_sequence.forEach((trial, index) => {
     right: jsPsych.timelineVariable('right'),
     current: jsPsych.timelineVariable('current'),
     reward_amount: jsPsych.timelineVariable('reward_amount'),
-    reward_decision: 6000,
+    reward_decision: 4000,
     post_trial_gap: 0,
     save_timeline_variables: true,
     on_start: function (trial) {
       const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
       if (last_trialphase === "control_controllability" || last_trialphase === "control_reward_prompt") {
-        trial.reward_decision += 2000;
+        trial.reward_decision += 0;
       }
     },
     on_finish: function (data) {
@@ -198,12 +198,30 @@ reward_sequence.forEach((trial, index) => {
     }
   });
   
+  // timelineItems.push({
+  //   timeline: [{
+  //     type: jsPsychRewardShipFeedback,
+  //     target_island: jsPsych.timelineVariable('target'),
+  //     feedback_duration: 2000,
+  //     post_trial_gap: 0
+  //   }],
+  //   conditional_function: function () {
+  //     const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
+  //     return lastTrialChoice !== null;
+  //   }
+  // });
+
+  // Add reward post trial gap but with ocean background
   timelineItems.push({
     timeline: [{
-      type: jsPsychRewardShipFeedback,
-      target_island: jsPsych.timelineVariable('target'),
-      feedback_duration: 2000,
-      post_trial_gap: 0
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+      <main class="main-stage">
+            <img class="background" src="imgs/ocean.png" alt="Background"/>
+      </main>
+    `,
+    trial_duration: 400,
+    choices: ["NO_KEYS"]
     }],
     conditional_function: function () {
       const lastTrialChoice = jsPsych.data.getLastTrialData().values()[0].response;
