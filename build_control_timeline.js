@@ -306,11 +306,14 @@ for (let i = 0; i < explore_sequence.length; i++) {
     } else {
       // Add the reward trials after trial 12, 24, 36...
       controlTimeline.push(controlRating);
-      indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
-      controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
+      // indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
+      // controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
     }
   }
 }
+
+// Add the reward trials as a separate block
+controlTimeline.push(controlRewardTimeline);
 
 // Add the final reward feedback
 controlTimeline.push(controlTotalReward);
