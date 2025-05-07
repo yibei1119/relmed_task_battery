@@ -809,7 +809,7 @@ controlIntroComprehension.push({
         }
     },
     on_finish: function(data) {
-        if (!Object.values(data).every(value => value === "True")) {
+        if (!Object.values(data.response).every(value => value === "True")) {
             var up_to_now = parseInt(jsPsych.data.get().last(1).select('control_instruction_fail').values[0]);
             jsPsych.data.addProperties({
                 control_instruction_fail: up_to_now + 1
