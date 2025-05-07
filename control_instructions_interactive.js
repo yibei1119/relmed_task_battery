@@ -856,14 +856,14 @@ controlIntroComprehension.push(
             trialphase: "control_instruction_quiz_review"
         },
         timeline: [
-            {
-                pages: [
-                `
-                <p>You did not answer all the quiz questions correctly.</p>
-                <p>Press <span class="spacebar-icon">Next</span> to review the questions answered wrong.</p>
-                `
-                ]
-            },
+            // {
+            //     pages: [
+            //     `
+            //     <p>You did not answer all the quiz questions correctly.</p>
+            //     <p>Press <span class="spacebar-icon">Next</span> to review the questions answered wrong.</p>
+            //     `
+            //     ]
+            // },
             {
                 pages: () => {
                     const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
@@ -871,9 +871,10 @@ controlIntroComprehension.push(
                         return Object.values(data)[index] !== "True";
                     }).map(item => `
                         <p>You've answered wrong for the following question:</p>
-                        <h3 style="color: darkred;">Question: ${item.prompt}</h3>
-                        <p><strong>Your answer:</strong> False</p>
-                        <p><strong>Explanation:</strong> ${item.explanation}</p>
+                        <h3 style="color: darkred; width: 700px; text-align: left;">Question: ${item.prompt}</h3>
+                        <br>
+                        <p style="max-width: 700px; text-align: left;"><strong>Your answer:</strong> False</p>
+                        <p style="max-width: 700px; text-align: left;"><strong>Explanation:</strong> ${item.explanation}</p>
                     `);
                 }
             }
@@ -900,8 +901,8 @@ controlIntroComprehension.push(
             {
                 pages: [
                 `
-                <p>Press <span class="spacebar-icon">Next</span> to re-take the quiz questions</p>
-                <p>or <span class="spacebar-icon">Restart</span> to review the full instructions again.</p>
+                <p>Press <span style="font-weight: bold; color: #2f6cac;">Next</span> to <strong>re-take the quiz questions</strong></p>
+                <p>or <span style="font-weight: bold; color: #ff7875;">Restart</span> to <strong>review the full instructions again.</strong></p>
                 `
                 ]
             }
