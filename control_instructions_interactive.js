@@ -107,6 +107,7 @@ const createProgressBar = (current, total) => {
 
 // New helper to abstract the fuel trial common behavior
 function setupFuelTrial(config) {
+    jsPsych.pluginAPI.cancelAllKeyboardResponses();
     let selectedKey = null;
     let trialPresses = 0;
     const leftArrow = document.querySelector('.arrow-left');
@@ -202,6 +203,7 @@ function setupFuelTrial(config) {
             jsPsych.pluginAPI.setTimeout(() => {
                 document.getElementById("jspsych-instructions-next").disabled = false;
             }, config.finishDelay || 350);
+            jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
         }
     }
 }
