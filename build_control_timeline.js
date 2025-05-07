@@ -51,7 +51,7 @@ explore_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
-        explore_decision: 4000,
+        explore_decision: window.default_response_deadline,
         explore_effort: 3000,
         post_trial_gap: 0,
         save_timeline_variables: true,
@@ -109,7 +109,7 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 4000,
+        predict_decision: window.default_response_deadline,
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
@@ -170,7 +170,7 @@ reward_sequence.forEach((trial, index) => {
     current: jsPsych.timelineVariable('current'),
     reward_amount: jsPsych.timelineVariable('reward_amount'),
     reward_number: jsPsych.timelineVariable('reward_number'),
-    reward_decision: 4000,
+    reward_decision: window.default_response_deadline,
     post_trial_gap: 0,
     save_timeline_variables: true,
     on_start: function (trial) {
