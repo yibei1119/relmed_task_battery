@@ -938,6 +938,9 @@ const controlInstructions = {
     loop_function: () => {
         const restart = jsPsych.data.get().filter({trialphase: "control_instructions"}).last(1).select('restart').values[0];
         return restart;
+    },
+    on_timeline_start: () => {
+        updateState("control_instructions_start");
     }
 };
 
