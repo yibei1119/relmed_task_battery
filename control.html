@@ -8,7 +8,11 @@
   <script>
     window.maxWarnings = 15;
     window.interimWarning = 5;
+    window.max_warnings_per_task = 3;
     window.max_instruction_fails = 3;
+    window.relemd_default_response_deadline = 4000;
+    window.prolific_default_response_deadline = 3000;
+    window.default_long_response_deadline = 6000;
     // Initialize jsPsych object
     let jsPsych = initJsPsych({
       display_element: 'display_element',
@@ -22,6 +26,7 @@
     // window.sessionNum = jsPsych.data.getURLVariable('session_num');
     // window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
     // window.debug = prolificPID.includes("debug");
+    window.session_state = JSON.parse(jsPsych.data.getURLVariable('session_state') || "{}");
   </script>
   <script src="jspsych/plugin-html-keyboard-response.js"></script>
   <script src="jspsych/plugin-html-button-response.js"></script>
@@ -63,8 +68,9 @@
 <script>
   // Save participant variables to data
   jsPsych.data.addProperties({
-            n_warnings: 0
-        })
+      n_warnings: 0,
+      // control_explore_n_warnings: 0
+  })
 
   // if (window.participantID.includes("simulate")) {
   //     const simulation_options = {
@@ -95,9 +101,9 @@
   
   controlTestingTimeline.push(controlPreload);
 
-  controlTestingTimeline.push(controlInstructionsTimeline);
+  // controlTestingTimeline.push(controlInstructionsTimeline);
   
-  // controlTestingTimeline.push(controlExploreTimeline);
+  controlTestingTimeline.push(controlExploreTimeline);
 
   // controlTestingTimeline.push(controlPredTimeline);
 
