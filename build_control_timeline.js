@@ -51,7 +51,13 @@ explore_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
-        explore_decision: window.default_response_deadline,
+        explore_decision: () => {
+          if (can_be_warned("control_explore")) {
+              return window.default_response_deadline
+          } else {
+              return window.default_long_response_deadline
+          }
+        },
         explore_effort: 3000,
         post_trial_gap: 0,
         save_timeline_variables: true,
@@ -94,11 +100,21 @@ explore_sequence.forEach(trial => {
       noChoiceWarning("response", 
         `<main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
-        </main>`)
+        </main>`,
+        "control_explore"
+      )
     ],
     timeline_variables: [trial]
   });
 });
+
+controlExploreTimeline[0]["on_timeline_start"] = () => {
+  // updateState(`no_resume`);
+  // updateState(`control_task_start`);
+  jsPsych.data.addProperties({
+      control_explore_n_warnings: 0
+  });
+}
 
 const controlPredTimeline = [];
 predict_sequence.forEach(trial => {
@@ -109,7 +125,13 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: window.default_response_deadline,
+        predict_decision: () => {
+          if (can_be_warned("control_predict_homebase")) {
+              return window.default_response_deadline
+          } else {
+              return window.default_long_response_deadline
+          }
+        },
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
@@ -132,11 +154,17 @@ predict_sequence.forEach(trial => {
         }
       },
       confidenceRating,
-      noChoiceWarning("response")
+      noChoiceWarning("response", '', "control_predict_homebase")
     ],
     timeline_variables: [trial]
   });
 });
+
+controlPredTimeline[0]["on_timeline_start"] = () => {
+  jsPsych.data.addProperties({
+      control_predict_homebase_n_warnings: 0
+  });
+}
 
 const controlRewardTimeline = [];
 reward_sequence.forEach((trial, index) => {
@@ -170,7 +198,13 @@ reward_sequence.forEach((trial, index) => {
     current: jsPsych.timelineVariable('current'),
     reward_amount: jsPsych.timelineVariable('reward_amount'),
     reward_number: jsPsych.timelineVariable('reward_number'),
-    reward_decision: window.default_response_deadline,
+    reward_decision: () => {
+      if (can_be_warned("control_reward")) {
+          return window.default_response_deadline
+      } else {
+          return window.default_long_response_deadline
+      }
+    },
     post_trial_gap: 0,
     save_timeline_variables: true,
     on_start: function (trial) {
@@ -234,7 +268,8 @@ reward_sequence.forEach((trial, index) => {
     noChoiceWarning("response",
       `<main class="main-stage">
         <img class="background" src="imgs/ocean.png" alt="Background"/>
-      </main>`
+      </main>`,
+      "control_reward"
     )
   );
   
@@ -243,6 +278,14 @@ reward_sequence.forEach((trial, index) => {
     timeline_variables: [trial]
   });
 });
+
+controlRewardTimeline[0]["on_timeline_start"] = () => {
+  // updateState(`no_resume`);
+  // updateState(`control_reward_start`);
+  jsPsych.data.addProperties({
+      control_reward_n_warnings: 0
+  });
+}
 
 // Add feedback on the final rewards in total
 let controlTotalReward = {
@@ -271,6 +314,7 @@ let controlTotalReward = {
   },
   on_finish: function (data) {
     data.control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
+    saveDataREDCap(retry = 3);
   }
 };
 
@@ -279,9 +323,6 @@ let controlDebriefing = [];
 controlDebriefing.push(control_acceptability_intro);
 controlDebriefing.push(acceptability_control);
 controlDebriefing.push(control_debrief);
-controlDebriefing["on_timeline_start"] = () => {
-  saveDataREDCap(retry = 3);
-}
 
 // Assembling the control timeline
 let controlTimeline = [];
@@ -291,10 +332,6 @@ controlTimeline.push(controlPreload);
 controlTimeline.push(controlInstructionsTimeline);
 
 // Add the explore, predict, reward trials
-controlTimeline[0]["on_timeline_start"] = () => {
-  updateState(`no_resume`);
-  updateState(`control_task_start`);
-};
 for (let i = 0; i < explore_sequence.length; i++) {
   // Add the explore trials
   controlTimeline.push(controlExploreTimeline[i]);
