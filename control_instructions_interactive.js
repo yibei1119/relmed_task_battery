@@ -564,6 +564,11 @@ controlInstructionTrial = {
     show_page_number: false,
     data: {trialphase: "control_instructions"},
     simulation_options: {simulate: false},
+    on_finish: function(data) {
+        jsPsych.data.addProperties({
+            control_instruction_fail: 0
+        });
+    },
     on_page_change: function(current_page) {
         if (current_page === 3) {
             setupFuelTrial({
@@ -802,8 +807,21 @@ controlIntroComprehension.push({
                 Q3: `True`
             }
         }
+    },
+    on_finish: function(data) {
+        if (!Object.values(data).every(value => value === "True")) {
+            var up_to_now = parseInt(jsPsych.data.get().last(1).select('control_instruction_fail').values[0]);
+            jsPsych.data.addProperties({
+                control_instruction_fail: up_to_now + 1
+            });
+        }
     }
 });
+
+const controlInstructKickout = create_instruction_kick_out("control");
+if (controlInstructKickout !== undefined) {
+    controlIntroComprehension.push(controlInstructKickout);
+}
 
 const controlQuizExplanation = [
     {
@@ -849,7 +867,6 @@ controlIntroComprehension.push(
             {
                 pages: () => {
                     const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
-                    console.log(data);
                     return controlQuizExplanation.filter((item, index) => {
                         return Object.values(data)[index] !== "True";
                     }).map(item => `
@@ -863,7 +880,6 @@ controlIntroComprehension.push(
         ],
         conditional_function: () => {
             const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
-            console.log(data);
             return !Object.values(data).every(value => value === "True");
         }
     }

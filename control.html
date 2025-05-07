@@ -8,6 +8,7 @@
   <script>
     window.maxWarnings = 15;
     window.interimWarning = 5;
+    window.max_instruction_fails = 3;
     // Initialize jsPsych object
     let jsPsych = initJsPsych({
       display_element: 'display_element',
@@ -15,6 +16,9 @@
         jsPsych.data.displayData('json');
       }
     });
+    // Get condition from URL, all caps are prolific, lowercase are ours
+    window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
+    // window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
     // window.sessionNum = jsPsych.data.getURLVariable('session_num');
     // window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
     // window.debug = prolificPID.includes("debug");
@@ -61,10 +65,6 @@
   jsPsych.data.addProperties({
             n_warnings: 0
         })
-
-  // // Get condition from URL, all caps are prolific, lowercase are ours
-  // window.context = typeof jsPsych.data.getURLVariable('RELMED_PID') === "undefined" ? "prolific" : "relmed"
-  // window.participantID = window.context === "relmed" ? jsPsych.data.getURLVariable('RELMED_PID') : jsPsych.data.getURLVariable('PROLIFIC_PID') ;
 
   // if (window.participantID.includes("simulate")) {
   //     const simulation_options = {
