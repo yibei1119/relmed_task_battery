@@ -387,12 +387,12 @@ const controlInstructionPages = [
                     </div>
                     <img class="island-near" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_i4.png" alt="Hidden island" />
                     <div class="choice-right">
-                        <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${CONTROL_CONFIG.controlRule[rightShip]}.png" alt="Destination island" style="top: -10%;" />
+                        <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${homebaseIsland}.png" alt="Destination island" style="top: -10%;" />
                     </div>
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, so with enough fuel, this ${rightShip} ship can overcome the ocean currents to reach its home fruit island - ${CONTROL_CONFIG.controlRule[rightShip]} island.</p>
+                <p>Great, so with enough fuel, this ${rightShip} ship can overcome the ocean currents to reach its home fruit island - ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]} island.</p>
                 `)}
             ${createProgressBar(5, nPages)}
         </div>
@@ -454,7 +454,6 @@ const controlInstructionPages = [
             ${createInstructionDialog(`
                 <p>The ship ran out of fuel midway.</p>
                 <p>Now the ship drifted to the island at the top of the screen and did <strong>not</strong> reach its home fruit island.</p>
-
             `)}
             ${createProgressBar(7, nPages)}
         </div>
@@ -592,6 +591,7 @@ controlInstructionTrial = {
             
             // Calculate the distance to move the ship
             const distance = islandImg.offsetWidth + shipImg.offsetWidth / 4;
+            console.log(distance);
 
             // Determine if ship should be flipped based on which side it starts from
             // Ships on the left are already flipped with scaleX(-1) in the CSS
@@ -792,7 +792,7 @@ controlIntroComprehension.push({
             required: true
         },
         {
-            prompt: `The ${rightShip} ship has ${CONTROL_CONFIG.controlRule[rightShip]} island as its home fruit island.`,
+            prompt: `The ${rightShip} ship has ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]} island as its home fruit island.`,
             name: "homebase",
             options: ["True", "False"],
             required: true
@@ -837,8 +837,8 @@ const controlQuizExplanation = [
         explanation: "Stronger currents (indicated by more lines) require more fuel to reach the home fruit island."
     },
     {
-        prompt: `The ${rightShip} ship has ${CONTROL_CONFIG.controlRule[rightShip]} island as its home fruit island.`,
-        explanation: `The ${rightShip} ship's home fruit island in this game is ${CONTROL_CONFIG.controlRule[rightShip]}.`
+        prompt: `The ${rightShip} ship has ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]} island as its home fruit island.`,
+        explanation: `The ${rightShip} ship's home fruit island in this game is ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]}.`
     }
 ]
 

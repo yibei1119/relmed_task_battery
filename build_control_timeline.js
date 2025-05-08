@@ -27,7 +27,7 @@ const controlPreload = {
       "island_icon_i2.png",
       "island_icon_i3.png",
       "island_icon_i4.png"
-    ].map(s => "imgs/" + window.session + "/" + s)),
+    ].map(s => "imgs/Control_stims/" + window.session + "/" + s)),
   ],
   post_trial_gap: 800,
   continue_after_error: true,
