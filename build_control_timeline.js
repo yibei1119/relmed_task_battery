@@ -295,7 +295,7 @@ controlRewardTimeline[0]["on_timeline_start"] = () => {
 let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
-    let total_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() / 50;
+    let total_bonus = (jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() + 45) / 125 * 3;
     if (window.context === "relmed" || window.task === "control") {
       stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
@@ -330,9 +330,11 @@ let controlTotalReward = {
     trialphase: 'control_bonus'
   },
   on_finish: function (data) {
-    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() / 50;
+    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
     data.control_bonus = control_bonus;
-    postToParent({bonus: control_bonus});
+    data.control_bonus_adjusted = (control_bonus + 45) / 125 * 3;
+    console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
+    postToParent({bonus: data.control_bonus_adjusted});
     saveDataREDCap(retry = 3);
   }
 };
