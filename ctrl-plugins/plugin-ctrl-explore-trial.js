@@ -145,12 +145,12 @@ var jsPsychExploreShip = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${far}.png" alt="Farther island" />
               <!--Middle group for other islands, if needed-->
               <!--
               <div class="middle-group">
-                <img class="island-middle" src="imgs/simple_island_${left_island}.png" alt="Left island" />
-                <img class="island-middle" src="imgs/simple_island_${right_island}.png" alt="Right island" />
+                <img class="island-middle" src="imgs/Control_stims/${window.session}/simple_island_${left_island}.png" alt="Left island" />
+                <img class="island-middle" src="imgs/Control_stims/${window.session}/simple_island_${right_island}.png" alt="Right island" />
               </div>
               -->
               <div class="overlap-group">
@@ -163,7 +163,7 @@ var jsPsychExploreShip = (function (jspsych) {
                   <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
                   <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${trial.near}.png" alt="Nearer island" />
                 <div class="choice-right">
                   <div class="fuel-container-right">
                     <div class="fuel-indicator-container">
@@ -463,7 +463,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
             <div class="overlap-group" style="justify-content: space-between;">
               <div class="choice-left">
               </div>
-              <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Nearer island" />
+              <img class="island-near" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_i4.png" alt="Nearer island" />
               <div class="choice-right">
               </div>
             </div>
@@ -501,7 +501,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       // islandImg.className = `ship-${islandSide}`;  
       islandImg.className = `island-near`;
       islandImg.style.top = '-10%';
-      islandImg.src = `imgs/simple_island_${destinationIsland}.png`;
+      islandImg.src = `imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png`;
       // Add the image to the container
       islandContainer.appendChild(islandImg);
 

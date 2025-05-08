@@ -107,6 +107,7 @@ const createProgressBar = (current, total) => {
 
 // New helper to abstract the fuel trial common behavior
 function setupFuelTrial(config) {
+    jsPsych.pluginAPI.cancelAllKeyboardResponses();
     let selectedKey = null;
     let trialPresses = 0;
     const leftArrow = document.querySelector('.arrow-left');
@@ -202,6 +203,7 @@ function setupFuelTrial(config) {
             jsPsych.pluginAPI.setTimeout(() => {
                 document.getElementById("jspsych-instructions-next").disabled = false;
             }, config.finishDelay || 350);
+            jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
         }
     }
 }
@@ -210,7 +212,7 @@ function setupFuelTrial(config) {
 const nPages = 12;
 const leftShip = "green";
 const rightShip = "blue";
-const downstreamIsland = "orange";
+const downstreamIsland = "i4";
 const homebaseIsland = CONTROL_CONFIG.controlRule[rightShip];
 
 const controlInstructionPages = [
@@ -220,7 +222,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -259,7 +261,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -298,7 +300,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -337,7 +339,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left">
@@ -383,14 +385,14 @@ const controlInstructionPages = [
                     <div class="choice-left">
                         <img class="ship-left" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
                     </div>
-                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
+                    <img class="island-near" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_i4.png" alt="Hidden island" />
                     <div class="choice-right">
-                        <img class="island-near" src="imgs/simple_island_${CONTROL_CONFIG.controlRule[rightShip]}.png" alt="Destination island" style="top: -10%;" />
+                        <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${homebaseIsland}.png" alt="Destination island" style="top: -10%;" />
                     </div>
                 </div>
             </section>
             ${createInstructionDialog(`
-                <p>Great, so with enough fuel, this ${rightShip} ship can overcome the ocean currents to reach its home fruit island - ${CONTROL_CONFIG.controlRule[rightShip]} island.</p>
+                <p>Great, so with enough fuel, this ${rightShip} ship can overcome the ocean currents to reach its home fruit island - ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]} island.</p>
                 `)}
             ${createProgressBar(5, nPages)}
         </div>
@@ -403,7 +405,7 @@ const controlInstructionPages = [
             <div class="instruction-stage">
                 <img class="background" src="imgs/ocean.png" alt="Background"/>
                 <section class="scene">
-                <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+                <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
                 <div class="overlap-group">
                     <div class="choice-left">
                         <div class="fuel-container-left" style="visibility: hidden;">
@@ -445,14 +447,13 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-                <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+                <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
                 <img class="feedback-ship" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
             ${createOceanCurrents(2)}
             </section>
             ${createInstructionDialog(`
                 <p>The ship ran out of fuel midway.</p>
                 <p>Now the ship drifted to the island at the top of the screen and did <strong>not</strong> reach its home fruit island.</p>
-
             `)}
             ${createProgressBar(7, nPages)}
         </div>
@@ -518,7 +519,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -562,6 +563,11 @@ controlInstructionTrial = {
     show_page_number: false,
     data: {trialphase: "control_instructions"},
     simulation_options: {simulate: false},
+    on_finish: function(data) {
+        jsPsych.data.addProperties({
+            control_instruction_fail: 0
+        });
+    },
     on_page_change: function(current_page) {
         if (current_page === 3) {
             setupFuelTrial({
@@ -585,6 +591,7 @@ controlInstructionTrial = {
             
             // Calculate the distance to move the ship
             const distance = islandImg.offsetWidth + shipImg.offsetWidth / 4;
+            console.log(distance);
 
             // Determine if ship should be flipped based on which side it starts from
             // Ships on the left are already flipped with scaleX(-1) in the CSS
@@ -785,7 +792,7 @@ controlIntroComprehension.push({
             required: true
         },
         {
-            prompt: `The ${rightShip} ship has ${CONTROL_CONFIG.controlRule[rightShip]} island as its home fruit island.`,
+            prompt: `The ${rightShip} ship has ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]} island as its home fruit island.`,
             name: "homebase",
             options: ["True", "False"],
             required: true
@@ -800,8 +807,21 @@ controlIntroComprehension.push({
                 Q3: `True`
             }
         }
+    },
+    on_finish: function(data) {
+        if (!Object.values(data.response).every(value => value === "True")) {
+            var up_to_now = parseInt(jsPsych.data.get().last(1).select('control_instruction_fail').values[0]);
+            jsPsych.data.addProperties({
+                control_instruction_fail: up_to_now + 1
+            });
+        }
     }
 });
+
+const controlInstructKickout = create_instruction_kick_out("control");
+if (controlInstructKickout !== undefined) {
+    controlIntroComprehension.push(controlInstructKickout);
+}
 
 const controlQuizExplanation = [
     {
@@ -817,8 +837,8 @@ const controlQuizExplanation = [
         explanation: "Stronger currents (indicated by more lines) require more fuel to reach the home fruit island."
     },
     {
-        prompt: `The ${rightShip} ship has ${CONTROL_CONFIG.controlRule[rightShip]} island as its home fruit island.`,
-        explanation: `The ${rightShip} ship's home fruit island in this game is ${CONTROL_CONFIG.controlRule[rightShip]}.`
+        prompt: `The ${rightShip} ship has ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]} island as its home fruit island.`,
+        explanation: `The ${rightShip} ship's home fruit island in this game is ${CONTROL_CONFIG[`${homebaseIsland}_name`][window.session]}.`
     }
 ]
 
@@ -836,32 +856,31 @@ controlIntroComprehension.push(
             trialphase: "control_instruction_quiz_review"
         },
         timeline: [
-            {
-                pages: [
-                `
-                <p>You did not answer all the quiz questions correctly.</p>
-                <p>Press <span class="spacebar-icon">Next</span> to review the questions answered wrong.</p>
-                `
-                ]
-            },
+            // {
+            //     pages: [
+            //     `
+            //     <p>You did not answer all the quiz questions correctly.</p>
+            //     <p>Press <span class="spacebar-icon">Next</span> to review the questions answered wrong.</p>
+            //     `
+            //     ]
+            // },
             {
                 pages: () => {
                     const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
-                    console.log(data);
                     return controlQuizExplanation.filter((item, index) => {
                         return Object.values(data)[index] !== "True";
                     }).map(item => `
                         <p>You've answered wrong for the following question:</p>
-                        <h3 style="color: darkred;">Question: ${item.prompt}</h3>
-                        <p><strong>Your answer:</strong> False</p>
-                        <p><strong>Explanation:</strong> ${item.explanation}</p>
+                        <h3 style="color: darkred; width: 700px; text-align: left;">Question: ${item.prompt}</h3>
+                        <br>
+                        <p style="max-width: 700px; text-align: left;"><strong>Your answer:</strong> False</p>
+                        <p style="max-width: 700px; text-align: left;"><strong>Explanation:</strong> ${item.explanation}</p>
                     `);
                 }
             }
         ],
         conditional_function: () => {
             const data = jsPsych.data.get().filter({trialphase: "control_instruction_quiz"}).last(1).select('response').values[0];
-            console.log(data);
             return !Object.values(data).every(value => value === "True");
         }
     }
@@ -882,8 +901,8 @@ controlIntroComprehension.push(
             {
                 pages: [
                 `
-                <p>Press <span class="spacebar-icon">Next</span> to re-take the quiz questions</p>
-                <p>or <span class="spacebar-icon">Restart</span> to review the full instructions again.</p>
+                <p>Press <span style="font-weight: bold; color: #2f6cac;">Next</span> to <strong>re-take the quiz questions</strong></p>
+                <p>or <span style="font-weight: bold; color: #ff7875;">Restart</span> to <strong>review the full instructions again.</strong></p>
                 `
                 ]
             }
@@ -919,6 +938,9 @@ const controlInstructions = {
     loop_function: () => {
         const restart = jsPsych.data.get().filter({trialphase: "control_instructions"}).last(1).select('restart').values[0];
         return restart;
+    },
+    on_timeline_start: () => {
+        updateState("control_instructions_start");
     }
 };
 

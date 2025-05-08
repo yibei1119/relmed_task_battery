@@ -43,7 +43,12 @@ var jsPsychRewardShip = (function (jspsych) {
       reward_amount: {
         type: jspsych.ParameterType.STRING,
         default: "",
-        description: "Amount of reward shown in the quest scroll"
+        description: "Amount of reward in currency shown in the quest scroll"
+      },
+      reward_number: {
+        type: jspsych.ParameterType.FLOAT,
+        default: 0,
+        description: "Amount of reward in number shown in the quest scroll"
       },
       choices: {
         type: jspsych.ParameterType.KEYS,
@@ -66,6 +71,12 @@ var jsPsychRewardShip = (function (jspsych) {
       rt: {
         type: jspsych.ParameterType.INT
       },
+      correct: {
+        type: jspsych.ParameterType.BOOL
+      },
+      reward: {
+        type: jspsych.ParameterType.FLOAT
+      },
       responseTime: {
         type: jspsych.ParameterType.INT,
         array: true
@@ -80,8 +91,21 @@ var jsPsychRewardShip = (function (jspsych) {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
 
-      // Define base rule mapping
       this.baseRule = CONTROL_CONFIG.baseRule;
+      this.controlRule = CONTROL_CONFIG.controlRule;
+
+      this.effort_threshold = CONTROL_CONFIG.effort_threshold;
+      this.scale = CONTROL_CONFIG.scale;
+    }
+
+    sigmoid(x) {
+      return 1 / (1 + Math.exp(-x));
+    }
+
+    chooseControlRule(effort, current) {
+      const extra_effort = (effort - this.effort_threshold[current - 1]) * this.scale;
+      const prob = this.sigmoid(extra_effort);
+      return Math.random() < prob ? 'control' : 'base';
     }
 
     trial(display_element, trial) {
@@ -100,12 +124,15 @@ var jsPsychRewardShip = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <img class="island-far" style="visibility: hidden;" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <img class="island-far" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_${far}.png" alt="Farther island" />
               <div class="quest-scroll">
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
-                <img class="island-target glowing-border" src="imgs/simple_island_${trial.target}.png" alt="Target island">
-                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
+                <img class="island-target glowing-border" src="imgs/Control_stims/${window.session}/simple_island_${trial.target}.png" alt="Target island">
+                <div class="quest-reward" style="position: absolute;display: inline-flex;z-index: 4;top: 72%;flex-direction: row;align-items: center;background-color: #eedfbc;border-radius: 10px;">
+                  <p style="font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;margin-left: 10px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
+                  <img src="imgs/${trial.reward_amount === "£2" ? `200p.png`: `50pence.png`}" style="height:5em;margin: 10px;">
+                </div>
               </div>
               <div class="overlap-group">
                 <div class="choice-left">
@@ -253,11 +280,26 @@ var jsPsychRewardShip = (function (jspsych) {
         // Kill keyboard listeners
         this.jsPsych.pluginAPI.cancelAllKeyboardResponses();
 
+        // Determine destination island based on control rule
+        const currentRule = this.chooseControlRule(
+          trial_presses, 
+          trial.current
+        );
+
+        const destinationIsland = currentRule === 'base' 
+          ? this.baseRule[trial.near]
+          : this.controlRule[choice === "left" ? trial.left : trial.right];
+
+        const correct = trial.target === destinationIsland;
+        const reward = correct ? trial.reward_number : 0;
+
         // Save data
         const trial_data = {
           trialphase: "control_reward",
           response: choice,
           rt: choice_rt,
+          correct: correct,
+          reward: reward,
           responseTime: responseTime,
           trial_presses: trial_presses,
         };
@@ -326,10 +368,30 @@ var jsPsychRewardShip = (function (jspsych) {
     create_simulation_data(trial, simulation_options) {
       const keyToChoice = {"ArrowLeft": "left", "ArrowRight": "right"};
       const trial_presses = this.jsPsych.randomization.randomInt(2, 20);
+
+      // Simulate choice data and outcomes
+      const choice = keyToChoice[this.jsPsych.pluginAPI.getValidKey(trial.choices)];
+
+      // Determine destination island based on control rule
+      const currentRule = this.chooseControlRule(
+        trial_presses, 
+        trial.current
+      );
+
+      const destinationIsland = currentRule === 'base' 
+        ? this.baseRule[trial.near]
+        : this.controlRule[choice === "left" ? trial.left : trial.right];
+
+      const correct = trial.target === destinationIsland;
+      const reward = correct ? trial.reward_number : 0;
+
+
       const default_data = {
         trialphase: "control_reward",
-        response: keyToChoice[this.jsPsych.pluginAPI.getValidKey(trial.choices)],
+        response: choice,
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
+        correct: correct,
+        reward: reward,
         responseTime: Array.from({ length: trial_presses }, () => Math.floor(this.jsPsych.randomization.sampleExGaussian(100, 10, 0.5, true))),
         trial_presses: trial_presses,
       };
@@ -386,6 +448,14 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         type: jspsych.ParameterType.STRING,
         default: undefined,
         description: "Target island for delivery"
+      },
+      reward_amount: {
+        type: jspsych.ParameterType.STRING,
+        description: "Amount of reward in currency shown in the quest scroll"
+      },
+      reward_number: {
+        type: jspsych.ParameterType.FLOAT,
+        description: "Amount of reward in number shown in the quest scroll"
       },
       feedback_duration: {
         type: jspsych.ParameterType.INT,
@@ -448,7 +518,6 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
       const nearIsland = this.jsPsych.evaluateTimelineVariable('near');
       const currentStrength = this.jsPsych.evaluateTimelineVariable('current');
       const effortLevel = lastTrial.trial_presses;
-      const reward_amount = this.jsPsych.evaluateTimelineVariable('reward_amount');
 
       // Determine destination island based on control rule
       const currentRule = this.chooseControlRule(
@@ -461,10 +530,10 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
         : this.controlRule[chosenColor];
 
       const correct = trial.target_island === destinationIsland;
-      const reward = correct ? this.jsPsych.evaluateTimelineVariable('reward_number') : 0;
+      const reward = correct ? trial.reward_number : 0;
       
       const msg = correct 
-        ? `<p>🎉Congratulations!</p><p>You have won <strong>${reward_amount}</strong>!</p>`
+        ? `<p>🎉Congratulations!</p><p>You have won <strong>${trial.reward_amount}</strong>!</p>`
         : `<p>❌Sorry!</p><p>The ship didn't reach the target island.<br>Maybe next time.</p>`;
 
       // Generate feedback display
@@ -477,7 +546,7 @@ var jsPsychRewardShipFeedback = (function (jspsych) {
             </div>
             ${
               correct
-              ? `<img style="width: 150px" src="imgs/${reward_amount === "£1" ? `1pound.png`: `50pence.png`}">`
+              ? `<img style="width: 150px" src="imgs/${trial.reward_amount === "£2" ? `200p.png`: `50pence.png`}">`
               : ''
             }
           </div>

@@ -75,12 +75,15 @@ var jsPsychRewardPrompt = (function (jspsych) {
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-              <img class="island-far" style="visibility: hidden;" src="imgs/simple_island_${far}.png" alt="Farther island" />
+              <img class="island-far" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_${far}.png" alt="Farther island" />
               <div class="quest-scroll">
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
-                <img class="island-target glowing-border" src="imgs/simple_island_${trial.target}.png" alt="Target island">
-                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
+                <img class="island-target glowing-border" src="imgs/Control_stims/${window.session}/simple_island_${trial.target}.png" alt="Target island">
+                <div class="quest-reward" style="position: absolute;display: inline-flex;z-index: 4;top: 72%;flex-direction: row;align-items: center;background-color: #eedfbc;border-radius: 10px;">
+                  <p style="font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;margin-left: 10px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
+                  <img src="imgs/${trial.reward_amount === "£2" ? `200p.png`: `50pence.png`}" style="height:5em;margin: 10px;">
+                </div>
               </div>
               <div class="overlap-group">
                 <div class="choice-left">
@@ -107,10 +110,6 @@ var jsPsychRewardPrompt = (function (jspsych) {
             </section>
             <div class="instruction-dialog" style="bottom:20%; width: 50%; min-width: 400px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
-                  <p>From now on, we will give you a target fruit island</p>
-                  <p>If you manage to reach it, the reward will be added to your safe</p>
-                  <p>Use what you learned about home fruit islands and ocean currents</p>
-                  <p><strong>When you are ready, press <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</strong></p>
                 </div>
             </div>
           </main>
@@ -146,8 +145,8 @@ var jsPsychRewardPrompt = (function (jspsych) {
         const pages = [
           {
             html: `
-              <p>From now on, we will give you a target fruit island</p>
-              <p>If you manage to reach it, the reward will be added to your safe</p>
+              <p>From now on, we will give you a <strong>target fruit island</strong></p>
+              <p><strong>If you manage to reach it</strong>, you can earn the coin as a bonus<br>At the end of the game, you’ll earn a proportion of the total coins collected</p>
               <p>Use what you learned about home fruit islands and ocean currents</p>
               <p><strong>When you are ready, press <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</strong></p>
             `,

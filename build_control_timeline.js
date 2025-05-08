@@ -1,30 +1,33 @@
 const controlPreload = {
   type: jsPsychPreload,
   images: [
-    "ocean.png",
-    "ocean_above.png",
-    "simple_island.png",
-    "simple_island_banana.png",
-    "simple_island_coconut.png",
-    "simple_island_grape.png",
-    "simple_island_orange.png",
-    "simple_ship_blue.png",
-    "simple_ship_green.png",
-    "simple_ship_red.png",
-    "simple_ship_yellow.png",
-    "island_icon_banana.png",
-    "island_icon_coconut.png",
-    "island_icon_grape.png",
-    "island_icon_orange.png",
-    "left.png",
-    "map.png",
-    "map_islands.png",
-    "fuel.png",
-    "scroll.png",
-    "icon-reward.png",
-    "icon-predict.png",
-    "icon-explore.png"
-  ].map(s => "imgs/" + s),
+    ...([
+      "200p.png",
+      "ocean.png",
+      "ocean_above.png",
+      "simple_island.png",
+      "simple_ship_blue.png",
+      "simple_ship_green.png",
+      "simple_ship_red.png",
+      "simple_ship_yellow.png",
+      "left.png",
+      "fuel.png",
+      "scroll.png",
+      "icon-reward.png",
+      "icon-predict.png",
+      "icon-explore.png"
+    ].map(s => "imgs/" + s)),
+    ...([
+      "simple_island_i1.png", //wk0: banana
+      "simple_island_i2.png", //wk0: coconut
+      "simple_island_i3.png", //wk0: grape
+      "simple_island_i4.png", //wk0: orange
+      "island_icon_i1.png",
+      "island_icon_i2.png",
+      "island_icon_i3.png",
+      "island_icon_i4.png"
+    ].map(s => "imgs/Control_stims/" + window.session + "/" + s)),
+  ],
   post_trial_gap: 800,
   continue_after_error: true,
   data: {
@@ -51,7 +54,13 @@ explore_sequence.forEach(trial => {
         right: jsPsych.timelineVariable('right'),
         near: jsPsych.timelineVariable('near'),
         current: jsPsych.timelineVariable('current'),
-        explore_decision: 4000,
+        explore_decision: () => {
+          if (can_be_warned("control_explore")) {
+              return window.default_response_deadline
+          } else {
+              return window.default_long_response_deadline
+          }
+        },
         explore_effort: 3000,
         post_trial_gap: 0,
         save_timeline_variables: true,
@@ -94,11 +103,21 @@ explore_sequence.forEach(trial => {
       noChoiceWarning("response", 
         `<main class="main-stage">
           <img class="background" src="imgs/ocean.png" alt="Background"/>
-        </main>`)
+        </main>`,
+        "control_explore"
+      )
     ],
     timeline_variables: [trial]
   });
 });
+
+controlExploreTimeline[0]["on_timeline_start"] = () => {
+  updateState(`no_resume`);
+  updateState(`control_task_start`);
+  jsPsych.data.addProperties({
+      control_explore_n_warnings: 0
+  });
+}
 
 const controlPredTimeline = [];
 predict_sequence.forEach(trial => {
@@ -109,7 +128,13 @@ predict_sequence.forEach(trial => {
       {
         type: jsPsychPredictHomeBase,
         ship: jsPsych.timelineVariable('ship'),
-        predict_decision: 4000,
+        predict_decision: () => {
+          if (can_be_warned("control_predict_homebase")) {
+              return window.default_response_deadline
+          } else {
+              return window.default_long_response_deadline
+          }
+        },
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_finish: function (data) {
@@ -132,11 +157,17 @@ predict_sequence.forEach(trial => {
         }
       },
       confidenceRating,
-      noChoiceWarning("response")
+      noChoiceWarning("response", '', "control_predict_homebase")
     ],
     timeline_variables: [trial]
   });
 });
+
+controlPredTimeline[0]["on_timeline_start"] = () => {
+  jsPsych.data.addProperties({
+      control_predict_homebase_n_warnings: 0
+  });
+}
 
 const controlRewardTimeline = [];
 reward_sequence.forEach((trial, index) => {
@@ -169,7 +200,15 @@ reward_sequence.forEach((trial, index) => {
     right: jsPsych.timelineVariable('right'),
     current: jsPsych.timelineVariable('current'),
     reward_amount: jsPsych.timelineVariable('reward_amount'),
-    reward_decision: 4000,
+    reward_number: jsPsych.timelineVariable('reward_number'),
+    reward_decision: () => {
+      return 10000000000;
+      if (can_be_warned("control_reward")) {
+          return window.default_response_deadline
+      } else {
+          return window.default_long_response_deadline
+      }
+    },
     post_trial_gap: 0,
     save_timeline_variables: true,
     on_start: function (trial) {
@@ -211,6 +250,15 @@ reward_sequence.forEach((trial, index) => {
   //   }
   // });
 
+  timelineItems.push(
+    noChoiceWarning("response",
+      `<main class="main-stage">
+        <img class="background" src="imgs/ocean.png" alt="Background"/>
+      </main>`,
+      "control_reward"
+    )
+  );
+  
   // Add reward post trial gap but with ocean background
   timelineItems.push({
     timeline: [{
@@ -229,35 +277,48 @@ reward_sequence.forEach((trial, index) => {
     }
   });
   
-  timelineItems.push(
-    noChoiceWarning("response",
-      `<main class="main-stage">
-        <img class="background" src="imgs/ocean.png" alt="Background"/>
-      </main>`
-    )
-  );
-  
   controlRewardTimeline.push({
     timeline: timelineItems,
     timeline_variables: [trial]
   });
 });
 
+controlRewardTimeline[0]["on_timeline_start"] = () => {
+  updateState(`no_resume`);
+  updateState(`control_reward_start`);
+  jsPsych.data.addProperties({
+      control_reward_n_warnings: 0
+  });
+}
+
 // Add feedback on the final rewards in total
 let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
-    let total_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
-    return `<main class="main-stage">
+    let total_bonus = (jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() + 45) / 125 * 3;
+    if (window.context === "relmed" || window.task === "control") {
+      stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
-              <p>You final bonus from all the successful Reward Missions is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
               <p>Thank you for playing the game!</p>
-              <p>Now press any key to continue.</p>
+              <p>Your final bonus from all the successful quests is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
+              <p>You may now press any key to continue.</p>
             </div>
           </div>
         </main>`;
+    } else {
+      stimulus = `<main class="main-stage">
+          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
+            <div class="instruction-content" style="font-size: 32px; text-align: center;">
+              <p>Thank you for playing the game!</p>
+              <p>You may now press any key to continue.</p>
+            </div>
+          </div>
+        </main>`;
+    }
+    return stimulus;
   },
   choices: "ALL_KEYS",
   response_ends_trial: true,
@@ -269,7 +330,12 @@ let controlTotalReward = {
     trialphase: 'control_bonus'
   },
   on_finish: function (data) {
-    data.control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
+    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
+    data.control_bonus = control_bonus;
+    data.control_bonus_adjusted = (control_bonus + 45) / 125 * 3;
+    console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
+    postToParent({bonus: data.control_bonus_adjusted});
+    saveDataREDCap(retry = 3);
   }
 };
 
@@ -278,9 +344,6 @@ let controlDebriefing = [];
 controlDebriefing.push(control_acceptability_intro);
 controlDebriefing.push(acceptability_control);
 controlDebriefing.push(control_debrief);
-controlDebriefing["on_timeline_start"] = () => {
-  saveDataREDCap(retry = 3);
-}
 
 // Assembling the control timeline
 let controlTimeline = [];
@@ -290,10 +353,6 @@ controlTimeline.push(controlPreload);
 controlTimeline.push(controlInstructionsTimeline);
 
 // Add the explore, predict, reward trials
-controlTimeline[0]["on_timeline_start"] = () => {
-  updateState(`no_resume`);
-  updateState(`control_task_start`);
-};
 for (let i = 0; i < explore_sequence.length; i++) {
   // Add the explore trials
   controlTimeline.push(controlExploreTimeline[i]);
@@ -306,11 +365,14 @@ for (let i = 0; i < explore_sequence.length; i++) {
     } else {
       // Add the reward trials after trial 12, 24, 36...
       controlTimeline.push(controlRating);
-      indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
-      controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
+      // indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
+      // controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
     }
   }
 }
+
+// Add the reward trials as a separate block
+controlTimeline.push(controlRewardTimeline);
 
 // Add the final reward feedback
 controlTimeline.push(controlTotalReward);

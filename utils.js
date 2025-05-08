@@ -111,7 +111,7 @@ if (window.context == "relmed") {
             {   
                 stimulus: '...',
                 trial_duration: 200,
-                on_finish: function(trial) {
+                on_finish: function(data) {
                     // Save data
                     saveDataREDCap(retry = 3);
                     // Allow refresh
@@ -140,7 +140,47 @@ const kick_out = {
         kick_out_warning
     ]
 }
-  
+
+const create_instruction_kick_out = (task) => {
+    if (window.context == "relmed") {
+        return undefined;
+    } else {
+        return {
+            type: jsPsychHtmlKeyboardResponse,
+            conditional_function: function () {
+                if (jsPsych.data.get().last(1).select(`${task}_instruction_fail`).values[0] >= window.max_instruction_fails) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            css_classes: ['instructions'],
+            timeline: [
+                {
+                    stimulus: '...',
+                    trial_duration: 200,
+                    on_finish: function (data) {
+                        // Save data
+                        saveDataREDCap(retry = 3);
+                        // Allow refresh
+                        window.removeEventListener('beforeunload', preventRefresh);
+                    }
+                },
+                {
+                    stimulus: `<p>Thank you for your time—unfortunately, it seems that the instructions weren’t fully understood, so we won’t be able to proceed with the experiment.</p>
+                    <p>If you believe this is a mistake, please email haoyang.lu@ucl.ac.uk, explaining the circumstances.</p>
+                    <p>Please return this study on <a href="https://app.prolific.com/">Prolific</a>.</p>
+                    <p>You may now close this tab.</p>
+                `
+                }
+            ],
+            choices: ["NO_KEYS"],
+            data: {
+                trialphase: 'kick-out'
+            }
+        }
+    }
+}
   
   // Function that checks for fullscreen
 function check_fullscreen(){
@@ -818,9 +858,9 @@ function noChoiceWarning(resp_var = "response", stimulus = "", task = "") {
         },
         on_finish: () => {
             // Update task warning counter if can be warned on this trial
-            const task_n_warnings = jsPsych.data.get().last(1).select("dd_n_warnings").values[0];
+            const task_n_warnings = jsPsych.data.get().last(1).select([`${task}_n_warnings`]).values[0];
             jsPsych.data.addProperties({
-                dd_n_warnings: task_n_warnings + 1
+                [`${task}_n_warnings`]: task_n_warnings + 1
             });
         }
     }
