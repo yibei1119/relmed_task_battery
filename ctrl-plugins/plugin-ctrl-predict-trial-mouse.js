@@ -22,14 +22,14 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       },
       choices : {
         type: jspsych.ParameterType.STRING,
-        default: ["coconut", "grape", "orange", "banana"],
+        default: ["i2", "i3", "i4", "i1"],
         array: true,
         description: "Island choices",
       },
       button_html: {
         type: jspsych.ParameterType.FUNCTION,
         default: function(choice, choice_index) {
-          return `<button class="destination-button"><img src="imgs/island_icon_${choice}.png" style="width:100px;"></button>`;
+          return `<button class="destination-button"><img src="imgs/Control_stims/${window.session}/island_icon_${choice}.png" style="width:100px;"></button>`;
         }
       },
       post_trial_gap: {
@@ -270,10 +270,10 @@ var jsPsychPredictDest = (function (jspsych) {
       this.jsPsych = jsPsych;
 
       this.islandKeyList = {
-        'coconut': "d",
-        'orange': "f",
-        'grape': "j",
-        'banana': "k"
+        'i2': "d",
+        'i3': "f",
+        'i4': "j",
+        'i1': "k"
       };
 
       this.keyList = {
@@ -301,7 +301,7 @@ var jsPsychPredictDest = (function (jspsych) {
           <section class="scene">
             <div class="overlap-group">
               <div class="choice-left">
-                <img class="island-near" src="imgs/simple_island_${trial.near}.png" alt="Nearer island" />
+                <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${trial.near}.png" alt="Nearer island" />
                 <img class="ship-left" src="imgs/simple_ship_${trial.ship}.png" style="top:-10%" alt="Prediction ship" />
               </div>
               <!-- Fuel Level Indicator -->
@@ -324,7 +324,7 @@ var jsPsychPredictDest = (function (jspsych) {
         <div class="island-choices">
           ${Object.entries(this.islandKeyList).map(([island, key]) => `
             <div class="destination-button" data-choice="${this.keyList[key]}">
-              <img src="imgs/island_icon_${island}.png" style="width:100px;">
+              <img src="imgs/Control_stims/${window.session}/island_icon_${island}.png" style="width:100px;">
               <img src="imgs/letter-${key}.png" style="width:50px;">
             </div>
           `).join('')}

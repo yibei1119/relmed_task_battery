@@ -212,7 +212,7 @@ function setupFuelTrial(config) {
 const nPages = 12;
 const leftShip = "green";
 const rightShip = "blue";
-const downstreamIsland = "orange";
+const downstreamIsland = "i4";
 const homebaseIsland = CONTROL_CONFIG.controlRule[rightShip];
 
 const controlInstructionPages = [
@@ -222,7 +222,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -261,7 +261,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -300,7 +300,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">
@@ -339,7 +339,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left">
@@ -385,9 +385,9 @@ const controlInstructionPages = [
                     <div class="choice-left">
                         <img class="ship-left" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
                     </div>
-                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island_grape.png" alt="Hidden island" />
+                    <img class="island-near" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_i4.png" alt="Hidden island" />
                     <div class="choice-right">
-                        <img class="island-near" src="imgs/simple_island_${CONTROL_CONFIG.controlRule[rightShip]}.png" alt="Destination island" style="top: -10%;" />
+                        <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${CONTROL_CONFIG.controlRule[rightShip]}.png" alt="Destination island" style="top: -10%;" />
                     </div>
                 </div>
             </section>
@@ -405,7 +405,7 @@ const controlInstructionPages = [
             <div class="instruction-stage">
                 <img class="background" src="imgs/ocean.png" alt="Background"/>
                 <section class="scene">
-                <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+                <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
                 <div class="overlap-group">
                     <div class="choice-left">
                         <div class="fuel-container-left" style="visibility: hidden;">
@@ -447,7 +447,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-                <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+                <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
                 <img class="feedback-ship" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
             ${createOceanCurrents(2)}
             </section>
@@ -520,7 +520,7 @@ const controlInstructionPages = [
         <div class="instruction-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
             <section class="scene">
-            <img class="island-far" src="imgs/simple_island_${downstreamIsland}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${downstreamIsland}.png" alt="Farther island" />
             <div class="overlap-group">
                 <div class="choice-left">
                     <div class="fuel-container-left" style="visibility: hidden;">

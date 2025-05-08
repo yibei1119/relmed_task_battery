@@ -26,6 +26,7 @@
     // window.sessionNum = jsPsych.data.getURLVariable('session_num');
     // window.prolificPID = jsPsych.data.getURLVariable('PROLIFIC_PID');
     // window.debug = prolificPID.includes("debug");
+    window.session = jsPsych.data.getURLVariable('session');
     window.session_state = JSON.parse(jsPsych.data.getURLVariable('session_state') || "{}");
   </script>
   <script src="jspsych/plugin-html-keyboard-response.js"></script>
@@ -103,12 +104,12 @@
 
   // controlTestingTimeline.push(controlInstructionsTimeline);
   
-  controlTestingTimeline.push(controlExploreTimeline);
+  // controlTestingTimeline.push(controlExploreTimeline);
 
   // controlTestingTimeline.push(controlPredTimeline);
 
-  // controlTestingTimeline.push(controlRewardTimeline);
-  // controlTestingTimeline.push(controlTotalReward);
+  controlTestingTimeline.push(controlRewardTimeline);
+  controlTestingTimeline.push(controlTotalReward);
   // controlTestingTimeline.push([controlRating]);
 
   // controlTestingTimeline.push(controlDebriefing);

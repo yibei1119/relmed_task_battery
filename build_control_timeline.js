@@ -1,30 +1,34 @@
 const controlPreload = {
   type: jsPsychPreload,
   images: [
-    "ocean.png",
-    "ocean_above.png",
-    "simple_island.png",
-    "simple_island_banana.png",
-    "simple_island_coconut.png",
-    "simple_island_grape.png",
-    "simple_island_orange.png",
-    "simple_ship_blue.png",
-    "simple_ship_green.png",
-    "simple_ship_red.png",
-    "simple_ship_yellow.png",
-    "island_icon_banana.png",
-    "island_icon_coconut.png",
-    "island_icon_grape.png",
-    "island_icon_orange.png",
-    "left.png",
-    "map.png",
-    "map_islands.png",
-    "fuel.png",
-    "scroll.png",
-    "icon-reward.png",
-    "icon-predict.png",
-    "icon-explore.png"
-  ].map(s => "imgs/" + s),
+    ...([
+      "ocean.png",
+      "ocean_above.png",
+      "simple_island.png",
+
+      "simple_ship_blue.png",
+      "simple_ship_green.png",
+      "simple_ship_red.png",
+      "simple_ship_yellow.png",
+
+      "left.png",
+      "fuel.png",
+      "scroll.png",
+      "icon-reward.png",
+      "icon-predict.png",
+      "icon-explore.png"
+    ].map(s => "imgs/" + s)),
+    ...([
+      "simple_island_i1.png", //wk0: banana
+      "simple_island_i2.png", //wk0: coconut
+      "simple_island_i3.png", //wk0: grape
+      "simple_island_i4.png", //wk0: orange
+      "island_icon_i1.png",
+      "island_icon_i2.png",
+      "island_icon_i3.png",
+      "island_icon_i4.png"
+    ].map(s => "imgs/" + window.session + "/" + s)),
+  ],
   post_trial_gap: 800,
   continue_after_error: true,
   data: {
@@ -246,6 +250,15 @@ reward_sequence.forEach((trial, index) => {
   //   }
   // });
 
+  timelineItems.push(
+    noChoiceWarning("response",
+      `<main class="main-stage">
+        <img class="background" src="imgs/ocean.png" alt="Background"/>
+      </main>`,
+      "control_reward"
+    )
+  );
+  
   // Add reward post trial gap but with ocean background
   timelineItems.push({
     timeline: [{
@@ -263,15 +276,6 @@ reward_sequence.forEach((trial, index) => {
       return lastTrialChoice !== null;
     }
   });
-  
-  timelineItems.push(
-    noChoiceWarning("response",
-      `<main class="main-stage">
-        <img class="background" src="imgs/ocean.png" alt="Background"/>
-      </main>`,
-      "control_reward"
-    )
-  );
   
   controlRewardTimeline.push({
     timeline: timelineItems,
@@ -292,16 +296,29 @@ let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
     let total_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() / 50;
-    return `<main class="main-stage">
+    if (window.context === "relmed" || window.task === "control") {
+      stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
-              <p>Your final bonus from all the successful Reward Missions is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
               <p>Thank you for playing the game!</p>
-              <p>Now press any key to continue.</p>
+              <p>Your final bonus from all the successful quests is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
+              <p>You may now press any key to continue.</p>
             </div>
           </div>
         </main>`;
+    } else {
+      stimulus = `<main class="main-stage">
+          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
+            <div class="instruction-content" style="font-size: 32px; text-align: center;">
+              <p>Thank you for playing the game!</p>
+              <p>You may now press any key to continue.</p>
+            </div>
+          </div>
+        </main>`;
+    }
+    return stimulus;
   },
   choices: "ALL_KEYS",
   response_ends_trial: true,
@@ -313,7 +330,7 @@ let controlTotalReward = {
     trialphase: 'control_bonus'
   },
   on_finish: function (data) {
-    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
+    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() / 50;
     data.control_bonus = control_bonus;
     postToParent({bonus: control_bonus});
     saveDataREDCap(retry = 3);

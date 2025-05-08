@@ -87,7 +87,7 @@ var jsPsychExploreShip = (function (jspsych) {
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                 <img src="imgs/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
             </div>
-            <img class="island-far" src="imgs/simple_island_${far}.png" alt="Farther island" />
+            <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${far}.png" alt="Farther island" />
             <div class="overlap-group">
               <div class="choice-left">
                 <div class="fuel-container-left">
@@ -428,7 +428,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
               <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
                   <img src="imgs/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
               </div>
-              <img class="island-far" src="imgs/simple_island_${destinationIsland}.png" alt="Farther island" />
+              <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Farther island" />
               <img class="feedback-ship" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
             </section>
           </main>
@@ -442,13 +442,13 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
                 <div class="choice-left">
                   ${feedbackChoice === 'left' ? 
                     `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                  ${islandSide === 'left' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
+                  ${islandSide === 'left' ? `<img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
                 </div>
                 <img class="island-near" style="visibility: hidden;" src="imgs/simple_island.png" alt="Hidden island" />
                 <div class="choice-right">
                   ${feedbackChoice === 'right' ? 
                     `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                  ${islandSide === 'right' ? `<img class="island-near" src="imgs/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
+                  ${islandSide === 'right' ? `<img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
                 </div>
               </div>
             </section>
