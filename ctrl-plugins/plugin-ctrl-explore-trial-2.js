@@ -631,7 +631,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       oldStyles.forEach(style => style.remove());
 
       // Match base rule island
-      const matchBaseRule = currentRule === 'base' || destinationIsland === this.baseRule[nearIsland];
+      const matchBaseRule = currentRule === 'base';
       
       // Generate feedback display
       display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland, matchBaseRule);
