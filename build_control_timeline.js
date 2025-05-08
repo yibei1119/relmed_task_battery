@@ -2,15 +2,14 @@ const controlPreload = {
   type: jsPsychPreload,
   images: [
     ...([
+      "200p.png",
       "ocean.png",
       "ocean_above.png",
       "simple_island.png",
-
       "simple_ship_blue.png",
       "simple_ship_green.png",
       "simple_ship_red.png",
       "simple_ship_yellow.png",
-
       "left.png",
       "fuel.png",
       "scroll.png",
@@ -203,6 +202,7 @@ reward_sequence.forEach((trial, index) => {
     reward_amount: jsPsych.timelineVariable('reward_amount'),
     reward_number: jsPsych.timelineVariable('reward_number'),
     reward_decision: () => {
+      return 10000000000;
       if (can_be_warned("control_reward")) {
           return window.default_response_deadline
       } else {

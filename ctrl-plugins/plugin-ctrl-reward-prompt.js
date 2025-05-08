@@ -80,7 +80,10 @@ var jsPsychRewardPrompt = (function (jspsych) {
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
                 <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
                 <img class="island-target glowing-border" src="imgs/Control_stims/${window.session}/simple_island_${trial.target}.png" alt="Target island">
-                <p style="position: absolute;z-index: 4;top: 73%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
+                <div class="quest-reward" style="position: absolute;display: inline-flex;z-index: 4;top: 72%;flex-direction: row;align-items: center;background-color: #eedfbc;border-radius: 10px;">
+                  <p style="font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;margin-left: 10px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
+                  <img src="imgs/${trial.reward_amount === "£2" ? `200p.png`: `50pence.png`}" style="height:5em;margin: 10px;">
+                </div>
               </div>
               <div class="overlap-group">
                 <div class="choice-left">
@@ -105,7 +108,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
               </div>
               ${this.generateOceanCurrentsHTML(trial.current)}
             </section>
-            <div class="instruction-dialog" style="bottom:20%; width: 50%; min-width: 400px;">
+            <div class="instruction-dialog" style="bottom:20%; width: 60%; min-width: 400px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
                   <p>From now on, we will give you a target fruit island</p>
                   <p>If you manage to reach it, the reward will be added to your safe</p>
