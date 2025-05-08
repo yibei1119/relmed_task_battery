@@ -108,12 +108,8 @@ var jsPsychRewardPrompt = (function (jspsych) {
               </div>
               ${this.generateOceanCurrentsHTML(trial.current)}
             </section>
-            <div class="instruction-dialog" style="bottom:20%; width: 60%; min-width: 400px;">
+            <div class="instruction-dialog" style="bottom:20%; width: 50%; min-width: 400px;">
                 <div class="instruction-content" style="font-size: 1.25em; text-align: center;">
-                  <p>From now on, we will give you a target fruit island</p>
-                  <p>If you manage to reach it, the reward will be added to your safe</p>
-                  <p>Use what you learned about home fruit islands and ocean currents</p>
-                  <p><strong>When you are ready, press <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</strong></p>
                 </div>
             </div>
           </main>
@@ -149,8 +145,8 @@ var jsPsychRewardPrompt = (function (jspsych) {
         const pages = [
           {
             html: `
-              <p>From now on, we will give you a target fruit island</p>
-              <p>If you manage to reach it, the reward will be added to your safe</p>
+              <p>From now on, we will give you a <strong>target fruit island</strong></p>
+              <p><strong>If you manage to reach it</strong>, you can earn the coin as a bonus<br>At the end of the game, you’ll earn a proportion of the total coins collected</p>
               <p>Use what you learned about home fruit islands and ocean currents</p>
               <p><strong>When you are ready, press <span class="spacebar-icon">&nbsp;→&nbsp;</span> to continue</strong></p>
             `,
