@@ -313,7 +313,9 @@ let controlTotalReward = {
     trialphase: 'control_bonus'
   },
   on_finish: function (data) {
-    data.control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
+    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward_feedback' }).select('reward').sum() / 50;
+    data.control_bonus = control_bonus;
+    postToParent({bonus: control_bonus});
     saveDataREDCap(retry = 3);
   }
 };
