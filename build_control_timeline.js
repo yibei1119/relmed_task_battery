@@ -202,7 +202,6 @@ reward_sequence.forEach((trial, index) => {
     reward_amount: jsPsych.timelineVariable('reward_amount'),
     reward_number: jsPsych.timelineVariable('reward_number'),
     reward_decision: () => {
-      return 10000000000;
       if (can_be_warned("control_reward")) {
           return window.default_response_deadline
       } else {
