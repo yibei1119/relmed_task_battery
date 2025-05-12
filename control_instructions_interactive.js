@@ -750,10 +750,10 @@ controlInstructionPredTrials.push({
         instructionDialog.className = 'instruction-dialog';
         instructionStage.appendChild(instructionDialog);
         // Position the instruction dialog in the center of the screen
-        instructionDialog.style.position = "absolute";
-        instructionDialog.style.bottom = "25%";
+        instructionDialog.style.position = "relative";
+        instructionDialog.style.top = "calc(24% - 5vh)";
         instructionDialog.style.left = "50%";
-        instructionDialog.style.transform = "translate(-50%, -50%)";
+        instructionDialog.style.transform = "translateX(-50%)";
         instructionDialog.style.zIndex = "10";
         instructionDialog.innerHTML = `
             <div class="instruction-content" style="font-size: 1.2em; ">
