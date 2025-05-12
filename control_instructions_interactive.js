@@ -770,7 +770,13 @@ controlInstructionPredTrials.push({
 let controlIntroComprehension = [];
 controlIntroComprehension.push({
     type: jsPsychSurveyMultiChoice,
-    preamble: `<div class=instructions><p>For each statement, please indicate whether it is true or false:</p></div>`,
+    preamble: () => {
+        var preamble = `<div class=instructions><p>For each statement, please indicate whether it is true or false:</p></div>`
+        if (jsPsych.data.get().last(1).select('control_instruction_fail').values[0] == window.max_instruction_fails - 1) {
+            preamble += `<p style="color:#f44336; font-weight:bold">You have almost reached the maximum number of failures allowed. Please pay close attention to the instructions.</p>`;
+        }
+        return preamble;
+    },
     data: {trialphase: "control_instruction_quiz"},
     questions: [
         {
@@ -901,8 +907,8 @@ controlIntroComprehension.push(
             {
                 pages: [
                 `
-                <p>Press <span style="font-weight: bold; color: #2f6cac;">Next</span> to <strong>re-take the quiz questions</strong></p>
-                <p>or <span style="font-weight: bold; color: #ff7875;">Restart</span> to <strong>review the full instructions again.</strong></p>
+                <p style="font-size: 1.4em;">Press <span style="font-weight: bold; color: #2f6cac;">Next</span> to <strong>re-take the quiz questions</strong></p>
+                <p style="font-size: 1.4em;">or <span style="font-weight: bold; color: #ff7875;">Restart</span> to <strong>review the full instructions again.</strong></p>
                 `
                 ]
             }
