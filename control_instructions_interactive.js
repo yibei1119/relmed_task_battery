@@ -558,7 +558,10 @@ controlInstructionTrial = {
     type: jsPsychInstructions,
     css_classes: ['instructions'],
     pages: controlInstructionPages.map(page => page.content),
-    allow_keys: false,
+    allow_keys: () => {
+        console.log("here")
+        return (window.simulating || false)
+    },
     show_clickable_nav: true,
     show_page_number: false,
     data: {trialphase: "control_instructions"},
