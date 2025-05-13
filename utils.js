@@ -915,7 +915,6 @@ function createPressBothTrial(stimulus, trialphase){
             console.log(`response_ends_trial: ${window.simulating || false}`)
             return window.simulating || false
         },
-        // simulation_options: {simulate: false},
         on_load: function() {
             if (window.simulating || false){
                 return
