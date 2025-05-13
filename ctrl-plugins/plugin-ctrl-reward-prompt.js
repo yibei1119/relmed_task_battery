@@ -254,7 +254,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
     create_simulation_data(trial, simulation_options) {
       const default_data = {
         trialphase: "control_reward_prompt",
-        response: this.jsPsych.pluginAPI.getValidKey(trial.choices),
+        response: this.jsPsych.pluginAPI.getValidKey(["ArrowRight"]),
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true))
       };
 
@@ -283,6 +283,8 @@ var jsPsychRewardPrompt = (function (jspsych) {
       load_callback();
 
       if (data.rt !== null) {
+        // It works with the current setup for the plugin, since there's only one instruction page so one keypress to end the trial
+        // But if there are multiple pages, it's better to simulate multiple keypresses based on the number of pages
         this.jsPsych.pluginAPI.pressKey(data.response, data.rt);
       }
     }
