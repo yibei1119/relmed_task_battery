@@ -62,32 +62,14 @@ function prepare_PILT_instructions() {
     ];
 
     inst.push(
-        {
-            type: jsPsychHtmlKeyboardResponse,
-            css_classes: ['instructions'],
-            stimulus: `<p>You choose a card by pressing the left or the right arrow keys.</p>
+        createPressBothTrial(
+            `<p>You choose a card by pressing the left or the right arrow keys.</p>
                     <p>Let's try it out now! Flip a card on the next screen.</p>
                     <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
                     <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
                     `,
-            // choices: ['arrowleft', 'arrowright'],
-            data: {trialphase: "pilt_instruction"},
-            response_ends_trial: false,
-            simulation_options: {simulate: false},
-            on_load: function() {
-                const start = performance.now();
-                const multiKeysListener = setupMultiKeysListener(
-                    ['ArrowRight', 'ArrowLeft'], 
-                    function() {
-                        jsPsych.finishTrial({
-                            rt: Math.floor(performance.now() - start)
-                        });
-                        // Clean up the event listeners to prevent persistining into the next trial
-                        multiKeysListener.cleanup();
-                    }
-                );
-            }
-        },
+            "pilt_instruction"
+        ),
         {
             timeline: build_PILT_task(
                 [[
@@ -132,34 +114,16 @@ function prepare_PILT_instructions() {
         show_clickable_nav: true,
         data: {trialphase: "pilt_instruction"}
     },
-    {
-        type: jsPsychHtmlKeyboardResponse,
-        css_classes: ['instructions'],
-        stimulus: `<p>Let's practice collecting coins. \
+    createPressBothTrial(
+        `<p>Let's practice collecting coins. \
             On the next screen, choose cards to collect as much money as you can.</p>
             <p>One of the picture cards has mostly high value coins behind it, while the other has mostly pennies behind it.</p>
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
-`,
-        // choices: ['arrowleft', 'arrowright'],
-        data: {trialphase: "pilt_instruction"},
-        response_ends_trial: false,
-        simulation_options: {simulate: false},
-        on_load: function() {
-            const start = performance.now();
-            const multiKeysListener = setupMultiKeysListener(
-                ['ArrowRight', 'ArrowLeft'], 
-                function() {
-                    jsPsych.finishTrial({
-                        rt: Math.floor(performance.now() - start)
-                    });
-                    // Clean up the event listeners to prevent persistining into the next trial
-                    multiKeysListener.cleanup();
-                }
-            );
-        }
-
-    }]);
+        `,
+        "pilt_instruction"
+    )
+   ]);
 
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
     let reward_magnitude = shuffleArray([0.5, 1, 1, 0.5, 1, 0.5], window.session + "b");
@@ -202,33 +166,14 @@ function prepare_PILT_instructions() {
     if (window.session !== "screening"){
         inst = inst.concat([
             inter_block_instruct,
-            {
-                type: jsPsychHtmlKeyboardResponse,
-                css_classes: ['instructions'],
-                stimulus: `<p>Now, let's practice minimizing your coin losses. 
+            createPressBothTrial(
+                `<p>Now, let's practice minimizing your coin losses. 
                 On the next screen, choose cards to lose as little money as possible.</p>
                 <p>One of the picture cards will often break the high-value coins in your safe, while the other will mostly break only your pennies.</p>
                 <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
                 <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-                // choices: ['arrowright', 'arrowleft'],
-                data: {trialphase: "pilt_instruction"},
-                response_ends_trial: false,
-                simulation_options: {simulate: false},
-                on_load: function() {
-                    const start = performance.now();
-                    const multiKeysListener = setupMultiKeysListener(
-                        ['ArrowRight', 'ArrowLeft'], 
-                        function() {
-                            jsPsych.finishTrial({
-                                rt: Math.floor(performance.now() - start)
-                            });
-                            // Clean up the event listeners to prevent persistining into the next trial
-                            multiKeysListener.cleanup();
-                        }
-                    );
-                }
-        
-            }
+                "pilt_instruction"
+            ),
         ]);
     
         let hammer_on_right = shuffleArray([false, true, false, true, false, false], window.session);
@@ -358,37 +303,14 @@ function prepare_PILT_instructions() {
 
     const inst_total = [
         inst_loop,
-        {
-            type: jsPsychHtmlKeyboardResponse,
-            css_classes: ['instructions'],
-            stimulus: `<p>Great! Let's start playing for real.</p>
+        createPressBothTrial(
+            `<p>Great! Let's start playing for real.</p>
             <p>You will now complete ${window.session === "screening" ? "another round" : "20 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "15-20 minutes"} on average to complete.</p>
             ${window.session !== "screening" ? "<p>You will be able to take a short break between rounds, if you feel you need it.</p>" : ""}
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-            choices: ['arrowright', 'arrowleft'],
-            data: {trialphase: "pilt_instruction"},
-            on_finish: () => {
-                jsPsych.data.addProperties({
-                    pilt_n_warnings: 0
-                });
-            },
-            response_ends_trial: false,
-            simulation_options: {simulate: false},
-            on_load: function() {
-                const start = performance.now();
-                const multiKeysListener = setupMultiKeysListener(
-                    ['ArrowRight', 'ArrowLeft'], 
-                    function() {
-                        jsPsych.finishTrial({
-                            rt: Math.floor(performance.now() - start)
-                        });
-                        // Clean up the event listeners to prevent persistining into the next trial
-                        multiKeysListener.cleanup();
-                    }
-                );
-            }
-        }
+            "pilt_instruction"
+        )
     ]
 
     return inst_total

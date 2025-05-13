@@ -898,3 +898,42 @@ function setupMultiKeysListener(keysToTrack, callback_function, targetElement = 
         cleanup
     };
 }
+
+function createPressBothTrial(stimulus, trialphase){
+    return {
+        type: jsPsychHtmlKeyboardResponse,
+        css_classes: ['instructions'],
+        stimulus: stimulus,
+        choices: ['arrowleft', 'arrowright'],
+        data: {trialphase: trialphase},
+        on_finish: () => {
+            jsPsych.data.addProperties({
+                reversal_n_warnings: 0
+            });
+        },
+        response_ends_trial: () => {
+            console.log(`response_ends_trial: ${window.simulating || false}`)
+            return window.simulating || false
+        },
+        // simulation_options: {simulate: false},
+        on_load: function() {
+            if (window.simulating || false){
+                return
+            }
+
+            const start = performance.now();
+            const callback = function() {
+                jsPsych.finishTrial({
+                    rt: Math.floor(performance.now() - start)
+                });
+                // Clean up the event listeners to prevent persistining into the next trial
+                multiKeysListener.cleanup();
+            }
+
+            const multiKeysListener = setupMultiKeysListener(
+                ['ArrowRight', 'ArrowLeft'], 
+                callback
+            );
+        }
+    }
+}
