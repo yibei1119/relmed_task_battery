@@ -446,9 +446,6 @@ let questionnaires_instructions = (total) => {
             },
             show_clickable_nav: true,
             data: {trialphase: "pre_questionnaire_instructions"},
-            simulation_options:{
-                simulate: false
-            }
         }
     ];
 } 
