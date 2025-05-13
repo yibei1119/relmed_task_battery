@@ -125,9 +125,6 @@ const startConfirmation = {
     const seed = jsPsych.randomization.setSeed();
     data.rng_seed = seed;
   },
-  simulation_options: {
-    simulate: false
-  }
 }
 
 const vigourInstructions = {

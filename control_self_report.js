@@ -61,9 +61,6 @@ const control_acceptability_intro =
     ],
     show_clickable_nav: true,
     data: { trialphase: "control_pre_debrief_instructions" },
-    simulation_options: {
-        simulate: false
-    }
 };
 
 const acceptability_control = {
@@ -92,9 +89,6 @@ const acceptability_control = {
   data: {
       trialphase: "acceptability_ctrl"
   },
-  simulation_options: {
-      simulate: false
-  }
 };
 
 const control_debrief = {
@@ -136,7 +130,4 @@ const control_debrief = {
   data: {
       trialphase: 'control_debrief_text'
   },
-  simulation_options: {
-      simulate: false
-  }
 };

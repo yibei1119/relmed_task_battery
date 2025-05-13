@@ -231,9 +231,6 @@ const PIT_bonus = {
   on_finish: (data) => {
     data.PIT_bonus = window.sampledPITreward / 100
   },
-  simulation_options: {
-    simulate: false
-  }
 };
 
 // Debriefing
@@ -262,9 +259,6 @@ const vigour_PIT_bonus = {
 
     postToParent({bonus: bonus});
   },
-  simulation_options: {
-    simulate: false
-  }
 };
 
 const vigour_PIT_bonus2 = {
@@ -311,9 +305,6 @@ const vigour_PIT_bonus2 = {
   on_finish: (data) => {
     data.vigour_bonus = getFracVigourReward() + getFracPITReward();
   },
-  simulation_options: {
-    simulate: false
-  }
 };
 
 // Instructions for comparison task
@@ -335,9 +326,6 @@ const PITruleInstruction = {
   data: { trialphase: 'pit_instructions' },
   choices: ['b'],
   post_trial_gap: 300,
-  simulation_options: {
-    simulate: false
-  }
 };
 
 const PITruleInstruction_2 = {
@@ -419,9 +407,6 @@ const PITruleInstruction_2 = {
           </div>
     </div>
     `],
-  simulation_options: {
-    simulate: false
-  }
 };
 
 const startPITconfirmation = {
@@ -436,9 +421,6 @@ const startPITconfirmation = {
     `,
   post_trial_gap: 300,
   data: { trialphase: 'pit_instructions' },
-  simulation_options: {
-    simulate: false
-  }
 }
 
 const PITinstructions = {

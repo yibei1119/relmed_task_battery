@@ -562,7 +562,6 @@ controlInstructionTrial = {
     show_clickable_nav: true,
     show_page_number: false,
     data: {trialphase: "control_instructions"},
-    simulation_options: {simulate: false},
     on_finish: function(data) {
         jsPsych.data.addProperties({
             control_instruction_fail: 0
@@ -714,7 +713,6 @@ const controlInstructionLastPage = {
     show_clickable_nav: true,
     show_page_number: false,
     data: {trialphase: "control_instructions"},
-    simulation_options: {simulate: false},
     on_load: function() {
         const navigationElement = document.querySelector('.jspsych-instructions-nav');
         const firstButton = navigationElement.querySelector('button:first-child');
@@ -857,7 +855,6 @@ controlIntroComprehension.push(
         allow_keys: false,
         show_page_number: false,
         show_clickable_nav: true,
-        simulation_options: {simulate: false},
         data: {
             trialphase: "control_instruction_quiz_review"
         },
@@ -899,7 +896,6 @@ controlIntroComprehension.push(
         allow_keys: false,
         show_page_number: false,
         show_clickable_nav: true,
-        simulation_options: {simulate: false},
         data: {
             trialphase: "control_instruction_quiz_failure"
         },

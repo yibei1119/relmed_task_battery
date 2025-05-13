@@ -108,7 +108,6 @@ function initPavlovianLottery() {
       `
     ],
     show_clickable_nav: true,
-    simulation_options: {simulate: false},
     data: { trialphase: 'prepilt_instruction' }
   },
   {
