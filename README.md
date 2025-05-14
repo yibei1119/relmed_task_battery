@@ -49,7 +49,7 @@ Data is written to REDCap via a call to an AWS lamda function.
 | wk2 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | reversal | ✅ Success | ❌ Failed | ✅ Success |
+| wk4 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
