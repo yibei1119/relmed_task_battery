@@ -207,16 +207,27 @@ function check_fullscreen(){
 function postToParent(message, fallback = () => {}) {
     try {
         if (window.parent && window.parent.postMessage) {
-            // Send message to localhost and relmed.ac.uk
-            window.parent.postMessage(message, 'http://localhost:3000');
-            window.parent.postMessage(message, 'https://relmed.ac.uk');
-            window.parent.postMessage(message, 'https://www.relmed.ac.uk');
+            const allowedOrigins = [
+                'http://localhost:3000',
+                'https://relmed.ac.uk',
+                'https://www.relmed.ac.uk'
+            ];
+
+            // Check if the parent URL matches one of the allowed origins
+            const parentUrl = document.referrer || window.parent.location.origin;
+            if (allowedOrigins.includes(parentUrl)) {
+                window.parent.postMessage(message, parentUrl);
+            } else {
+                console.warn("Parent URL does not match any allowed origins:", parentUrl);
+                fallback();
+            }
         } else {
-            throw new Error("Parent window or postMessage is unavailable.");
+            console.warn("Parent window or postMessage is unavailable.");
+            fallback();
         }
     } catch (error) {
-        console.error("Failed to send message to parent window:", error);
-    
+        console.warn("Failed to send message to parent window:", error);
+
         // Implement a fallback or handle the error
         fallback();
     }
