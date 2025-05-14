@@ -152,7 +152,7 @@ const test_trial = (task) => {
                         });
                     }
                  },
-                post_trial_gap: 600
+                post_trial_gap: () => {return (window.simulating || false) ? 50 : 600}
             },
             {
                 timeline: [
@@ -161,7 +161,7 @@ const test_trial = (task) => {
                         stimulus: `<p><strong><span class="highlight-txt">How confident are you that your last choice was correct?</span></strong></p>`,
                         choices: ["1<br>Not at all", "2", "3", "4", "5<br>Very confident"],
                         trial_duration: 10000,
-                        post_trial_gap: 800,                    
+                        post_trial_gap: () => {return (window.simulating || false) ? 50 : 800},                    
                         data: {
                             trialphase: "pilt_confidence"
                         },
@@ -307,7 +307,9 @@ const PILT_trial = (task) => {
                     });
                 }
             },
-            post_trial_gap: 400
+            post_trial_gap: () => {
+                return (window.simulating || false) ? 50 : 400
+            }
         }
         ],
         conditional_function: function () {
