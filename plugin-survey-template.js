@@ -134,6 +134,7 @@ var jsPsychSurveyTemplate = (function (jspsych) {
       this.jsPsych = jsPsych;
     }
     trial(display_element, trial) {
+      const self = this; 
 
       //---------------------------------------//
       // Define survey HTML.
@@ -374,8 +375,8 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         var responses = objectifyForm(question_data);
 
         // Detect heuristic responding
-        var straightlining = detectStraightLining(question_data);
-        var zigzagging = detectZigZagging(question_data, trial.scale);
+        var straightlining = self.detectStraightLining(question_data);
+        var zigzagging = self.detectZigZagging(question_data, trial.scale);
 
         // Check honeypot.
         var honeypot = serializeArray(display_element.querySelector('#survey-template-form'));
@@ -450,56 +451,142 @@ var jsPsychSurveyTemplate = (function (jspsych) {
         }
         return returnArray;
       }
+    }
 
-      // Straight-lining is defined as choosing the same response option (by position)
-      // across the entire survey. We detect this pattern by identifying the maximum
-      // percentage of responses loading onto the same item position.
-      function detectStraightLining(formArray) {
+    // Straight-lining is defined as choosing the same response option (by position)
+    // across the entire survey. We detect this pattern by identifying the maximum
+    // percentage of responses loading onto the same item position.
+    detectStraightLining(formArray) {
 
-        // Initialize counts
-        let counts = [];
+      // Initialize counts
+      let counts = [];
 
-        // Count number of instances per unique response
-        for (let i = 0; i < formArray.length; i++) {
-          let loc = parseInt(formArray[i]['position']);
-          if ( counts[loc] > 0 ) {
-            counts[loc]++;
-          } else {
-            counts[loc] = 1;
-          }
+      // Count number of instances per unique response
+      for (let i = 0; i < formArray.length; i++) {
+        let loc = parseInt(formArray[i]['position']);
+        if ( counts[loc] > 0 ) {
+          counts[loc]++;
+        } else {
+          counts[loc] = 1;
         }
-
-        // Error-catching: replace empty with zero.
-        counts = Array.from(counts, item => item || 0);
-
-        // Compute and return maximum fraction
-        return Math.max(...counts) / formArray.length;
-
       }
 
-      // Zig-zagging is defined as choosing adjacent response options (by position)
-      // such that a diagonal pattern emerges across responses (i.e. the zig-zag).
-      // We detect this pattern by identifying the fraction of responses that exhibit
-      // response adjacency (including wrapping).
-      function detectZigZagging(formArray, scale) {
+      // Error-catching: replace empty with zero.
+      counts = Array.from(counts, item => item || 0);
 
-        // Initialize score
-        let score = 0;
-
-        // Compute distance between adjacent responses
-        for (let i = 0; i < formArray.length-1; i++) {
-          let a = parseInt(formArray[i]['position']);
-          let b = parseInt(formArray[i+1]['position']);
-          let delta = Math.abs(a - b);
-          if ( delta == 1 || delta == (scale.length-1) ) { score++ };
-        }
-
-        // Compute and return fraction
-        return score / (formArray.length-1);
-        
-      }
+      // Compute and return maximum fraction
+      return Math.max(...counts) / formArray.length;
 
     }
+
+    // Zig-zagging is defined as choosing adjacent response options (by position)
+    // such that a diagonal pattern emerges across responses (i.e. the zig-zag).
+    // We detect this pattern by identifying the fraction of responses that exhibit
+    // response adjacency (including wrapping).
+    detectZigZagging(formArray, scale) {
+
+      // Initialize score
+      let score = 0;
+
+      // Compute distance between adjacent responses
+      for (let i = 0; i < formArray.length-1; i++) {
+        let a = parseInt(formArray[i]['position']);
+        let b = parseInt(formArray[i+1]['position']);
+        let delta = Math.abs(a - b);
+        if ( delta == 1 || delta == (scale.length-1) ) { score++ };
+      }
+
+      // Compute and return fraction
+      return score / (formArray.length-1);
+      
+    }
+
+
+    // Simulation method
+    simulate(trial, simulation_mode, simulation_options, load_callback) {
+      if (simulation_mode == "data-only") {
+          load_callback();
+          this.simulate_data_only(trial, simulation_options);
+      }
+      if (simulation_mode == "visual") {
+          this.simulate_visual(trial, simulation_options, load_callback);
+      }
+    }
+
+    create_simulation_data(trial, simulation_options) {
+      const question_data = {};
+      let radio_event_times = [];
+      let radio_event_ids = [];
+      let key_event_times = [];
+      let mouse_event_times = [];
+      let item_names = [];
+      for (let q = 0; q < trial.items.length; q++) {
+        const name = "Q" + ("0" + (q + 1)).slice(-2);
+
+        question_data[name] = this.jsPsych.randomization.sampleWithoutReplacement(trial.scale.map((_, index) => index.toString()), 1)[0];
+        // Calculate the time based on previous events (cumulative timing)
+        const newTime = this.jsPsych.randomization.sampleExGaussian(1500, 400, 1 / 200, true);
+        const prevTimeSum = radio_event_times.length > 0 ? radio_event_times[radio_event_times.length - 1] : 0;
+        radio_event_times.push(prevTimeSum + newTime);
+
+        // Split radio_event_times into key_event_times and mouse_event_times
+        for (let i = 0; i < radio_event_times.length; i++) {
+            if (this.jsPsych.randomization.sampleWithReplacement([true, false], 1)[0]) {
+              key_event_times.push(radio_event_times[i]);
+            } else {
+              mouse_event_times.push(radio_event_times[i]);
+            }
+        }
+      }
+      const default_data = {
+        responses: question_data,
+        rt: radio_event_times[radio_event_times.length - 1],
+        radio_event_ids: this.jsPsych.randomization.shuffle(item_names),
+        radio_event_times: radio_event_times,
+        key_event_times: key_event_times,
+        mouse_event_times: mouse_event_times,
+        zigzagging: this.detectZigZagging(question_data, trial.scale),
+        straightlining: this.detectStraightLining(question_data),
+        question_order: trial.randomize_question_order ? this.jsPsych.randomization.shuffle(item_names) : item_names,
+        honeypot: 0
+      };
+      const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+      this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+      return data;
+    }
+    simulate_data_only(trial, simulation_options) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      this.jsPsych.finishTrial(data);
+    }
+    simulate_visual(trial, simulation_options, load_callback) {
+      const data = this.create_simulation_data(trial, simulation_options);
+      const display_element = this.jsPsych.getDisplayElement();
+      this.trial(display_element, trial);
+      load_callback();
+      const answers = Object.entries(data.responses);
+      for (let i = 0; i < answers.length; i++) {
+        const answerKey = answers[i][0];
+        const answerValue = answers[i][1];
+        
+        // Find the radio button with the matching name and value
+        const selector = `input[type="radio"][name="${answerKey}"][value="${answerValue}"]`;
+        const radioButton = display_element.querySelector(selector);
+        
+        if (radioButton) {
+          this.jsPsych.pluginAPI.clickTarget(
+            radioButton,
+            (data.rt) / answers.length * (i + 1)
+          );
+        }
+      }
+      this.jsPsych.pluginAPI.clickTarget(
+        display_element.querySelector('input[type="submit"]'),
+        data.rt
+      );
+    }
+
+  
+  
   }
   SurveyTemplatePlugin.info = info;
 
