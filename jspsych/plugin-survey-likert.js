@@ -235,9 +235,12 @@ var jsPsychSurveyLikert = (function (jspsych) {
       load_callback();
       const answers = Object.entries(data.response);
       for (let i = 0; i < answers.length; i++) {
+        const questionIndex = trial.questions.findIndex(q => 
+          (q.name !== "" ? q.name : `Q${trial.questions.indexOf(q)}`) === answers[i][0]
+        );
         this.jsPsych.pluginAPI.clickTarget(
           display_element.querySelector(
-            `input[type="radio"][name="${answers[i][0]}"][value="${answers[i][1]}"]`
+            `input[type="radio"][name="Q${questionIndex}"][value="${answers[i][1]}"]`
           ),
           (data.rt - 1e3) / answers.length * (i + 1)
         );
