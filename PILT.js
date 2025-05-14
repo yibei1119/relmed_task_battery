@@ -152,7 +152,7 @@ const test_trial = (task) => {
                         });
                     }
                  },
-                post_trial_gap: 600
+                post_trial_gap: () => {return (window.simulating || false) ? 50 : 600}
             },
             {
                 timeline: [
@@ -161,7 +161,7 @@ const test_trial = (task) => {
                         stimulus: `<p><strong><span class="highlight-txt">How confident are you that your last choice was correct?</span></strong></p>`,
                         choices: ["1<br>Not at all", "2", "3", "4", "5<br>Very confident"],
                         trial_duration: 10000,
-                        post_trial_gap: 800,                    
+                        post_trial_gap: () => {return (window.simulating || false) ? 50 : 800},                    
                         data: {
                             trialphase: "pilt_confidence"
                         },
@@ -307,7 +307,9 @@ const PILT_trial = (task) => {
                     });
                 }
             },
-            post_trial_gap: 400
+            post_trial_gap: () => {
+                return (window.simulating || false) ? 50 : 400
+            }
         }
         ],
         conditional_function: function () {
@@ -409,35 +411,14 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
 
         if (isValidNumber(block_number) & task_name === "pilt" && (window.session !== "screening")){
             block.push(
-                {
-                    type: jsPsychHtmlKeyboardResponse,
-                    stimulus: `
+                createPressBothTrial(
+                    `
                         <h3>Round ${i + 1} out of ${structure.length}</h3>
                         <p>On the next round you will play to <b>${valence > 0 ? "win" : "avoid losing"} coins</b>.<p>` + 
                        ( n_stimuli === 2 ? `<p>Place your fingers on the left and right arrow keys, and <b>press both</b> to continue.</p>` :
                         `<p>Place your fingers on the left, right, and up arrow keys, and press either one to continue.</p>`),
-                    choices: n_stimuli === 2 ? ['arrowright', 'arrowleft'] : ['arrowright', 'arrowleft', 'arrowup'],
-                    css_classes: ['instructions'],
-                    data: {
-                        trialphase: "pre_block",
-                    },
-                    response_ends_trial: n_stimuli !== 2,
-                    simulation_options: {simulate: n_stimuli !== 2},
-                    on_load: n_stimuli === 2 ? function() {
-                        const start = performance.now();
-                        const multiKeysListener = setupMultiKeysListener(
-                            ['ArrowRight', 'ArrowLeft'], 
-                            function() {
-                                jsPsych.finishTrial({
-                                    rt: Math.floor(performance.now() - start)
-                                });
-                                // Clean up the event listeners to prevent persistining into the next trial
-                                multiKeysListener.cleanup();
-                            }
-                        );
-                    } : () => {}
-        
-                }
+                    "pre_block"
+                )
             )
         }
             

@@ -410,9 +410,6 @@ const vigour_bonus = {
   on_finish: (data) => {
     data.vigour_bonus = window.sampledVigourReward / 100
   },
-  simulation_options: {
-    simulate: false
-  }
 };
 
 const vigour_bonus2 = {
@@ -430,9 +427,6 @@ const vigour_bonus2 = {
   on_finish: (data) => {
     data.vigour_bonus = getFracVigourReward();
   },
-  simulation_options: {
-    simulate: false
-  }
 };
 
 // Create main experiment timeline

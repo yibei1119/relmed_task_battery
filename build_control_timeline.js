@@ -322,9 +322,6 @@ let controlTotalReward = {
   choices: "ALL_KEYS",
   response_ends_trial: true,
   post_trial_gap: 400,
-  simulation_options: {
-    simulate: false
-  },
   data: { 
     trialphase: 'control_bonus'
   },
