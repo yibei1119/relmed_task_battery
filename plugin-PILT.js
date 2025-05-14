@@ -504,8 +504,8 @@ jsPsychPILT = (function (jspsych) {
         simulate_visual(trial, simulation_options, load_callback) {
             const data = this.create_simulation_data(trial, simulation_options);
             const display_element = this.jsPsych.getDisplayElement();
-            trial.feedback_duration = 200;
-            trial.choice_feedback_duration = 200;
+            trial.feedback_duration = 50;
+            trial.choice_feedback_duration = 50;
             trial.pavlovian_stimulus_duration = 10;
             this.trial(display_element, trial);
             load_callback();
