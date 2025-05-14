@@ -213,9 +213,16 @@ function postToParent(message, fallback = () => {}) {
                 'https://www.relmed.ac.uk'
             ];
 
-            // Check if the parent URL matches one of the allowed origins
-            const parentUrl = document.referrer || window.parent.location.origin;
-            if (allowedOrigins.includes(parentUrl)) {
+            // Normalize a URL by removing trailing slashes
+            const normalizeUrl = (url) => url.replace(/\/+$/, '');
+
+            // Get the parent URL and normalize it
+            const parentUrl = normalizeUrl(document.referrer || window.parent.location.origin);
+
+            // Check if the normalized parent URL matches any of the allowed origins
+            const isAllowed = allowedOrigins.some(origin => normalizeUrl(origin) === parentUrl);
+
+            if (isAllowed) {
                 window.parent.postMessage(message, parentUrl);
             } else {
                 console.warn("Parent URL does not match any allowed origins:", parentUrl);
