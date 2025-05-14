@@ -108,7 +108,7 @@
         </tr><tr>
             <td>PVSS_Q18</td><td>I <u>expected</u> to master the tasks I undertook</td>
         </tr><tr>
-            <td>PVSS_Q19</td><td>I felt like engaging in enjoyable activities with people I'm close to</td>
+            <td>PVSS_Q19</td><td>I <u>felt like</u> engaging in enjoyable activities with people I'm close to</td>
         </tr><tr>
             <td>PVSS_Q20</td><td>I <u>actively pursued</u> activities I thought would be fun</td>
         </tr><tr>
@@ -182,4 +182,4 @@
             <td>BFI_Q8</td><td>I see myself as someone who gets nervous easily</td>
         </tr><tr>
             <td>BFI_Q9</td><td>I see myself as someone who has an active imagination</td>
-        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
+        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table>        </tr></table><!-- END Validation Report -->
