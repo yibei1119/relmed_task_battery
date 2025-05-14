@@ -103,6 +103,16 @@ jsPsychPILT = (function (jspsych) {
                 type: jspsych.ParameterType.INT,
                 default: 300
             },
+            /** Duration of flip */
+            flip_duration: {
+                type: jspsych.ParameterType.INT,
+                default: 100
+            },
+            /** Duration of coin flip */
+            coin_flip_duration: {
+                type: jspsych.ParameterType.INT,
+                default: 250
+            },
             /** Coin image filenames */
             coin_images: {
                 type: jspsych.ParameterType.OBJECT,
@@ -357,7 +367,7 @@ jsPsychPILT = (function (jspsych) {
                             const ani1 = selImg.animate([
                                 { transform: "rotateY(0)", visibility: "visible" },
                                 { transform: "rotateY(90deg)", visibility: "hidden" },
-                            ], { duration: 100, iterations: 1, fill: 'forwards' })
+                            ], { duration: trial.flip_duration, iterations: 1, fill: 'forwards' })
     
                             ani1.finished.then(() => {
     
@@ -366,7 +376,7 @@ jsPsychPILT = (function (jspsych) {
                                     const ani2 = coinBackground.animate([
                                         { transform: "rotateY(90deg)", visibility: "hidden" },
                                         { transform: "rotateY(0deg)", visibility: "visible" },
-                                    ], { duration: 100, iterations: 1, fill: 'forwards' });
+                                    ], { duration: trial.flip_duration, iterations: 1, fill: 'forwards' });
     
                                     ani2.finished.then(() => {
                                         this.jsPsych.pluginAPI.setTimeout(() => {
@@ -382,7 +392,7 @@ jsPsychPILT = (function (jspsych) {
                                     const ani2 = coin.animate([
                                         { transform: "rotateY(90deg)", visibility: "hidden" },
                                         { transform: "rotateY(0deg)", visibility: "visible" },
-                                    ], { duration: 250, iterations: 1, fill: 'forwards' })
+                                    ], { duration: trial.coin_flip_duration, iterations: 1, fill: 'forwards' })
                                     ani2.finished.then(() => {
                                         this.jsPsych.pluginAPI.setTimeout(endTrial, trial.feedback_duration)
                                     });
@@ -507,6 +517,8 @@ jsPsychPILT = (function (jspsych) {
             trial.feedback_duration = 50;
             trial.choice_feedback_duration = 50;
             trial.pavlovian_stimulus_duration = 10;
+            trial.flip_duration = 10;
+            trial.coin_flip_duration = 10;
             this.trial(display_element, trial);
             load_callback();
             if (data.rt !== null) {
