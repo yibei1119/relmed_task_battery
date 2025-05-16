@@ -427,22 +427,6 @@
                 // Welcome message
                 procedure.push(welcome_back_msg);
             }
-
-            if (resumptionRule(wm_order, window.last_state, "ltm_task_start")) {
-                // Add LTM block
-                console.log("Adding LTM");
-                procedure.push(PILT_tasks.LTM_procedure);
-                procedure = procedure.concat([
-                    acceptability_intro,
-                    acceptability_ltm
-                ]);
-            }
-
-            if (resumptionRule(wm_order, window.last_state, "ltm_test_task_start")) {
-                // Add post-LTM test
-                console.log("Adding post-LTM test");
-                procedure.push(PILT_tasks.LTM_test_procedure);
-            }
             
             if (resumptionRule(wm_order, window.last_state, "wm_task_start")) {
                 // Add WM block
