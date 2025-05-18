@@ -355,7 +355,7 @@ const piggyBankTrial = {
         n_warnings: up_to_now + 1
       });
       // console.log(jsPsych.data.get().last(1).select('n_warnings').values[0]);
-      showTemporaryWarning("Don't forget to participate!", 800); // Enable this line for non-stopping warning
+      showTemporaryWarning("Didn't catch a response - moving on", 800); // Enable this line for non-stopping warning
     }
   }
 };
@@ -392,7 +392,7 @@ const noPressWarning = {
     stimulus: "",
     trial_duration: 1000,
     on_load: function () {
-      showTemporaryWarning("Don't forget to participate!", 800);
+      showTemporaryWarning("Didn't catch a response - moving on", 800);
     }
   }],
   conditional_function: function () {

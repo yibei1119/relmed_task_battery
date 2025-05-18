@@ -417,7 +417,7 @@ jsPsychPILT = (function (jspsych) {
 
                         // Display messge
                         document.getElementById('centerTxt').innerText = ''
-                        showTemporaryWarning("Don't forget to participate!", trial.warning_duration - 200)
+                        showTemporaryWarning("Didn't catch a response - moving on", trial.warning_duration - 200)
 
                         // End trial after warning message
                         this.jsPsych.pluginAPI.setTimeout(endTrial, (trial.warning_duration));
