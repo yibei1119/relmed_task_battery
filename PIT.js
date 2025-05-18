@@ -230,7 +230,7 @@ const PIT_bonus = {
   },
   on_finish: (data) => {
     data.PIT_bonus = window.sampledPITreward / 100
-  },
+  }
 };
 
 // Debriefing
@@ -258,7 +258,7 @@ const vigour_PIT_bonus = {
     data.vigour_bonus = bonus;
 
     postToParent({bonus: bonus});
-  },
+  }
 };
 
 const vigour_PIT_bonus2 = {
@@ -304,8 +304,29 @@ const vigour_PIT_bonus2 = {
   },
   on_finish: (data) => {
     data.vigour_bonus = getFracVigourReward() + getFracPITReward();
-  },
+  }
 };
+
+const computeRelativeVigourPITBonus = () => {
+
+    // Compute lowest and highest sum of coins possible to earn
+    
+    // Vigour task
+    const vigour_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "vigour_trial").select('total_reward').values.slice(-1)[0] * 0.01;
+    const vigour_min = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
+    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
+
+    // PIT task
+    const pit_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial").select('total_reward').values.slice(-1)[0] * 0.01;
+    const pit_min = jsPsych.data.get().filter({trialphase: "pit_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
+    const pit_max = jsPsych.data.get().filter({trialphase: "pit_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
+    
+    return {
+        earned: (isNaN(vigour_earned) ? 0 : vigour_earned) + (isNaN(pit_earned) ? 0 : pit_earned),
+        min: vigour_min + pit_min,
+        max: vigour_max + pit_max
+    }
+}
 
 // Instructions for comparison task
 const PITruleInstruction = {
@@ -325,7 +346,7 @@ const PITruleInstruction = {
   `,
   data: { trialphase: 'pit_instructions' },
   choices: ['b'],
-  post_trial_gap: 300,
+  post_trial_gap: 300
 };
 
 const PITruleInstruction_2 = {
@@ -406,7 +427,7 @@ const PITruleInstruction_2 = {
                 </div>
           </div>
     </div>
-    `],
+    `]
 };
 
 const startPITconfirmation = {
@@ -420,7 +441,7 @@ const startPITconfirmation = {
   </div>
     `,
   post_trial_gap: 300,
-  data: { trialphase: 'pit_instructions' },
+  data: { trialphase: 'pit_instructions' }
 }
 
 const PITinstructions = {
