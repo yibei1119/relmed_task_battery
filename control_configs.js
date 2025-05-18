@@ -20,7 +20,7 @@ const CONTROL_CONFIG = {
 
   i1_name: {
     wk0: "banana",
-    wk2: "???",
+    wk2: "apple",
     wk4: "???",
     wk24: "???",
     wk28: "???"
