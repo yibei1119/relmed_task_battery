@@ -60,27 +60,27 @@ const control_acceptability_intro =
         `
     ],
     show_clickable_nav: true,
-    data: { trialphase: "control_pre_debrief_instructions" },
+    data: { trialphase: "control_pre_debrief_instructions" }
 };
 
 const acceptability_control = {
   type: jsPsychSurveyLikert,
-  preamble: `<p>Please answer these questions regarding the fruit shipping game:<p>`,
+  preamble: `<p>Please answer these questions regarding the shipping game:<p>`,
   questions: [
       {
-          prompt: "How difficult was the fruit shipping game?",
+          prompt: "How difficult was the shipping game?",
           labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very difficult"],
           required: true,
           name: "control_difficulty"
       },
       {
-          prompt: "How enjoyable was the fruit shipping game?",
+          prompt: "How enjoyable was the shipping game?",
           labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very enjoyable"],
           required: true,
           name: "control_enjoy"
       },
       {
-          prompt: "Was it clear to you what you needed to do in the fruit shipping game?",
+          prompt: "Was it clear to you what you needed to do in the shipping game?",
           labels: ["1<br>Not clear at all", "2", "3", "4", "5<br>Extremely clear"],
           required: true,
           name: "control_clear"

@@ -46,11 +46,6 @@ const quests_order = [
 ]
 
 const wm_order = [
-    "ltm_instructions_start",
-    "ltm_task_start",
-    "ltm_block_1_start",
-    "ltm_test_instructions_start",
-    "ltm_test_task_start",
     "wm_instructions_start",
     "wm_task_start",
     "wm_block_1_start",

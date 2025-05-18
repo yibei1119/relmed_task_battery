@@ -56,7 +56,7 @@ explore_sequence.forEach(trial => {
         current: jsPsych.timelineVariable('current'),
         explore_decision: () => {
           if (can_be_warned("control_explore")) {
-              return window.default_response_deadline
+              return window.relemd_default_response_deadline
           } else {
               return window.default_long_response_deadline
           }
@@ -66,8 +66,8 @@ explore_sequence.forEach(trial => {
         save_timeline_variables: true,
         on_start: function (trial) {
           const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
-          if (last_trialphase === "control_confidence") {
-            trial.explore_decision += 0;
+          if (last_trialphase === "control_confidence" || last_trialphase === "control_controllability") {
+            trial.explore_decision += 2000;
           }
         },
         on_finish: function (data) {
@@ -130,13 +130,19 @@ predict_sequence.forEach(trial => {
         ship: jsPsych.timelineVariable('ship'),
         predict_decision: () => {
           if (can_be_warned("control_predict_homebase")) {
-              return window.default_response_deadline
+              return window.relemd_default_response_deadline
           } else {
               return window.default_long_response_deadline
           }
         },
         post_trial_gap: 0,
         save_timeline_variables: true,
+        on_start: function (trial) {
+          const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
+          if (last_trialphase === "control_explore_feedback") {
+            trial.predict_decision += 2000;
+          }
+        },
         on_finish: function (data) {
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           data.n_control_trials = n_trials;
@@ -203,19 +209,13 @@ reward_sequence.forEach((trial, index) => {
     reward_number: jsPsych.timelineVariable('reward_number'),
     reward_decision: () => {
       if (can_be_warned("control_reward")) {
-          return window.default_response_deadline
+          return window.relemd_default_response_deadline
       } else {
           return window.default_long_response_deadline
       }
     },
     post_trial_gap: 0,
     save_timeline_variables: true,
-    on_start: function (trial) {
-      const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
-      if (last_trialphase === "control_controllability" || last_trialphase === "control_reward_prompt") {
-        trial.reward_decision += 0;
-      }
-    },
     on_finish: function (data) {
       const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
       data.n_control_trials = n_trials;
@@ -291,6 +291,21 @@ controlRewardTimeline[0]["on_timeline_start"] = () => {
 }
 
 // Add feedback on the final rewards in total
+const computeRelativeControlBonus = () => {
+
+    // Compute lowest and highest sum of coins possible to earn
+    
+    const earned_sum = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
+    const min_sum = 0;
+    const max_sum = jsPsych.data.get().filter({trialphase: 'control_reward'}).select('timeline_variables').values.reduce((sum, value) => sum + value.reward_number, 0);
+    
+    return {
+        earned: earned_sum,
+        min: min_sum,
+        max: max_sum
+    }
+}
+
 let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
@@ -335,12 +350,6 @@ let controlTotalReward = {
   }
 };
 
-// Add debriefing questions
-let controlDebriefing = [];
-controlDebriefing.push(control_acceptability_intro);
-controlDebriefing.push(acceptability_control);
-controlDebriefing.push(control_debrief);
-
 // Assembling the control timeline
 let controlTimeline = [];
 // Add the preload
@@ -371,7 +380,11 @@ for (let i = 0; i < explore_sequence.length; i++) {
 controlTimeline.push(controlRewardTimeline);
 
 // Add the final reward feedback
-controlTimeline.push(controlTotalReward);
+// controlTimeline.push(controlTotalReward);
 
 // Add the debriefing to the end of the experiment
-controlTimeline.push(controlDebriefing);
+// let controlDebriefing = [];
+// controlDebriefing.push(control_acceptability_intro);
+// controlDebriefing.push(acceptability_control);
+// controlDebriefing.push(control_debrief);
+// controlTimeline.push(controlDebriefing);

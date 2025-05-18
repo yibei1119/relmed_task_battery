@@ -606,7 +606,6 @@ controlInstructionTrial = {
             
             // Calculate the distance to move the ship
             const distance = islandImg.offsetWidth + shipImg.offsetWidth / 4;
-            console.log(distance);
 
             // Determine if ship should be flipped based on which side it starts from
             // Ships on the left are already flipped with scaleX(-1) in the CSS
@@ -751,7 +750,6 @@ controlInstructionPredTrials.push({
     ship: "blue",
     predict_decision: null,
     post_trial_gap: 0,
-    data: {trialphase: "control_instruction_prediction"},
     on_load: function () {
         // Remove the icon-row element if it exists
         const iconRow = document.querySelector('.icon-row');
@@ -776,6 +774,9 @@ controlInstructionPredTrials.push({
                 <p>Now, finish this example test to continue.</p>
             </div>
         `;
+    },
+    on_finish: function(data) {
+        data.trialphase = "control_instruction_prediction";
     }
 });
 

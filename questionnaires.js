@@ -333,7 +333,7 @@ var questionnaire_pvss = (i,total) => {
             'I <u>felt pleased</u> when I reached a goal I set for myself',
             'Getting a hug from someone close to me made me happy <u>even after</u> we parted',
             'I <u>expected</u> to master the tasks I undertook',
-            "I felt like engaging in enjoyable activities with people I'm close to", // Catch
+            "I <u>felt like</u> engaging in enjoyable activities with people I'm close to", // Catch
             'I <u>actively pursued</u> activities I thought would be fun',
             'I <u>went out of my way</u> to admire the beauty around me',
         ],
