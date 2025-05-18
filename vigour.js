@@ -242,10 +242,9 @@ const piggyBankTrial = {
   trial_duration: function () {
     return jsPsych.evaluateTimelineVariable('trialDuration')
   },
-  save_timeline_variables: ["magnitude", "ratio"],
+  save_timeline_variables: ["magnitude", "ratio", "trialDuration"],
   data: {
     trialphase: 'vigour_trial',
-    trial_duration: () => { return jsPsych.evaluateTimelineVariable('trialDuration') },
     response_time: () => { return window.responseTime },
     trial_presses: () => { return window.trialPresses },
     trial_reward: () => { return window.trialReward },
@@ -253,25 +252,25 @@ const piggyBankTrial = {
     total_presses: () => { return window.totalPresses },
     total_reward: () => { return window.totalReward }
   },
-  simulation_options: {
-    data: {
-      trial_presses: () => { window.trialPresses = jsPsych.randomization.randomInt(8, 20) },
-      trial_reward: () => { window.trialReward = Math.floor(window.trialPresses / jsPsych.evaluateTimelineVariable('ratio')) * jsPsych.evaluateTimelineVariable('magnitude') },
-      response_time: () => {
-        do {
-          window.responseTime = [];
-          for (let i = 0; i < window.trialPresses; i++) {
-            window.responseTime.push(Math.floor(jsPsych.randomization.sampleExGaussian(150, 15, 0.01, true)));
-          }
-        } while (window.responseTime.reduce((acc, curr) => acc + curr, 0) > experimentConfig.trialDuration);
-      },
-      total_presses: () => { window.totalPresses += window.trialPresses },
-      total_reward: () => { window.totalReward += window.trialReward }
-    }
-  },
+  // simulation_options: {
+  //   data: {
+  //     trial_presses: () => { window.trialPresses = jsPsych.randomization.randomInt(8, 20) },
+  //     trial_reward: () => { window.trialReward = Math.floor(window.trialPresses / jsPsych.evaluateTimelineVariable('ratio')) * jsPsych.evaluateTimelineVariable('magnitude') },
+  //     response_time: () => {
+  //       do {
+  //         window.responseTime = [];
+  //         for (let i = 0; i < window.trialPresses; i++) {
+  //           window.responseTime.push(Math.floor(jsPsych.randomization.sampleExGaussian(150, 15, 0.01, true)));
+  //         }
+  //       } while (window.responseTime.reduce((acc, curr) => acc + curr, 0) > experimentConfig.trialDuration);
+  //     },
+  //     total_presses: () => { window.totalPresses += window.trialPresses },
+  //     total_reward: () => { window.totalReward += window.trialReward }
+  //   }
+  // },
   on_start: function (trial) {
-    if (window.participantID.includes("simulate")) {
-      trial.trial_duration = 1000;
+    if (window.simulating) {
+      trial.trial_duration = 500;
     }
     // Create a shared state object
     window.trialPresses = 0;
@@ -324,6 +323,15 @@ const piggyBankTrial = {
     };
     document.addEventListener('fullscreenchange', fsChangeHandler);
     document.addEventListener('webkitfullscreenchange', fsChangeHandler);
+
+    // Simulating keypresses
+    if (window.simulating) {
+      trial_presses = jsPsych.randomization.randomInt(1, 5);
+      avg_rt = 500/trial_presses;
+      for (let i = 0; i < trial_presses; i++) {
+        jsPsych.pluginAPI.pressKey('b', avg_rt * i + 1);
+      }
+    }
   },
   on_finish: function (data) {
     // Clean up listener

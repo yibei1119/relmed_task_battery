@@ -33,7 +33,7 @@ const maxPressRateTrial = {
     choices: 'NO_KEYS',
     data: {trialphase: 'max_press_rate'},
     on_start: function (trial) {
-        if (window.participantID.includes("simulate")) {
+        if (window.simulating) {
             trial.trial_duration = 1000;
         }
         // Create a shared state object
@@ -112,7 +112,7 @@ const maxPressRateTrial = {
         });
     },
     on_finish: function (data) {
-        if (window.participantID.includes("simulate")) {
+        if (window.simulating) {
             data.avgSpeed = 5.0;
         }
     }

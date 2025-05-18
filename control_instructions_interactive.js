@@ -107,7 +107,6 @@ const createProgressBar = (current, total) => {
 
 // New helper to abstract the fuel trial common behavior
 function setupFuelTrial(config) {
-    jsPsych.pluginAPI.cancelAllKeyboardResponses();
     let selectedKey = null;
     let trialPresses = 0;
     const leftArrow = document.querySelector('.arrow-left');
@@ -115,7 +114,9 @@ function setupFuelTrial(config) {
     const leftContainer = document.querySelector('.fuel-container-left');
     const rightContainer = document.querySelector('.fuel-container-right');
 
-    document.getElementById("jspsych-instructions-next").disabled = true;
+    if (!window.simulating) {
+        document.getElementById("jspsych-instructions-next").disabled = true;
+    }
     document.getElementById(jsPsych.getDisplayContainerElement().id).focus();
 
     // Listener for the first key press
@@ -158,12 +159,11 @@ function setupFuelTrial(config) {
             document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
         }
         document.querySelector('.instruction-content').innerHTML = config.initialMessage;
-        setupRepeatedKeyListener();
+        repeatedKeyListener = setupRepeatedKeyListener();
     }
     
-    let repeatedKeyListener = null;
     function setupRepeatedKeyListener() {
-        repeatedKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
+        return jsPsych.pluginAPI.getKeyboardResponse({
             callback_function: handleRepeatedKeypress,
             valid_responses: selectedKey === 'left' ? ['ArrowLeft'] : ['ArrowRight'],
             rt_method: 'performance',
@@ -203,7 +203,6 @@ function setupFuelTrial(config) {
             jsPsych.pluginAPI.setTimeout(() => {
                 document.getElementById("jspsych-instructions-next").disabled = false;
             }, config.finishDelay || 350);
-            jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
         }
     }
 }
@@ -558,19 +557,33 @@ controlInstructionTrial = {
     type: jsPsychInstructions,
     css_classes: ['instructions'],
     pages: controlInstructionPages.map(page => page.content),
-    allow_keys: () => {
-        console.log("here")
-        return (window.simulating || false)
+    allow_keys: false,
+    simulation_options: {
+        data: {
+            rt: 1000
+        }
     },
     show_clickable_nav: true,
     show_page_number: false,
     data: {trialphase: "control_instructions"},
+    on_start: function(trial) {
+        if (window.simulating) {
+            trial.allow_keys = true;
+            trial.key_forward = ' ';
+        }
+    },
     on_finish: function(data) {
         jsPsych.data.addProperties({
             control_instruction_fail: 0
         });
     },
     on_page_change: function(current_page) {
+        // Cancel any existing repeatedKeyListener before proceeding
+        if (typeof repeatedKeyListener !== 'undefined' && repeatedKeyListener) {
+            jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
+            repeatedKeyListener = null;
+        }
+
         if (current_page === 3) {
             setupFuelTrial({
                 initialMessage: `<p>Now press the same <strong>right arrow key</strong> multiple times to give it a lot of fuel.</p>`,

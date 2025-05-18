@@ -4,7 +4,7 @@
 const instructionPage = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generateInstructStimulus,
-  choices: "NO_KEYS",
+  choices: ["NO_KEYS"],
   trial_duration: null,
   data: {trialphase: 'vigour_instructions'},
   on_load: function () {
@@ -65,6 +65,40 @@ const instructionPage = {
 
     document.getElementById('restart-button').addEventListener('click', restart);
     document.getElementById('continue-button').addEventListener('click', jsPsych.finishTrial);
+
+    // Add simulation for the instruction page
+    if (window.simulating) {
+      async function simulateKeyPressesAndClick() {
+        const pressKeyPromises = [];
+        // FR is defined in the outer scope (e.g., let FR = 5;)
+        // Loop to schedule FR + 1 key presses
+        for (let i = 0; i < FR + 1; i++) {
+          const scheduledTime = 100 * i + 1; // Delay for this specific key press
+
+          pressKeyPromises.push(
+        new Promise(resolve => {
+          // Schedule the key press simulation
+          jsPsych.pluginAPI.pressKey('b', scheduledTime);
+          
+          // This promise resolves when the time for this key press simulation has passed
+          setTimeout(resolve, scheduledTime);
+        })
+          );
+        }
+
+        // Wait for all promises in the array to resolve.
+        // This means waiting until the maximum scheduledTime (i.e., 100 * FR) has passed.
+        // At this point, all key presses should have been simulated.
+        await Promise.all(pressKeyPromises);
+
+        // Now that all key presses are simulated, call clickTarget.
+        // The click will be simulated 100ms after this function call.
+        jsPsych.pluginAPI.clickTarget(document.getElementById('continue-button'), 100);
+      }
+
+      // Call the async function to start the simulation
+      simulateKeyPressesAndClick();
+    }
   },
   on_finish: function () {
     jsPsych.pluginAPI.cancelAllKeyboardResponses();
@@ -72,6 +106,8 @@ const instructionPage = {
 };
 
 // Before starting the first trial
+// If one wants to specify the simulation options, then it should provide view_history (array: {page_index: (starting from 0), viewing_time}) and rt (the time spent on the whole instruction).
+// But setting global simulation options will cause the view_history array in the local simulation options to be an object rather than an array. So the simulation mode would not work.
 const ruleInstruction = {
   type: jsPsychInstructions,
   data: {trialphase: 'vigour_instructions'},
@@ -121,6 +157,11 @@ const startConfirmation = {
     `,
   post_trial_gap: 300,
   data: {trialphase: 'vigour_instructions'},
+  simulation_options: {
+    data: {
+      response: 'b'
+    }
+  },
   on_finish: function (data) {
     const seed = jsPsych.randomization.setSeed();
     data.rng_seed = seed;
