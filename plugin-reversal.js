@@ -198,7 +198,7 @@ var jsPsychReversal = (function (jspsych) {
                 response.response_deadline_warning = true;
                 
                 // Display messge
-                showTemporaryWarning("Don't forget to participate!", trial.warning_duration - 200)
+                showTemporaryWarning("Didn't catch a response - moving on", trial.warning_duration - 200)
 
                 // End trial
                 this.jsPsych.pluginAPI.setTimeout(() => {

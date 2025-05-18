@@ -865,7 +865,7 @@ function noChoiceWarning(resp_var = "response", stimulus = "", task = "") {
             },
             trial_duration: 1000,
             on_load: function () {
-                showTemporaryWarning("Don't forget to participate!", 800);
+                showTemporaryWarning("Didn't catch a response - moving on", 800);
             }
         }],
         conditional_function: function () {
