@@ -121,9 +121,6 @@ var jsPsychReversal = (function (jspsych) {
             // Trial end procedure
             const end_trial = () => {
 
-                // Remove keayboard listener
-                this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-
                 // Create trial dta to be saved
                 var trial_data = {
                     feedback_left: trial.feedback_left, 
@@ -183,6 +180,9 @@ var jsPsychReversal = (function (jspsych) {
                 var chosen_side = this.keys[response.key.toLowerCase()];
                 
                 this.triggerCoinAnimation(chosen_side);
+
+                // Remove keayboard listener
+                this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
                 
                 this.jsPsych.pluginAPI.setTimeout(ITI, simulating ? 80 : trial.animation_duration);
 
@@ -190,6 +190,9 @@ var jsPsychReversal = (function (jspsych) {
 
             // Warn that responses need to be quicker
             const deadline_warning = () => {
+
+                // Remove keayboard listener
+                this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
 
                 // Document that warning was shown
                 response.response_deadline_warning = true;
