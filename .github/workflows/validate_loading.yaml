@@ -22,7 +22,7 @@ jobs:
         # Set HOME to /root for Firefox to work properly
         env:
           HOME: /root
-        run: npx playwright test validation/playwright || true # Continue even if error
+        run: npx playwright test validation/playwright/load_test.spec.js || true # Continue even if error
       
       - name: Generate README Update
         run: node validation/update-readme-loading.js
