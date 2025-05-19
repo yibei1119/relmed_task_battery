@@ -44,7 +44,9 @@ const controlPreload = {
 };
 
 const controlExploreTimeline = [];
-explore_sequence.forEach(trial => {
+(window.session === "screening" 
+  ? explore_sequence_screening 
+  : explore_sequence).forEach(trial => {
   controlExploreTimeline.push({
     timeline: [
       kick_out,
@@ -310,14 +312,15 @@ const computeRelativeControlBonus = () => {
 let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
-    let total_bonus = (jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() + 45) / 125 * 3;
+    let raw_bonus = computeRelativeControlBonus();
+    let total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
     if (window.context === "relmed" || window.task === "control") {
       stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
               <p>Thank you for playing the game!</p>
-              <p>Your final bonus from all the successful quests is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
+              <p>Your final bonus from all the successful quests in the game is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
               <p>You may now press any key to continue.</p>
             </div>
           </div>
@@ -351,6 +354,58 @@ let controlTotalReward = {
   }
 };
 
+// Reveal homebases in the experiment
+const controlHomebaseReveal = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: () => {
+    // Create the HTML stimulus with a table showing ships and their homebases
+    let html = `
+      <main class="main-stage">
+        <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+        <div class="instruction-dialog" style="bottom:unset;">
+          <div class="instruction-content" style="font-size: 24px; text-align: center;">
+            <p>Here are the homebases for each ship in today's session:</p>
+            <table style="margin: auto; border-collapse: separate; border-spacing: 20px 0px;">
+              <tbody>`;
+    
+    // Add a row for each ship that has a defined homebase
+    const shipColors = ["blue", "green", "red", "yellow"];
+    shipColors.forEach(color => {
+      const homebase = CONTROL_CONFIG.controlRule[color];
+      if (homebase) { // Only show ships with defined homebases
+        html += `
+          <tr>
+            <td style="text-align: right; vertical-align: middle;">
+              <img src="imgs/simple_ship_${color}.png" alt="${color} ship" style="height: 80px;">
+            </td>
+            <td style="text-align: center; vertical-align: middle; padding: 0 15px;">
+              <div style="font-size: 32px;">→</div>
+            </td>
+            <td style="text-align: left; vertical-align: middle;">
+              <img src="imgs/Control_stims/${window.session}/island_icon_${homebase}.png" alt="Island ${homebase}" style="height: 100px;">
+            </td>
+          </tr>`;
+      }
+    });
+    
+    html += `
+              </tbody>
+            </table>
+            <p>Thank you for playing the game!</p>
+            <p>You may now press any key to continue.</p>
+          </div>
+        </div>
+      </main>`;
+    
+    return html;
+  },
+  choices: "ALL_KEYS",
+  response_ends_trial: true,
+  post_trial_gap: 400,
+  data: { 
+    trialphase: 'control_reveal'}
+};
+
 // Assembling the control timeline
 let controlTimeline = [];
 // Add the preload
@@ -358,28 +413,62 @@ controlTimeline.push(controlPreload);
 // Add the instructions
 controlTimeline.push(controlInstructionsTimeline);
 
-// Add the explore, predict, reward trials
-for (let i = 0; i < explore_sequence.length; i++) {
-  // Add the explore trials
-  controlTimeline.push(controlExploreTimeline[i]);
-  if ((i + 1) % 6 === 0) {
-    num_miniblock = Math.floor(i / 6)
-    if (num_miniblock % 2 === 0) {
-      // Add the prediction trials after trial 6, 18, 30...
-      indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
-      controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
-    } else {
-      // Add the reward trials after trial 12, 24, 36...
-      controlTimeline.push(controlRating);
-      // indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
-      // controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
+// Add the control trials depending on the session
+if (window.session === "screening") {
+  controlTimeline.push(...controlExploreTimeline);
+  // Add one prediction trial
+  controlTimeline.push([
+    kick_out,
+    fullscreen_prompt,
+    {
+      type: jsPsychPredictHomeBase,
+      ship: "green",
+      choices: ["i1", "i2", "i3"],
+      predict_decision: window.relemd_default_response_deadline + 2000,
+      post_trial_gap: 0,
+      on_finish: function (data) {
+        const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
+        data.n_control_trials = n_trials;
+        console.log("Trial number: " + n_trials + " (predict)");
+
+        if (data.response === null) {
+          var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+          console.log("n_warnings: " + up_to_now);
+          jsPsych.data.addProperties({
+              n_warnings: up_to_now + 1
+          });
+        }
+      }
+    },
+    noChoiceWarning("response", '', "control_predict_homebase")
+  ]);
+  // Add one reveal trial for the screening session
+  controlTimeline.push(controlHomebaseReveal);
+} else {
+  // Add the explore, predict, reward trials
+  for (let i = 0; i < explore_sequence.length; i++) {
+    // Add the explore trials
+    controlTimeline.push(controlExploreTimeline[i]);
+    if ((i + 1) % 6 === 0) {
+      num_miniblock = Math.floor(i / 6);
+      if (num_miniblock % 2 === 0) {
+        // Add the prediction trials after trial 6, 18, 30...
+        indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
+        controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
+      } else {
+        // Add the reward trials after trial 12, 24, 36...
+        controlTimeline.push(controlRating);
+        // indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
+        // controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
+      }
     }
   }
+
+  // Add the reward trials as a separate block
+  controlTimeline.push(controlRewardTimeline);
 }
 
-// Add the reward trials as a separate block
-controlTimeline.push(controlRewardTimeline);
-
+// Deprecated: moved to experiment.html for final assembly
 // Add the final reward feedback
 // controlTimeline.push(controlTotalReward);
 
