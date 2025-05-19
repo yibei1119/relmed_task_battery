@@ -496,11 +496,10 @@ async function load_sequences(session) {
         // Load json
         const [
             PILT_structure, PILT_test_structure, pav_test_structure,
-            WM_structure, LTM_structure,
-            WM_test_structure, LTM_test_structure
+            WM_structure, WM_test_structure,
         ] = await Promise.all([
-            fetchJSON('pilot9_PILT.json'),
-            fetchJSON('pilot9_PILT_test.json'),
+            fetchJSON('trial1_PILT.json'),
+            fetchJSON('trial1_PILT_test.json'),
             fetchJSON('pavlovian_test.json'),
             fetchJSON('trial1_WM.json'),
             fetchJSON('trial1_WM_test.json'),
@@ -543,7 +542,7 @@ async function load_sequences(session) {
 }
 
 
-function return_PILT_full_sequence(PILT_structure, PILT_test_structure) {
+function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_structure, WM_test_structure) {
     // Compute best-rest
     computeBestRest(PILT_structure);
     computeBestRest(WM_structure);
