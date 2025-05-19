@@ -177,7 +177,7 @@ const test_trial = (task) => {
                             }
                          }
                     },
-                    noChoiceWarning("response")
+                    noChoiceWarning("response", "", task)
                 ],
                 conditional_function: () => {
                     let missed = jsPsych.data.get().last(1).select("response").values[0] == null
