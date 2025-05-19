@@ -364,7 +364,8 @@ const controlHomebaseReveal = {
         <img class="background" src="imgs/ocean_above.png" alt="Background"/>
         <div class="instruction-dialog" style="bottom:unset;">
           <div class="instruction-content" style="font-size: 24px; text-align: center;">
-            <p>Here are the homebases for each ship in today's session:</p>
+            <h3>Well done!</h3>
+            <p>In case you’re curious, this is the home base for each ship in today's session:</p>
             <table style="margin: auto; border-collapse: separate; border-spacing: 20px 0px;">
               <tbody>`;
     
