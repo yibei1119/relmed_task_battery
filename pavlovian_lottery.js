@@ -261,10 +261,6 @@ function initPavlovianLottery() {
 
         // Find the target item position (it's the last item in our reel)
         const winningItem = document.getElementById('winning-item');
-<<<<<<< HEAD
-=======
-        // let targetIndex = totalItems - 1;
->>>>>>> cce4161 (merge new PILT into trial 1)
 
         // Calculate the exact position needed to center the target in the frame
         const containerCenter = slotContainer.offsetWidth / 2;
