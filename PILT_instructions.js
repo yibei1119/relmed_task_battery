@@ -26,15 +26,9 @@ function prepare_PILT_instructions() {
 
             let pages = [
             `<p><b>THE CARD CHOOSING GAME</b></p>
-                <p>In this game you are the owner of a safe.</p>
-                <img src='imgs/safe.png' style='width:100px; height:100px;'>
-                <p>At the start of the game, your safe contains:</p>
-                <div style='display: grid'><table><tr><td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
-                <td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>
-                <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr>
-                <tr><td>60x one pound coins</td><td>60x fifty pence coins</td><td>60x one penny coins</td></tr></table></div>
-                <p>At the end of the game, you will draw one coin from your safe, and that will be your bonus payment.</p>
-                <p>Your goal is to add valuable coins to your safe${window.task == "screening" ? "" : " while avoid losing the valuable coins already in it"}.</p>`,
+                <p>In this game you will flip cards to collect the coins behind them.</p>
+                <p>Some cards are luckier than others. Your goal is to collect as much money as possible${window.task == "screening" ? "" : " and avoid losing it"}.</p>
+                <p>At the end of this session, you will be paid a bonus based on the sum of coins you collected.</p>`,
             `<p>On each turn of this game, you will see two cards.
                 You have ${window.context === "relmed" ? "four" : "three"} seconds to flip one of the two cards.</p>
                 <p>This will reveal the coin you collect: either 1 pound, 50 pence, or 1 penny.</p>
@@ -45,12 +39,14 @@ function prepare_PILT_instructions() {
         ];
 
         if (window.session !== "screening"){
-            pages.push(`<p>When you flip a card, you might also see broken coins like these:</p>\
+            pages.push(`<p>When you flip a card, you might see broken coins like these:</p>\
                 <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
                 <td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
                 <td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>
-                <p>This means that you lost one such coin, as it was broken in your safe.</p>`);
+                <p>This means you lose that amount of game coins.</p>`);
+            pages.push(`<p>Sometimes, losing coins cannot be avoided. Your goal then is to lose as little money as possible.</p>
+                <p>To cover these losses, you will start the game with £100 in game coins.</p>`)
         }
 
         return pages
@@ -87,14 +83,12 @@ function prepare_PILT_instructions() {
                         optimal_right: 1,
                         block: "practice1",
                         trial: 1,
-                        valence: 1,
+                        valence: 0,
                         response_deadline: -1,
                         stimulus_group: 1,
                         stimulus_group_id: 1,
                         n_groups: 1,
-                        rest_1pound: 0,
-                        rest_50pence: 0,
-                        rest_1penny: 0,
+                        rest: {},
                         early_stop: false
                     }
                 ]],
@@ -117,7 +111,7 @@ function prepare_PILT_instructions() {
     createPressBothTrial(
         `<p>Let's practice collecting coins. \
             On the next screen, choose cards to collect as much money as you can.</p>
-            <p>One of the picture cards has mostly high value coins behind it, while the other has mostly pennies behind it.</p>
+            <p>One of the picture cards has mostly £1 coins behind it, while the other has mostly broken £1 coins behind it.</p>
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
         `,
@@ -126,7 +120,7 @@ function prepare_PILT_instructions() {
    ]);
 
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
-    let reward_magnitude = shuffleArray([0.5, 1, 1, 0.5, 1, 0.5], window.session + "b");
+    let reward_magnitude = shuffleArray([1, 1, 1, 0.5, 1, 0.5], window.session + "b");
 
     inst.push(
         {
@@ -142,18 +136,16 @@ function prepare_PILT_instructions() {
                             pavlovian_images: pavlovian_images_f(),
                             n_stimuli: 2,
                             optimal_side: "",
-                            feedback_left: e ? 0.01 : reward_magnitude[i],
-                            feedback_right: e ? reward_magnitude[i] : 0.01,
+                            feedback_left: e ? -1. : reward_magnitude[i],
+                            feedback_right: e ? reward_magnitude[i] : -1.,
                             optimal_right: e,
                             block: "practice2",
                             trial: i,
-                            valence: 1,
+                            valence: 0,
                             stimulus_group: 1,
                             stimulus_group_id: 1,
                             n_groups: 1,
-                            rest_1pound: 0,
-                            rest_50pence: 0,
-                            rest_1penny: 0,
+                            rest: {},
                             early_stop: false
                         })
                     )
@@ -162,59 +154,6 @@ function prepare_PILT_instructions() {
             )
         }
     )
-
-    if (window.session !== "screening"){
-        inst = inst.concat([
-            inter_block_instruct,
-            createPressBothTrial(
-                `<p>Now, let's practice minimizing your coin losses. 
-                On the next screen, choose cards to lose as little money as possible.</p>
-                <p>One of the picture cards will often break the high-value coins in your safe, while the other will mostly break only your pennies.</p>
-                <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
-                <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-                "pilt_instruction"
-            ),
-        ]);
-    
-        let hammer_on_right = shuffleArray([false, true, false, true, false, false], window.session);
-        let punishment_magnitude = shuffleArray([-1, -0.5, -0.5, -1, -1, -0.5], window.session + "c");
-    
-    
-        inst.push(
-            {
-                timeline: build_PILT_task(
-                    [
-                        hammer_on_right.map((e, i) => 
-                            ({
-                                stimulus_left: e ? demo_stimuli[4] : demo_stimuli[5],
-                                stimulus_right: e ? demo_stimuli[5] : demo_stimuli[4],
-                                stimulus_middle: "",
-                                feedback_middle: "",
-                                present_pavlovian: window.session !== "screening",
-                                pavlovian_images: pavlovian_images_f(),
-                                n_stimuli: 2,
-                                optimal_side: "",
-                                feedback_left: e ? -0.01 : punishment_magnitude[i],
-                                feedback_right: e ? punishment_magnitude[i] : -0.01,
-                                optimal_right: e,
-                                block: "practice3",
-                                trial: i,
-                                valence: -1,
-                                stimulus_group: 1,
-                                stimulus_group_id: 1,
-                                n_groups: 1,
-                                rest_1pound: 0,
-                                rest_50pence: 0,
-                                rest_1penny: 0,
-                                early_stop: false
-                            })
-                        )
-                    ],
-                    false
-                )
-            }
-        );
-    }
 
     inst = inst.concat(
         [
@@ -237,7 +176,7 @@ function prepare_PILT_instructions() {
             required: true
         },
         {
-            prompt: `My goal is to collect as many high-value coins as I can${window.session !== "screening" ? " and avoid breaking them" : ''}.`,
+            prompt: `My goal is to collect as much game coins as I can${window.session !== "screening" ? " and avoid losing them" : ''}.`,
             options: ["True", "False"],
             required: true
         },
@@ -245,7 +184,7 @@ function prepare_PILT_instructions() {
 
     if (window.session !== "screening"){
         quiz_questions.splice(1, 0, {
-            prompt: "If I find a broken coin, that means I lost that coin.",
+            prompt: "If I find a broken coin, that means I lose that amount.",
             options: ["True", "False"],
             required: true
         });

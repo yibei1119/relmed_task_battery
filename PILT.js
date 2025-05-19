@@ -61,7 +61,7 @@ const inter_block_msg = {
 
         const n_stimuli = jsPsych.data.get().filter({ trial_type: "PILT" }).last(1).select("n_stimuli").values[0];
 
-        return n_stimuli === 2 ? ['arrowright', 'arrowleft'] : ['arrowright', 'arrowleft', 'arrowup']
+        return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
     },
     css_classes: ['instructions'],
     stimulus: inter_block_stimulus,
@@ -93,7 +93,7 @@ const test_trial = (task) => {
                 feedback_left: jsPsych.timelineVariable('feedback_left'),
                 feedback_right: jsPsych.timelineVariable('feedback_right'),
                 feedback_middle: '',
-                optimal_right: false,
+                optimal_right: jsPsych.timelineVariable('optimal_right'),
                 optimal_side: '',
                 response_deadline: window.defaul_response_deadline,
                 n_stimuli: 2,
@@ -132,8 +132,8 @@ const test_trial = (task) => {
                     stimulus_right: jsPsych.timelineVariable("stimulus_right"),
                     same_valence: jsPsych.timelineVariable("same_valence"),
                     same_block: jsPsych.timelineVariable("same_block"),
-                    magnitude_left: jsPsych.timelineVariable("magnitude_left"),
-                    magnitude_right: jsPsych.timelineVariable("magnitude_right"),
+                    EV_left: jsPsych.timelineVariable("EV_left"),
+                    EV_right: jsPsych.timelineVariable("EV_right"),
                     original_block_left: jsPsych.timelineVariable("original_block_left"),
                     original_block_right: jsPsych.timelineVariable("original_block_right"),
                 },
@@ -288,9 +288,7 @@ const PILT_trial = (task) => {
                 stimulus_group_id: jsPsych.timelineVariable('stimulus_group_id'),
                 valence: jsPsych.timelineVariable('valence'),
                 n_groups: jsPsych.timelineVariable('n_groups'),
-                rest_1pound: jsPsych.timelineVariable('rest_1pound'),
-                rest_50pence: jsPsych.timelineVariable('rest_50pence'),
-                rest_1penny: jsPsych.timelineVariable('rest_1penny')
+                rest: jsPsych.timelineVariable('rest'),
             },
             on_finish: function(data) {
                 if (data.response === "noresp") {
@@ -413,8 +411,8 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
             block.push(
                 createPressBothTrial(
                     `
-                        <h3>Round ${i + 1} out of ${structure.length}</h3>
-                        <p>On the next round you will play to <b>${valence > 0 ? "win" : "avoid losing"} coins</b>.<p>` + 
+                        <h3>Round ${i + 1} out of ${structure.length}</h3>` +
+                        (valence != 0 ? `<p>On the next round you will play to <b>${valence > 0 ? "win" : "avoid losing"} coins</b>.<p>` : "") + 
                        ( n_stimuli === 2 ? `<p>Place your fingers on the left and right arrow keys, and <b>press both</b> to continue.</p>` :
                         `<p>Place your fingers on the left, right, and up arrow keys, and press either one to continue.</p>`),
                     "pre_block"
@@ -498,36 +496,29 @@ async function load_sequences(session) {
         // Load json
         const [
             PILT_structure, PILT_test_structure, pav_test_structure,
-            WM_structure, LTM_structure,
-            WM_test_structure, LTM_test_structure
+            WM_structure, WM_test_structure,
         ] = await Promise.all([
             fetchJSON('trial1_PILT.json'),
             fetchJSON('trial1_PILT_test.json'),
             fetchJSON('pavlovian_test.json'),
             fetchJSON('trial1_WM.json'),
-            fetchJSON('trial1_LTM.json'),
             fetchJSON('trial1_WM_test.json'),
-            fetchJSON('trial1_LTM_test.json')
         ]);
 
         // Select session
         let PILT_sess = PILT_structure[session];
         let PILT_test_sess = PILT_test_structure[session];
         let WM_sess = WM_structure[session];
-        let LTM_sess = LTM_structure[session];
         let WM_test_sess = WM_test_structure[session];
-        let LTM_test_sess = LTM_test_structure[session];
 
         if (window.demo) {
             PILT_sess = PILT_sess.slice(0, 6);
             PILT_test_sess = [PILT_test_sess[0].slice(0, 25)];
             WM_sess = WM_sess.slice(0, 3);
-            LTM_sess = LTM_sess.slice(0, 3);
         }
         
         adjustStimuliPaths(PILT_test_sess, 'PILT_stims');
         adjustStimuliPaths(WM_test_sess, 'PILT_stims');
-        adjustStimuliPaths(LTM_test_sess, 'PILT_stims');
 
         pav_test_structure.forEach(trial => {
             trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
@@ -535,24 +526,26 @@ async function load_sequences(session) {
             trial.block = "pavlovian";
             trial.feedback_left = trial.magnitude_left;
             trial.feedback_right = trial.magnitude_right;
+            trial.EV_left = trial.magnitude_left
+            trial.EV_right = trial.magnitude_right;
+            trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
         });
 
         if (!window.demo) {
             PILT_test_sess = [pav_test_structure].concat(PILT_test_sess);
         }
 
-        run_full_experiment(PILT_sess, PILT_test_sess, WM_sess, WM_test_sess, LTM_sess, LTM_test_sess);
+        run_full_experiment(PILT_sess, PILT_test_sess, WM_sess, WM_test_sess);
     } catch (error) {
         console.error('Error loading sequences:', error);
     }
 }
 
 
-function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_structure, WM_test_structure, LTM_structure, LTM_test_structure) {
+function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_structure, WM_test_structure) {
     // Compute best-rest
     computeBestRest(PILT_structure);
     computeBestRest(WM_structure);
-    computeBestRest(LTM_structure);
 
     let PILT_procedure = [];
 
@@ -618,23 +611,8 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
         WM_procedure = [];
     }
 
-    // LTM block
-    let LTM_procedure;
-    if (LTM_structure != null) {
-        let LTM_blocks = build_PILT_task(LTM_structure, true, "ltm");
-        LTM_blocks[0]["on_start"] = () => {
-            updateState("ltm_task_start");
-        };
-        LTM_procedure = LTM_instructions.concat(LTM_blocks);    
-    } else {
-        LTM_procedure = []
-    }
-
     // WM test block
     const WM_test_procedure = generateTestProcedure(WM_test_structure, "wm");
-
-    // LTM test block
-    const LTM_test_procedure = generateTestProcedure(LTM_test_structure, "ltm");    
 
 
     return {
@@ -642,7 +620,23 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
         PILT_test_procedure: PILT_test_procedure,
         WM_procedure: WM_procedure,
         WM_test_procedure: WM_test_procedure,
-        LTM_procedure: LTM_procedure,
-        LTM_test_procedure: LTM_test_procedure
+    }
+}
+
+const computeRelativePILTBonus = () => {
+
+    // Compute lowest and highest sum of coins possible to earn
+    const feedback_right = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_right").values;
+    const feedback_left = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_left").values;
+    const max_sum = feedback_right.map((value, index) => Math.max(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
+    const min_sum = feedback_right.map((value, index) => Math.min(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
+
+    // Compute the actual sum of coins
+    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
+
+    return {
+        earned: earned_sum, 
+        min: min_sum, 
+        max: max_sum
     }
 }

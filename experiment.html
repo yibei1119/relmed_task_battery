@@ -253,7 +253,7 @@
         }
     ]
 
-    function run_full_experiment(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure){
+    function run_full_experiment(PILT_structure, test_structure, WM_structure, WM_test_structure){
 
         let procedure = [];
 
@@ -266,8 +266,77 @@
         }
 
         // Create card choosing timelines
-        if (["pilt-to-test", "pilt", "pilt_test", "wm", "ltm", "wm_only", "screening"].includes(window.task)){
-            PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_procedure, WM_test_procedure, LTM_procedure, LTM_test_procedure);
+        if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening", "pilot9"].includes(window.task)){
+            PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_structure, WM_test_structure);
+        }
+
+        if (window.task === "pilot9"){
+            // Preload
+            procedure.push(preload_PILT);
+
+            // Welcome message
+            procedure.push(welcome_msgs);
+
+            // Max press rate test
+            console.log("Adding max press rate");
+            procedure = procedure.concat(maxPressTimeline);
+
+            // Add Pre-PILT conditioning
+            console.log("Adding pre-PILT conditioning");
+            procedure = procedure.concat(initPavlovianLottery());
+
+            // Adding PILT
+            console.log("Adding PILT");
+                procedure = procedure.concat(PILT_tasks.PILT_procedure);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_PILT
+            ]);
+
+            // Add vigour task timeline
+            console.log("Adding vigour");
+            const vigourTimeline = [
+                preload_vigour,
+                vigourInstructions,
+                ...experimentTimeline,
+            ];
+            procedure = procedure.concat(vigourTimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_vigour
+            ]);
+
+            // Add PIT timeline: instructions, trials, bonus
+            console.log("Adding PIT");
+            const PITtimeline = [
+                PITinstructions,
+                PITtrials
+            ];
+            procedure = procedure.concat(PITtimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_PIT
+            ]);
+
+            // PILT & Pavlovian test 
+            console.log("Adding PILT test");
+            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            
+            // Add control timeline
+            console.log("Adding control");
+            procedure = procedure.concat(controlTimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_control
+            ]);
+
+            // Add debriefing
+            console.log("Adding debriefing");
+            procedure.push(debrief_pilot9);
+
+            // Final bonus message
+            console.log("Adding bonus trial");
+            procedure.push(bonus_trial);
         }
 
         if (window.task === "pilt-to-test") {
@@ -400,21 +469,6 @@
                 acceptability_intro,
                 acceptability_PIT
             ]);
-        }
-
-        if (window.task == "ltm") {
-            // Preload
-            procedure.push(preload_wm_ltm);
-
-            // Add LTM block
-            procedure.push(PILT_tasks.LTM_procedure);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_ltm
-            ]);
-
-            // Add post-LTM test
-            procedure.push(PILT_tasks.LTM_test_procedure);
         }
         
         // This is a module used by relemd.ac.uk. For WM only, see wm_only
