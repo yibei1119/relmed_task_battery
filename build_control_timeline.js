@@ -310,7 +310,8 @@ const computeRelativeControlBonus = () => {
 let controlTotalReward = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
-    let total_bonus = (jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum() + 45) / 125 * 3;
+    let raw_bonus = computeRelativeControlBonus();
+    let total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
     if (window.context === "relmed" || window.task === "control") {
       stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
