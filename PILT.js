@@ -28,7 +28,8 @@ const preload_PILT = {
 
         // Report to relmed.ac.uk
         postToParent({message: "load_successful"})
-    }
+    },
+    continue_after_error: true
 }
 
 const preload_wm_ltm = {
@@ -50,7 +51,8 @@ const preload_wm_ltm = {
 
         // Report to relmed.ac.uk
         postToParent({message: "load_successful"})
-    }
+    },
+    continue_after_error: true
 }
 
 
