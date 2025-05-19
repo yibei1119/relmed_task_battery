@@ -117,7 +117,7 @@ const reversal_instructions = [
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `<p>Let's start with the first game!</p>
+            `${window.session !== "screening" ? "<p>Let's start with the first game!</p>" : ""}
             <p>Next, you will meet two friendly squirrels, each with a bag of coins to share. 
             Use the arrow keys to choose either the left or right squirrel. 
             The squirrel you pick will give you a coin to add to your safe.</p>`,
