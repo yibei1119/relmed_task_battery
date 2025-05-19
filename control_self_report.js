@@ -44,7 +44,7 @@ const controlRating = {
       }
     }
   },
-  noChoiceWarning("response")
+  noChoiceWarning("response", "", "control_explore")
 ]
 };
 
