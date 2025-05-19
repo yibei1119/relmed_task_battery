@@ -633,7 +633,8 @@
 
         if (window.task === "screening") {
             // Preload
-            procedure.push(reversal_preload);
+            procedure.push(preload_PILT);
+            
 
             // Resumption message
             if (window.last_state !== "none" && window.context === "relmed") {
@@ -643,22 +644,29 @@
                 procedure.push(welcome_msgs);
             }
 
-            if (resumptionRule(screening_order, window.last_state, "reversal_task_start")) {
-                // Add reversal timeline
-                console.log("Adding reversal");
-                procedure = procedure.concat(reversal_instructions);
-                procedure = procedure.concat(reversal_blocks);
+            if (resumptionRule(screening_order, window.last_state, "pilt_task_start")) {
+                console.log("Adding PILT");            
+                procedure = procedure.concat(PILT_tasks.PILT_procedure);
                 procedure = procedure.concat([
                     acceptability_intro,
-                    acceptability_reversal
+                    acceptability_PILT
                 ]);
             }
 
-            if (resumptionRule(screening_order, window.last_state, "pilt_task_start")) {
-                console.log("Adding PILT");
-                // Preload
-                procedure.push(preload_PILT);
+            if (resumptionRule(screening_order, window.last_state, "control_task_start")) {
+                // Add control timeline
+                console.log("Adding control");
+                procedure = procedure.concat(controlTimeline);
+                procedure = procedure.concat([
+                    acceptability_intro,
+                    acceptability_control
+                ]);
+            }
 
+            if (resumptionRule(screening_order, window.last_state, "reversal_task_start")) {
+                // Add reversal timeline
+                console.log("Adding reversal");
+                procedure.push(reversal_preload);
                 procedure.push({
                     type: jsPsychInstructions,
                     css_classes: ['instructions'],
@@ -670,20 +678,13 @@
                     data: {trialphase: "instruction"}
                 });
 
-                procedure = procedure.concat(PILT_tasks.PILT_procedure);
+                procedure = procedure.concat(reversal_instructions);
+                procedure = procedure.concat(reversal_blocks);
                 procedure = procedure.concat([
                     acceptability_intro,
-                    acceptability_PILT
+                    acceptability_reversal
                 ]);
             }
-
-            // Add control timeline
-            console.log("Adding control");
-            procedure = procedure.concat(controlTimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_control
-            ]);
 
             // Add questionnaire timeline
             console.log("Adding questionnaires");
