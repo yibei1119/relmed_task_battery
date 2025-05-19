@@ -244,7 +244,7 @@ function prepare_PILT_instructions() {
         inst_loop,
         createPressBothTrial(
             `<p>Great! Let's start playing for real.</p>
-            <p>You will now complete ${window.session === "screening" ? "another round" : "20 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "15-20 minutes"} on average to complete.</p>
+            <p>You will now complete ${window.session === "screening" ? "another round" : "15 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "10-15 minutes"} on average to complete.</p>
             ${window.session !== "screening" ? "<p>You will be able to take a short break between rounds, if you feel you need it.</p>" : ""}
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
