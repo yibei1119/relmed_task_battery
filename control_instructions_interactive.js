@@ -211,7 +211,7 @@ function setupFuelTrial(config) {
 const nPages = 12;
 const leftShip = "green";
 const rightShip = "blue";
-const downstreamIsland = "i4";
+const downstreamIsland = "i3"; // compatible to screening session too since there are only 3 islands
 const homebaseIsland = CONTROL_CONFIG.controlRule[rightShip];
 
 const controlInstructionPages = [
@@ -384,7 +384,7 @@ const controlInstructionPages = [
                     <div class="choice-left">
                         <img class="ship-left" src="imgs/simple_ship_${rightShip}.png" alt="Ship" style="opacity: 0;" />
                     </div>
-                    <img class="island-near" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_i4.png" alt="Hidden island" />
+                    <img class="island-near" style="visibility: hidden;" src="imgs/simple_island.png" alt="Hidden island" />
                     <div class="choice-right">
                         <img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${homebaseIsland}.png" alt="Destination island" style="top: -10%;" />
                     </div>
