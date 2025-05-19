@@ -514,7 +514,12 @@
         
         if (window.task == "control") {
             // Control
-            procedure.push(controlTimeline);
+            procedure = procedure.concat(controlTimeline);
+            procedure = procedure.concat(controlTotalReward);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_control
+            ]);
 
             // Update safe
             procedure.push(updateSafe);
@@ -617,6 +622,14 @@
                     acceptability_PILT
                 ]);
             }
+
+            // Add control timeline
+            console.log("Adding control");
+            procedure = procedure.concat(controlTimeline);
+            procedure = procedure.concat([
+                acceptability_intro,
+                acceptability_control
+            ]);
 
             // Add questionnaire timeline
             console.log("Adding questionnaires");
