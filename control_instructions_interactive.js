@@ -106,6 +106,8 @@ const createProgressBar = (current, total) => {
 };
 
 // New helper to abstract the fuel trial common behavior
+let firstKeyListener = null;
+let repeatedKeyListener = null;
 function setupFuelTrial(config) {
     let selectedKey = null;
     let trialPresses = 0;
@@ -120,7 +122,7 @@ function setupFuelTrial(config) {
     document.getElementById(jsPsych.getDisplayContainerElement().id).focus();
 
     // Listener for the first key press
-    const firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
+    firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleFirstKey,
         valid_responses: ['ArrowRight'],
         rt_method: 'performance',
@@ -578,10 +580,15 @@ controlInstructionTrial = {
         });
     },
     on_page_change: function(current_page) {
-        // Cancel any existing repeatedKeyListener before proceeding
+        // Cancel any existing first or repeatedKeyListener before proceeding
         if (typeof repeatedKeyListener !== 'undefined' && repeatedKeyListener) {
             jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
             repeatedKeyListener = null;
+        }
+
+        if (typeof firstKeyListener !== 'undefined' && firstKeyListener) {
+            jsPsych.pluginAPI.cancelKeyboardResponse(firstKeyListener);
+            firstKeyListener = null;
         }
 
         if (current_page === 3) {
