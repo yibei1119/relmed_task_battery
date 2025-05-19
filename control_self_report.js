@@ -20,7 +20,7 @@ const confidenceRating = {
   }],
   conditional_function: function () {
     const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
-    return last_trial_choice !== null;
+    return last_trial_choice !== null && window.session !== "screening";
   }
 };
 

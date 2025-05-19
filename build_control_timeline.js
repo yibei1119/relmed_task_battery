@@ -123,7 +123,9 @@ controlExploreTimeline[0]["on_timeline_start"] = () => {
 }
 
 const controlPredTimeline = [];
-predict_sequence.forEach(trial => {
+(window.session === "screening" 
+  ? predict_sequence_screening 
+  : predict_sequence).forEach(trial => {
   controlPredTimeline.push({
     timeline: [
       kick_out,
@@ -416,55 +418,29 @@ controlTimeline.push(controlInstructionsTimeline);
 
 // Add the control trials depending on the session
 if (window.session === "screening") {
-  controlTimeline.push(...controlExploreTimeline);
-  // Add one prediction trial
-  controlTimeline.push([
-    kick_out,
-    fullscreen_prompt,
-    {
-      type: jsPsychPredictHomeBase,
-      ship: "green",
-      choices: ["i1", "i2", "i3"],
-      predict_decision: window.relemd_default_response_deadline + 2000,
-      post_trial_gap: 0,
-      on_finish: function (data) {
-        const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
-        data.n_control_trials = n_trials;
-        console.log("Trial number: " + n_trials + " (predict)");
-
-        if (data.response === null) {
-          var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-          console.log("n_warnings: " + up_to_now);
-          jsPsych.data.addProperties({
-              n_warnings: up_to_now + 1
-          });
-        }
-      }
-    },
-    noChoiceWarning("response", '', "control_predict_homebase")
-  ]);
+    for (let i = 0; i < explore_sequence_screening.length; i++) {
+    controlTimeline.push(controlExploreTimeline[i]);
+    if ((i + 1) % 6 === 0) {
+      num_miniblock = Math.floor(i / 6);
+      controlTimeline.push(controlPredTimeline[num_miniblock]);
+    }
+  }
   // Add one reveal trial for the screening session
   controlTimeline.push(controlHomebaseReveal);
 } else {
-  // Add the explore, predict, reward trials
+  // Add the explore, predict, report trials
   for (let i = 0; i < explore_sequence.length; i++) {
-    // Add the explore trials
     controlTimeline.push(controlExploreTimeline[i]);
     if ((i + 1) % 6 === 0) {
       num_miniblock = Math.floor(i / 6);
       if (num_miniblock % 2 === 0) {
-        // Add the prediction trials after trial 6, 18, 30...
         indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
         controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
       } else {
-        // Add the reward trials after trial 12, 24, 36...
         controlTimeline.push(controlRating);
-        // indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
-        // controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
       }
     }
   }
-
   // Add the reward trials as a separate block
   controlTimeline.push(controlRewardTimeline);
 }
