@@ -39,7 +39,8 @@ const controlPreload = {
 
     // Report to relmed.ac.uk
     postToParent({message: "load_successful"})
-  }
+  },
+  continue_after_error: true
 };
 
 const controlExploreTimeline = [];
