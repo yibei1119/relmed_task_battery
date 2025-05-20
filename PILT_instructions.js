@@ -27,8 +27,8 @@ function prepare_PILT_instructions() {
             let pages = [
             `<p><b>THE CARD CHOOSING GAME</b></p>
                 <p>In this game you will flip cards to collect the coins behind them.</p>
-                <p>Some cards are luckier than others. Your goal is to collect as much money as possible${window.task == "screening" ? "" : " and avoid losing it"}.</p>
-                <p>At the end of this session, you will be paid a bonus based on the sum of coins you collected.</p>`,
+                <p>Some cards are luckier than others. Your goal is to collect as much game money as possible${window.task == "screening" ? "" : " and avoid losing it"}.</p>
+                ${window.session !== "screening" ? "<p>At the end of this session, you will be paid a bonus based on the sum of coins you collected.</p>" : ""}`,
             `<p>On each turn of this game, you will see two cards.
                 You have ${window.context === "relmed" ? "four" : "three"} seconds to flip one of the two cards.</p>
                 <p>This will reveal the coin you collect: either 1 pound, 50 pence, or 1 penny.</p>
@@ -113,7 +113,7 @@ function prepare_PILT_instructions() {
     createPressBothTrial(
         `<p>Let's practice collecting coins. \
             On the next screen, choose cards to collect as much money as you can.</p>
-            <p>One of the picture cards has mostly £1 coins behind it, while the other has mostly broken £1 coins behind it.</p>
+            <p>One of the picture cards has mostly £1 coins behind it, while the other has mostly ${window.session === "screening" ? "50 pence coins" : "broken £1 coins"} behind it.</p>
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
             <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
         `,
@@ -122,7 +122,7 @@ function prepare_PILT_instructions() {
    ]);
 
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
-    let reward_magnitude = shuffleArray([1, 1, 1, 0.5, 1, 0.5], window.session + "b");
+    let reward_magnitude = shuffleArray([1, 1, 1, 0.5, 1, 1.], window.session + "b");
 
     // Shorter paractise for non screening sessions
     if (window.session !== "screening"){
@@ -145,8 +145,8 @@ function prepare_PILT_instructions() {
                             pavlovian_images: pavlovian_images_f(),
                             n_stimuli: 2,
                             optimal_side: "",
-                            feedback_left: e ? -1. : reward_magnitude[i],
-                            feedback_right: e ? reward_magnitude[i] : -1.,
+                            feedback_left: e ? (window.session === "screening" ? 0.5 : -1. ) : reward_magnitude[i],
+                            feedback_right: e ? reward_magnitude[i] : (window.session === "screening" ? 0.5 : -1. ),
                             optimal_right: e,
                             block: "practice2",
                             trial: i,
