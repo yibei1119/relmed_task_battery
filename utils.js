@@ -240,10 +240,10 @@ function postToParent(message, fallback = () => {}) {
     }
 }
 
-function updateState(state) {
+function updateState(state, save_data = true) {
 
     // Save data to REDCap
-    if (!state.includes("no_resume")){
+    if (!state.includes("no_resume") && save_data){
         saveDataREDCap();
     }
 

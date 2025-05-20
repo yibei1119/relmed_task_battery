@@ -4,7 +4,7 @@
 const rev_n_trials = (window.demo || (window.task === "screening")) ? 50 : 150; // N trials
 
 // Parse json sequence
-const reversal_timeline = JSON.parse(reversal_json);
+let reversal_timeline = JSON.parse(reversal_json);
 
 // First preload for task
 const reversal_preload = {
@@ -31,85 +31,109 @@ const reversal_preload = {
     }
 }
 
-// Assemble list of blocks
-var reversal_blocks = [
-];
-for (i=0; i<reversal_timeline.length; i++){
-    reversal_blocks.push([
-        {
-            timeline: [
-                {
-                    timeline: [
-                        kick_out,
-                        fullscreen_prompt,
-                        {
-                            type: jsPsychReversal,
-                            feedback_right: jsPsych.timelineVariable('feedback_right'),
-                            feedback_left: jsPsych.timelineVariable('feedback_left'),
-                            optimal_right: jsPsych.timelineVariable('optimal_right'),
-                            response_deadline: () => {
-                                if (can_be_warned("reversal")){
-                                    // console.log(window.default_response_deadline)
-                                    return window.default_response_deadline
-                                } else {
-                                    // console.log(window.default_long_response_deadline)
-                                    return window.default_long_response_deadline
+const generateReversalBlocks = (reversal_timeline) => {
+    
+    // Remove blocks and trials from the timeline if this is a resumption
+    if (window.last_state.includes("reversal_block_")) {
+        const last_block = parseInt(window.last_state.split("_")[2]) - 1;
+        const last_trial = parseInt(window.last_state.split("_")[4]);
+
+        // Remove blocks before the last one
+        reversal_timeline = reversal_timeline.slice(last_block);
+        
+        // Remove trials before the last one
+        reversal_timeline[0] = reversal_timeline[0].slice(last_trial);
+    }
+    
+    
+    // Assemble list of blocks
+    var reversal_blocks = [
+    ];
+    for (i=0; i<reversal_timeline.length; i++){
+        reversal_blocks.push([
+            {
+                timeline: [
+                    {
+                        timeline: [
+                            kick_out,
+                            fullscreen_prompt,
+                            {
+                                type: jsPsychReversal,
+                                feedback_right: jsPsych.timelineVariable('feedback_right'),
+                                feedback_left: jsPsych.timelineVariable('feedback_left'),
+                                optimal_right: jsPsych.timelineVariable('optimal_right'),
+                                response_deadline: () => {
+                                    if (can_be_warned("reversal")){
+                                        // console.log(window.default_response_deadline)
+                                        return window.default_response_deadline
+                                    } else {
+                                        // console.log(window.default_long_response_deadline)
+                                        return window.default_long_response_deadline
+                                    }
+                                },
+                                show_warning: () => {
+                                    return can_be_warned("reversal")
+                                },
+                                on_finish: () => {
+                                    const trial_number = jsPsych.data.get().last(1).select('trial').values[0];
+                                    const block_number = jsPsych.data.get().last(1).select('block').values[0];
+
+                                    updateState(`reversal_block_${block_number}_trial_${trial_number}`, false)
+
+                                    n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
+                                    
+                                    if (n_trials % 40 == 0) {
+                                        saveDataREDCap(retry = 3);
+                                    }
                                 }
-                            },
-                            show_warning: () => {
-                                return can_be_warned("reversal")
-                            },
-                            on_finish: () => {
-                                n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
-                                
-                                if (n_trials % 40 == 0) {
-                                    saveDataREDCap(retry = 3);
-                                  }
                             }
+                        ],
+                        conditional_function: () => {
+
+                            // Check whether participants are up to crtierion
+                            const criterion = jsPsych.evaluateTimelineVariable('criterion');
+
+                            let num_correct = jsPsych.data.get()
+                                .filter({block: jsPsych.evaluateTimelineVariable('block'), trial_type: 'reversal'})
+                                .select('response_optimal').sum()
+
+                            // Check whether trial limit reached
+                            let n_trials = jsPsych.data.get()
+                            .filter({trial_type: 'reversal'})
+                            .count()
+                            
+                            return (n_trials < rev_n_trials) && (num_correct < criterion)
+                    },
+                    on_finish: function(data) {
+                        if (data.response === null) {
+                            const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+                            jsPsych.data.addProperties({
+                                n_warnings: up_to_now + 1
+                            });
                         }
-                    ],
-                    conditional_function: () => {
 
-                        // Check whether participants are up to crtierion
-                        const criterion = jsPsych.evaluateTimelineVariable('criterion');
-
-                        let num_correct = jsPsych.data.get()
-                            .filter({block: jsPsych.evaluateTimelineVariable('block'), trial_type: 'reversal'})
-                            .select('response_optimal').sum()
-
-                        // Check whether trial limit reached
-                        let n_trials = jsPsych.data.get()
-                        .filter({trial_type: 'reversal'})
-                        .count()
-
-                        return (n_trials < rev_n_trials) && (num_correct < criterion)
-                },
-                on_finish: function(data) {
-                    if (data.response === null) {
-                        const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-                        jsPsych.data.addProperties({
-                            n_warnings: up_to_now + 1
-                        });
-                    }
-
-                    if (data.response_deadline_warning) {
-                        const up_to_now = parseInt(jsPsych.data.get().last(1).select('reversal_n_warnings').values);
-                        jsPsych.data.addProperties({
-                            reversal_n_warnings: up_to_now + 1
-                        });
-                    }
-                 },
+                        if (data.response_deadline_warning) {
+                            const up_to_now = parseInt(jsPsych.data.get().last(1).select('reversal_n_warnings').values);
+                            jsPsych.data.addProperties({
+                                reversal_n_warnings: up_to_now + 1
+                            });
+                        }
+                    },
+                }
+                ],
+                timeline_variables: reversal_timeline[i],
+                data: {
+                    block: jsPsych.timelineVariable('block'),
+                    trial: jsPsych.timelineVariable('trial'),
+                    trialphase: "reversal"
+                }
             }
-            ],
-            timeline_variables: reversal_timeline[i],
-            data: {
-                block: jsPsych.timelineVariable('block'),
-                trial: jsPsych.timelineVariable('trial'),
-                trialphase: "reversal"
-            }
-        }
-    ]);
+        ]);
+    }
+
+    return reversal_blocks;
 }
+
 
 // Reversal instructions
 const reversal_instructions = [
@@ -132,7 +156,7 @@ const reversal_instructions = [
         },
         on_finish: () => {
             if (window.session !== "screening") {
-                updateState(`no_resume`)
+                updateState(`no_resume_10_minutes`)
             }
             updateState(`reversal_task_start`)    
         }
