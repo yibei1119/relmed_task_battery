@@ -1,10 +1,22 @@
 // This files creates the jsPsych timeline for the reversal task block
 
+// Load the reversal task JSON
+const scriptSrc = `reversal_sequences/trial1_${window.session}_reversal_sequence.js`; // Replace with your variable
+
+// Create a new script element
+const script = document.createElement("script");
+
+// Set the src attribute to the variable
+script.src = scriptSrc;
+
+// Optionally, set the type attribute (default is "text/javascript")
+script.type = "text/javascript";
+
+// Append the script to the document's head or body
+document.head.appendChild(script); 
+
 // Parameters
 const rev_n_trials = (window.demo || (window.task === "screening")) ? 50 : 150; // N trials
-
-// Parse json sequence
-let reversal_timeline = JSON.parse(reversal_json);
 
 // First preload for task
 const reversal_preload = {
@@ -31,8 +43,11 @@ const reversal_preload = {
     }
 }
 
-const generateReversalBlocks = (reversal_timeline) => {
-    
+const generateReversalBlocks = () => {
+
+    // Parse json sequence
+    let reversal_timeline = JSON.parse(reversal_json);
+
     // Remove blocks and trials from the timeline if this is a resumption
     if (window.last_state.includes("reversal_block_")) {
         const last_block = parseInt(window.last_state.split("_")[2]) - 1;

@@ -88,7 +88,6 @@
     <script src="open-text//plugin-survey-text_jo.js"></script>
     <script src="plugin-PILT.js"></script>
     <script src="plugin-survey-template.js"></script>
-    <script src="pilot6_reversal_sequence.js"></script>
     <script src="plugin-reversal.js"></script>
     <script src="reversal.js"></script>
     <script src="plugin-coin-lottery.js"></script>
@@ -554,7 +553,7 @@
 
             // Add reversal timeline
             procedure = procedure.concat(reversal_instructions);
-            procedure = procedure.concat(generateReversalBlocks(reversal_timeline));
+            procedure = procedure.concat(generateReversalBlocks());
             procedure = procedure.concat([
                 acceptability_intro,
                 acceptability_reversal
