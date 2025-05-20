@@ -994,7 +994,7 @@ const controlInstructionsTimeline = [
     controlInstructionsLoop,
     createPressBothTrial(
         `<p><strong>Great! You're now ready to begin the real game.</strong></p>
-        <p>You'll play multiple rounds, which typically takes about <strong>${(window.demo || (window.task === "screening")) ? 4 : 14} minutes</strong> to complete.</p>
+        <p>You'll play multiple rounds, which typically takes about <strong>${(window.demo || (window.session === "screening")) ? 4 : 14} minutes</strong> to complete.</p>
         <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
         <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
         "control_instruction_end"
