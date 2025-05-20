@@ -33,7 +33,7 @@ const CONTROL_CONFIG = {
   scale: 2,
 
   i1_name: {
-    screening: "<Placeholder>",
+    screening: "strawberry",
     wk0: "banana",
     wk2: "apple",
     wk4: "<Placeholder>",
@@ -50,3 +50,5 @@ const reward_sequence = [{"target":"i1","near":"i2","left":"red","right":"blue",
 
 // Screening session
 const explore_sequence_screening = [{"left":"green","right":"blue","near":"i1","current":1},{"left":"red","right":"green","near":"i2","current":3},{"left":"green","right":"blue","near":"i3","current":3},{"left":"red","right":"green","near":"i1","current":1},{"left":"blue","right":"green","near":"i3","current":2},{"left":"red","right":"blue","near":"i2","current":1},{"left":"blue","right":"red","near":"i3","current":1},{"left":"green","right":"blue","near":"i1","current":2},{"left":"green","right":"red","near":"i2","current":2},{"left":"green","right":"blue","near":"i2","current":1},{"left":"red","right":"blue","near":"i1","current":1},{"left":"blue","right":"red","near":"i1","current":3},{"left":"blue","right":"green","near":"i3","current":1},{"left":"red","right":"blue","near":"i1","current":2},{"left":"green","right":"red","near":"i3","current":2},{"left":"red","right":"blue","near":"i2","current":3},{"left":"blue","right":"green","near":"i2","current":3},{"left":"red","right":"blue","near":"i3","current":2},{"left":"green","right":"red","near":"i3","current":1},{"left":"red","right":"blue","near":"i3","current":3},{"left":"green","right":"red","near":"i1","current":3},{"left":"blue","right":"green","near":"i2","current":2},{"left":"blue","right":"red","near":"i2","current":2},{"left":"blue","right":"green","near":"i1","current":3}];
+
+const predict_sequence_screening = [{"ship":"red"},{"ship":"blue"},{"ship":"green"},{"ship":"red"}];

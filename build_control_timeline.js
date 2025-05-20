@@ -123,7 +123,9 @@ controlExploreTimeline[0]["on_timeline_start"] = () => {
 }
 
 const controlPredTimeline = [];
-predict_sequence.forEach(trial => {
+(window.session === "screening" 
+  ? predict_sequence_screening 
+  : predict_sequence).forEach(trial => {
   controlPredTimeline.push({
     timeline: [
       kick_out,
@@ -138,6 +140,7 @@ predict_sequence.forEach(trial => {
               return window.default_long_response_deadline
           }
         },
+        choices: window.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
@@ -310,12 +313,13 @@ const computeRelativeControlBonus = () => {
 }
 
 let controlTotalReward = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: function () {
-    let raw_bonus = computeRelativeControlBonus();
-    let total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
-    if (window.context === "relmed" || window.task === "control") {
-      stimulus = `<main class="main-stage">
+  timeline: [{
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: function () {
+      let raw_bonus = computeRelativeControlBonus();
+      let total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
+      if (window.context === "relmed" || window.task === "control") {
+        stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
@@ -325,8 +329,8 @@ let controlTotalReward = {
             </div>
           </div>
         </main>`;
-    } else {
-      stimulus = `<main class="main-stage">
+      } else {
+        stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
             <div class="instruction-content" style="font-size: 32px; text-align: center;">
@@ -335,22 +339,26 @@ let controlTotalReward = {
             </div>
           </div>
         </main>`;
+      }
+      return stimulus;
+    },
+    choices: "ALL_KEYS",
+    response_ends_trial: true,
+    post_trial_gap: 400,
+    data: {
+      trialphase: 'control_bonus'
+    },
+    on_finish: function (data) {
+      const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
+      data.control_bonus = control_bonus;
+      data.control_bonus_adjusted = (control_bonus + 45) / 125 * 3;
+      console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
+      postToParent({ bonus: data.control_bonus_adjusted });
+      saveDataREDCap(retry = 3);
     }
-    return stimulus;
-  },
-  choices: "ALL_KEYS",
-  response_ends_trial: true,
-  post_trial_gap: 400,
-  data: { 
-    trialphase: 'control_bonus'
-  },
-  on_finish: function (data) {
-    const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
-    data.control_bonus = control_bonus;
-    data.control_bonus_adjusted = (control_bonus + 45) / 125 * 3;
-    console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
-    postToParent({bonus: data.control_bonus_adjusted});
-    saveDataREDCap(retry = 3);
+  }],
+  conditional_function: () => {
+    return window.session !== "screening";
   }
 };
 
@@ -364,7 +372,8 @@ const controlHomebaseReveal = {
         <img class="background" src="imgs/ocean_above.png" alt="Background"/>
         <div class="instruction-dialog" style="bottom:unset;">
           <div class="instruction-content" style="font-size: 24px; text-align: center;">
-            <p>Here are the homebases for each ship in today's session:</p>
+            <h3>Well done!</h3>
+            <p>In case you’re curious, this is the home base for each ship in today's session:</p>
             <table style="margin: auto; border-collapse: separate; border-spacing: 20px 0px;">
               <tbody>`;
     
@@ -415,55 +424,29 @@ controlTimeline.push(controlInstructionsTimeline);
 
 // Add the control trials depending on the session
 if (window.session === "screening") {
-  controlTimeline.push(...controlExploreTimeline);
-  // Add one prediction trial
-  controlTimeline.push([
-    kick_out,
-    fullscreen_prompt,
-    {
-      type: jsPsychPredictHomeBase,
-      ship: "green",
-      choices: ["i1", "i2", "i3"],
-      predict_decision: window.relemd_default_response_deadline + 2000,
-      post_trial_gap: 0,
-      on_finish: function (data) {
-        const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
-        data.n_control_trials = n_trials;
-        console.log("Trial number: " + n_trials + " (predict)");
-
-        if (data.response === null) {
-          var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-          console.log("n_warnings: " + up_to_now);
-          jsPsych.data.addProperties({
-              n_warnings: up_to_now + 1
-          });
-        }
-      }
-    },
-    noChoiceWarning("response", '', "control_predict_homebase")
-  ]);
+    for (let i = 0; i < explore_sequence_screening.length; i++) {
+    controlTimeline.push(controlExploreTimeline[i]);
+    if ((i + 1) % 6 === 0) {
+      num_miniblock = Math.floor(i / 6);
+      controlTimeline.push(controlPredTimeline[num_miniblock]);
+    }
+  }
   // Add one reveal trial for the screening session
   controlTimeline.push(controlHomebaseReveal);
 } else {
-  // Add the explore, predict, reward trials
+  // Add the explore, predict, report trials
   for (let i = 0; i < explore_sequence.length; i++) {
-    // Add the explore trials
     controlTimeline.push(controlExploreTimeline[i]);
     if ((i + 1) % 6 === 0) {
       num_miniblock = Math.floor(i / 6);
       if (num_miniblock % 2 === 0) {
-        // Add the prediction trials after trial 6, 18, 30...
         indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
         controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
       } else {
-        // Add the reward trials after trial 12, 24, 36...
         controlTimeline.push(controlRating);
-        // indx = [0, 8].map(num => num + (num_miniblock - 1) / 2 * 8);
-        // controlTimeline.push(...controlRewardTimeline.slice(indx[0], indx[1]));
       }
     }
   }
-
   // Add the reward trials as a separate block
   controlTimeline.push(controlRewardTimeline);
 }

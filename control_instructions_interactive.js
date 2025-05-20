@@ -106,6 +106,8 @@ const createProgressBar = (current, total) => {
 };
 
 // New helper to abstract the fuel trial common behavior
+let firstKeyListener = null;
+let repeatedKeyListener = null;
 function setupFuelTrial(config) {
     let selectedKey = null;
     let trialPresses = 0;
@@ -120,7 +122,7 @@ function setupFuelTrial(config) {
     document.getElementById(jsPsych.getDisplayContainerElement().id).focus();
 
     // Listener for the first key press
-    const firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
+    firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleFirstKey,
         valid_responses: ['ArrowRight'],
         rt_method: 'performance',
@@ -578,10 +580,15 @@ controlInstructionTrial = {
         });
     },
     on_page_change: function(current_page) {
-        // Cancel any existing repeatedKeyListener before proceeding
+        // Cancel any existing first or repeatedKeyListener before proceeding
         if (typeof repeatedKeyListener !== 'undefined' && repeatedKeyListener) {
             jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
             repeatedKeyListener = null;
+        }
+
+        if (typeof firstKeyListener !== 'undefined' && firstKeyListener) {
+            jsPsych.pluginAPI.cancelKeyboardResponse(firstKeyListener);
+            firstKeyListener = null;
         }
 
         if (current_page === 3) {
@@ -749,6 +756,7 @@ controlInstructionPredTrials.push({
     type: jsPsychPredictHomeBase,
     ship: "blue",
     predict_decision: null,
+    choices: ["i1", "i2", "i3"],
     post_trial_gap: 0,
     on_load: function () {
         // Remove the icon-row element if it exists
@@ -986,7 +994,7 @@ const controlInstructionsTimeline = [
     controlInstructionsLoop,
     createPressBothTrial(
         `<p><strong>Great! You're now ready to begin the real game.</strong></p>
-        <p>You'll play multiple rounds, which typically takes about <strong>20 minutes</strong> to complete.</p>
+        <p>You'll play multiple rounds, which typically takes about <strong>${(window.demo || (window.session === "screening")) ? 4 : 14} minutes</strong> to complete.</p>
         <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
         <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
         "control_instruction_end"
