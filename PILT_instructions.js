@@ -57,51 +57,53 @@ function prepare_PILT_instructions() {
     }
     ];
 
-    inst.push(
-        createPressBothTrial(
-            `<p>You choose a card by pressing the left or the right arrow keys.</p>
-                    <p>Let's try it out now! Flip a card on the next screen.</p>
-                    <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
-                    <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
-                    `,
-            "pilt_instruction"
-        ),
-        {
-            timeline: build_PILT_task(
-                [[
-                    {   
-                        stimulus_left: demo_stimuli[0],
-                        stimulus_right: demo_stimuli[1],
-                        stimulus_middle: "",
-                        feedback_middle: "",
-                        n_stimuli: 2,
-                        present_pavlovian: window.session !== "screening",
-                        pavlovian_images: pavlovian_images_f(),
-                        optimal_side: "",
-                        feedback_left: 1,
-                        feedback_right: 1,
-                        optimal_right: 1,
-                        block: "practice1",
-                        trial: 1,
-                        valence: 0,
-                        response_deadline: -1,
-                        stimulus_group: 1,
-                        stimulus_group_id: 1,
-                        n_groups: 1,
-                        rest: {},
-                        early_stop: false
-                    }
-                ]],
-                false
-            )
-        }
-    );
+    if (window.session === "screening"){
+        inst.push(
+            createPressBothTrial(
+                `<p>You choose a card by pressing the left or the right arrow keys.</p>
+                        <p>Let's try it out now! Flip a card on the next screen.</p>
+                        <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
+                        <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>
+                        `,
+                "pilt_instruction"
+            ),
+            {
+                timeline: build_PILT_task(
+                    [[
+                        {   
+                            stimulus_left: demo_stimuli[0],
+                            stimulus_right: demo_stimuli[1],
+                            stimulus_middle: "",
+                            feedback_middle: "",
+                            n_stimuli: 2,
+                            present_pavlovian: window.session !== "screening",
+                            pavlovian_images: pavlovian_images_f(),
+                            optimal_side: "",
+                            feedback_left: 1,
+                            feedback_right: 1,
+                            optimal_right: 1,
+                            block: "practice1",
+                            trial: 1,
+                            valence: 0,
+                            response_deadline: -1,
+                            stimulus_group: 1,
+                            stimulus_group_id: 1,
+                            n_groups: 1,
+                            rest: {},
+                            early_stop: false
+                        }
+                    ]],
+                    false
+                )
+            }
+        );
+    }
 
     inst = inst.concat([{
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            `<p>You found a one pound coin!</p>
+            `${window.session === "screening" ? "<p>You found a one pound coin!</p>" : ""}
             <p>Some cards are better than others, and through trial and error, you can learn which ones are best.</p> 
             <p>However, even the best cards may sometimes give only a penny${window.task == "screening" ? "" : " or occasionally break a one-pound coin"}.</p>`
         ],
@@ -122,6 +124,13 @@ function prepare_PILT_instructions() {
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
     let reward_magnitude = shuffleArray([1, 1, 1, 0.5, 1, 0.5], window.session + "b");
 
+    // Shorter paractise for non screening sessions
+    if (window.session !== "screening"){
+        dumbbell_on_right = dumbbell_on_right.slice(0, 4);
+        reward_magnitude = reward_magnitude.slice(0, 4);
+    }
+
+    // Practice task
     inst.push(
         {
             timeline: build_PILT_task(
