@@ -41,32 +41,32 @@ Data is written to REDCap via a call to an AWS lamda function.
 |---------|------|----------|---------|--------|
 | screening | screening | ❌ Failed | ❌ Failed | ❌ Failed |
 | wk0 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
-| wk0 | reversal | ❌ Failed | ✅ Success | ✅ Success |
+| wk0 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk0 | wm | ❌ Failed | ✅ Success | ✅ Success |
-| wk2 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
+| wk0 | wm | ✅ Success | ✅ Success | ✅ Success |
+| wk2 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
 | wk2 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
+| wk4 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
 | wk4 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | reversal | ✅ Success | ✅ Success | ✅ Success |
+| wk24 | reversal | ✅ Success | ❌ Failed | ✅ Success |
 | wk24 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
+| wk24 | wm | ✅ Success | ✅ Success | ❌ Failed |
+| wk28 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
 | wk28 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk28 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | wm | ❌ Failed | ✅ Success | ✅ Success |
-| wk0 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | quests | ✅ Success | ✅ Success | ✅ Success |
+| wk28 | wm | ✅ Success | ✅ Success | ✅ Success |
+| wk0 | quests | ✅ Success | ✅ Success | ❌ Failed |
+| wk2 | quests | ✅ Success | ✅ Success | ❌ Failed |
+| wk4 | quests | ✅ Success | ✅ Success | ❌ Failed |
+| wk24 | quests | ✅ Success | ✅ Success | ❌ Failed |
+| wk28 | quests | ✅ Success | ✅ Success | ❌ Failed |
 | wk6 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk8 | quests | ✅ Success | ✅ Success | ✅ Success |
+| wk8 | quests | ❌ Failed | ✅ Success | ✅ Success |
 | wk52 | quests | ✅ Success | ✅ Success | ✅ Success |
 
 <!-- LOADING-TEST-RESULTS -->
