@@ -140,6 +140,7 @@ const controlPredTimeline = [];
               return window.default_long_response_deadline
           }
         },
+        choices: window.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
         post_trial_gap: 0,
         save_timeline_variables: true,
         on_start: function (trial) {
