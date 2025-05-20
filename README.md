@@ -54,7 +54,7 @@ Data is written to REDCap via a call to an AWS lamda function.
 | wk4 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | reversal | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | control | ✅ Success | ❌ Failed | ✅ Success |
+| wk24 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk28 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
 | wk28 | reversal | ✅ Success | ✅ Success | ✅ Success |
