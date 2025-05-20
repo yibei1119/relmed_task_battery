@@ -24,8 +24,8 @@ let study_completed_error = 'E_SC1' // Study already completed before
 
 // Usefuf duration and warning variables
 let timeout_alert_duration = 4 // duration of the timeout/empty alert
-let max_timeout = 4 // max number of timeouts or empty responses allowed (next one kicks ppt out)
-let warning_text = `You've timed out or haven't provided a full response!`
+let max_timeout = 5 // max number of timeouts or empty responses allowed (next one kicks ppt out). Effectively set to never kick out.
+let warning_text = `Didn't catch a resopnse - moving on.`
 let warning_last_chance = `<br><br>This is your <b>last warning</b>, next time you <u>will be asked to return your submission.</u>`
 
 // User class for storing booleans etc for a given participant
@@ -141,15 +141,7 @@ function showAlert(jsPsych_instance, currentUser_instance) {
 
     let alert_text = `
                    <div id="customAlert">
-                   ` + warning_text + `<br> You have used <b>` + currentUser_instance.warning_count + ` out of ` + (max_timeout) + ` chances</b>.
-                   `
-    let extra_time = 0
-    if (currentUser_instance.warning_count === max_timeout) {
-        alert_text += warning_last_chance + '<br><br>The experiment will resume shortly.</div>'
-        extra_time = 2
-    } else {
-        alert_text += '<br><br>The experiment will resume shortly.</div>'
-    }
+                   ` + warning_text 
     document.getElementById('jspsych-content').innerHTML = alert_text
 
     let alertBox = document.getElementById("customAlert");
@@ -161,5 +153,5 @@ function showAlert(jsPsych_instance, currentUser_instance) {
     setTimeout(function () {
         alertBox.style.display = "none";
         jsPsych_instance.resumeExperiment()
-    }, (timeout_alert_duration + extra_time) * 1000);
+    }, (timeout_alert_duration) * 1000);
 }
