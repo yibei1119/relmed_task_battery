@@ -548,11 +548,13 @@
             // Welcome message
             if (window.last_state === "none"){
                 procedure.push(welcome_msgs);
+            } else if (window.context === "relmed") {
+                procedure.push(resumption_msg);
             }
 
             // Add reversal timeline
             procedure = procedure.concat(reversal_instructions);
-            procedure = procedure.concat(reversal_blocks);
+            procedure = procedure.concat(generateReversalBlocks(reversal_timeline));
             procedure = procedure.concat([
                 acceptability_intro,
                 acceptability_reversal
