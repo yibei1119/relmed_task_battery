@@ -33,7 +33,7 @@ const CONTROL_CONFIG = {
   scale: 2,
 
   i1_name: {
-    screening: "<Placeholder>",
+    screening: "strawberry",
     wk0: "banana",
     wk2: "apple",
     wk4: "<Placeholder>",
