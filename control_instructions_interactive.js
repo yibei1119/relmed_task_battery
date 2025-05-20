@@ -890,10 +890,10 @@ controlIntroComprehension.push(
                     return controlQuizExplanation.filter((item, index) => {
                         return Object.values(data)[index] !== "True";
                     }).map(item => `
-                        <p>You've answered wrong for the following question:</p>
+                        <p>You gave the wrong answer for the following question:</p>
                         <h3 style="color: darkred; width: 700px; text-align: left;">Question: ${item.prompt}</h3>
                         <br>
-                        <p style="max-width: 700px; text-align: left;"><strong>Your answer:</strong> False</p>
+                        <p style="max-width: 700px; text-align: left;"><strong>The correct answer:</strong> True</p>
                         <p style="max-width: 700px; text-align: left;"><strong>Explanation:</strong> ${item.explanation}</p>
                     `);
                 }
