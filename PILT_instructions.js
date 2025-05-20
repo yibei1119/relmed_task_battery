@@ -153,12 +153,13 @@ function prepare_PILT_instructions() {
                 false
             )
         }
-    )
+    );
 
-    inst = inst.concat(
-        [
-            inter_block_instruct,
-            {
+    // Block summary message
+    inst.push(inter_block_instruct);
+
+    // Quiz introduction
+    inst.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
                 pages: [`<p>Before you start playing, you'll answer a few questions about the instructions you just read.</p>
@@ -166,9 +167,9 @@ function prepare_PILT_instructions() {
                         <p>If not, you can review the instructions and try again.</p>`],
                 show_clickable_nav: true,
                 data: {trialphase: "pilt_instruction"}
-            }
-    ]);
-
+            });
+    
+    // Instruciton comprehension quiz
     let quiz_questions = [
         {
             prompt: `Some cards are better than others, but even the best cards might only give a penny${window.session !== "screening" ? " or break a £1 coin" : ''}.`,
@@ -190,7 +191,7 @@ function prepare_PILT_instructions() {
         });
     }
 
-    inst.push(
+    let quiz = [
         {
             type: jsPsychSurveyMultiChoice,
             questions: quiz_questions,
@@ -210,47 +211,106 @@ function prepare_PILT_instructions() {
                         Q2: `True`
                     }
                 }
-            }   
+            },
         }
-    );
+    ];
 
-    inst.push(
+    // Explanation for wrong answers
+    let piltQuizExplanation = [
         {
+            prompt: `Some cards are better than others, but even the best cards might only give a penny${window.session !== "screening" ? " or break a £1 coin" : ''}.`,
+            explanation: "You can learn which cards are better by trial and error. However, cards are not 100% consistent in the coins behind them."
+        },
+        {
+            prompt: `My goal is to collect as much game coins as I can${window.session !== "screening" ? " and avoid losing them" : ''}.`,
+            explanation: "Your goal is to collect as much money as possible. This means learning to chose cards that give you the most money, and avoiding cards that break valuable coins."
+        }
+    ];
+
+    if (window.session !== "screening"){
+        piltQuizExplanation.splice(1, 0,{
+            prompt: "If I find a broken coin, that means I lose that amount.",
+            explanation: "If you find a broken coin, you lose that amount of game coins. This means that if you find a broken £1 coin, you lose £1 in the game."
+        });
+    }
+    
+    
+    quiz.push(
+        {   
             type: jsPsychInstructions,
             css_classes: ['instructions'],
-            timeline: [
-                {
-                    pages: [
-                    `<p>You did not answer all the quiz questions correctly. 
-                    Please read the instructions again before you continue</p>`
-                    ]
-                }
-            ],
-            conditional_function: check_quiz_failed,
+            allow_keys: false,
+            show_page_number: false,
             show_clickable_nav: true,
             data: {
-                trialphase: "quiz_failure"
-            }
+                trialphase: "pilt_instruction_quiz_review"
+            },
+            timeline: [
+                {
+                    pages: () => {
+                        const data = jsPsych.data.get().filter({trialphase: "instruction_quiz"}).last(1).select('response').values[0];
+                        return piltQuizExplanation.filter((item, index) => {
+                            return Object.values(data)[index] !== "True";
+                        }).map(item => `
+                            <p>You gave the wrong answer for the following question:</p>
+                            <h3 style="color: darkred; width: 700px; text-align: left;">Question: ${item.prompt}</h3>
+                            <br>
+                            <p style="max-width: 700px; text-align: left;"><strong>The correct answer:</strong> True</p>
+                            <p style="max-width: 700px; text-align: left;"><strong>Explanation:</strong> ${item.explanation}</p>
+                            ${window.session === "screening" ? "<p>Press next to review the instructions again.<p>" : "<p>Press next to try the quiz again.</p>"}
+                        `);
+                    }
+                }
+            ],
+            conditional_function: check_quiz_failed
         }
     );
 
+
     const inst_loop = {
-        timeline: inst,
-        loop_function: check_quiz_failed
+        timeline: window.session === "screening" ? inst.concat(quiz) : quiz,
+        loop_function: () => {
+            if (!check_quiz_failed()){
+                return false;
+            }
+
+            // Since in non-screening sessions only the quiz is repeated, don't limit the number of attempts
+            if (window.session !== "screening"){
+                return true;
+            }
+
+            // Compute the number of attempts
+            const attempts = jsPsych.data.get().select('trialphase').values.filter(item => item === "instruction_quiz").length;
+            
+            // Allow up to 3 attempts on screening session
+            if (attempts < 3){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    let inst_total = [];
+
+    if (window.session !== "screening"){
+        inst_total = inst_total.concat(inst);
     }
 
 
-    const inst_total = [
-        inst_loop,
-        createPressBothTrial(
-            `<p>Great! Let's start playing for real.</p>
-            <p>You will now complete ${window.session === "screening" ? "another round" : "15 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "10-15 minutes"} on average to complete.</p>
-            ${window.session !== "screening" ? "<p>You will be able to take a short break between rounds, if you feel you need it.</p>" : ""}
-            <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
-            <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
-            "pilt_instruction"
-        )
-    ]
+    inst_total = inst_total.concat(
+        [
+            inst_loop,
+            createPressBothTrial(
+                `<p>Great! Let's start playing for real.</p>
+                <p>You will now complete ${window.session === "screening" ? "another round" : "15 rounds"} of the card choosing game, taking ${window.session === "screening" ? "a couple of minutes" : "10-15 minutes"} on average to complete.</p>
+                ${window.session !== "screening" ? "<p>You will be able to take a short break between rounds, if you feel you need it.</p>" : ""}
+                <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
+                <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
+                "pilt_instruction"
+            )
+        ]
+    )
 
     return inst_total
 } 
