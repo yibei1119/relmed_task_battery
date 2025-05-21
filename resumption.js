@@ -55,7 +55,7 @@ const wm_order = [
     "dd_task_start",
     "open_text_instructions_start",
     "open_text_task_start",
-    "coin_lottery_end"
+    "bonus_trial_end"
 ]
 
 let pilt_to_test_order = [
