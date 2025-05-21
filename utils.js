@@ -225,7 +225,7 @@ function postToParent(message, fallback = () => {}) {
             if (isAllowed) {
                 window.parent.postMessage(message, parentUrl);
             } else {
-                console.warn("Parent URL does not match any allowed origins:", parentUrl);
+                // console.warn("Parent URL does not match any allowed origins:", parentUrl);
                 fallback();
             }
         } else {
@@ -274,7 +274,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
         ...extra_fields
     };
 
-    console.log("Data to be sent:", data_message);
+    // console.log("Data to be sent:", data_message);
 
     if (window.context === "relmed") {
         postToParent(
@@ -976,19 +976,23 @@ function computeTotalBonus(){
         const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"] + control_bonus["min"];
         const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"] + control_bonus["max"];    
 
-        return ((total_earned - min_total) / (max_total - min_total) * 1.80);
+        return ((total_earned - min_total) / (max_total - min_total) * 2.45);
     }
 
     if (window.task === "reversal"){
         const reversal_bonus = computeRelativeReversalBonus();
-        return ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]) * 0.7);
+        return ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]) * 0.5);
     }
 
     if (window.task === "wm"){
         const wm_bonus = computeRelativePILTBonus();
-        return ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]) * 0.7);
+        return ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]) * 0.8);
     }
-    
+
+    if (window.task === "control"){
+        const ctrl_bonus = computeRelativeControlBonus();
+        return ((ctrl_bonus["earned"] - ctrl_bonus["min"]) / (ctrl_bonus["max"] - ctrl_bonus["min"]) * 1.25);
+    }
     
 }
 
