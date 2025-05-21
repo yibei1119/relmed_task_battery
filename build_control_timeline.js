@@ -359,7 +359,7 @@ let controlTotalReward = {
     }
   }],
   conditional_function: () => {
-    return window.session !== "screening";
+    return window.session !== "screening" && window.context !== "relmed";
   }
 };
 

@@ -3,9 +3,6 @@
 // Parameters
 const rev_n_trials = (window.demo || (window.task === "screening")) ? 50 : 150; // N trials
 
-// Parse json sequence
-let reversal_timeline = JSON.parse(reversal_json);
-
 // First preload for task
 const reversal_preload = {
     type: jsPsychPreload,
@@ -31,8 +28,11 @@ const reversal_preload = {
     }
 }
 
-const generateReversalBlocks = (reversal_timeline) => {
-    
+const generateReversalBlocks = () => {
+
+    // Parse json sequence
+    let reversal_timeline = JSON.parse(reversal_json);
+
     // Remove blocks and trials from the timeline if this is a resumption
     if (window.last_state.includes("reversal_block_")) {
         const last_block = parseInt(window.last_state.split("_")[2]) - 1;
@@ -168,3 +168,20 @@ const reversal_instructions = [
         "reversal_instruction"
     )
 ]
+
+const computeRelativeReversalBonus = () => {
+
+    // Compute maximal possible earnings
+    max_sum = rev_n_trials; // Best and luckiest participant gets one pound on every trial
+
+    min_sum = rev_n_trials * 0.01; // Worst and most unfortunate participant gets one penny on every trial
+
+    // Compute the actual sum of coins
+    const earned_sum = jsPsych.data.get().filter({trial_type: "reversal"}).select("chosen_feedback").sum();
+
+    return {
+        earned: earned_sum, 
+        min: min_sum, 
+        max: max_sum
+    }
+}

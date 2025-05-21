@@ -460,21 +460,6 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
     return PILT_task
 }
 
-// Load PILT sequences from json file
-async function fetchJSON(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${url}`);
-        }
-
-        data = await response.json();
-        return data
-    } catch (error) {
-        console.error(`Error fetching ${url}:`, error);
-        throw error;
-    }
-}
 
 function adjustStimuliPaths(structure, folder) {
 
@@ -492,59 +477,33 @@ function adjustStimuliPaths(structure, folder) {
     });
 }
 
-async function load_sequences(session) {
-    try {
+function return_PILT_full_sequence() {
 
-        // Load json
-        const [
-            PILT_structure, PILT_test_structure, pav_test_structure,
-            WM_structure, WM_test_structure,
-        ] = await Promise.all([
-            fetchJSON('trial1_PILT.json'),
-            fetchJSON('trial1_PILT_test.json'),
-            fetchJSON('pavlovian_test.json'),
-            fetchJSON('trial1_WM.json'),
-            fetchJSON('trial1_WM_test.json'),
-        ]);
-
-        // Select session
-        let PILT_sess = PILT_structure[session];
-        let PILT_test_sess = PILT_test_structure[session];
-        let WM_sess = WM_structure[session];
-        let WM_test_sess = WM_test_structure[session];
-
-        if (window.demo) {
-            PILT_sess = PILT_sess.slice(0, 6);
-            PILT_test_sess = [PILT_test_sess[0].slice(0, 25)];
-            WM_sess = WM_sess.slice(0, 3);
-        }
+    // Parse json sequence
+    let PILT_structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
+    let PILT_test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
+    let WM_structure = typeof WM_json !== "undefined" ? JSON.parse(WM_json) : null;
+    let WM_test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
+    let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
         
-        adjustStimuliPaths(PILT_test_sess, 'PILT_stims');
-        adjustStimuliPaths(WM_test_sess, 'PILT_stims');
+    adjustStimuliPaths(PILT_test_structure, 'PILT_stims');
+    adjustStimuliPaths(WM_test_structure, 'PILT_stims');
 
-        pav_test_structure.forEach(trial => {
-            trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
-            trial.stimulus_right = `imgs/Pav_stims/${window.session}/${trial.stimulus_right}`;
-            trial.block = "pavlovian";
-            trial.feedback_left = trial.magnitude_left;
-            trial.feedback_right = trial.magnitude_right;
-            trial.EV_left = trial.magnitude_left
-            trial.EV_right = trial.magnitude_right;
-            trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
-        });
+    pav_test_structure.forEach(trial => {
+        trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
+        trial.stimulus_right = `imgs/Pav_stims/${window.session}/${trial.stimulus_right}`;
+        trial.block = "pavlovian";
+        trial.feedback_left = trial.magnitude_left;
+        trial.feedback_right = trial.magnitude_right;
+        trial.EV_left = trial.magnitude_left
+        trial.EV_right = trial.magnitude_right;
+        trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
+    });
 
-        if (!window.demo) {
-            PILT_test_sess = [pav_test_structure].concat(PILT_test_sess);
-        }
-
-        run_full_experiment(PILT_sess, PILT_test_sess, WM_sess, WM_test_sess);
-    } catch (error) {
-        console.error('Error loading sequences:', error);
+    if (!window.demo) {
+        PILT_test_structure = [pav_test_structure].concat(PILT_test_structure);
     }
-}
-
-
-function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_structure, WM_test_structure) {
+    
     // Compute best-rest
     computeBestRest(PILT_structure);
     computeBestRest(WM_structure);
@@ -581,9 +540,6 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
             let test_blocks = build_post_PILT_test(structure, name);
             test_blocks[0]["on_start"] = () => {
 
-                if (!(["wk24", "wk28"].includes(window.session)) && (name !== "ltm")) {
-                    updateState("no_resume");
-                }
                 updateState(`${name}_test_task_start`);
             };
             procedure = procedure.concat(test_blocks);    
@@ -625,16 +581,39 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     }
 }
 
+const earnedSumPILT = () => {
+    // Compute the actual sum of coins
+    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
+
+    return earned_sum
+}
+
 const computeRelativePILTBonus = () => {
 
     // Compute lowest and highest sum of coins possible to earn
-    const feedback_right = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_right").values;
-    const feedback_left = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_left").values;
-    const max_sum = feedback_right.map((value, index) => Math.max(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
-    const min_sum = feedback_right.map((value, index) => Math.min(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
+    // Get all relevant trials: PILT plugin, and numeric block
+    const trials = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
+
+    let max_sum = 0;
+    let min_sum = 0;
+
+    trials.forEach(trial => {
+        let feedbacks = [];
+        if (trial.n_stimuli === 2) {
+            feedbacks = [trial.feedback_left, trial.feedback_right];
+        } else if (trial.n_stimuli !== 2) {
+            feedbacks = [trial.feedback_left, trial.feedback_right, trial.feedback_middle];
+        }
+        // Only consider numeric feedbacks
+        feedbacks = feedbacks.filter(f => typeof f === "number" && !isNaN(f));
+        if (feedbacks.length > 0) {
+            max_sum += Math.max(...feedbacks);
+            min_sum += Math.min(...feedbacks);
+        }
+    });
 
     // Compute the actual sum of coins
-    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
+    const earned_sum = earnedSumPILT();
 
     return {
         earned: earned_sum, 

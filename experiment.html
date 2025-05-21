@@ -80,6 +80,7 @@
 
     </script>
     <script src="utils.js"></script>
+    <script src="sequences/trial1_pavlovian_test.js"></script>
     <script src="resumption.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-explore-trial-2.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
@@ -88,7 +89,6 @@
     <script src="open-text//plugin-survey-text_jo.js"></script>
     <script src="plugin-PILT.js"></script>
     <script src="plugin-survey-template.js"></script>
-    <script src="pilot6_reversal_sequence.js"></script>
     <script src="plugin-reversal.js"></script>
     <script src="reversal.js"></script>
     <script src="plugin-coin-lottery.js"></script>
@@ -253,7 +253,7 @@
         }
     ]
 
-    function run_full_experiment(PILT_structure, test_structure, WM_structure, WM_test_structure){
+    function run_full_experiment(){
 
         let procedure = [];
 
@@ -266,79 +266,9 @@
         }
 
         // Create card choosing timelines
-        if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening", "pilot9"].includes(window.task)){
-            PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_structure, WM_test_structure);
-        }
 
-        if (window.task === "pilot9"){
-            // Preload
-            procedure.push(preload_PILT);
-
-            // Welcome message
-            procedure.push(welcome_msgs);
-
-            // Max press rate test
-            console.log("Adding max press rate");
-            procedure = procedure.concat(maxPressTimeline);
-
-            // Add Pre-PILT conditioning
-            console.log("Adding pre-PILT conditioning");
-            procedure = procedure.concat(initPavlovianLottery());
-
-            // Adding PILT
-            console.log("Adding PILT");
-                procedure = procedure.concat(PILT_tasks.PILT_procedure);
-                procedure = procedure.concat([
-                    acceptability_intro,
-                    acceptability_PILT
-            ]);
-
-            // Add vigour task timeline
-            console.log("Adding vigour");
-            const vigourTimeline = [
-                preload_vigour,
-                vigourInstructions,
-                ...experimentTimeline,
-            ];
-            procedure = procedure.concat(vigourTimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_vigour
-            ]);
-
-            // Add PIT timeline: instructions, trials, bonus
-            console.log("Adding PIT");
-            const PITtimeline = [
-                PITinstructions,
-                PITtrials
-            ];
-            procedure = procedure.concat(PITtimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_PIT
-            ]);
-
-            // PILT & Pavlovian test 
-            console.log("Adding PILT test");
-            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
-            
-            // Add control timeline
-            console.log("Adding control");
-            procedure = procedure.concat(controlPreload);
-            procedure = procedure.concat(controlInstructionsTimeline);
-            procedure = procedure.concat(controlTimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_control
-            ]);
-
-            // Add debriefing
-            console.log("Adding debriefing");
-            procedure.push(debrief_pilot9);
-
-            // Final bonus message
-            console.log("Adding bonus trial");
-            procedure.push(bonus_trial);
+        if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening"].includes(window.task)){
+            PILT_tasks = return_PILT_full_sequence();
         }
 
         if (window.task === "pilt-to-test") {
@@ -414,11 +344,16 @@
             }
 
             // PILT & Pavlovian test 
-            console.log("Adding PILT test");
-            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pilt_test_task_start")) {
+                console.log("Adding PILT test");
+                procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            }
 
-            // Update safe
-            procedure.push(updateSafe);
+            // Add bonus trial
+            if (resumptionRule(pilt_to_test_order, window.last_state, "bonus_trial_end")) {
+                console.log("Adding bonus trial");
+                procedure.push(bonus_trial);
+            }
 
         }
 
@@ -518,10 +453,9 @@
 
             }
 
-            // Add coin lottery
-            if (resumptionRule(wm_order, window.last_state, "coin_lottery_end")) {
-                procedure.push(lottery_instructions);
-                procedure.push(coin_lottery);
+            // Add bonus trial
+            if (resumptionRule(wm_order, window.last_state, "bonus_trial_end")) {
+                 procedure.push(bonus_trial);
             }
 
         }
@@ -556,14 +490,17 @@
 
             // Add reversal timeline
             procedure = procedure.concat(reversal_instructions);
-            procedure = procedure.concat(generateReversalBlocks(reversal_timeline));
+            procedure = procedure.concat(generateReversalBlocks());
             procedure = procedure.concat([
                 acceptability_intro,
                 acceptability_reversal
             ]);
 
-            // Update safe
-            procedure.push(updateSafe);
+            // Add bonus trial
+            if (window.last_state !== "bonus_trial_end") {
+                 procedure.push(bonus_trial);
+            }
+
         }
 
         if (window.task === "open_text"){
@@ -588,8 +525,11 @@
             ]);
             procedure = procedure.concat(controlTotalReward);
 
-            // Update safe
-            procedure.push(updateSafe);
+            // Add bonus trial
+            if (window.last_state !== "bonus_trial_end") {
+                 procedure.push(bonus_trial);
+            }
+
         }
 
         if (window.task === "dd") {
@@ -695,7 +635,7 @@
                 });
 
                 procedure = procedure.concat(reversal_instructions);
-                procedure = procedure.concat(reversal_blocks);
+                procedure = procedure.concat(generateReversalBlocks());
                 procedure = procedure.concat([
                     acceptability_intro,
                     acceptability_reversal
@@ -805,6 +745,6 @@
     // Load sequences and start
     var procedure = [];
 
-    load_sequences(window.session);
+    loadSequence(`sequences/trial1_${window.session}_sequences.js`);
 </script>
 </html>

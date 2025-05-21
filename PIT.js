@@ -134,7 +134,7 @@ const PITtrial = {
         n_warnings: up_to_now + 1
       });
       // console.log(jsPsych.data.get().last(1).select('n_warnings').values[0]);
-      showTemporaryWarning("Didn't catch a response - moving on", 800); // Enable this line for non-stopping warning
+      showTemporaryWarning("Don't forget to participate!", 800); // Enable this line for non-stopping warning
     }
   },
   simulation_options: {
@@ -314,7 +314,7 @@ const computeRelativeVigourPITBonus = () => {
     // Vigour task
     const vigour_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "vigour_trial").select('total_reward').values.slice(-1)[0] * 0.01;
     const vigour_min = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
-    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
+    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.timeline_variables.trialDuration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
 
     // PIT task
     const pit_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial").select('total_reward').values.slice(-1)[0] * 0.01;
