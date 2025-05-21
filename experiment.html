@@ -449,10 +449,9 @@
 
             }
 
-            // Add coin lottery
-            if (resumptionRule(wm_order, window.last_state, "coin_lottery_end")) {
-                procedure.push(lottery_instructions);
-                procedure.push(coin_lottery);
+            // Add bonus trial
+            if (resumptionRule(wm_order, window.last_state, "bonus_trial_end")) {
+                 procedure.push(bonus_trial);
             }
 
         }
@@ -493,8 +492,7 @@
                 acceptability_reversal
             ]);
 
-            // Update safe
-            procedure.push(updateSafe);
+            procedure.push(bonus_trial);
         }
 
         if (window.task === "open_text"){
@@ -510,8 +508,7 @@
                 acceptability_control
             ]);
 
-            // Update safe
-            procedure.push(updateSafe);
+            procedure.push(bonus_trial);
         }
 
         if (window.task === "dd") {
