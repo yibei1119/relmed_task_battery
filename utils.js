@@ -964,16 +964,32 @@ function createPressBothTrial(stimulus, trialphase){
         }
     }
 }
-function computeTotalBonus(){
-    const pilt_bonus = computeRelativePILTBonus();
-    const vigour_pit_bonus = computeRelativeVigourPITBonus();
-    const control_bonus = computeRelativeControlBonus();
 
-    const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"] + control_bonus["earned"];
-    const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"] + control_bonus["min"];
-    const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"] + control_bonus["max"];
+function computeTotalBonus(){
+
+    if (window.task === "pilt-to-test"){
+        const pilt_bonus = computeRelativePILTBonus();
+        const vigour_pit_bonus = computeRelativeVigourPITBonus();
+        const control_bonus = computeRelativeControlBonus();
     
-    return ((total_earned - min_total) / (max_total - min_total) * 3);
+        const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"] + control_bonus["earned"];
+        const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"] + control_bonus["min"];
+        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"] + control_bonus["max"];    
+
+        return ((total_earned - min_total) / (max_total - min_total) * 1.80);
+    }
+
+    if (window.task === "reversal"){
+        const reversal_bonus = computeRelativeReversalBonus();
+        return ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]) * 0.7);
+    }
+
+    if (window.task === "wm"){
+        const wm_bonus = computeRelativePILTBonus();
+        return ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]) * 0.7);
+    }
+    
+    
 }
 
 const bonus_trial = {
