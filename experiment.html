@@ -265,77 +265,8 @@
         }
 
         // Create card choosing timelines
-        if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening", "pilot9"].includes(window.task)){
+        if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening"].includes(window.task)){
             PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_structure, WM_test_structure);
-        }
-
-        if (window.task === "pilot9"){
-            // Preload
-            procedure.push(preload_PILT);
-
-            // Welcome message
-            procedure.push(welcome_msgs);
-
-            // Max press rate test
-            console.log("Adding max press rate");
-            procedure = procedure.concat(maxPressTimeline);
-
-            // Add Pre-PILT conditioning
-            console.log("Adding pre-PILT conditioning");
-            procedure = procedure.concat(initPavlovianLottery());
-
-            // Adding PILT
-            console.log("Adding PILT");
-                procedure = procedure.concat(PILT_tasks.PILT_procedure);
-                procedure = procedure.concat([
-                    acceptability_intro,
-                    acceptability_PILT
-            ]);
-
-            // Add vigour task timeline
-            console.log("Adding vigour");
-            const vigourTimeline = [
-                preload_vigour,
-                vigourInstructions,
-                ...experimentTimeline,
-            ];
-            procedure = procedure.concat(vigourTimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_vigour
-            ]);
-
-            // Add PIT timeline: instructions, trials, bonus
-            console.log("Adding PIT");
-            const PITtimeline = [
-                PITinstructions,
-                PITtrials
-            ];
-            procedure = procedure.concat(PITtimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_PIT
-            ]);
-
-            // PILT & Pavlovian test 
-            console.log("Adding PILT test");
-            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
-            
-            // Add control timeline
-            console.log("Adding control");
-            procedure = procedure.concat(controlTimeline);
-            procedure = procedure.concat([
-                acceptability_intro,
-                acceptability_control
-            ]);
-
-            // Add debriefing
-            console.log("Adding debriefing");
-            procedure.push(debrief_pilot9);
-
-            // Final bonus message
-            console.log("Adding bonus trial");
-            procedure.push(bonus_trial);
         }
 
         if (window.task === "pilt-to-test") {
@@ -411,11 +342,16 @@
             }
 
             // PILT & Pavlovian test 
-            console.log("Adding PILT test");
-            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pilt_test_task_start")) {
+                console.log("Adding PILT test");
+                procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            }
 
-            // Update safe
-            procedure.push(updateSafe);
+            // Add bonus trial
+            if (resumptionRule(pilt_to_test_order, window.last_state, "bonus_trial_end")) {
+                console.log("Adding bonus trial");
+                procedure.push(bonus_trial);
+            }
 
         }
 
@@ -515,10 +451,9 @@
 
             }
 
-            // Add coin lottery
-            if (resumptionRule(wm_order, window.last_state, "coin_lottery_end")) {
-                procedure.push(lottery_instructions);
-                procedure.push(coin_lottery);
+            // Add bonus trial
+            if (resumptionRule(wm_order, window.last_state, "bonus_trial_end")) {
+                 procedure.push(bonus_trial);
             }
 
         }
@@ -559,8 +494,11 @@
                 acceptability_reversal
             ]);
 
-            // Update safe
-            procedure.push(updateSafe);
+            // Add bonus trial
+            if (window.last_state !== "bonus_trial_end") {
+                 procedure.push(bonus_trial);
+            }
+
         }
 
         if (window.task === "open_text"){
@@ -576,8 +514,11 @@
                 acceptability_control
             ]);
 
-            // Update safe
-            procedure.push(updateSafe);
+            // Add bonus trial
+            if (window.last_state !== "bonus_trial_end") {
+                 procedure.push(bonus_trial);
+            }
+
         }
 
         if (window.task === "dd") {

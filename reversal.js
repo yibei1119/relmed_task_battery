@@ -183,3 +183,20 @@ const reversal_instructions = [
         "reversal_instruction"
     )
 ]
+
+const computeRelativeReversalBonus = () => {
+
+    // Compute maximal possible earnings
+    max_sum = rev_n_trials; // Best and luckiest participant gets one pound on every trial
+
+    min_sum = rev_n_trials * 0.01; // Worst and most unfortunate participant gets one penny on every trial
+
+    // Compute the actual sum of coins
+    const earned_sum = jsPsych.data.get().filter({trial_type: "reversal"}).select("chosen_feedback").sum();
+
+    return {
+        earned: earned_sum, 
+        min: min_sum, 
+        max: max_sum
+    }
+}

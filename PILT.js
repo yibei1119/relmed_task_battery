@@ -581,9 +581,6 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
             let test_blocks = build_post_PILT_test(structure, name);
             test_blocks[0]["on_start"] = () => {
 
-                if (!(["wk24", "wk28"].includes(window.session)) && (name !== "ltm")) {
-                    updateState("no_resume");
-                }
                 updateState(`${name}_test_task_start`);
             };
             procedure = procedure.concat(test_blocks);    
@@ -625,16 +622,39 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
     }
 }
 
+const earnedSumPILT = () => {
+    // Compute the actual sum of coins
+    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
+
+    return earned_sum
+}
+
 const computeRelativePILTBonus = () => {
 
     // Compute lowest and highest sum of coins possible to earn
-    const feedback_right = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_right").values;
-    const feedback_left = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_left").values;
-    const max_sum = feedback_right.map((value, index) => Math.max(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
-    const min_sum = feedback_right.map((value, index) => Math.min(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
+    // Get all relevant trials: PILT plugin, and numeric block
+    const trials = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
+
+    let max_sum = 0;
+    let min_sum = 0;
+
+    trials.forEach(trial => {
+        let feedbacks = [];
+        if (trial.n_stimuli === 2) {
+            feedbacks = [trial.feedback_left, trial.feedback_right];
+        } else if (trial.n_stimuli !== 2) {
+            feedbacks = [trial.feedback_left, trial.feedback_right, trial.feedback_middle];
+        }
+        // Only consider numeric feedbacks
+        feedbacks = feedbacks.filter(f => typeof f === "number" && !isNaN(f));
+        if (feedbacks.length > 0) {
+            max_sum += Math.max(...feedbacks);
+            min_sum += Math.min(...feedbacks);
+        }
+    });
 
     // Compute the actual sum of coins
-    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
+    const earned_sum = earnedSumPILT();
 
     return {
         earned: earned_sum, 

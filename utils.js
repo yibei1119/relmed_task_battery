@@ -225,7 +225,7 @@ function postToParent(message, fallback = () => {}) {
             if (isAllowed) {
                 window.parent.postMessage(message, parentUrl);
             } else {
-                console.warn("Parent URL does not match any allowed origins:", parentUrl);
+                // console.warn("Parent URL does not match any allowed origins:", parentUrl);
                 fallback();
             }
         } else {
@@ -274,7 +274,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
         ...extra_fields
     };
 
-    console.log("Data to be sent:", data_message);
+    // console.log("Data to be sent:", data_message);
 
     if (window.context === "relmed") {
         postToParent(
@@ -964,26 +964,62 @@ function createPressBothTrial(stimulus, trialphase){
         }
     }
 }
-function computeTotalBonus(){
-    const pilt_bonus = computeRelativePILTBonus();
-    const vigour_pit_bonus = computeRelativeVigourPITBonus();
-    const control_bonus = computeRelativeControlBonus();
 
-    const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"] + control_bonus["earned"];
-    const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"] + control_bonus["min"];
-    const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"] + control_bonus["max"];
+function computeTotalBonus(){
+
+    const max_bonus = {
+        "pilt-to-test": 2.45,
+        "reversal": 0.5,
+        "wm": 0.8,
+        "control": 1.25
+    }[window.task];
+
+    const min_prop_bonus = 0.6;
+    const min_bonus = max_bonus * min_prop_bonus;
+
+    if (window.task === "pilt-to-test"){
+        const pilt_bonus = computeRelativePILTBonus();
+        const vigour_pit_bonus = computeRelativeVigourPITBonus();
     
-    return ((total_earned - min_total) / (max_total - min_total) * 3);
+        const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"];
+        const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"];
+        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"];
+        
+        const prop = (total_earned - min_total) / (max_total - min_total);
+
+        return prop * (max_bonus - min_bonus) + min_bonus;
+    }
+
+    if (window.task === "reversal"){
+        const reversal_bonus = computeRelativeReversalBonus();
+
+        const prop = ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]));
+        return prop * (max_bonus - min_bonus) + min_bonus;
+    }
+
+    if (window.task === "wm"){
+        const wm_bonus = computeRelativePILTBonus();
+        const prop = ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]));
+        return prop * (max_bonus - min_bonus) + min_bonus;
+    }
+
+    if (window.task === "control"){
+        const ctrl_bonus = computeRelativeControlBonus();
+        const prop = ((ctrl_bonus["earned"] - ctrl_bonus["min"]) / (ctrl_bonus["max"] - ctrl_bonus["min"]));
+        return prop * (max_bonus - min_bonus) + min_bonus;
+    }
+    
 }
 
 const bonus_trial = {
     type: jsPsychHtmlButtonResponse,
     css_classes: ['instructions'],
     stimulus: function (trial) {
-        let stimulus =  "Congratulations! You are nearly at the end of this session!"      
+        let event = window.context === "relmed" ? "module" : "session";
+        let stimulus =  `Congratulations! You are nearly at the end of this ${event}!`      
         const total_bonus = computeTotalBonus();
         stimulus += `
-                <p>It is time to reveal your total bonus payment for this session.</p>
+                <p>It is time to reveal your total bonus payment for this ${event}.</p>
                 <p>Altogether, you will earn an extra ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}.</p>
             `;
         return stimulus;
@@ -994,9 +1030,13 @@ const bonus_trial = {
       updateState(`bonus_trial`);
     },
     on_finish: (data) => {
-      data.total_bonus = computeTotalBonus().toFixed(2);
+      const bonus = computeTotalBonus().toFixed(2);
       
-      updateState('bonus_trial_finished');
+      data.bonus = bonus;
+
+      postToParent({bonus: bonus});
+      
+      updateState('bonus_trial_end');
     },
     simulation_options: {
       simulate: false
