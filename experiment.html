@@ -745,6 +745,11 @@
     // Load sequences and start
     var procedure = [];
 
-    loadSequence(`sequences/trial1_${window.session}_sequences.js`);
+    if (["wk0", "wk2", "wk4", "wk24", "wk28", "screening"].includes(window.session)) {
+        loadSequence(`sequences/trial1_${window.session}_sequences.js`);
+    } else {
+        run_full_experiment();
+    }
+   
 </script>
 </html>
