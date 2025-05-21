@@ -46,7 +46,7 @@ const controlPreload = {
 const controlExploreTimeline = [];
 (window.session === "screening" 
   ? explore_sequence_screening 
-  : explore_sequence).forEach(trial => {
+  : explore_sequence).forEach(t => {
   controlExploreTimeline.push({
     timeline: [
       kick_out,
@@ -110,7 +110,7 @@ const controlExploreTimeline = [];
         "control_explore"
       )
     ],
-    timeline_variables: [trial]
+    timeline_variables: [t]
   });
 });
 
@@ -125,7 +125,7 @@ controlExploreTimeline[0]["on_timeline_start"] = () => {
 const controlPredTimeline = [];
 (window.session === "screening" 
   ? predict_sequence_screening 
-  : predict_sequence).forEach(trial => {
+  : predict_sequence).forEach(t => {
   controlPredTimeline.push({
     timeline: [
       kick_out,
@@ -171,7 +171,7 @@ const controlPredTimeline = [];
       confidenceRating,
       noChoiceWarning("response", '', "control_predict_homebase")
     ],
-    timeline_variables: [trial]
+    timeline_variables: [t]
   });
 });
 
@@ -182,7 +182,7 @@ controlPredTimeline[0]["on_timeline_start"] = () => {
 }
 
 const controlRewardTimeline = [];
-reward_sequence.forEach((trial, index) => {
+reward_sequence.forEach((t, index) => {
   const timelineItems = [
     kick_out,
     fullscreen_prompt
@@ -284,7 +284,7 @@ reward_sequence.forEach((trial, index) => {
   
   controlRewardTimeline.push({
     timeline: timelineItems,
-    timeline_variables: [trial]
+    timeline_variables: [t]
   });
 });
 
