@@ -333,7 +333,7 @@ const PITruleInstruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <div id="instruction-text" style="text-align: left">
-      <p><strong>You will now play the same game again for the next few minutes. The rules remain the same:</strong></p>
+      <p><strong>You will now play the same game again for the next seven minutes. The rules remain the same:</strong></p>
       <ul>
         <li><img src="imgs/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <strong>Vividness</strong> of piggy colors: Indicates how hard you need to shake it.</li>
         <li><img src="imgs/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <strong>Tail length</strong>: Longer piggy tails = more valuable coins.</li>
