@@ -638,7 +638,7 @@ const computeRelativePILTBonus = () => {
         let feedbacks = [];
         if (trial.n_stimuli === 2) {
             feedbacks = [trial.feedback_left, trial.feedback_right];
-        } else if (trial.n_stimuli === 3) {
+        } else if (trial.n_stimuli !== 2) {
             feedbacks = [trial.feedback_left, trial.feedback_right, trial.feedback_middle];
         }
         // Only consider numeric feedbacks
