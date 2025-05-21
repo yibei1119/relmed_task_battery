@@ -39,34 +39,34 @@ Data is written to REDCap via a call to an AWS lamda function.
 
 | Session | Task | Chromium | Firefox | WebKit |
 |---------|------|----------|---------|--------|
-| screening | screening | ❌ Failed | ❌ Failed | ❌ Failed |
-| wk0 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk0 | reversal | ✅ Success | ✅ Success | ✅ Success |
-| wk0 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk0 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | reversal | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | reversal | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | reversal | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | reversal | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk0 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk24 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk28 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk6 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk8 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk52 | quests | ✅ Success | ✅ Success | ✅ Success |
+| screening | screening | ❌ Failed | ✅ Success | ❌ Failed |
+| wk0 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
+| wk0 | reversal | ❌ Failed | ✅ Success | ❌ Failed |
+| wk0 | control | ❌ Failed | ✅ Success | ❌ Failed |
+| wk0 | wm | ❌ Failed | ✅ Success | ❌ Failed |
+| wk2 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
+| wk2 | reversal | ❌ Failed | ✅ Success | ❌ Failed |
+| wk2 | control | ❌ Failed | ✅ Success | ❌ Failed |
+| wk2 | wm | ❌ Failed | ✅ Success | ❌ Failed |
+| wk4 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
+| wk4 | reversal | ❌ Failed | ✅ Success | ❌ Failed |
+| wk4 | control | ❌ Failed | ✅ Success | ❌ Failed |
+| wk4 | wm | ❌ Failed | ✅ Success | ❌ Failed |
+| wk24 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
+| wk24 | reversal | ❌ Failed | ✅ Success | ❌ Failed |
+| wk24 | control | ❌ Failed | ✅ Success | ❌ Failed |
+| wk24 | wm | ❌ Failed | ✅ Success | ❌ Failed |
+| wk28 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
+| wk28 | reversal | ❌ Failed | ✅ Success | ❌ Failed |
+| wk28 | control | ❌ Failed | ✅ Success | ❌ Failed |
+| wk28 | wm | ❌ Failed | ✅ Success | ❌ Failed |
+| wk0 | quests | ❌ Failed | ✅ Success | ❌ Failed |
+| wk2 | quests | ❌ Failed | ✅ Success | ❌ Failed |
+| wk4 | quests | ❌ Failed | ✅ Success | ❌ Failed |
+| wk24 | quests | ❌ Failed | ✅ Success | ❌ Failed |
+| wk28 | quests | ❌ Failed | ✅ Success | ❌ Failed |
+| wk6 | quests | ❌ Failed | ❌ Failed | ❌ Failed |
+| wk8 | quests | ❌ Failed | ❌ Failed | ❌ Failed |
+| wk52 | quests | ❌ Failed | ❌ Failed | ❌ Failed |
 
 <!-- LOADING-TEST-RESULTS -->
