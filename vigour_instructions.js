@@ -150,7 +150,7 @@ const startConfirmation = {
   choices: ['b', 'r'],
   stimulus: `
   <div id="instruction-text">
-      <p>You will now play the piggy-bank game without a break for about seven minutes.</p>
+      <p>You will now play the piggy-bank game without a break for about four minutes.</p>
       <p><strong>When you're ready, press <span class="spacebar-icon">B</span> to start!</strong></p>
     <p>If you want to start over from the beginning, press <span class="spacebar-icon">R</span>.</p>
   </div>
