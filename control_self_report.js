@@ -35,6 +35,8 @@ const controlRating = {
       trialphase: "control_controllability"
     },
     on_finish: function (data) {
+      updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
+
       if (data.response === null) {
         var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
         console.log("n_warnings: " + up_to_now);
