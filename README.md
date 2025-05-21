@@ -45,13 +45,13 @@ Data is written to REDCap via a call to an AWS lamda function.
 | wk0 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | reversal | ✅ Success | ✅ Success | ✅ Success |
+| wk2 | reversal | ✅ Success | ✅ Success | ❌ Failed |
 | wk2 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
-| wk4 | reversal | ✅ Success | ✅ Success | ✅ Success |
+| wk4 | reversal | ❌ Failed | ✅ Success | ✅ Success |
 | wk4 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | wm | ✅ Success | ✅ Success | ❌ Failed |
+| wk4 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | control | ✅ Success | ✅ Success | ✅ Success |
