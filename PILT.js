@@ -460,21 +460,6 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
     return PILT_task
 }
 
-// Load PILT sequences from json file
-async function fetchJSON(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${url}`);
-        }
-
-        data = await response.json();
-        return data
-    } catch (error) {
-        console.error(`Error fetching ${url}:`, error);
-        throw error;
-    }
-}
 
 function adjustStimuliPaths(structure, folder) {
 
@@ -492,59 +477,33 @@ function adjustStimuliPaths(structure, folder) {
     });
 }
 
-async function load_sequences(session) {
-    try {
+function return_PILT_full_sequence(PILT_json, PILT_test_json, WM_json, WM_test_json) {
 
-        // Load json
-        const [
-            PILT_structure, PILT_test_structure, pav_test_structure,
-            WM_structure, WM_test_structure,
-        ] = await Promise.all([
-            fetchJSON('trial1_PILT.json'),
-            fetchJSON('trial1_PILT_test.json'),
-            fetchJSON('pavlovian_test.json'),
-            fetchJSON('trial1_WM.json'),
-            fetchJSON('trial1_WM_test.json'),
-        ]);
-
-        // Select session
-        let PILT_sess = PILT_structure[session];
-        let PILT_test_sess = PILT_test_structure[session];
-        let WM_sess = WM_structure[session];
-        let WM_test_sess = WM_test_structure[session];
-
-        if (window.demo) {
-            PILT_sess = PILT_sess.slice(0, 6);
-            PILT_test_sess = [PILT_test_sess[0].slice(0, 25)];
-            WM_sess = WM_sess.slice(0, 3);
-        }
+    // Parse json sequence
+    let PILT_structure = JSON.parse(PILT_json);
+    let PILT_test_structure = JSON.parse(PILT_test_json);
+    let WM_structure = JSON.parse(WM_json);
+    let WM_test_structure = JSON.parse(WM_test_json);
+    let pav_test_structure = JSON.parse(pav_test_json);
         
-        adjustStimuliPaths(PILT_test_sess, 'PILT_stims');
-        adjustStimuliPaths(WM_test_sess, 'PILT_stims');
+    adjustStimuliPaths(PILT_test_structure, 'PILT_stims');
+    adjustStimuliPaths(WM_test_structure, 'PILT_stims');
 
-        pav_test_structure.forEach(trial => {
-            trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
-            trial.stimulus_right = `imgs/Pav_stims/${window.session}/${trial.stimulus_right}`;
-            trial.block = "pavlovian";
-            trial.feedback_left = trial.magnitude_left;
-            trial.feedback_right = trial.magnitude_right;
-            trial.EV_left = trial.magnitude_left
-            trial.EV_right = trial.magnitude_right;
-            trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
-        });
+    pav_test_structure.forEach(trial => {
+        trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
+        trial.stimulus_right = `imgs/Pav_stims/${window.session}/${trial.stimulus_right}`;
+        trial.block = "pavlovian";
+        trial.feedback_left = trial.magnitude_left;
+        trial.feedback_right = trial.magnitude_right;
+        trial.EV_left = trial.magnitude_left
+        trial.EV_right = trial.magnitude_right;
+        trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
+    });
 
-        if (!window.demo) {
-            PILT_test_sess = [pav_test_structure].concat(PILT_test_sess);
-        }
-
-        run_full_experiment(PILT_sess, PILT_test_sess, WM_sess, WM_test_sess);
-    } catch (error) {
-        console.error('Error loading sequences:', error);
+    if (!window.demo) {
+        PILT_test_structure = [pav_test_structure].concat(PILT_test_structure);
     }
-}
-
-
-function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_structure, WM_test_structure) {
+    
     // Compute best-rest
     computeBestRest(PILT_structure);
     computeBestRest(WM_structure);
