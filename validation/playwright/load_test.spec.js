@@ -82,20 +82,22 @@ for (const browserType of browsers) {
                 // Navigate to the page with the URL parameter
                 let passed = false;
                 try {
-                    const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 5000 });
-                    
+                    // Attach the console listener before navigating to the page
+                    const messagePromise = new Promise(resolve => {
+                        page.on('console', msg => {
+                            console.log(`Console message in ${session}/${task} (${browserType}):`, msg.text());
+                            if (msg.text().includes("load_successful")) {
+                                resolve(true);
+                            }
+                        });
+                    });
+
+                    const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 10000 });
+
+                    console.log(`Response status for ${session}/${task} (${browserType}):`, response.status());
                     passed = response.ok();
                     if (passed) {
-                        const messagePromise = new Promise(resolve => {
-                            page.on('console', msg => {
-                                if (msg.text().includes("load_successful")) {
-                                    resolve(true);
-                                }
-                            });
-                        });
-
                         const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(false), 3000));
-
                         passed = await Promise.race([messagePromise, timeoutPromise]);
                     }
                 } catch (e) {
