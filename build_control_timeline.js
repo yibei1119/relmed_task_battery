@@ -448,7 +448,6 @@ if (window.session === "screening") {
         });
         controlTimeline.push(...pred_trials);
       } else {
-        console.log(trial);
         controlTimeline.push({
           ...controlRating,
           timeline_variables: [{trial: trial++}]
