@@ -40,18 +40,18 @@ Data is written to REDCap via a call to an AWS lamda function.
 | Session | Task | Chromium | Firefox | WebKit |
 |---------|------|----------|---------|--------|
 | screening | screening | ❌ Failed | ❌ Failed | ❌ Failed |
-| wk0 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
+| wk0 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk0 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk2 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
+| wk2 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
 | wk2 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | control | ✅ Success | ✅ Success | ✅ Success |
 | wk2 | wm | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | pilt-to-test | ❌ Failed | ✅ Success | ✅ Success |
+| wk4 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk4 | control | ✅ Success | ✅ Success | ✅ Success |
-| wk4 | wm | ✅ Success | ✅ Success | ❌ Failed |
+| wk4 | wm | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | pilt-to-test | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | reversal | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | control | ✅ Success | ✅ Success | ✅ Success |
@@ -65,8 +65,8 @@ Data is written to REDCap via a call to an AWS lamda function.
 | wk4 | quests | ✅ Success | ✅ Success | ✅ Success |
 | wk24 | quests | ✅ Success | ✅ Success | ✅ Success |
 | wk28 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk6 | quests | ✅ Success | ✅ Success | ✅ Success |
+| wk6 | quests | ❌ Failed | ✅ Success | ✅ Success |
 | wk8 | quests | ✅ Success | ✅ Success | ✅ Success |
-| wk52 | quests | ✅ Success | ✅ Success | ✅ Success |
+| wk52 | quests | ❌ Failed | ✅ Success | ✅ Success |
 
 <!-- LOADING-TEST-RESULTS -->
