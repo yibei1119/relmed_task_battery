@@ -77,9 +77,10 @@ const controlExploreTimeline = [];
           const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
           data.n_control_trials = n_trials;
           console.log("Trial number: " + n_trials + " (explore)");
-          
+
+          updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
+
           if (n_trials % 24 === 0) {
-            console.log("n_trials: " + n_trials);
             saveDataREDCap(retry = 3);
           }
 
@@ -153,8 +154,9 @@ const controlPredTimeline = [];
           data.n_control_trials = n_trials;
           console.log("Trial number: " + n_trials + " (predict)");
 
+          updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
+
           if (n_trials % 24 === 0) {
-            console.log("n_trials: " + n_trials);
             saveDataREDCap(retry = 3);
           }
 
@@ -226,8 +228,9 @@ reward_sequence.forEach((t, index) => {
       data.n_control_trials = n_trials;
       console.log("Trial number: " + n_trials + " (reward)");
 
+      updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
+
       if (n_trials % 24 === 0) {
-        console.log("n_trials: " + n_trials);
         saveDataREDCap(retry = 3);
       }
 
@@ -413,49 +416,55 @@ const controlHomebaseReveal = {
     trialphase: 'control_reveal'}
 };
 
-// Assembling the control timeline
+// Assembling the control task timeline
 let controlTimeline = [];
-// Add the preload
-controlTimeline.push(controlPreload);
-// Add the instructions
-controlTimeline.push(controlInstructionsTimeline);
 
 // Add the control trials depending on the session
 if (window.session === "screening") {
-    for (let i = 0; i < explore_sequence_screening.length; i++) {
+  let trial = 1;
+  for (let i = 0; i < explore_sequence_screening.length; i++) {
+    controlExploreTimeline[i].timeline_variables[0].trial = trial++;
     controlTimeline.push(controlExploreTimeline[i]);
     if ((i + 1) % 6 === 0) {
       num_miniblock = Math.floor(i / 6);
+      controlPredTimeline[num_miniblock].timeline_variables[0].trial = trial++;
       controlTimeline.push(controlPredTimeline[num_miniblock]);
     }
   }
-  // Add one reveal trial for the screening session
-  controlTimeline.push(controlHomebaseReveal);
 } else {
+  let trial = 1;
+  let pred_trials = [];
   // Add the explore, predict, report trials
   for (let i = 0; i < explore_sequence.length; i++) {
+    controlExploreTimeline[i].timeline_variables[0].trial = trial++;
     controlTimeline.push(controlExploreTimeline[i]);
     if ((i + 1) % 6 === 0) {
       num_miniblock = Math.floor(i / 6);
       if (num_miniblock % 2 === 0) {
         indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
-        controlTimeline.push(...controlPredTimeline.slice(indx[0], indx[1]));
+        pred_trials = controlPredTimeline.slice(indx[0], indx[1]);
+        pred_trials.forEach(t => {
+          t.timeline_variables[0].trial = trial++;
+        });
+        controlTimeline.push(...pred_trials);
       } else {
-        controlTimeline.push(controlRating);
+        console.log(trial);
+        controlTimeline.push({
+          ...controlRating,
+          timeline_variables: [{trial: trial++}]
+        });
       }
     }
   }
   // Add the reward trials as a separate block
-  controlTimeline.push(controlRewardTimeline);
+  controlRewardTimeline.forEach((t, index) => {
+    t.timeline_variables[0].trial = trial++;
+  });
+  controlTimeline.push(...controlRewardTimeline);
 }
 
-// Deprecated: moved to experiment.html for final assembly
-// Add the final reward feedback
-// controlTimeline.push(controlTotalReward);
-
-// Add the debriefing to the end of the experiment
-// let controlDebriefing = [];
-// controlDebriefing.push(control_acceptability_intro);
-// controlDebriefing.push(acceptability_control);
-// controlDebriefing.push(control_debrief);
-// controlTimeline.push(controlDebriefing);
+// If resuming, remove all the trials they have finished
+if (window.last_state.includes("control_trial_")) {
+  const last_trial = parseInt(window.last_state.split("_")[2]);
+  controlTimeline = controlTimeline.slice(last_trial);
+}
