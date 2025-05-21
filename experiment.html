@@ -80,6 +80,7 @@
 
     </script>
     <script src="utils.js"></script>
+    <script src="sequences/trial1_pavlovian_test.js"></script>
     <script src="resumption.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-explore-trial-2.js"></script>
     <script src="ctrl-plugins/plugin-ctrl-predict-trial-mouse.js"></script>
@@ -252,7 +253,7 @@
         }
     ]
 
-    function run_full_experiment(PILT_structure, test_structure, WM_structure, WM_test_structure){
+    function run_full_experiment(){
 
         let procedure = [];
 
@@ -266,7 +267,7 @@
 
         // Create card choosing timelines
         if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening"].includes(window.task)){
-            PILT_tasks = return_PILT_full_sequence(PILT_structure, test_structure, WM_structure, WM_test_structure);
+            PILT_tasks = return_PILT_full_sequence(PILT_json, PILT_test_json, WM_json, WM_test_json);
         }
 
         if (window.task === "pilt-to-test") {
@@ -731,6 +732,6 @@
     // Load sequences and start
     var procedure = [];
 
-    load_sequences(window.session);
+    loadSequence(`sequences/trial1_${window.session}_sequences.js`);
 </script>
 </html>

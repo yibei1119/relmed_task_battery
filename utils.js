@@ -1043,3 +1043,25 @@ const bonus_trial = {
     }
   };
   
+
+function loadSequence(scriptSrc) {
+    // Create a new script element
+    const script = document.createElement("script");
+
+    // Set the src attribute to the variable
+    script.src = scriptSrc;
+
+    // Optionally, set the type attribute (default is "text/javascript")
+    script.type = "text/javascript";
+
+    // Ensure the script is loaded before using running experiment
+    script.onload = () => {
+        console.log("Script loaded successfully, running experiment.");
+        
+        run_full_experiment();
+    };
+    
+    // Append the script to the document's head or body
+    document.head.appendChild(script); 
+
+}
