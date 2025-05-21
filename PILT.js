@@ -581,9 +581,6 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
             let test_blocks = build_post_PILT_test(structure, name);
             test_blocks[0]["on_start"] = () => {
 
-                if (!(["wk24", "wk28"].includes(window.session)) && (name !== "ltm")) {
-                    updateState("no_resume");
-                }
                 updateState(`${name}_test_task_start`);
             };
             procedure = procedure.concat(test_blocks);    
