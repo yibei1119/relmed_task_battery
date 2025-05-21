@@ -628,10 +628,26 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
 const computeRelativePILTBonus = () => {
 
     // Compute lowest and highest sum of coins possible to earn
-    const feedback_right = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_right").values;
-    const feedback_left = jsPsych.data.get().filter({trial_type: "PILT"}).select("feedback_left").values;
-    const max_sum = feedback_right.map((value, index) => Math.max(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
-    const min_sum = feedback_right.map((value, index) => Math.min(value, feedback_left[index])).reduce((sum, value) => sum + value, 0);
+    // Get all relevant trials
+    const trials = jsPsych.data.get().filter({trial_type: "PILT"}).values();
+
+    let max_sum = 0;
+    let min_sum = 0;
+
+    trials.forEach(trial => {
+        let feedbacks = [];
+        if (trial.n_stimuli === 2) {
+            feedbacks = [trial.feedback_left, trial.feedback_right];
+        } else if (trial.n_stimuli === 3) {
+            feedbacks = [trial.feedback_left, trial.feedback_right, trial.feedback_middle];
+        }
+        // Only consider numeric feedbacks
+        feedbacks = feedbacks.filter(f => typeof f === "number" && !isNaN(f));
+        if (feedbacks.length > 0) {
+            max_sum += Math.max(...feedbacks);
+            min_sum += Math.min(...feedbacks);
+        }
+    });
 
     // Compute the actual sum of coins
     const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
