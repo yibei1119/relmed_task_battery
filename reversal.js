@@ -162,7 +162,7 @@ const reversal_instructions = [
         }
     },
     createPressBothTrial(`
-        <p>You will now play the squirrel game for about ${rev_n_trials == 50 ? 3 : 5} minutes without breaks.</p>
+        <p>You will now play the squirrel game for about ${rev_n_trials == 50 ? "three" : "five"} minutes without breaks.</p>
         <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
         <img src='imgs/PILT_keys.jpg' style='width:250px;'></img>`,
         "reversal_instruction"
