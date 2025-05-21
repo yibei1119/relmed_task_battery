@@ -628,8 +628,8 @@ function return_PILT_full_sequence(PILT_structure, PILT_test_structure, WM_struc
 const computeRelativePILTBonus = () => {
 
     // Compute lowest and highest sum of coins possible to earn
-    // Get all relevant trials
-    const trials = jsPsych.data.get().filter({trial_type: "PILT"}).values();
+    // Get all relevant trials: PILT plugin, and numeric block
+    const trials = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {typeof trial.block === "number"}).values();
 
     let max_sum = 0;
     let min_sum = 0;
