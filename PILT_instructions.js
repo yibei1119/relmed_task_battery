@@ -350,9 +350,10 @@ const test_instructions = (task) => {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
         pages: [
-            '<p>You will now continue to another round of the card choosing game.</p>\
-                <p>On this round you won\'t be able to see the coins you discover and collect. However, they are still being added to your safe.</p>\
-                <p>On each trun you will be presented with two cards you already know. Do you best to choose the best card.</p>'
+            `<p>You will now begin another round of the card choosing game.</p>
+            <p>In this round, you will not see the coins you collect after each choice, but your coins will still be added to your safe.</p>
+            <p>On each turn, you will choose between two cards you have already seen. Try your best to pick the card that you think is most rewarding.</p>
+            <p>This round will take about three minutes to complete.</p>`
         ],
         show_clickable_nav: true,
         on_start: () => {
@@ -360,11 +361,9 @@ const test_instructions = (task) => {
         },
         data: {trialphase: `post-${task}_test_instructions`},
         on_finish: () => {
-            
             jsPsych.data.addProperties({
                 [`${task}_test_n_warnings`]: 0
             });
-
             console.log(jsPsych.data.get().last(1).select(`${task}_test_n_warnings`).values)
         }
     }
