@@ -248,7 +248,7 @@ function updateState(state, save_data = true) {
     }
 
     // Update safe state
-    updateSafeFun();
+    // updateSafeFun();
 
     console.log(state);
     postToParent({
