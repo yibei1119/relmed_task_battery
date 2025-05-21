@@ -970,11 +970,10 @@ function computeTotalBonus(){
     if (window.task === "pilt-to-test"){
         const pilt_bonus = computeRelativePILTBonus();
         const vigour_pit_bonus = computeRelativeVigourPITBonus();
-        const control_bonus = computeRelativeControlBonus();
     
-        const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"] + control_bonus["earned"];
-        const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"] + control_bonus["min"];
-        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"] + control_bonus["max"];    
+        const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"];
+        const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"];
+        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"];    
 
         return ((total_earned - min_total) / (max_total - min_total) * 2.45);
     }
