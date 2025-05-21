@@ -756,7 +756,7 @@ controlInstructionPredTrials.push({
     type: jsPsychPredictHomeBase,
     ship: "blue",
     predict_decision: null,
-    choices: ["i1", "i2", "i3"],
+    choices: window.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
     post_trial_gap: 0,
     on_load: function () {
         // Remove the icon-row element if it exists
