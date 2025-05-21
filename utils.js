@@ -967,30 +967,46 @@ function createPressBothTrial(stimulus, trialphase){
 
 function computeTotalBonus(){
 
+    const max_bonus = {
+        "pilt-to-test": 2.45,
+        "reversal": 0.5,
+        "wm": 0.8,
+        "control": 1.25
+    }[window.task];
+
+    const min_prop_bonus = 0.6;
+    const min_bonus = max_bonus * min_prop_bonus;
+
     if (window.task === "pilt-to-test"){
         const pilt_bonus = computeRelativePILTBonus();
         const vigour_pit_bonus = computeRelativeVigourPITBonus();
     
         const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"];
         const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"];
-        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"];    
+        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"];
+        
+        const prop = (total_earned - min_total) / (max_total - min_total);
 
-        return ((total_earned - min_total) / (max_total - min_total) * 2.45);
+        return prop * (max_bonus - min_bonus) + min_bonus;
     }
 
     if (window.task === "reversal"){
         const reversal_bonus = computeRelativeReversalBonus();
-        return ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]) * 0.5);
+
+        const prop = ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]));
+        return prop * (max_bonus - min_bonus) + min_bonus;
     }
 
     if (window.task === "wm"){
         const wm_bonus = computeRelativePILTBonus();
-        return ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]) * 0.8);
+        const prop = ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]));
+        return prop * (max_bonus - min_bonus) + min_bonus;
     }
 
     if (window.task === "control"){
         const ctrl_bonus = computeRelativeControlBonus();
-        return ((ctrl_bonus["earned"] - ctrl_bonus["min"]) / (ctrl_bonus["max"] - ctrl_bonus["min"]) * 1.25);
+        const prop = ((ctrl_bonus["earned"] - ctrl_bonus["min"]) / (ctrl_bonus["max"] - ctrl_bonus["min"]));
+        return prop * (max_bonus - min_bonus) + min_bonus;
     }
     
 }
@@ -1020,7 +1036,7 @@ const bonus_trial = {
 
       postToParent({bonus: bonus});
       
-      updateState('bonus_trial_finished');
+      updateState('bonus_trial_end');
     },
     simulation_options: {
       simulate: false
