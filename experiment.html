@@ -342,14 +342,16 @@
             }
 
             // PILT & Pavlovian test 
-            console.log("Adding PILT test");
-            procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pilt_test_task_start")) {
+                console.log("Adding PILT test");
+                procedure = procedure.concat(PILT_tasks.PILT_test_procedure);
+            }
 
             // Add bonus trial
-            procedure.push(bonus_trial);
-
-            // Update safe
-            procedure.push(updateSafe);
+            if (resumptionRule(pilt_to_test_order, window.last_state, "bonus_trial_end")) {
+                console.log("Adding bonus trial");
+                procedure.push(bonus_trial);
+            }
 
         }
 
@@ -492,7 +494,11 @@
                 acceptability_reversal
             ]);
 
-            procedure.push(bonus_trial);
+            // Add bonus trial
+            if (window.last_state !== "bonus_trial_end") {
+                 procedure.push(bonus_trial);
+            }
+
         }
 
         if (window.task === "open_text"){
@@ -508,7 +514,11 @@
                 acceptability_control
             ]);
 
-            procedure.push(bonus_trial);
+            // Add bonus trial
+            if (window.last_state !== "bonus_trial_end") {
+                 procedure.push(bonus_trial);
+            }
+
         }
 
         if (window.task === "dd") {
