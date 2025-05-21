@@ -115,7 +115,7 @@ const controlExploreTimeline = [];
 });
 
 controlExploreTimeline[0]["on_timeline_start"] = () => {
-  updateState(`no_resume`);
+  updateState(`no_resume_10_minutes`);
   updateState(`control_task_start`);
   jsPsych.data.addProperties({
       control_explore_n_warnings: 0
@@ -289,7 +289,6 @@ reward_sequence.forEach((trial, index) => {
 });
 
 controlRewardTimeline[0]["on_timeline_start"] = () => {
-  updateState(`no_resume`);
   updateState(`control_reward_start`);
   jsPsych.data.addProperties({
       control_reward_n_warnings: 0
