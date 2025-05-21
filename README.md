@@ -39,7 +39,7 @@ Data is written to REDCap via a call to an AWS lamda function.
 
 | Session | Task | Chromium | Firefox | WebKit |
 |---------|------|----------|---------|--------|
-| screening | screening | ❌ Failed | ❌ Failed | ❌ Failed |
+| screening | screening | ❌ Failed | ✅ Success | ❌ Failed |
 | wk0 | pilt-to-test | ❌ Failed | ✅ Success | ❌ Failed |
 | wk0 | reversal | ❌ Failed | ✅ Success | ❌ Failed |
 | wk0 | control | ❌ Failed | ✅ Success | ❌ Failed |

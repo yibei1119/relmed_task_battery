@@ -266,6 +266,7 @@
         }
 
         // Create card choosing timelines
+
         if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening"].includes(window.task)){
             PILT_tasks = return_PILT_full_sequence();
         }
@@ -508,12 +509,21 @@
         
         if (window.task == "control") {
             // Control
+            procedure = procedure.concat(controlPreload);
+            if (window.last_state === "none") {
+                procedure.push(controlInstructionsTimeline);
+            } else if (window.last_state === "control_instructions_start") {
+                procedure.push(resumption_msg);
+                procedure.push(controlInstructionsTimeline);
+            } else if (window.context === "relmed") {
+                procedure.push(resumption_msg);
+            }
             procedure = procedure.concat(controlTimeline);
-            procedure = procedure.concat(controlTotalReward);
             procedure = procedure.concat([
                 acceptability_intro,
                 acceptability_control
             ]);
+            procedure = procedure.concat(controlTotalReward);
 
             // Add bonus trial
             if (window.last_state !== "bonus_trial_end") {
@@ -599,7 +609,10 @@
             if (resumptionRule(screening_order, window.last_state, "control_task_start")) {
                 // Add control timeline
                 console.log("Adding control");
+                procedure = procedure.concat(controlPreload);
+                procedure = procedure.concat(controlInstructionsTimeline);
                 procedure = procedure.concat(controlTimeline);
+                procedure = procedure.concat(controlHomebaseReveal);
                 procedure = procedure.concat([
                     acceptability_intro,
                     acceptability_control
