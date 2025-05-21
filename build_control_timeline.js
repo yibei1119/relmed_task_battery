@@ -316,8 +316,8 @@ let controlTotalReward = {
   timeline: [{
     type: jsPsychHtmlKeyboardResponse,
     stimulus: function () {
-      let raw_bonus = computeRelativeControlBonus();
-      let total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
+      const raw_bonus = computeRelativeControlBonus();
+      const total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
       if (window.context === "relmed" || window.task === "control") {
         stimulus = `<main class="main-stage">
           <img class="background" src="imgs/ocean_above.png" alt="Background"/>
@@ -349,9 +349,9 @@ let controlTotalReward = {
       trialphase: 'control_bonus'
     },
     on_finish: function (data) {
-      const control_bonus = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
-      data.control_bonus = control_bonus;
-      data.control_bonus_adjusted = (control_bonus + 45) / 125 * 3;
+      const raw_bonus = computeRelativeControlBonus();
+      data.control_bonus = raw_bonus.earned;
+      data.control_bonus_adjusted = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
       console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
       postToParent({ bonus: data.control_bonus_adjusted });
       saveDataREDCap(retry = 3);
