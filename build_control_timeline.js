@@ -115,7 +115,6 @@ const controlExploreTimeline = [];
 });
 
 controlExploreTimeline[0]["on_timeline_start"] = () => {
-  updateState(`no_resume_10_minutes`);
   updateState(`control_task_start`);
   jsPsych.data.addProperties({
       control_explore_n_warnings: 0

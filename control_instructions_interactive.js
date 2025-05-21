@@ -967,6 +967,9 @@ const controlInstructions = {
         return restart;
     },
     on_timeline_start: () => {
+        if (window.session !== "screening") {
+            updateState(`no_resume_10_minutes`);
+        }
         updateState("control_instructions_start");
     }
 };
