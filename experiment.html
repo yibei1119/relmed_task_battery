@@ -267,7 +267,7 @@
 
         // Create card choosing timelines
         if (["pilt-to-test", "pilt", "pilt_test", "wm", "wm_only", "screening"].includes(window.task)){
-            PILT_tasks = return_PILT_full_sequence(PILT_json, PILT_test_json, WM_json, WM_test_json);
+            PILT_tasks = return_PILT_full_sequence();
         }
 
         if (window.task === "pilt-to-test") {
@@ -622,7 +622,7 @@
                 });
 
                 procedure = procedure.concat(reversal_instructions);
-                procedure = procedure.concat(reversal_blocks);
+                procedure = procedure.concat(generateReversalBlocks());
                 procedure = procedure.concat([
                     acceptability_intro,
                     acceptability_reversal
