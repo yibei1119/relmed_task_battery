@@ -76,6 +76,7 @@ pilt_to_test_order = pilt_to_test_order.concat([
     `vigour_test_task_start`,
     "pilt_test_instructions_start",
     "pilt_test_task_start",
+    "bonus_trial_end"
 ]);
 
 const screening_order = [
