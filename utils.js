@@ -980,10 +980,11 @@ const bonus_trial = {
     type: jsPsychHtmlButtonResponse,
     css_classes: ['instructions'],
     stimulus: function (trial) {
-        let stimulus =  "Congratulations! You are nearly at the end of this session!"      
+        let event = window.context === "relmed" ? "module" : "session";
+        let stimulus =  `Congratulations! You are nearly at the end of this ${event}!`      
         const total_bonus = computeTotalBonus();
         stimulus += `
-                <p>It is time to reveal your total bonus payment for this session.</p>
+                <p>It is time to reveal your total bonus payment for this ${event}.</p>
                 <p>Altogether, you will earn an extra ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}.</p>
             `;
         return stimulus;
@@ -994,7 +995,11 @@ const bonus_trial = {
       updateState(`bonus_trial`);
     },
     on_finish: (data) => {
-      data.total_bonus = computeTotalBonus().toFixed(2);
+      const bonus = computeTotalBonus().toFixed(2);
+      
+      data.bonus = bonus;
+
+      postToParent({bonus: bonus});
       
       updateState('bonus_trial_finished');
     },
