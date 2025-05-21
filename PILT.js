@@ -477,14 +477,14 @@ function adjustStimuliPaths(structure, folder) {
     });
 }
 
-function return_PILT_full_sequence(PILT_json, PILT_test_json, WM_json, WM_test_json) {
+function return_PILT_full_sequence() {
 
     // Parse json sequence
-    let PILT_structure = JSON.parse(PILT_json);
-    let PILT_test_structure = JSON.parse(PILT_test_json);
-    let WM_structure = JSON.parse(WM_json);
-    let WM_test_structure = JSON.parse(WM_test_json);
-    let pav_test_structure = JSON.parse(pav_test_json);
+    let PILT_structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
+    let PILT_test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
+    let WM_structure = typeof WM_json !== "undefined" ? JSON.parse(WM_json) : null;
+    let WM_test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
+    let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
         
     adjustStimuliPaths(PILT_test_structure, 'PILT_stims');
     adjustStimuliPaths(WM_test_structure, 'PILT_stims');
