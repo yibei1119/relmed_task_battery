@@ -54,6 +54,7 @@ function generatePITstimulus(coin, ratio) {
 
 // PIT trial
 let PITtrialCounter = 0;
+
 const PITtrial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: function () {
@@ -75,8 +76,8 @@ const PITtrial = {
     total_reward: () => { return window.totalReward }
   },
   on_start: function (trial) {
-    if (window.participantID.includes("simulate")) {
-      trial.trial_duration = 1000;
+    if (window.simulating) {
+      trial.trial_duration = 500;
     }
     // Create a shared state object
     window.trialPresses = 0;
@@ -113,8 +114,27 @@ const PITtrial = {
     });
   },
   on_load: function () {
-    updatePiggyTails(jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio'));
-    // console.log([jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio')]);
+    const currentMag = jsPsych.evaluateTimelineVariable('magnitude');
+    const currentRatio = jsPsych.evaluateTimelineVariable('ratio');
+    updatePiggyTails(currentMag, currentRatio);
+
+    // Add fullscreen change listener to re-update piggy tails
+    fsChangeHandler = () => {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        updatePiggyTails(currentMag, currentRatio);
+      }
+    };
+    document.addEventListener('fullscreenchange', fsChangeHandler);
+    document.addEventListener('webkitfullscreenchange', fsChangeHandler);
+
+    // Simulating keypresses
+    if (window.simulating) {
+      trial_presses = jsPsych.randomization.randomInt(1, 8);
+      avg_rt = 500/trial_presses;
+      for (let i = 0; i < trial_presses; i++) {
+        jsPsych.pluginAPI.pressKey('b', avg_rt * i + 1);
+      }
+    }
   },
   on_finish: function (data) {
     // Clean up listener
@@ -126,6 +146,11 @@ const PITtrial = {
 
       updatePITBonus();
     }
+    if (fsChangeHandler) {
+      document.removeEventListener('fullscreenchange', fsChangeHandler);
+      document.removeEventListener('webkitfullscreenchange', fsChangeHandler);
+      fsChangeHandler = null;
+    }
 
     // No response
     if (data.trial_presses === 0 && data.timeline_variables.ratio === 1) {
@@ -135,22 +160,6 @@ const PITtrial = {
       });
       // console.log(jsPsych.data.get().last(1).select('n_warnings').values[0]);
       showTemporaryWarning("Don't forget to participate!", 800); // Enable this line for non-stopping warning
-    }
-  },
-  simulation_options: {
-    data: {
-      trial_presses: () => { window.trialPresses = jsPsych.randomization.randomInt(8, 20) },
-      trial_reward: () => { window.trialReward = Math.floor(window.trialPresses / jsPsych.evaluateTimelineVariable('ratio')) * jsPsych.evaluateTimelineVariable('magnitude') },
-      response_time: () => {
-        do {
-          window.responseTime = [];
-          for (let i = 0; i < window.trialPresses; i++) {
-            window.responseTime.push(Math.floor(jsPsych.randomization.sampleExGaussian(150, 15, 0.01, true)));
-          }
-        } while (window.responseTime.reduce((acc, curr) => acc + curr, 0) > experimentConfig.trialDuration);
-      },
-      total_presses: () => { window.totalPresses += window.trialPresses },
-      total_reward: () => { window.totalReward += window.trialReward }
     }
   }
 };
@@ -314,7 +323,7 @@ const computeRelativeVigourPITBonus = () => {
     // Vigour task
     const vigour_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "vigour_trial").select('total_reward').values.slice(-1)[0] * 0.01;
     const vigour_min = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
-    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.timeline_variables.trialDuration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
+    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
 
     // PIT task
     const pit_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial").select('total_reward').values.slice(-1)[0] * 0.01;
@@ -435,8 +444,11 @@ const startPITconfirmation = {
   choices: ['b', 'r'],
   stimulus: `
   <div id="instruction-text">
-      <p>You will now play the piggy-bank game in the clouds for about eight minutes.</p>
-      <p>When you're ready, press <span class="spacebar-icon">B</span> to start!</p>
+      <p>You will now play the piggy-bank game in the clouds for about <strong>eight minutes</strong>.</p>
+      <p>When you're ready, place a <strong>finger of your dominant hand</strong> (e.g., right index finger) comfortably on the <span class="spacebar-icon">B</span> key, as shown below.</p>
+      <p>Use this finger only to press during the game.</p>
+      <p>Press it down once to begin.</p>
+      <img src="imgs/Vigour_key.png" style="width:250px;" alt="Key press illustration">
       <p>If you want to read the rules again, press <span class="spacebar-icon">R</span>.</p>
   </div>
     `,

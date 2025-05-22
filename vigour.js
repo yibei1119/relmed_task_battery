@@ -240,12 +240,11 @@ const piggyBankTrial = {
   },
   choices: 'NO_KEYS',
   // response_ends_trial: false,
-  trial_duration: function () {
-    return jsPsych.evaluateTimelineVariable('trialDuration')
-  },
-  save_timeline_variables: ["magnitude", "ratio", "trialDuration"],
+  trial_duration: jsPsych.timelineVariable('trialDuration'),
+  save_timeline_variables: ["magnitude", "ratio"],
   data: {
     trialphase: 'vigour_trial',
+    trial_duration: jsPsych.timelineVariable('trialDuration'),
     response_time: () => { return window.responseTime },
     trial_presses: () => { return window.trialPresses },
     trial_reward: () => { return window.trialReward },
@@ -253,22 +252,6 @@ const piggyBankTrial = {
     total_presses: () => { return window.totalPresses },
     total_reward: () => { return window.totalReward }
   },
-  // simulation_options: {
-  //   data: {
-  //     trial_presses: () => { window.trialPresses = jsPsych.randomization.randomInt(8, 20) },
-  //     trial_reward: () => { window.trialReward = Math.floor(window.trialPresses / jsPsych.evaluateTimelineVariable('ratio')) * jsPsych.evaluateTimelineVariable('magnitude') },
-  //     response_time: () => {
-  //       do {
-  //         window.responseTime = [];
-  //         for (let i = 0; i < window.trialPresses; i++) {
-  //           window.responseTime.push(Math.floor(jsPsych.randomization.sampleExGaussian(150, 15, 0.01, true)));
-  //         }
-  //       } while (window.responseTime.reduce((acc, curr) => acc + curr, 0) > experimentConfig.trialDuration);
-  //     },
-  //     total_presses: () => { window.totalPresses += window.trialPresses },
-  //     total_reward: () => { window.totalReward += window.trialReward }
-  //   }
-  // },
   on_start: function (trial) {
     if (window.simulating) {
       trial.trial_duration = 500;
@@ -312,7 +295,6 @@ const piggyBankTrial = {
     const currentMag = jsPsych.evaluateTimelineVariable('magnitude');
     const currentRatio = jsPsych.evaluateTimelineVariable('ratio');
     updatePiggyTails(currentMag, currentRatio);
-    // console.log([jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio')]);
     updatePersistentCoinContainer(); // Update the persistent coin container
     observeResizing('coin-container', updatePersistentCoinContainer);
 
@@ -327,7 +309,7 @@ const piggyBankTrial = {
 
     // Simulating keypresses
     if (window.simulating) {
-      trial_presses = jsPsych.randomization.randomInt(1, 5);
+      trial_presses = jsPsych.randomization.randomInt(1, 8);
       avg_rt = 500/trial_presses;
       for (let i = 0; i < trial_presses; i++) {
         jsPsych.pluginAPI.pressKey('b', avg_rt * i + 1);
@@ -341,6 +323,7 @@ const piggyBankTrial = {
     data.trial_number = vigourTrialCounter;
     if (vigourTrialCounter % (vigourTrials.length / 3) == 0 || vigourTrialCounter == vigourTrials.length) {
       saveDataREDCap(retry = 3);
+      
       updateVigourBonus();
     }
     if (fsChangeHandler) {
