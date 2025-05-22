@@ -198,10 +198,7 @@ reward_sequence.forEach((t, index) => {
       left: jsPsych.timelineVariable('left'),
       right: jsPsych.timelineVariable('right'),
       current: jsPsych.timelineVariable('current'),
-      reward_amount: jsPsych.timelineVariable('reward_amount'),
-      simulation_options: {
-        simulate: false
-      }
+      reward_amount: jsPsych.timelineVariable('reward_amount')
     });
   }
   
