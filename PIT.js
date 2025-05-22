@@ -54,7 +54,6 @@ function generatePITstimulus(coin, ratio) {
 
 // PIT trial
 let PITtrialCounter = 0;
-let fsChangeHandler = null;
 
 const PITtrial = {
   type: jsPsychHtmlKeyboardResponse,
@@ -445,8 +444,11 @@ const startPITconfirmation = {
   choices: ['b', 'r'],
   stimulus: `
   <div id="instruction-text">
-      <p>You will now play the piggy-bank game in the clouds for about eight minutes.</p>
-      <p>When you're ready, press <span class="spacebar-icon">B</span> to start!</p>
+      <p>You will now play the piggy-bank game in the clouds for about <strong>eight minutes</strong>.</p>
+      <p>When you're ready, place a <strong>finger of your dominant hand</strong> (e.g., right index finger) comfortably on the <span class="spacebar-icon">B</span> key, as shown below.</p>
+      <p>Use this finger only to press during the game.</p>
+      <p>Press it down once to begin.</p>
+      <img src="imgs/Vigour_key.png" style="width:250px;" alt="Key press illustration">
       <p>If you want to read the rules again, press <span class="spacebar-icon">R</span>.</p>
   </div>
     `,
