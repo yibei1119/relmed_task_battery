@@ -151,9 +151,9 @@ const startConfirmation = {
   stimulus: `
   <div id="instruction-text">
       <p>You will now play the piggy-bank game without a break for about <strong>four minutes</strong>.</p>
-      <p>When you're ready, place a <strong>finger of your dominant hand</strong> (e.g., right index finger) comfortably on the <span class="spacebar-icon">B</span> key, as shown below.</p>
-      <p>Use this finger only to press during the game.</p>
-      <p>Press it down once to begin.</p>
+      <p>When you're ready, place the <strong>index finger of the hand you write with</strong> comfortably on the <span class="spacebar-icon">B</span> key, as shown below.</p>
+      <p>Use only this finger to press during the game.</p>
+      <p>Press it once to begin.</p>
       <img src="imgs/Vigour_key.png" style="width:250px;" alt="Key press illustration">
       <p>If you want to start over from the beginning, press <span class="spacebar-icon">R</span>.</p>
   </div>
