@@ -1025,7 +1025,7 @@ const bonus_trial = {
         return stimulus;
     },
     choices: ['Continue'],
-    data: { trialphase: 'vigour_bonus' },
+    data: { trialphase: 'bonus_trial' },
     on_start: () => {
       updateState(`bonus_trial`);
     },
