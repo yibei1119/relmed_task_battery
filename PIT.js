@@ -253,42 +253,21 @@ const vigour_PIT_bonus2 = {
   choices: ['Finish'],
   data: { trialphase: 'vigour_bonus' },
   on_start: function (trial) {
-    let vigour_reward = getFracVigourReward();
-    let pit_reward = getFracPITReward();
-    
-    // Check for NaN values and try to replace them
-    if (isNaN(vigour_reward) && window.session_state && window.session_state["vigour"] !== undefined) {
-      vigour_reward = window.session_state["vigour"];
-      console.log("Using stored vigour reward:", vigour_reward);
-    }
-    
-    if (isNaN(pit_reward) && window.session_state && window.session_state["PIT"] !== undefined) {
-      pit_reward = window.session_state["PIT"];
-      console.log("Using stored PIT reward:", pit_reward);
-    }
-    
-    // Final check for NaN values
-    if (isNaN(vigour_reward)) {
-      console.error("Vigour reward is NaN and no fallback available");
-      vigour_reward = 0;
-    }
-    
-    if (isNaN(pit_reward)) {
-      console.error("PIT reward is NaN and no fallback available");
-      pit_reward = 0;
-    }
-    
-    const total_bonus = vigour_reward + pit_reward;
+    updateState(`vigour_pit_bonus_start`);
+
+    const raw_bonus = computeRelativeVigourPITBonus();
+    const total_bonus = (raw_bonus.earned - raw_bonus.min)/(raw_bonus.max - raw_bonus.min) * (1 - 0.6) + 0.6;
     trial.stimulus = `
             <p>It is time to reveal your total bonus payment for the Piggy-Bank Game.</p>
             <p>With the cloudy version and the no-cloud version combined, you will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
         `;
   },
-  on_start: () => {
-    updateState(`vigour_pit_bonus_start`);
-  },
   on_finish: (data) => {
-    data.vigour_bonus = getFracVigourReward() + getFracPITReward();
+    const raw_bonus = computeRelativeVigourPITBonus();
+    data.vigour_bonus = (raw_bonus.earned - raw_bonus.min)/(raw_bonus.max - raw_bonus.min) * (1 - 0.6) + 0.6;
+  },
+  simulation_options: {
+    simulate: true
   }
 };
 
