@@ -965,8 +965,30 @@ function createPressBothTrial(stimulus, trialphase){
     }
 }
 
-function computeTotalBonus(){
-
+function getTaskBonusData(task) {
+    switch (task) {
+        case "pilt-to-test":
+            const pilt_bonus = computeRelativePILTBonus();
+            const vigour_pit_bonus = computeRelativeVigourPITBonus();
+            return {
+                earned: pilt_bonus["earned"] + vigour_pit_bonus["earned"],
+                min: pilt_bonus["min"] + vigour_pit_bonus["min"],
+                max: pilt_bonus["max"] + vigour_pit_bonus["max"]
+            };
+        case "reversal":
+            return computeRelativeReversalBonus();
+        case "wm":
+            return computeRelativePILTBonus();
+        case "control":
+            return computeRelativeControlBonus();
+        case "vigour": // only for testing vigour module
+            return computeRelativeVigourPITBonus();
+        case "pit": // only for testing pit module
+            return computeRelativeVigourPITBonus();
+        default:
+            return { earned: 0, min: 0, max: 0 };
+    }
+}
     const max_bonus = {
         "pilt-to-test": 2.45,
         "reversal": 0.5,
