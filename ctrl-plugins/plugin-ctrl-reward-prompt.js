@@ -255,7 +255,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
       const default_data = {
         trialphase: "control_reward_prompt",
         response: this.jsPsych.pluginAPI.getValidKey(["ArrowRight"]),
-        rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true))
+        rt: this.jsPsych.randomization.randomInt(1100, 1200)
       };
 
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);

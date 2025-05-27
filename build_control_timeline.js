@@ -460,7 +460,7 @@ if (window.session === "screening") {
 }
 
 // If resuming, remove all the trials they have finished
-if (window.last_state.includes("control_trial_")) {
+if (typeof window.last_state !== "undefined" && window.last_state.includes("control_trial_")) {
   const last_trial = parseInt(window.last_state.split("_")[2]);
   controlTimeline = controlTimeline.slice(last_trial);
 }
