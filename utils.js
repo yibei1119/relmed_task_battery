@@ -989,6 +989,37 @@ function getTaskBonusData(task) {
             return { earned: 0, min: 0, max: 0 };
     }
 }
+
+function updateBonusState() {
+    // Get the previous bonus values from session state or set defaults
+    const prevBonus = {
+        earned: window.session_state["earned"] || 0,
+        min: window.session_state["min"] || 0,
+        max: window.session_state["max"] || 0
+    };
+    console.log("Last session bonus: ", prevBonus.earned);
+
+    const taskBonus = getTaskBonusData(window.task);
+    
+    const newBonus = {
+        earned: prevBonus.earned + taskBonus.earned,
+        min: prevBonus.min + taskBonus.min,
+        max: prevBonus.max + taskBonus.max
+    };
+
+    let updated_session_state_obj = { ...window.session_state } || {}; // shallow copy to avoid mutation
+    updated_session_state_obj["earned"] = newBonus.earned;
+    updated_session_state_obj["min"] = newBonus.min;
+    updated_session_state_obj["max"] = newBonus.max;
+
+    // Send the updated state back to the parent window
+    console.log("To-be-updated session bonus: ", updated_session_state_obj["earned"]);
+    postToParent({
+        session_state: JSON.stringify(updated_session_state_obj)
+    });
+}
+
+function computeTotalBonus() {
     const max_bonus = {
         "pilt-to-test": 2.45,
         "reversal": 0.5,
