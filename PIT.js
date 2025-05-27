@@ -164,30 +164,6 @@ const PITtrial = {
   }
 };
 
-// Function to update relemd.ac.uk with PIT bonus in case of module interruption
-const updatePITBonus = () => {
-
-  if (isNaN(getFracPITReward())) {
-    console.log("PIT bonus is NaN");
-    return;
-  }
-
-  // Retrieve the previous bonus from the session state
-  const previous_bonus = window.session_state["PIT"];
-
-  console.log("Previous PIT bonus: ", previous_bonus);
-
-  // Update the session state with the new bonus
-  window.session_state["PIT"] = getFracPITReward();
-
-  console.log("Updated bonus: ", window.session_state["vigour_PIT"]);
-
-  // Send the updated state back to the parent window
-  postToParent({
-    session_state: JSON.stringify(window.session_state)
-  });
-}
-
 // Create timeline for PIT task
 const PITtrials = [];
 PITtrialList.forEach(trial => {
