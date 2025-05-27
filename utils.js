@@ -1009,8 +1009,11 @@ function updateBonusState() {
 
     let updated_session_state_obj = { ...window.session_state } || {}; // shallow copy to avoid mutation
     updated_session_state_obj["earned"] = newBonus.earned;
-    updated_session_state_obj["min"] = newBonus.min;
-    updated_session_state_obj["max"] = newBonus.max;
+    if (window.task !== "reversal") {
+        // For all tasks except reversal, we update the min and max in bonus state
+        updated_session_state_obj["min"] = newBonus.min;
+        updated_session_state_obj["max"] = newBonus.max;
+    }
 
     // Send the updated state back to the parent window
     console.log("To-be-updated session bonus: ", updated_session_state_obj);
