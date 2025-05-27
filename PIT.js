@@ -190,7 +190,7 @@ function getSelectedPITtrial() {
 }
 
 // Get fractional rewards of Vigour
-function getFracPITReward() {
+function getFracPITReward(prop = 0.0213) {
   const raw_data = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial");
   const total_reward = raw_data.select('total_reward').values.slice(-1)[0];
   try {
@@ -198,7 +198,7 @@ function getFracPITReward() {
   } catch (error) {
     console.error("Total reward for PIT mismatch!");
   }
-  return total_reward / 100 * 0.0213;
+  return total_reward / 100 * prop;
 }
 
 const PIT_bonus = {
