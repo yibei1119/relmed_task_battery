@@ -324,7 +324,7 @@ const piggyBankTrial = {
     if (vigourTrialCounter % (vigourTrials.length / 3) == 0 || vigourTrialCounter == vigourTrials.length) {
       saveDataREDCap(retry = 3);
       
-      updateVigourBonus();
+      updateBonusState();
     }
     if (fsChangeHandler) {
       document.removeEventListener('fullscreenchange', fsChangeHandler);

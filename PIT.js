@@ -144,7 +144,7 @@ const PITtrial = {
     if (PITtrialCounter % (PITtrials.length / 3) == 0 || PITtrialCounter == PITtrials.length) {
       saveDataREDCap(retry = 3);
 
-      updatePITBonus();
+      updateBonusState();
     }
     if (fsChangeHandler) {
       document.removeEventListener('fullscreenchange', fsChangeHandler);
