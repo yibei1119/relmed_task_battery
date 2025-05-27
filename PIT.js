@@ -272,25 +272,40 @@ const vigour_PIT_bonus2 = {
 };
 
 const computeRelativeVigourPITBonus = () => {
-
-    // Compute lowest and highest sum of coins possible to earn
+  const computePiggyMetrics = (trialphase) => {
+    const trials = jsPsych.data.get().filter({trialphase});
     
-    // Vigour task
-    const vigour_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "vigour_trial").select('total_reward').values.slice(-1)[0] * 0.01;
-    const vigour_min = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
-    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
-
-    // PIT task
-    const pit_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial").select('total_reward').values.slice(-1)[0] * 0.01;
-    const pit_min = jsPsych.data.get().filter({trialphase: "pit_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
-    const pit_max = jsPsych.data.get().filter({trialphase: "pit_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
-    
-    return {
-        earned: (isNaN(vigour_earned) ? 0 : vigour_earned) + (isNaN(pit_earned) ? 0 : pit_earned),
-        min: vigour_min + pit_min,
-        max: vigour_max + pit_max
+    if (trials.count() === 0) {
+      console.log(`No trials found for ${trialphase}. Returning default values.`);
+      return { earned: 0, min: 0, max: 0 };
     }
-}
+    
+    const earned = trials.select('total_reward').values.slice(-1)[0] * 0.01;
+    const values = trials.values();
+    
+    const min = values.reduce((sum, trial) => 
+      sum + (1 * trial.timeline_variables.magnitude * 0.01 / trial.timeline_variables.ratio), 0);
+    
+    const max = values.reduce((sum, trial) => 
+      sum + (10 * trial.trial_duration / 1000 * 
+           (trial.timeline_variables.magnitude * 0.01 / trial.timeline_variables.ratio)), 0);
+    
+    return { 
+      earned: isNaN(earned) ? 0 : earned, 
+      min: isNaN(min) ? 0 : min, 
+      max: isNaN(max) ? 0 : max
+    }
+  };
+
+  const vigour = computePiggyMetrics("vigour_trial");
+  const pit = computePiggyMetrics("pit_trial");
+  
+  return {
+    earned: vigour.earned + pit.earned,
+    min: vigour.min + pit.min,
+    max: vigour.max + pit.max
+  };
+};
 
 // Instructions for comparison task
 const PITruleInstruction = {
