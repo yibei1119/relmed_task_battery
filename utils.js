@@ -1030,38 +1030,25 @@ function computeTotalBonus() {
     const min_prop_bonus = 0.6;
     const min_bonus = max_bonus * min_prop_bonus;
 
-    if (window.task === "pilt-to-test"){
-        const pilt_bonus = computeRelativePILTBonus();
-        const vigour_pit_bonus = computeRelativeVigourPITBonus();
-    
-        const total_earned = pilt_bonus["earned"] + vigour_pit_bonus["earned"];
-        const min_total = pilt_bonus["min"] + vigour_pit_bonus["min"];
-        const max_total = pilt_bonus["max"] + vigour_pit_bonus["max"];
-        
-        const prop = (total_earned - min_total) / (max_total - min_total);
+    // Retrieve the lastest session state
+    const prevBonus = {
+        earned: window.session_state["earned"] || 0,
+        min: window.session_state["min"] || 0,
+        max: window.session_state["max"] || 0
+    };
 
-        return prop * (max_bonus - min_bonus) + min_bonus;
-    }
+    const taskBonus = getTaskBonusData(window.task);
 
-    if (window.task === "reversal"){
-        const reversal_bonus = computeRelativeReversalBonus();
+    // Calculate the total bonus based on the current bonus and last recorded bonus
+    const earned = prevBonus.earned + taskBonus.earned;
+    const min = prevBonus.min + taskBonus.min;
+    const max = prevBonus.max + taskBonus.max;
 
-        const prop = ((reversal_bonus["earned"] - reversal_bonus["min"]) / (reversal_bonus["max"] - reversal_bonus["min"]));
-        return prop * (max_bonus - min_bonus) + min_bonus;
-    }
+    const prop = Math.min(1, (earned - min) / (max - min));
+    const totalBonus = prop * (max_bonus - min_bonus) + min_bonus;
 
-    if (window.task === "wm"){
-        const wm_bonus = computeRelativePILTBonus();
-        const prop = ((wm_bonus["earned"] - wm_bonus["min"]) / (wm_bonus["max"] - wm_bonus["min"]));
-        return prop * (max_bonus - min_bonus) + min_bonus;
-    }
-
-    if (window.task === "control"){
-        const ctrl_bonus = computeRelativeControlBonus();
-        const prop = ((ctrl_bonus["earned"] - ctrl_bonus["min"]) / (ctrl_bonus["max"] - ctrl_bonus["min"]));
-        return prop * (max_bonus - min_bonus) + min_bonus;
-    }
-    
+    // Add insurance to ensure bonus is never below minimum or NaN
+    return (isNaN(totalBonus) || totalBonus < min_bonus) ? min_bonus : totalBonus;
 }
 
 const bonus_trial = {
