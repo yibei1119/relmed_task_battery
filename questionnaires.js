@@ -205,7 +205,7 @@ var questionnaire_phq = (i,total) => {
             trialphase: "PHQ"
         },
         on_start: () => {
-            updateState("PHQ_start");
+            updateState("PHQ9_start");
         }
     };
 };
@@ -223,7 +223,7 @@ var questionnaire_gad = (i,total) => {
             trialphase: "GAD"
         },
         on_start: () => {
-            updateState("GAD_start");
+            updateState("GAD7_start");
         }
     };
 };
@@ -345,7 +345,7 @@ var questionnaire_pvss = (i,total) => {
             trialphase: "PVSS"
         },
         on_start: () => {
-            updateState("pvss_start");
+            updateState("PVSS_start");
         }
     };
 };
