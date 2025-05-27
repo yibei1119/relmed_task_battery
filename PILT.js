@@ -70,7 +70,10 @@ const inter_block_msg = {
     data: {
         trialphase: "pilt_inter_block",
     },
-    on_start: saveDataREDCap,
+    on_start: () => {
+        saveDataREDCap();
+        updateBonusState();
+    },
     on_finish: () => { window.skipThisBlock = false }
 }
 
