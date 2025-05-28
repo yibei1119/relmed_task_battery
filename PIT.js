@@ -276,7 +276,7 @@ const computeRelativeVigourPITBonus = () => {
     const trials = jsPsych.data.get().filter({trialphase});
     
     if (trials.count() === 0) {
-      console.log(`No trials found for ${trialphase}. Returning default values.`);
+      // console.log(`No trials found for ${trialphase}. Returning default values.`);
       return { earned: 0, min: 0, max: 0 };
     }
     
