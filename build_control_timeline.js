@@ -354,7 +354,7 @@ let controlTotalReward = {
     on_finish: function (data) {
       const raw_bonus = computeRelativeControlBonus();
       data.control_bonus = raw_bonus.earned;
-      data.control_bonus_adjusted = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
+      data.control_bonus_adjusted = Math.round(((raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8) * 100) / 100;
       console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
       postToParent({ bonus: data.control_bonus_adjusted });
       saveDataREDCap(retry = 3);
