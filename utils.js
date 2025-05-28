@@ -1008,11 +1008,11 @@ function updateBonusState() {
     };
 
     let updated_session_state_obj = { ...window.session_state } || {}; // shallow copy to avoid mutation
-    updated_session_state_obj["earned"] = newBonus.earned;
+    updated_session_state_obj["earned"] = Math.round(newBonus.earned * 100) / 100; // round to 2 decimal places
     if (window.task !== "reversal") {
         // For all tasks except reversal, we update the min and max in bonus state
-        updated_session_state_obj["min"] = newBonus.min;
-        updated_session_state_obj["max"] = newBonus.max;
+        updated_session_state_obj["min"] = Math.round(newBonus.min * 100) / 100;
+        updated_session_state_obj["max"] = Math.round(newBonus.max * 100) / 100;
     }
 
     // Send the updated state back to the parent window
