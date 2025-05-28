@@ -1,11 +1,7 @@
-# RELMED probabilistic learning task pilot #8
-This reposistory hosts the experiment website for the eighth pilot for RELMED (Internal name Pilot 8?), which includes PILT, Vigour, PIT, reversal, WM, control, and questionnaires. The task is coded with jsPsych.
+# RELMED trial 1
+This reposistory hosts the experiment website for the RELMED trial 1, which includes PILT, Vigour, PIT, reversal, WM, control, and questionnaires. The task is coded with jsPsych.
 
-However, only WM and Control will be tested for Pilot 8.
-
-Data is written to REDCap via a call to an AWS lamda function.
-
-## Files in this repository
+## Files in this repository (update needed)
 ```
 .
 ├── consent.html - landing page, consent form.
