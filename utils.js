@@ -247,8 +247,8 @@ function updateState(state, save_data = true) {
         saveDataREDCap();
     }
 
-    // Update safe state
-    // updateSafeFun();
+    // Update bonus state
+    // updateBonusState();
 
     console.log(state);
     postToParent({

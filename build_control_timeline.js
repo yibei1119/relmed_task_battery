@@ -227,6 +227,8 @@ reward_sequence.forEach((t, index) => {
 
       updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
 
+      updateBonusState();
+
       if (n_trials % 24 === 0) {
         saveDataREDCap(retry = 3);
       }
