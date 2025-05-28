@@ -144,7 +144,7 @@ const PITtrial = {
     if (PITtrialCounter % (PITtrials.length / 3) == 0 || PITtrialCounter == PITtrials.length) {
       saveDataREDCap(retry = 3);
 
-      updatePITBonus();
+      updateBonusState();
     }
     if (fsChangeHandler) {
       document.removeEventListener('fullscreenchange', fsChangeHandler);
@@ -163,30 +163,6 @@ const PITtrial = {
     }
   }
 };
-
-// Function to update relemd.ac.uk with PIT bonus in case of module interruption
-const updatePITBonus = () => {
-
-  if (isNaN(getFracPITReward())) {
-    console.log("PIT bonus is NaN");
-    return;
-  }
-
-  // Retrieve the previous bonus from the session state
-  const previous_bonus = window.session_state["PIT"];
-
-  console.log("Previous PIT bonus: ", previous_bonus);
-
-  // Update the session state with the new bonus
-  window.session_state["PIT"] = getFracPITReward();
-
-  console.log("Updated bonus: ", window.session_state["vigour_PIT"]);
-
-  // Send the updated state back to the parent window
-  postToParent({
-    session_state: JSON.stringify(window.session_state)
-  });
-}
 
 // Create timeline for PIT task
 const PITtrials = [];
@@ -214,7 +190,7 @@ function getSelectedPITtrial() {
 }
 
 // Get fractional rewards of Vigour
-function getFracPITReward() {
+function getFracPITReward(prop = 0.0213) {
   const raw_data = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial");
   const total_reward = raw_data.select('total_reward').values.slice(-1)[0];
   try {
@@ -222,7 +198,7 @@ function getFracPITReward() {
   } catch (error) {
     console.error("Total reward for PIT mismatch!");
   }
-  return total_reward / 100 * 0.0213;
+  return total_reward / 100 * prop;
 }
 
 const PIT_bonus = {
@@ -277,65 +253,59 @@ const vigour_PIT_bonus2 = {
   choices: ['Finish'],
   data: { trialphase: 'vigour_bonus' },
   on_start: function (trial) {
-    let vigour_reward = getFracVigourReward();
-    let pit_reward = getFracPITReward();
-    
-    // Check for NaN values and try to replace them
-    if (isNaN(vigour_reward) && window.session_state && window.session_state["vigour"] !== undefined) {
-      vigour_reward = window.session_state["vigour"];
-      console.log("Using stored vigour reward:", vigour_reward);
-    }
-    
-    if (isNaN(pit_reward) && window.session_state && window.session_state["PIT"] !== undefined) {
-      pit_reward = window.session_state["PIT"];
-      console.log("Using stored PIT reward:", pit_reward);
-    }
-    
-    // Final check for NaN values
-    if (isNaN(vigour_reward)) {
-      console.error("Vigour reward is NaN and no fallback available");
-      vigour_reward = 0;
-    }
-    
-    if (isNaN(pit_reward)) {
-      console.error("PIT reward is NaN and no fallback available");
-      pit_reward = 0;
-    }
-    
-    const total_bonus = vigour_reward + pit_reward;
+    updateState(`vigour_pit_bonus_start`);
+
+    const raw_bonus = computeRelativeVigourPITBonus();
+    const total_bonus = (raw_bonus.earned - raw_bonus.min)/(raw_bonus.max - raw_bonus.min) * (1 - 0.6) + 0.6;
     trial.stimulus = `
             <p>It is time to reveal your total bonus payment for the Piggy-Bank Game.</p>
             <p>With the cloudy version and the no-cloud version combined, you will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
         `;
   },
-  on_start: () => {
-    updateState(`vigour_pit_bonus_start`);
-  },
   on_finish: (data) => {
-    data.vigour_bonus = getFracVigourReward() + getFracPITReward();
+    const raw_bonus = computeRelativeVigourPITBonus();
+    data.vigour_bonus = (raw_bonus.earned - raw_bonus.min)/(raw_bonus.max - raw_bonus.min) * (1 - 0.6) + 0.6;
+  },
+  simulation_options: {
+    simulate: true
   }
 };
 
 const computeRelativeVigourPITBonus = () => {
-
-    // Compute lowest and highest sum of coins possible to earn
+  const computePiggyMetrics = (trialphase) => {
+    const trials = jsPsych.data.get().filter({trialphase});
     
-    // Vigour task
-    const vigour_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "vigour_trial").select('total_reward').values.slice(-1)[0] * 0.01;
-    const vigour_min = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
-    const vigour_max = jsPsych.data.get().filter({trialphase: "vigour_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
-
-    // PIT task
-    const pit_earned = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "pit_trial").select('total_reward').values.slice(-1)[0] * 0.01;
-    const pit_min = jsPsych.data.get().filter({trialphase: "pit_trial"}).values().map((value, index) => (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio)).reduce((sum, value) => sum + value, 0);
-    const pit_max = jsPsych.data.get().filter({trialphase: "pit_trial"}).values().map((value, index) => (10 * value.trial_duration / 1000 * (value.timeline_variables.magnitude * 0.01 / value.timeline_variables.ratio))).reduce((sum, value) => sum + value, 0);
-    
-    return {
-        earned: (isNaN(vigour_earned) ? 0 : vigour_earned) + (isNaN(pit_earned) ? 0 : pit_earned),
-        min: vigour_min + pit_min,
-        max: vigour_max + pit_max
+    if (trials.count() === 0) {
+      // console.log(`No trials found for ${trialphase}. Returning default values.`);
+      return { earned: 0, min: 0, max: 0 };
     }
-}
+    
+    const earned = trials.select('total_reward').values.slice(-1)[0] * 0.01;
+    const values = trials.values();
+    
+    const min = values.reduce((sum, trial) => 
+      sum + (1 * trial.timeline_variables.magnitude * 0.01 / trial.timeline_variables.ratio), 0);
+    
+    const max = values.reduce((sum, trial) => 
+      sum + (10 * trial.trial_duration / 1000 * 
+           (trial.timeline_variables.magnitude * 0.01 / trial.timeline_variables.ratio)), 0);
+    
+    return { 
+      earned: isNaN(earned) ? 0 : earned, 
+      min: isNaN(min) ? 0 : min, 
+      max: isNaN(max) ? 0 : max
+    }
+  };
+
+  const vigour = computePiggyMetrics("vigour_trial");
+  const pit = computePiggyMetrics("pit_trial");
+  
+  return {
+    earned: vigour.earned + pit.earned,
+    min: vigour.min + pit.min,
+    max: vigour.max + pit.max
+  };
+};
 
 // Instructions for comparison task
 const PITruleInstruction = {

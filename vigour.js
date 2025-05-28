@@ -324,7 +324,7 @@ const piggyBankTrial = {
     if (vigourTrialCounter % (vigourTrials.length / 3) == 0 || vigourTrialCounter == vigourTrials.length) {
       saveDataREDCap(retry = 3);
       
-      updateVigourBonus();
+      updateBonusState();
     }
     if (fsChangeHandler) {
       document.removeEventListener('fullscreenchange', fsChangeHandler);
@@ -343,31 +343,6 @@ const piggyBankTrial = {
     }
   }
 };
-
-// Function to update relemd.ac.uk with PIT bonus in case of module interruption
-const updateVigourBonus = () => {
-
-  if (isNaN(getFracVigourReward())) {
-    console.log("Vigour bonus is NaN");
-    return;
-  }
-
-  // Retrieve the previous bonus from the session state
-  const previous_bonus = window.session_state["vigour"];
-
-  console.log("Previous vigour bonus: ", previous_bonus);
-
-  // Update the session state with the new bonus
-  window.session_state["vigour"] = getFracVigourReward();
-
-  console.log("Updated bonus: ", window.session_state["vigour"]);
-
-  // Send the updated state back to the parent window
-  postToParent({
-    session_state: JSON.stringify(window.session_state)
-  });
-}
-
 
 const noPressWarning = {
   timeline: [{
@@ -458,7 +433,7 @@ function getSelectedTrial() {
 }
 
 // Get fractional rewards of Vigour
-function getFracVigourReward() {
+function getFracVigourReward(prop = 0.0213) {
   const raw_data = jsPsych.data.get().filterCustom((trial) => trial.trialphase == "vigour_trial");
   const total_reward = raw_data.select('total_reward').values.slice(-1)[0];
   try {
@@ -466,5 +441,5 @@ function getFracVigourReward() {
   } catch (error) {
     console.error("Total reward for Vigour mismatch!");
   }
-  return total_reward / 100 * 0.0213;
+  return total_reward / 100 * prop;
 }

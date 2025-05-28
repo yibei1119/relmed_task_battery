@@ -80,6 +80,8 @@ const generateReversalBlocks = () => {
 
                                     updateState(`reversal_block_${block_number}_trial_${trial_number}`, false)
 
+                                    updateBonusState();
+
                                     n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
                                     
                                     if (n_trials % 40 == 0) {
