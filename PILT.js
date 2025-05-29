@@ -586,7 +586,7 @@ function return_PILT_full_sequence() {
 
 const earnedSumPILT = () => {
     // Compute the actual sum of coins
-    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).select("chosen_feedback").sum();
+    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).select("chosen_feedback").sum();
 
     return earned_sum
 }
