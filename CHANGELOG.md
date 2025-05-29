@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/huyslab/relmed_trial1/compare/v1.0.1...v1.0.2) (2025-05-29)
+
+
+### Bug Fixes
+
+* **task:** correct PILT bonus calculation to avoid earned being larger than max ([1551c78](https://github.com/huyslab/relmed_trial1/commit/1551c7875b40cbaa33078061f0693cf10a3e5495))
+
 ## [1.0.1](https://github.com/huyslab/relmed_trial1/compare/v1.0.0...v1.0.1) (2025-05-29)
 
 
