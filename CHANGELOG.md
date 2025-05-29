@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/huyslab/relmed_trial1/compare/v1.0.0...v1.0.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* **task:** remove obsolete vigour/pit bonus trial ([5b7ef3c](https://github.com/huyslab/relmed_trial1/commit/5b7ef3cf9cb1c92e83f1c349a99e991a4bde5a7e))
+
 # 1.0.0 (2025-05-28)
 
 
