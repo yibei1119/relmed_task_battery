@@ -274,7 +274,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
         ...extra_fields
     };
 
-    // console.log("Data to be sent:", data_message);
+    console.log("Data to be sent:", data_message);
 
     if (window.context === "relmed") {
         postToParent(
