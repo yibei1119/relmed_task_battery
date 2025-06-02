@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/huyslab/relmed_trial1/compare/v1.0.2...v1.0.3) (2025-06-02)
+
+
+### Bug Fixes
+
+* **bonus:** prevent bonus resumption carry-over across modules ([6d37410](https://github.com/huyslab/relmed_trial1/commit/6d374109bdc1fb6b11c96f437481c3686fb4f8f7))
+
 ## [1.0.2](https://github.com/huyslab/relmed_trial1/compare/v1.0.1...v1.0.2) (2025-05-29)
 
 
