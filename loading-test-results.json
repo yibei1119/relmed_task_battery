@@ -1,0 +1,205 @@
+[
+  {
+    "session": "screening",
+    "task": "screening",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk0",
+    "task": "pilt-to-test",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk0",
+    "task": "reversal",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk0",
+    "task": "control",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk0",
+    "task": "wm",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk2",
+    "task": "pilt-to-test",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk2",
+    "task": "reversal",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk2",
+    "task": "control",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk2",
+    "task": "wm",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk4",
+    "task": "pilt-to-test",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk4",
+    "task": "reversal",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk4",
+    "task": "control",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk4",
+    "task": "wm",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk24",
+    "task": "pilt-to-test",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk24",
+    "task": "reversal",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk24",
+    "task": "control",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk24",
+    "task": "wm",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk28",
+    "task": "pilt-to-test",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk28",
+    "task": "reversal",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk28",
+    "task": "control",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk28",
+    "task": "wm",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk0",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk2",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk4",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": true
+  },
+  {
+    "session": "wk24",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk28",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk6",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk8",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  },
+  {
+    "session": "wk52",
+    "task": "quests",
+    "chromium": null,
+    "firefox": null,
+    "webkit": null
+  }
+]

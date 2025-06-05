@@ -277,12 +277,27 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     console.log("Data to be sent:", data_message);
 
     if (window.context === "relmed") {
+        // Check if we're in a development environment
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log("Development mode: skipping data save to parent");
+            callback();
+            return;
+        }
+
         postToParent(
             data_message,
             () => {
-                setTimeout(function () {
-                    saveDataREDCap(retry - 1);
-                }, 1000);
+                if (retry > 0) {
+                    console.warn(`Failed to save data, retrying... (${retry} attempts left)`);
+                    // Exponential backoff: 1s, 2s, 4s, etc.
+                    const delay = Math.pow(2, (3 - retry)) * 1000;
+                    setTimeout(function () {
+                        saveDataREDCap(retry - 1);
+                    }, delay);
+                } else {
+                    console.error('Failed to submit data after retrying.');
+                }
+                
             }
         );
 
@@ -1023,7 +1038,7 @@ function updateBonusState() {
         min: updated_session_state_obj[window.task].min || 0,
         max: updated_session_state_obj[window.task].max || 0
     };
-    console.log(`Last session bonus for ${window.task}:`, prevBonus);
+    console.log(`Last saved bonus for ${window.task}:`, prevBonus);
 
     // Get task-specific bonus data
     const taskBonus = getTaskBonusData(window.task);
@@ -1044,7 +1059,7 @@ function updateBonusState() {
     }
 
     // Send the updated state back to the parent window
-    console.log("To-be-updated session bonus:", updated_session_state_obj);
+    console.log("To-be-updated bonus:", updated_session_state_obj);
     postToParent({
         session_state: JSON.stringify(updated_session_state_obj)
     });
@@ -1121,7 +1136,7 @@ const bonus_trial = {
       updateState('bonus_trial_end');
     },
     simulation_options: {
-      simulate: false
+      simulate: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' // Simulate the bonus trial in development mode
     }
   };
   

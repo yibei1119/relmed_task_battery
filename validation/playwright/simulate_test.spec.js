@@ -1,9 +1,8 @@
 const { test, expect } = require('@playwright/test');
-
 const fs = require('fs');
 const url = require('url');
 
-const BASE_URL = "https://huyslab.github.io/relmed_trial1/experiment.html?RELMED_PID=simulate";
+const BASE_URL = "http://127.0.0.1:3000/experiment.html?RELMED_PID=simulate";
 
 const task_sessions = ["wk0", "wk2", "wk4", "wk24", "wk28"];
 const quest_sessions = ["wk6", "wk8", "wk52"];
@@ -23,7 +22,7 @@ const PARAMS = [
 const browsers = ['chromium', 'firefox', 'webkit'];
 
 // Results file path
-const RESULTS_FILE = 'loading-test-results.json';
+const RESULTS_FILE = 'simulation-test-results.json';
 
 // Initialize or load results
 function getResults() {
@@ -34,7 +33,7 @@ function getResults() {
     } catch (e) {
         console.error('Error reading results file:', e);
     }
-    
+
     // Initialize new results array if file doesn't exist or is invalid
     return PARAMS.map(param => {
         const params = new URLSearchParams(param);
@@ -56,7 +55,7 @@ function updateResult(session, task, browser, passed) {
     const resultIndex = results.findIndex(
         item => item.session === session && item.task === task
     );
-    
+
     if (resultIndex !== -1) {
         results[resultIndex][browser] = passed;
         fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2));
@@ -71,29 +70,64 @@ if (!fs.existsSync(RESULTS_FILE)) {
 for (const browserType of browsers) {
     // Create a test fixture for this browser type at the top level
     const browserTest = test.extend({ browserName: browserType });
-    
+
     browserTest.describe(`Website Load Test in ${browserType}`, () => {
         for (let i = 0; i < PARAMS.length; i++) {
             const param = PARAMS[i];
             const params = new URLSearchParams(param);
             const session = params.get("session") || "N/A";
             const task = params.get("task") || "N/A";
-            
+
             browserTest(`Loading ${session}/${task} in ${browserType}`, async ({ page }) => {
 
                 test.setTimeout(1200000);
-                
+
                 // Navigate to the page with the URL parameter
                 let passed = false;
                 try {
                     const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 5000 });
-                    
+
                     passed = response.ok();
                     if (passed) {
                         const messagePromise = new Promise(resolve => {
-                            page.on('console', msg => {
-                                console.log(`Console message from ${session}/${task} on ${browserType}:`, msg.text());
-                                if (msg.text().includes("endTask")) {
+                            page.on('console', async msg => {
+
+                                let messageText = '';
+
+                                try {
+                                    // Try to get text directly first (works in Chromium)
+                                    messageText = msg.text();
+                                    console.log(`Console message from ${session}/${task} on ${browserType}:`, messageText);
+
+                                    // Check if we got a JSHandle string (Firefox case)
+                                    if (messageText.includes('JSHandle@') || messageText === '[object Object]') {
+                                        throw new Error('JSHandle detected, use fallback');
+                                    }
+                                } catch (e) {
+                                    // Firefox/WebKit fallback - handle JSHandle objects
+                                    try {
+                                        const args = msg.args();
+                                        if (args.length > 0) {
+                                            // Get the first argument (the log message)
+                                            const firstArg = await args[0].jsonValue();
+
+                                            // If there are multiple arguments, try to get the data object
+                                            if (args.length > 1) {
+                                                const dataArg = await args[1].jsonValue();
+                                                messageText = `${firstArg} ${JSON.stringify(dataArg)}`;
+                                            } else {
+                                                messageText = typeof firstArg === 'object' ? JSON.stringify(firstArg) : String(firstArg);
+                                            }
+                                        }
+                                    } catch (e2) {
+                                        console.warn(`Could not extract console message: ${e2}`);
+                                        messageText = '';
+                                    }
+                                }
+
+                                // Check if the message contains "endTask"
+                                if (messageText && messageText.includes("endTask")) {
+                                    console.log(`End task message received for ${session}/${task} on ${browserType}`);
                                     resolve(true);
                                 }
                             });
@@ -105,8 +139,8 @@ for (const browserType of browsers) {
                                 resolve(false);
                             });
                         });
-            
-                        const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(false), 3000 * 60));
+
+                        const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(false), 4000 * 60));
 
                         passed = await Promise.race([messagePromise, errorPromise, timeoutPromise]);
                     }
