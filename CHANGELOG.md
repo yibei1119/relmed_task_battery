@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/huyslab/relmed_trial1/compare/v1.0.3...v1.1.0) (2025-06-26)
+
+
+### Bug Fixes
+
+* **instruction:** add max trial key press example gif for clearer instruction ([26f7e19](https://github.com/huyslab/relmed_trial1/commit/26f7e198bd254cea4aa926e16055cbf87649fc3e))
+
+
+### Features
+
+* **control_configs:** update fruit placeholders and add new images for screening and weeks 4, 24, and 28 ([f0fdb45](https://github.com/huyslab/relmed_trial1/commit/f0fdb4580e9405e5c31d32d3ddccaa2f785fc620))
+
 ## [1.0.3](https://github.com/huyslab/relmed_trial1/compare/v1.0.2...v1.0.3) (2025-06-02)
 
 
