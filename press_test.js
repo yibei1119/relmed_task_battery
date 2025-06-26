@@ -20,7 +20,7 @@ const maxPressRateTrial = {
         return `
         <div id="instruction-container">
             <div id="instruction-text" style="text-align: center;">
-                <h3><div id="countdown" style="margin: 20px;">Place your finger on the  <span class="spacebar-icon">J</span> key.<br>When you are ready, start pressing it repeatedly as fast as you can!</div></h3>
+                <h3><div id="countdown" style="margin: 20px;">Place your finger on the <span class="spacebar-icon">J</span> key.<br>When you are ready, start pressing it repeatedly as fast as you can!</div></h3>
                 <div id="press-counter">Presses: 0</div>
                 <div id="speed-display" style="color: #0066cc;">Speed: 0.00 presses/sec</div>
                 <div style="width: 300px; margin: 20px auto; border: 1px solid black;">
@@ -124,9 +124,10 @@ const maxPressInstructions = {
     css_classes: ["instructions"],
     stimulus: `
     <div id="instruction-container">
-        <div id="instruction-text" style="text-align: left;">
+        <div id="instruction-text" style="text-align: center;">
             <p>Before we start the first game, we need to complete a short test of your keyboard.</p>
-            <p>On the next screen, you will need to <span class="highlight-txt">press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can.</span></p>
+            <p>On the next screen, you will need to <span class="highlight-txt">press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can</span>, as shown below.</p>
+            <img src="imgs/max_press_key.gif" alt="Max Press Key Example" style="width:250px;">
         </div>
     </div>
     `,
