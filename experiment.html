@@ -70,7 +70,7 @@
             session: window.session,
             n_warnings: 0,
             n_instruction_fail: 0,
-            version: "1.0.0",
+            version: "1.1.0",
             task: window.task,
             pre_kick_out_warned: false
         })
@@ -353,12 +353,6 @@
                     acceptability_intro,
                     acceptability_PIT
                 ]);
-            }
-
-            if (resumptionRule(pilt_to_test_order, window.last_state, "vigour_pit_bonus_start")) {
-                // Add vigour bonus message
-                console.log("Adding vigour bonus");
-                procedure.push(vigour_PIT_bonus2);
             }
 
             if (resumptionRule(pilt_to_test_order, window.last_state, "vigour_test_task_start")) {

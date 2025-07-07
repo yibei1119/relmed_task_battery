@@ -36,9 +36,9 @@ const CONTROL_CONFIG = {
     screening: "strawberry",
     wk0: "banana",
     wk2: "apple",
-    wk4: "<Placeholder>",
-    wk24: "<Placeholder>",
-    wk28: "<Placeholder>"
+    wk4: "lime",
+    wk24: "raspberry",
+    wk28: "peach"
   }
 };
 

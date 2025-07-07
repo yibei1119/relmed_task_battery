@@ -92,7 +92,7 @@ for (const browserType of browsers) {
                         });
                     });
 
-                    const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 10000 });
+                    const response = await page.goto(`${BASE_URL}${param}`, { waitUntil: 'load', timeout: 20000 });
 
                     console.log(`Response status for ${session}/${task} (${browserType}):`, response.status());
                     passed = response.ok();

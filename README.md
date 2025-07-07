@@ -1,4 +1,9 @@
 # RELMED trial 1
+
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/huyslab/relmed_trial1/validate_loading.yaml?branch=main&label=Task%20loading)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/huyslab/relmed_trial1/validate_simulation.yml?branch=main&label=Task%20simulation)
+![GitHub Release](https://img.shields.io/github/v/release/huyslab/relmed_trial1)
+
 This reposistory hosts the experiment website for the RELMED trial 1, which includes PILT, Vigour, PIT, reversal, WM, control, and questionnaires. The task is coded with jsPsych.
 
 ## Files in this repository (update needed)

@@ -15,7 +15,7 @@ let do_online = true // whether to run online or offline
 // let do_online = false // whether to run online or offline
 let no_skip = true // prevent skipping question if no response or timeout
 
-let run_sim = false || window.participantID.includes('simulate') // whether to run in simulation mode
+let run_sim = false || window.simulating // whether to run in simulation mode
 
 // Error codes
 let no_consent_error = 'E_NC1' // return when no consent is given
@@ -58,6 +58,12 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
      */
     // process text input
     let text = input.value
+    text = text.replace(/\s\s+/g, ' ');
+
+    // Replace commas, semi-colons, and periods with spaces
+    text = text.replace(/[,;.]/g, ' ');
+    
+    // Replace multiple spaces with a single space
     text = text.replace(/\s\s+/g, ' ');
 
     // count words

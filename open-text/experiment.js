@@ -11,6 +11,17 @@ let openText_instructions = {
     button_label_previous: 'Back',
     button_label_next: 'Next',
     allow_keys: false,
+    simulation_options: {
+        data: {
+            rt: 1000
+        }
+    },
+    on_start: function(trial) {
+        if (window.simulating) {
+            trial.allow_keys = true;
+            trial.key_forward = ' ';
+        }
+    },
     on_page_change: function (current_page) {
         let next_button_element = document.querySelector('button#jspsych-instructions-next')
         if (current_page === instr_pages.length - 1) {

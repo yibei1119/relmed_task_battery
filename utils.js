@@ -277,12 +277,27 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
     console.log("Data to be sent:", data_message);
 
     if (window.context === "relmed") {
+        // Check if we're in a development environment
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log("Development mode: skipping data save to parent");
+            callback();
+            return;
+        }
+
         postToParent(
             data_message,
             () => {
-                setTimeout(function () {
-                    saveDataREDCap(retry - 1);
-                }, 1000);
+                if (retry > 0) {
+                    console.warn(`Failed to save data, retrying... (${retry} attempts left)`);
+                    // Exponential backoff: 1s, 2s, 4s, etc.
+                    const delay = Math.pow(2, (3 - retry)) * 1000;
+                    setTimeout(function () {
+                        saveDataREDCap(retry - 1);
+                    }, delay);
+                } else {
+                    console.error('Failed to submit data after retrying.');
+                }
+                
             }
         );
 
@@ -990,33 +1005,61 @@ function getTaskBonusData(task) {
     }
 }
 
-function updateBonusState() {
-    // Get the previous bonus values from session state or set defaults
-    const prevBonus = {
-        earned: window.session_state["earned"] || 0,
-        min: window.session_state["min"] || 0,
-        max: window.session_state["max"] || 0
-    };
-    console.log("Last session bonus: ", prevBonus);
+function roundDigits(value, digits = 2) {
+    const multiplier = Math.pow(10, digits);
+    return Math.round(value * multiplier) / multiplier;
+}
 
+function deepCopySessionState() {
+    const base = window.session_state || {};
+    const copy = {};
+    for (const key in base) {
+        copy[key] = { ...base[key] };
+    }
+    return copy;
+}
+
+function updateBonusState() {
+    // Initialize an updated session state object
+    const updated_session_state_obj = deepCopySessionState();
+
+    // Initialize the task-specific object if it doesn't exist
+    if (!updated_session_state_obj[window.task]) {
+        updated_session_state_obj[window.task] = {
+            earned: 0,
+            min: 0,
+            max: 0
+        };
+    }
+    
+    // Get the previous bonus values from session state for this specific task
+    const prevBonus = {
+        earned: updated_session_state_obj[window.task].earned || 0,
+        min: updated_session_state_obj[window.task].min || 0,
+        max: updated_session_state_obj[window.task].max || 0
+    };
+    console.log(`Last saved bonus for ${window.task}:`, prevBonus);
+
+    // Get task-specific bonus data
     const taskBonus = getTaskBonusData(window.task);
     
+    // Calculate the new bonus values
     const newBonus = {
         earned: prevBonus.earned + taskBonus.earned,
         min: prevBonus.min + taskBonus.min,
         max: prevBonus.max + taskBonus.max
     };
 
-    let updated_session_state_obj = { ...window.session_state } || {}; // shallow copy to avoid mutation
-    updated_session_state_obj["earned"] = Math.round(newBonus.earned * 100) / 100; // round to 2 decimal places
+    // Update the task-specific values in the session state
+    updated_session_state_obj[window.task].earned = roundDigits(newBonus.earned);
     if (window.task !== "reversal") {
         // For all tasks except reversal, we update the min and max in bonus state
-        updated_session_state_obj["min"] = Math.round(newBonus.min * 100) / 100;
-        updated_session_state_obj["max"] = Math.round(newBonus.max * 100) / 100;
+        updated_session_state_obj[window.task].min = roundDigits(newBonus.min);
+        updated_session_state_obj[window.task].max = roundDigits(newBonus.max);
     }
 
     // Send the updated state back to the parent window
-    console.log("To-be-updated session bonus: ", updated_session_state_obj);
+    console.log("To-be-updated bonus:", updated_session_state_obj);
     postToParent({
         session_state: JSON.stringify(updated_session_state_obj)
     });
@@ -1033,11 +1076,22 @@ function computeTotalBonus() {
     const min_prop_bonus = 0.6;
     const min_bonus = max_bonus * min_prop_bonus;
 
-    // Retrieve the lastest session state
+    const session_state_obj = deepCopySessionState();
+
+    // Initialize the task-specific object if it doesn't exist
+    if (!session_state_obj[window.task]) {
+        session_state_obj[window.task] = {
+            earned: 0,
+            min: 0,
+            max: 0
+        };
+    }
+    
+    // Get the previous bonus values from session state for this specific task
     const prevBonus = {
-        earned: window.session_state["earned"] || 0,
-        min: window.session_state["min"] || 0,
-        max: window.session_state["max"] || 0
+        earned: session_state_obj[window.task].earned || 0,
+        min: session_state_obj[window.task].min || 0,
+        max: session_state_obj[window.task].max || 0
     };
 
     const taskBonus = getTaskBonusData(window.task);
@@ -1047,11 +1101,11 @@ function computeTotalBonus() {
     const min = prevBonus.min + taskBonus.min;
     const max = prevBonus.max + taskBonus.max;
 
-    const prop = Math.min(1, (earned - min) / (max - min));
+    const prop = Math.max(0, Math.min(1, (earned - min) / (max - min)));
     const totalBonus = prop * (max_bonus - min_bonus) + min_bonus;
 
     // Add insurance to ensure bonus is never below minimum or NaN
-    return (isNaN(totalBonus) || totalBonus < min_bonus) ? min_bonus : totalBonus;
+    return Number.isNaN(totalBonus) ? min_bonus : totalBonus;
 }
 
 const bonus_trial = {
@@ -1082,7 +1136,7 @@ const bonus_trial = {
       updateState('bonus_trial_end');
     },
     simulation_options: {
-      simulate: false
+      simulate: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' // Simulate the bonus trial in development mode
     }
   };
   

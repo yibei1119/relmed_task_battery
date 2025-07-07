@@ -1,3 +1,36 @@
+# [1.1.0](https://github.com/huyslab/relmed_trial1/compare/v1.0.3...v1.1.0) (2025-06-26)
+
+
+### Bug Fixes
+
+* **instruction:** add max trial key press example gif for clearer instruction ([26f7e19](https://github.com/huyslab/relmed_trial1/commit/26f7e198bd254cea4aa926e16055cbf87649fc3e))
+
+
+### Features
+
+* **control_configs:** update fruit placeholders and add new images for screening and weeks 4, 24, and 28 ([f0fdb45](https://github.com/huyslab/relmed_trial1/commit/f0fdb4580e9405e5c31d32d3ddccaa2f785fc620))
+
+## [1.0.3](https://github.com/huyslab/relmed_trial1/compare/v1.0.2...v1.0.3) (2025-06-02)
+
+
+### Bug Fixes
+
+* **bonus:** prevent bonus resumption carry-over across modules ([6d37410](https://github.com/huyslab/relmed_trial1/commit/6d374109bdc1fb6b11c96f437481c3686fb4f8f7))
+
+## [1.0.2](https://github.com/huyslab/relmed_trial1/compare/v1.0.1...v1.0.2) (2025-05-29)
+
+
+### Bug Fixes
+
+* **task:** correct PILT bonus calculation to avoid earned being larger than max ([1551c78](https://github.com/huyslab/relmed_trial1/commit/1551c7875b40cbaa33078061f0693cf10a3e5495))
+
+## [1.0.1](https://github.com/huyslab/relmed_trial1/compare/v1.0.0...v1.0.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* **task:** remove obsolete vigour/pit bonus trial ([5b7ef3c](https://github.com/huyslab/relmed_trial1/commit/5b7ef3cf9cb1c92e83f1c349a99e991a4bde5a7e))
+
 # 1.0.0 (2025-05-28)
 
 
