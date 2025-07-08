@@ -260,7 +260,18 @@ function updateState(state, save_data = true) {
 function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
 
     // Get data, remove stimulus string
-    let jspsych_data = jsPsych.data.get().ignore('stimulus').json();
+    const jspsych_data = jsPsych.data.get().ignore('stimulus').json();
+
+    // Get interaction data
+    const interaction_data = jsPsych.data.getInteractionData().json();
+
+    // Combine interaction data with jsPsych data
+    const combined_data = JSON.stringify([
+        {
+            interaction_data: interaction_data,
+            jspsych_data: jspsych_data
+        }
+    ]);
 
     const data_message = {
         data: {
@@ -269,7 +280,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
             sitting_start_time: window.module_start_time,
             session: window.session,
             module: window.task,
-            data: jspsych_data 
+            data: combined_data 
         },
         ...extra_fields
     };
@@ -311,7 +322,7 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
             sitting_start_time: window.module_start_time,
             session: window.session,
             module: window.task,
-            data: jspsych_data
+            data: combined_data
         }])
     
         fetch('https://h6pgstm0f9.execute-api.eu-north-1.amazonaws.com/prod/submit', {
