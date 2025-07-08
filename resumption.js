@@ -79,10 +79,13 @@ pilt_to_test_order = pilt_to_test_order.concat([
 ]);
 
 const screening_order = [
-    "reversal_task_start",
-    "reversal_instructions_start",
+    "max_press_rate_start",
+    "max_press_rate_end",
     "pilt_instructions_start",
     "pilt_task_start",
     "pilt_block_1_start",
     "pilt_last_block_start",
+    "control_task_start",
+    "reversal_instructions_start",
+    "reversal_task_start",
 ].concat(quests_order);

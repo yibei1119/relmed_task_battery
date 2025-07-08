@@ -67,6 +67,7 @@ const maxPressRateTrial = {
                 startTime = performance.now();
                 lastPressTime = startTime;
                 timeLeft = maxPressConfig.duration/1000;
+                updateState('max_press_rate_start');
                 
                 // Start animation loop
                 animationFrameId = requestAnimationFrame(updateSpeed);
@@ -187,6 +188,8 @@ const maxPressRetakeLoop = {
             maxPressTakes++;
             return true;
         } else {
+            updateState('max_press_rate_end');
+
             return false;
         }
     }
