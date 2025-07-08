@@ -614,6 +614,13 @@
                 // Welcome message
                 procedure.push(welcome_msgs);
             }
+            
+            // Add max press rate test
+            if (resumptionRule(screening_order, window.last_state, "max_press_rate_end")) {
+                // Add max press rate test
+                console.log("Adding max press rate");
+                procedure = procedure.concat(maxPressTimeline);
+            }
 
             if (resumptionRule(screening_order, window.last_state, "pilt_task_start")) {
                 console.log("Adding PILT");            
