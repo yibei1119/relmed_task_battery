@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/huyslab/relmed_trial1/compare/v1.1.1...v2.0.0) (2025-07-08)
+
+
+* feat!: add max press rate trial and browser interaction logging ([aea190d](https://github.com/huyslab/relmed_trial1/commit/aea190d0513f0942ebd9b23c183ef25205edb754))
+
+
+### BREAKING CHANGES
+
+* data structure has changed, adding interaction_data and jspsych_data fields
+
 ## [1.1.1](https://github.com/huyslab/relmed_trial1/compare/v1.1.0...v1.1.1) (2025-07-08)
 
 
