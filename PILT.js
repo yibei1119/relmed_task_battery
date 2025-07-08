@@ -11,7 +11,7 @@ const preload_PILT = {
             "1penny.png", "1pennybroken.png",
             "1pound.png", "1poundbroken.png",
             "50pence.png", "50pencebroken.png",
-            "safe.png","PILT_keys.jpg"
+            "safe.png","PILT_keys.jpg", "max_press_key.gif"
         ].map(s => "imgs/" + s),
         window.session === "screening" ? [] : [
             "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
