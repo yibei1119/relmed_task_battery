@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/huyslab/relmed_trial1/compare/v1.1.0...v1.1.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* wm sequence too difficult. return to older wm sequnces, with less stimuli. tested in pilot 8 ([88735b8](https://github.com/huyslab/relmed_trial1/commit/88735b8dd4a0fa5ff69540bad8ef96a16d077d1e))
+
 # [1.1.0](https://github.com/huyslab/relmed_trial1/compare/v1.0.3...v1.1.0) (2025-06-26)
 
 
