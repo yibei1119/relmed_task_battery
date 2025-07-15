@@ -57,7 +57,8 @@ const dd_trial = {
     data: {
         sum_today: jsPsych.timelineVariable("sum_today"),
         sum_later: jsPsych.timelineVariable("sum_later"),
-        delay: jsPsych.timelineVariable("delay")
+        delay: jsPsych.timelineVariable("delay"),
+        trialphase: "dd_task"
     },
     post_trial_gap: 200,
     on_finish: (data) => {
