@@ -315,6 +315,12 @@
                 console.log("Adding max press rate");
                 procedure = procedure.concat(maxPressTimeline);
             }
+
+            // Add Pre-PILT conditioning
+            if (resumptionRule(pilt_to_test_order, window.last_state, "pavlovian_lottery_last")) {
+                console.log("Adding pre-PILT conditioning");
+                procedure = procedure.concat(initPavlovianLottery());
+            }
             
             if (resumptionRule(pilt_to_test_order, window.last_state, "pilt_last_block_start")) {
                 // Add PILT task timeline
