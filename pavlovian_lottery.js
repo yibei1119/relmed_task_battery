@@ -8,51 +8,57 @@
  * followed by its associated coin reward with animation effects.
  */
 
-// Define the Pavlovian stimuli and their associated rewards
-const SPEED_UP_FACTOR = window.simulating ? 10 : 1;
-
-const PREPILT_CONFIG = {
-  sequence: [{ "pav_value": -1.0 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -1.0 }, { "pav_value": 0.01 }, { "pav_value": 1.0 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": 0.5 }, { "pav_value": -0.01 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": 1.0 }, { "pav_value": 1.0 }, { "pav_value": -0.5 }, { "pav_value": 0.01 }, { "pav_value": -0.5 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -0.5 }, { "pav_value": 1.0 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -0.5 }, { "pav_value": -0.01 }, { "pav_value": 0.5 }, { "pav_value": 1.0 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": -0.5 }],
-
-  stimulus: {
-    0.01: "PIT3.png",
-    1.0: "PIT1.png",
-    0.5: "PIT2.png",
-    "-0.01": "PIT4.png",
-    "-1": "PIT6.png",
-    "-0.5": "PIT5.png"
-  },
-
-  reward: {
-    0.01: "1penny.png",
-    1.0: "1pound.png",
-    0.5: "50pence.png",
-    "-0.01": "1pennybroken.png",
-    "-1": "1poundbroken.png",
-    "-0.5": "50pencebroken.png"
-  },
-
-  value: {
-    0.01: "+ 1p",
-    1.0: "+ £1",
-    0.5: "+ 50p",
-    "-0.01": "- 1p",
-    "-1": "- £1",
-    "-0.5": "- 50p"
-  },
-
-  CONSTANTS: {
-    SMALL_COIN_SIZE: 100,
-    INITIAL_MOVEMENT_DELAY: 50 / SPEED_UP_FACTOR,
-    REEL_SPIN_DURATION: 1500 / SPEED_UP_FACTOR,
-    WINNING_HIGHLIGHT_DELAY: 450 / SPEED_UP_FACTOR,
-    MAX_RESULT_DISPLAY_TIME: 4000 / SPEED_UP_FACTOR,
-    CONTINUE_MESSAGE_DELAY: 1500 / SPEED_UP_FACTOR,
-  }
-};
-
 // Function to initialize the Pavlovian Lottery experiment
 function initPavlovianLottery() {
+  // Define the Pavlovian stimuli and their associated rewards
+  const getSpeedUpFactor = () => window.simulating ? 10 : 1;
+
+  var PREPILT_CONFIG = {
+    sequence: [{ "pav_value": -1.0 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -1.0 }, { "pav_value": 0.01 }, { "pav_value": 1.0 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": 0.5 }, { "pav_value": -0.01 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": 1.0 }, { "pav_value": 1.0 }, { "pav_value": -0.5 }, { "pav_value": 0.01 }, { "pav_value": -0.5 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -0.5 }, { "pav_value": 1.0 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -0.5 }, { "pav_value": -0.01 }, { "pav_value": 0.5 }, { "pav_value": 1.0 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": -0.5 }],
+
+    stimulus: {
+      0.01: "PIT3.png",
+      1.0: "PIT1.png",
+      0.5: "PIT2.png",
+      "-0.01": "PIT4.png",
+      "-1": "PIT6.png",
+      "-0.5": "PIT5.png"
+    },
+
+    reward: {
+      0.01: "1penny.png",
+      1.0: "1pound.png",
+      0.5: "50pence.png",
+      "-0.01": "1pennybroken.png",
+      "-1": "1poundbroken.png",
+      "-0.5": "50pencebroken.png"
+    },
+
+    value: {
+      0.01: "+ 1p",
+      1.0: "+ £1",
+      0.5: "+ 50p",
+      "-0.01": "- 1p",
+      "-1": "- £1",
+      "-0.5": "- 50p"
+    },
+
+    CONSTANTS: {
+      SMALL_COIN_SIZE: 100,
+      get INITIAL_MOVEMENT_DELAY() { return 50 / getSpeedUpFactor(); },
+      get REEL_SPIN_DURATION() { return 1500 / getSpeedUpFactor(); },
+      get WINNING_HIGHLIGHT_DELAY() { return 450 / getSpeedUpFactor(); },
+      get MAX_RESULT_DISPLAY_TIME() { return 4000 / getSpeedUpFactor(); },
+      get CONTINUE_MESSAGE_DELAY() { return 1500 / getSpeedUpFactor(); }
+    }
+  };
+
+  // Add index to PREPILT_CONFIG.sequence for resumption
+  PREPILT_CONFIG.sequence = PREPILT_CONFIG.sequence.map((item, index) => ({
+    prepilt_trial: index + 1,
+    ...item
+  }));
+
   // Create preload trial
   const prepilt_preload = {
     type: jsPsychPreload,
@@ -120,7 +126,7 @@ function initPavlovianLottery() {
     `,
     choices: [' '],
     data: { trialphase: 'prepilt_instruction' },
-    on_start: () => {updateState("prepilt_instructions_start")}
+    on_start: () => {updateState("prepilt_conditioning_start")}
   }
   ];
 
@@ -147,7 +153,9 @@ function initPavlovianLottery() {
     },
     record_data: false,
     choices: "NO_KEYS",
-    trial_duration: PREPILT_CONFIG.CONSTANTS.REEL_SPIN_DURATION,
+    trial_duration: function() {
+      return PREPILT_CONFIG.CONSTANTS.REEL_SPIN_DURATION;
+    },
     on_load: function () {
       const currentStimulus = "imgs/Pav_stims/" + window.session + "/" + PREPILT_CONFIG.stimulus[jsPsych.evaluateTimelineVariable('pav_value')];
       const slotReel = document.getElementById('slot-reel');
@@ -311,8 +319,11 @@ function initPavlovianLottery() {
       `;
     },
     choices: "NO_KEYS",
-    trial_duration: PREPILT_CONFIG.CONSTANTS.MAX_RESULT_DISPLAY_TIME,
+    trial_duration: function() {
+      return PREPILT_CONFIG.CONSTANTS.MAX_RESULT_DISPLAY_TIME;
+    },
     save_timeline_variables: true,
+    data: { trialphase: 'prepilt_conditioning'},
     on_start: function (trial) {
       jsPsych.pluginAPI.setTimeout(() => {
         const continueMsg = document.querySelector('#continue-msg');
@@ -331,17 +342,28 @@ function initPavlovianLottery() {
         allow_held_key: false,
         minimum_valid_rt: PREPILT_CONFIG.CONSTANTS.CONTINUE_MESSAGE_DELAY,
       });
+      if (jsPsych.evaluateTimelineVariable('prepilt_trial') < PREPILT_CONFIG.sequence.length) {
+        updateState(`pavlovian_lottery_${jsPsych.evaluateTimelineVariable('prepilt_trial')}`, false);
+      } else {
+        updateState("pavlovian_lottery_last", false);
+      }
     }
   };
 
   // Build the main task trial sequence
+  let last_lottery = 0; // Default value
+  if (typeof window.last_state === 'string' && (window.last_state.match(/_/g) || []).length >= 2) {
+    const parts = window.last_state.split("_");
+    last_lottery = parseInt(parts[2]) || 0; // Fallback to 0 if parsing fails
+  } else {
+    console.warn("Invalid format for window.last_state. Falling back to default value.");
+  }
   const trialSequence = {
     timeline: [
       lotteryAnimation,
       showResult,
     ],
-    timeline_variables: PREPILT_CONFIG.sequence,
-    on_timeline_start:() => {updateState("prepilt_trial_start")}
+    timeline_variables: PREPILT_CONFIG.sequence.slice(last_lottery)
   };
 
   // Create an ending message
@@ -357,7 +379,7 @@ function initPavlovianLottery() {
 
   // Build the full experiment timeline
   const timeline = [
-    prepilt_preload,
+    // prepilt_preload, // Disabled because preloading is currently handled elsewhere. Re-enable this line if additional preloading is required for new stimuli or assets.
     instructions,
     trialSequence,
     endMessage
