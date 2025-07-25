@@ -75,6 +75,123 @@ const preload_card_choosing = {
     continue_after_error: true
 };
 
+// Function to compile inter_block_stimulus
+function inter_block_stimulus(){
+
+    const last_trial = jsPsych.data.get().filter({trial_type: "card-choosing"}).last(1);
+
+    // Valence of block
+    const valence = last_trial.select("valence").values[0];
+    
+    // Block number for filtering
+    const block = last_trial.select('block').values[0];
+
+    // Number of pairs in block
+    const n_groups = last_trial.select("n_groups").values[0]
+
+    // Number of stimuli in block
+    const n_stimuli = last_trial.select("n_stimuli").values[0];
+
+    // Are there 50pence coins in the block?
+    const feedbacks = jsPsych.data.get().filter({trial_type: "card-choosing", block: block}).select("feedback_right").values;
+    const fifty = feedbacks.includes(0.5) || feedbacks.includes(-0.5);
+    console.log(fifty)
+
+    // Find chosen outcomes for block
+    let chosen_outcomes = jsPsych.data.get().filter({trial_type: "card-choosing",
+        block: block
+    }).select('chosen_feedback').values;
+
+    // Summarize into counts
+    chosen_outcomes = countOccurrences(chosen_outcomes);
+
+    // Initiate text
+    let txt = ``
+
+    // Add text and tallies for early stop
+    if (window.skipThisBlock && window.task !== "screening"){
+        
+        txt += `<p>You've found the better ${n_groups > 1 ? "cards" : "card"}.</p><p>You will skip the remaining turns and `;
+        
+        txt += valence >= 0 ? `collect the remaining coins hidden under ` : 
+            `lose only the remaining coins hidden under `;
+
+        txt +=  n_groups > 1 ? "these cards." : "this card."
+        
+        if (valence != 0){
+             txt += `<p>Altogether, these coins were ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:<p>`;
+        }
+       
+        
+        // Add rest to outcomes
+        if (window.task !== "screening"){
+            Object.keys(last_trial.select('rest').values[0]).forEach(key => {
+                chosen_outcomes[key] += last_trial.select('rest').values[0][key];
+            });
+        }
+
+    } else if (valence != 0) {
+        txt += `<p><img src='imgs/safe.png' style='width:100px; height:100px;'></p>
+        <p>These coins ${isValidNumber(block) ? "were" : "would have been"} 
+        ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:</p>`
+    }
+
+    if (valence == 1){
+
+        txt += `<div style='display: grid'><table><tr>
+            <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+        
+        if (fifty){
+            txt +=  `<td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`
+        }
+           
+        txt += `<td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+            </tr>
+            <tr>
+            <td>${isValidNumber(chosen_outcomes[1]) ? chosen_outcomes[1] : 0}</td>`;
+
+        if (fifty) {
+            txt += `<td>${isValidNumber(chosen_outcomes[0.5]) ? chosen_outcomes[0.5] : 0}</td>`
+        }    
+            
+        txt += `<td>${isValidNumber(chosen_outcomes[0.01]) ? chosen_outcomes[0.01] : 0}</td>
+            </tr></table></div>`;
+    } else if (valence == -1) {
+        txt += `<div style='display: grid'><table>
+            <tr><td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+            
+        if (fifty){
+            txt += `<td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`;
+        }
+            
+        txt += `<td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+            </tr>
+            <tr>
+            <td>${isValidNumber(chosen_outcomes[-1]) ? chosen_outcomes[-1] : 0}</td>`
+
+        if (fifty){
+            txt += `<td>${isValidNumber(chosen_outcomes[-0.5]) ? chosen_outcomes[-0.5] : 0}</td>`;
+        }
+            
+        txt += `<td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
+            </tr></table></div>`;
+    } else {
+        const earnings = Object.entries(chosen_outcomes).reduce((sum, [value, count]) => {
+            // Convert string keys to numbers explicitly for reliable calculation
+            return sum + (Number(value) * count);
+        }, 0);
+
+        txt += `<p>Altogether on this round, you've ${earnings >= 0 ? "collected" : "lost"} coins worth £${Math.abs(earnings).toFixed(2)}.</p>`;
+        
+    }
+
+    if (isValidNumber(block)){
+        txt += n_stimuli === 2 ? `<p>Press the right arrow to continue.</p>` :
+         `<p>Place your fingers on the left, right, and up arrow keys, and press either one to continue.</p>`
+    }
+
+    return txt
+}
 
 // Message between blocks
 const inter_block_msg = {
@@ -98,7 +215,7 @@ const inter_block_msg = {
 }
 
 // Trial for post-learning test phase at notional extinction
-const test_trial = (task) => {
+const test_trial = (task, test_confidence_every = 4) => {
     return {
         timeline: [
             kick_out,
@@ -182,7 +299,7 @@ const test_trial = (task) => {
                         trial_duration: 10000,
                         post_trial_gap: () => {return (window.simulating || false) ? 50 : 800},                    
                         data: {
-                            trialphase: "pilt_confidence"
+                            trialphase: "test-confidence"
                         },
                         on_finish: function (data) {
                             if (data.response === null) {
@@ -201,7 +318,7 @@ const test_trial = (task) => {
     
                     let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
     
-                    return !missed && ((n_trials % window.pilt_test_confidence_every) === (window.pilt_test_confidence_every - 1))
+                    return !missed && ((n_trials % test_confidence_every) === (test_confidence_every - 1))
                 }
             }
         ]
@@ -210,7 +327,7 @@ const test_trial = (task) => {
     
 
 // Build post-learning test phase block
-function build_post_learning_test(structure, task_name = "pilt") {
+function buildPostLearningTest(structure, task_name = "pilt", settings = {test_confidence_every: 4}) {
 
     // Preload images
     let test = [
@@ -230,7 +347,7 @@ function build_post_learning_test(structure, task_name = "pilt") {
         // Push block                
         test.push({
             timeline: [
-                test_trial(task_name)
+                test_trial(task_name, settings.test_confidence_every)
             ],
             timeline_variables: structure[i]
         });
@@ -489,13 +606,13 @@ function adjustStimuliPaths(structure, folder) {
     // Adjust stimuli paths otherwise
     structure.forEach(block => {
         block.forEach(trial => {
-            trial.stimulus_left = `imgs/${folder}/${trial.stimulus_left}`;
-            trial.stimulus_right = `imgs/${folder}/${trial.stimulus_right}`;
+            trial.stimulus_left = `assets/images/${folder}/${trial.stimulus_left}`;
+            trial.stimulus_right = `assets/images/${folder}/${trial.stimulus_right}`;
         });
     });
 }
 
-function return_PILT_full_sequence() {
+function return_PILT_full_sequence(settings) {
 
     // Parse json sequence
     let PILT_structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
@@ -504,12 +621,12 @@ function return_PILT_full_sequence() {
     let WM_test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
     let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
         
-    adjustStimuliPaths(PILT_test_structure, 'PILT_stims');
-    adjustStimuliPaths(WM_test_structure, 'PILT_stims');
+    adjustStimuliPaths(PILT_test_structure, 'card_choosing/stimuli');
+    adjustStimuliPaths(WM_test_structure, 'card_choosing/stimuli');
 
     pav_test_structure.forEach(trial => {
-        trial.stimulus_left = `imgs/Pav_stims/${window.session}/${trial.stimulus_left}`;
-        trial.stimulus_right = `imgs/Pav_stims/${window.session}/${trial.stimulus_right}`;
+        trial.stimulus_left = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_left}`;
+        trial.stimulus_right = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_right}`;
         trial.block = "pavlovian";
         trial.feedback_left = trial.magnitude_left;
         trial.feedback_right = trial.magnitude_right;
@@ -555,7 +672,7 @@ function return_PILT_full_sequence() {
         if ((structure != null) && (structure.length == 1 || structure[1] != null)) {
             procedure = [];
             procedure.push(test_instructions(name));
-            let test_blocks = build_post_PILT_test(structure, name);
+            let test_blocks = buildPostLearningTest(structure, name, settings);
             test_blocks[0]["on_start"] = () => {
 
                 updateState(`${name}_test_task_start`);
@@ -599,18 +716,18 @@ function return_PILT_full_sequence() {
     }
 }
 
-const earnedSumPILT = () => {
+const earnedSumCardChoosing = () => {
     // Compute the actual sum of coins
     const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).select("chosen_feedback").sum();
 
     return earned_sum
 }
 
-const computeRelativePILTBonus = () => {
+const computeRelativeCardChoosingBonus = () => {
 
     // Compute lowest and highest sum of coins possible to earn
-    // Get all relevant trials: PILT plugin, and numeric block
-    const trials = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
+    // Get all relevant trials: card choosing plugin, and numeric block
+    const trials = jsPsych.data.get().filter({trial_type: "card_choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
 
     let max_sum = 0;
     let min_sum = 0;
@@ -631,7 +748,7 @@ const computeRelativePILTBonus = () => {
     });
 
     // Compute the actual sum of coins
-    const earned_sum = earnedSumPILT();
+    const earned_sum = earnedSumCardChoosing();
 
     return {
         earned: earned_sum, 
