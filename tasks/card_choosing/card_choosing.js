@@ -28,7 +28,7 @@ const preload_card_choosing = {
 
         // Add broken coins if valence is "both" or "mixed"
         if (["both", "mixed"].includes(settings.valence)) {
-            images.push("1pennybroken.png", "1poundbroken.png", "50pencebroken.png").map(s => `card_chosing_stims/${s}`);
+            images.push("1pennybroken.png", "1poundbroken.png", "50pencebroken.png").map(s => `card_chosing/outcomes/${s}`);
         }
 
         // Add key images according to n_choices
