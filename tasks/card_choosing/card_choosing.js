@@ -18,108 +18,7 @@ import {
   computeBestRest
 } from '../utils/index.js'; // Adjust path as needed
 
-export function runCardChoosing(settings) {
-  let timeline = [];
-  
-  // Parse json sequence based on task_name
-  let structure, instructions;
-  if (settings.task_name === "pilt") {
-    structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
-    instructions = prepare_PILT_instructions();
-  } else if (settings.task_name === "wm") {
-    structure = typeof WM_json !== "undefined" ? JSON.parse(WM_json) : null;
-    instructions = WM_instructions;
-  } else {
-    return timeline; // Return empty timeline for unknown task
-  }
-
-  // Compute best-rest
-  if (structure != null) {
-    computeBestRest(structure);
-  }
-
-  // Add instructions
-  timeline = timeline.concat(instructions);
-
-  // Add task blocks
-  if (structure != null) {
-    let task_blocks = build_card_choosing_task(structure, true, settings.task_name);
-    if (task_blocks.length === 0) {
-      console.log("No blocks to add");
-      timeline = [];
-    } else {
-      // Set on_start for first block
-      if (settings.task_name === "pilt") {
-        task_blocks[0]["on_start"] = () => {
-          updateState("pilt_task_start");
-        };
-      } else if (settings.task_name === "wm") {
-        task_blocks[0]["on_start"] = () => {
-          if (!(["wk24", "wk28"].includes(window.session))) {
-            updateState("no_resume_10_minutes");
-          }
-          updateState("wm_task_start");
-        };
-      }
-      timeline = timeline.concat(task_blocks);
-    }
-  } else {
-    timeline = [];
-  }
-  
-  return timeline;
-}
-
-export function runPostLearningTest(settings) {
-  let timeline = [];
-  
-  // Parse json sequence based on task_name
-  let test_structure;
-  if (settings.task_name === "pilt") {
-    test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
-    let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
-    
-    // Adjust stimuli paths
-    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
-    
-    // Process pavlovian test structure
-    if (pav_test_structure) {
-      pav_test_structure.forEach(trial => {
-        trial.stimulus_left = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_left}`;
-        trial.stimulus_right = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_right}`;
-        trial.block = "pavlovian";
-        trial.feedback_left = trial.magnitude_left;
-        trial.feedback_right = trial.magnitude_right;
-        trial.EV_left = trial.magnitude_left;
-        trial.EV_right = trial.magnitude_right;
-        trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
-      });
-      
-      if (!window.demo) {
-        test_structure = [pav_test_structure].concat(test_structure);
-      }
-    }
-  } else if (settings.task_name === "wm") {
-    test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
-    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
-  } else {
-    return timeline; // Return empty timeline for unknown task
-  }
-
-  // Generate test procedure
-  if ((test_structure != null) && (test_structure.length == 1 || test_structure[1] != null)) {
-    timeline.push(test_instructions(settings.task_name));
-    let test_blocks = buildPostLearningTest(test_structure, settings.task_name, settings);
-    test_blocks[0]["on_start"] = () => {
-      updateState(`${settings.task_name}_test_task_start`);
-    };
-    timeline = timeline.concat(test_blocks);
-  }
-
-  return timeline;
-}
-
-// First preload for task
+// CONSTANTS AND PRELOAD
 const preload_card_choosing = {
     type: jsPsychPreload,
     images: (() => {
@@ -166,8 +65,36 @@ const preload_card_choosing = {
     continue_after_error: true
 };
 
-// Function to compile inter_block_stimulus
-function inter_block_stimulus(){
+// UTILITY FUNCTIONS
+function getPavlovianImages() {
+    let PIT_imgs = {
+        0.01: "PIT3.png",
+        1.0: "PIT1.png",
+        0.5: "PIT2.png",
+        "-0.01": "PIT4.png",
+        "-1": "PIT6.png",
+        "-0.5": "PIT5.png"
+    };
+    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "assets/images/pavlovian_stims/" + window.session + "/" + v]));
+    return PIT_imgs;
+}
+
+function adjustStimuliPaths(structure, folder) {
+    // Return null if null
+    if (structure == null) {
+        return null
+    }
+    
+    // Adjust stimuli paths otherwise
+    structure.forEach(block => {
+        block.forEach(trial => {
+            trial.stimulus_left = `assets/images/${folder}/${trial.stimulus_left}`;
+            trial.stimulus_right = `assets/images/${folder}/${trial.stimulus_right}`;
+        });
+    });
+}
+
+function interBlockStimulus(){
 
     const last_trial = jsPsych.data.get().filter({trial_type: "card-choosing"}).last(1);
 
@@ -284,6 +211,7 @@ function inter_block_stimulus(){
     return txt
 }
 
+// TRIAL COMPONENTS
 // Message between blocks
 const inter_block_msg = {
     type: jsPsychHtmlKeyboardResponse,
@@ -294,7 +222,7 @@ const inter_block_msg = {
         return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
     },
     css_classes: ['instructions'],
-    stimulus: inter_block_stimulus,
+    stimulus: interBlockStimulus,
     data: {
         trialphase: "card_choosing_inter_block",
     },
@@ -306,7 +234,7 @@ const inter_block_msg = {
 }
 
 // Trial for post-learning test phase at notional extinction
-const test_trial = (task, test_confidence_every = 4) => {
+const testTrial = (task, test_confidence_every = 4) => {
     return {
         timeline: [
             kick_out,
@@ -417,6 +345,7 @@ const test_trial = (task, test_confidence_every = 4) => {
 }
     
 
+// BUILDING TASK FUNCTIONS
 // Build post-learning test phase block
 function buildPostLearningTest(structure, task_name = "pilt", settings = {test_confidence_every: 4}) {
 
@@ -438,7 +367,7 @@ function buildPostLearningTest(structure, task_name = "pilt", settings = {test_c
         // Push block                
         test.push({
             timeline: [
-                test_trial(task_name, settings.test_confidence_every)
+                testTrial(task_name, settings.test_confidence_every)
             ],
             timeline_variables: structure[i]
         });
@@ -447,149 +376,8 @@ function buildPostLearningTest(structure, task_name = "pilt", settings = {test_c
     return test
 }
 
-// Function to get pavlovian images
-// This function returns an object mapping magnitudes to image paths
-// It assumes that the images are stored in a specific directory structure
-// and that the session is stored in a global variable `window.session`.
-const pavlovian_images_f = () => {
-    let PIT_imgs = {
-        0.01: "PIT3.png",
-        1.0: "PIT1.png",
-        0.5: "PIT2.png",
-        "-0.01": "PIT4.png",
-        "-1": "PIT6.png",
-        "-0.5": "PIT5.png"
-    };
-    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "assets/images/pavlovian_stims/" + window.session + "/" + v]));
-    return PIT_imgs;
-};
-
-// Card choosing trial
-const card_choosing_trial = (task) => {
-    return {
-        timeline: [
-            kick_out,
-            fullscreen_prompt,
-        {
-            type: jsPsychCardChoosing,
-            stimulus_right: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
-            stimulus_left: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
-            stimulus_middle: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
-            feedback_left: jsPsych.timelineVariable('feedback_left'),
-            feedback_right: jsPsych.timelineVariable('feedback_right'),
-            feedback_middle: jsPsych.timelineVariable('feedback_middle'),
-            optimal_right: jsPsych.timelineVariable('optimal_right'),
-            optimal_side: jsPsych.timelineVariable('optimal_side'),
-            response_deadline: () => {
-                
-                // Try to fetch deadline from timeline
-                let deadline_from_timeline;
-                try {
-                    deadline_from_timeline = jsPsych.evaluateTimelineVariable('response_deadline') ?? null;
-                } catch (error) {
-                    deadline_from_timeline = null;
-                }
-                // Return if found
-                if (deadline_from_timeline !== null){
-                    
-                    return deadline_from_timeline
-                } 
-
-                // Use defaults otherwise
-                if (can_be_warned(task)){
-                    return window.default_response_deadline
-                } else {
-                    return window.default_long_response_deadline
-                }
-            },
-            show_warning: () => {
-                return can_be_warned(task)
-            },
-            n_stimuli: jsPsych.timelineVariable('n_stimuli'),
-            present_pavlovian: jsPsych.timelineVariable('present_pavlovian'),
-            pavlovian_images: pavlovian_images_f(),
-            data: {
-                trialphase: task,
-                block: jsPsych.timelineVariable('block'),
-                trial: jsPsych.timelineVariable('trial'),
-                stimulus_group: jsPsych.timelineVariable('stimulus_group'),
-                stimulus_group_id: jsPsych.timelineVariable('stimulus_group_id'),
-                valence: jsPsych.timelineVariable('valence'),
-                n_groups: jsPsych.timelineVariable('n_groups'),
-                rest: jsPsych.timelineVariable('rest'),
-            },
-            on_finish: function(data) {
-                if (data.response === "noresp") {
-                    var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-                    jsPsych.data.addProperties({
-                        n_warnings: up_to_now + 1
-                    });
-                }
-
-                if (data.response_deadline_warning) {
-                    const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${task}_n_warnings`).values);
-                    jsPsych.data.addProperties({
-                        [`${task}_n_warnings`]: up_to_now + 1
-                    });
-                }
-            },
-            post_trial_gap: () => {
-                return (window.simulating || false) ? 50 : 400
-            }
-        }
-        ],
-        conditional_function: function () {
-
-            // Only consider stopping if this is an early stop task, if this is not a practice block, and if there had been at least five previous trials
-            if (jsPsych.evaluateTimelineVariable('early_stop') &&
-                Number.isInteger(jsPsych.evaluateTimelineVariable('block')) &&
-                jsPsych.evaluateTimelineVariable('trial') > 5
-            ) {
-
-                // Block number
-                const block = jsPsych.data.get().last(1).select('block').values[0];
-
-                // Find all sitmulus-pairs in block
-                let unique_stimulus_pairs = [...new Set(jsPsych.data.get().filter({
-                    trial_type: "card-choosing",
-                    block: block
-                }).select('stimulus_group').values)]
-
-                // Initialize a variable to store the result
-                let all_optimal = true;
-
-                // Iterate over each unique stimulus_group and check the last 5 choices
-                unique_stimulus_pairs.forEach(g => {
-
-                    // Filter data for the current stimulus_group
-                    let num_optimal = jsPsych.data.get().filter({
-                        trial_type: "card-choosing",
-                        block: block,
-                        stimulus_group: g
-                    }).last(5).select('response_optimal').sum();
-
-                    // Check if all last 5 choices for this group are correct
-                    if (num_optimal < 5) {
-                        all_optimal = false;
-                    }
-                });
-
-                if (all_optimal) {
-                    window.skipThisBlock = true;
-                }
-
-                return !all_optimal
-            } else {
-                return true
-            }
-
-        }
-    }
-}
-
-
 // Build card-choosing task block
-function build_card_choosing_task(structure, insert_msg = true, task_name = "pilt") {
+function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt") {
 
     let card_choosing_task = [];
     for (let i = 0; i < structure.length; i++) {
@@ -651,7 +439,7 @@ function build_card_choosing_task(structure, insert_msg = true, task_name = "pil
         block.push(
             {
                 timeline: [
-                    card_choosing_trial(task_name)
+                    cardChoosingTrial(task_name)
                 ],
                 timeline_variables: structure[i],
                 on_start: (i === (structure.length - 1)) ? () => {
@@ -687,30 +475,110 @@ function build_card_choosing_task(structure, insert_msg = true, task_name = "pil
 }
 
 
-function adjustStimuliPaths(structure, folder) {
+// MAIN EXPORT FUNCTIONS
+export function runCardChoosing(settings) {
+  let timeline = [];
+  
+  // Parse json sequence based on task_name
+  let structure, instructions;
+  if (settings.task_name === "pilt") {
+    structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
+    instructions = prepare_PILT_instructions();
+  } else if (settings.task_name === "wm") {
+    structure = typeof WM_json !== "undefined" ? JSON.parse(WM_json) : null;
+    instructions = WM_instructions;
+  } else {
+    return timeline; // Return empty timeline for unknown task
+  }
 
-    // Return null if null
-    if (structure == null) {
-        return null
+  // Compute best-rest
+  if (structure != null) {
+    computeBestRest(structure);
+  }
+
+  // Add instructions
+  timeline = timeline.concat(instructions);
+
+  // Add task blocks
+  if (structure != null) {
+    let task_blocks = buildCardChoosingTask(structure, true, settings.task_name);
+    if (task_blocks.length === 0) {
+      console.log("No blocks to add");
+      timeline = [];
+    } else {
+      // Set on_start for first block
+      if (settings.task_name === "pilt") {
+        task_blocks[0]["on_start"] = () => {
+          updateState("pilt_task_start");
+        };
+      } else if (settings.task_name === "wm") {
+        task_blocks[0]["on_start"] = () => {
+          if (!(["wk24", "wk28"].includes(window.session))) {
+            updateState("no_resume_10_minutes");
+          }
+          updateState("wm_task_start");
+        };
+      }
+      timeline = timeline.concat(task_blocks);
     }
+  } else {
+    timeline = [];
+  }
+  
+  return timeline;
+}
+
+export function runPostLearningTest(settings) {
+  let timeline = [];
+  
+  // Parse json sequence based on task_name
+  let test_structure;
+  if (settings.task_name === "pilt") {
+    test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
+    let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
     
-    // Adjust stimuli paths otherwise
-    structure.forEach(block => {
-        block.forEach(trial => {
-            trial.stimulus_left = `assets/images/${folder}/${trial.stimulus_left}`;
-            trial.stimulus_right = `assets/images/${folder}/${trial.stimulus_right}`;
-        });
-    });
+    // Adjust stimuli paths
+    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
+    
+    // Process pavlovian test structure
+    if (pav_test_structure) {
+      pav_test_structure.forEach(trial => {
+        trial.stimulus_left = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_left}`;
+        trial.stimulus_right = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_right}`;
+        trial.block = "pavlovian";
+        trial.feedback_left = trial.magnitude_left;
+        trial.feedback_right = trial.magnitude_right;
+        trial.EV_left = trial.magnitude_left;
+        trial.EV_right = trial.magnitude_right;
+        trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
+      });
+      
+      if (!window.demo) {
+        test_structure = [pav_test_structure].concat(test_structure);
+      }
+    }
+  } else if (settings.task_name === "wm") {
+    test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
+    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
+  } else {
+    return timeline; // Return empty timeline for unknown task
+  }
+
+  // Generate test procedure
+  if ((test_structure != null) && (test_structure.length == 1 || test_structure[1] != null)) {
+    timeline.push(test_instructions(settings.task_name));
+    let test_blocks = buildPostLearningTest(test_structure, settings.task_name, settings);
+    test_blocks[0]["on_start"] = () => {
+      updateState(`${settings.task_name}_test_task_start`);
+    };
+    timeline = timeline.concat(test_blocks);
+  }
+
+  return timeline;
 }
 
-const earnedSumCardChoosing = () => {
-    // Compute the actual sum of coins
-    const earned_sum = jsPsych.data.get().filter({trial_type: "PILT"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).select("chosen_feedback").sum();
 
-    return earned_sum
-}
-
-const computeRelativeCardChoosingBonus = () => {
+export const computeRelativeCardChoosingBonus = () => {
 
     // Compute lowest and highest sum of coins possible to earn
     // Get all relevant trials: card choosing plugin, and numeric block
@@ -735,7 +603,7 @@ const computeRelativeCardChoosingBonus = () => {
     });
 
     // Compute the actual sum of coins
-    const earned_sum = earnedSumCardChoosing();
+    const earned_sum = jsPsych.data.get().filter({trial_type: "card-choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).select("chosen_feedback").sum();
 
     return {
         earned: earned_sum, 
