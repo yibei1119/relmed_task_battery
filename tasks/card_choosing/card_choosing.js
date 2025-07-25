@@ -18,56 +18,51 @@ export function runCardChoosing(config = {}) {
 window.skipThisBlock = false;
 
 // First preload for task
-const preload_PILT = {
+const preload_card_choosing = {
     type: jsPsychPreload,
-    images: [
-        [
-            "1penny.png", "1pennybroken.png",
-            "1pound.png", "1poundbroken.png",
-            "50pence.png", "50pencebroken.png",
-            "safe.png","PILT_keys.jpg", "max_press_key.gif"
-        ].map(s => "imgs/" + s),
-        window.session === "screening" ? [] : [
-            "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
-        ].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
-    ],
+    images: (() => {
+        // Base coin images
+        let images = [
+            "1penny.png", "1pound.png", "50pence.png", "safe.png"
+        ];
+
+        // Add broken coins if valence is "both" or "mixed"
+        if (["both", "mixed"].includes(settings.valence)) {
+            images.push("1pennybroken.png", "1poundbroken.png", "50pencebroken.png").map(s => `card_chosing_stims/${s}`);
+        }
+
+        // Add key images according to n_choices
+        if (settings.n_choices === 2) {
+            images.push("2_finger_keys.jpg");
+        } else if (settings.n_choices === 3) {
+            images.push("3_finger_keys.jpg");
+        }
+
+        // Add PIT images if present_pavlovian is true
+        if (settings.present_pavlovian) {
+            images = images.concat([
+                "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
+            ].map(s => `pavlovian_stims/${window.session}/${s}`));
+        }
+
+        // Add any extra media assets
+        if (Array.isArray(settings.extra_media_assets)) {
+            images = images.concat(settings.extra_media_assets);
+        }
+
+        // Prefix all with assets/images/
+        return images.map(s => `assets/images/${s}`);
+    })(),
     post_trial_gap: 800,
     data: {
-        trialphase: "preload_PILT"
+        trialphase: "preload_card_choosing"
     },
     on_start: () => {
-
-        // Report to tests
-        console.log("load_successful")
-
-        // Report to relmed.ac.uk
-        postToParent({message: "load_successful"})
+        console.log("load_successful");
+        postToParent({ message: "load_successful" });
     },
     continue_after_error: true
-}
-
-const preload_wm_ltm = {
-    type: jsPsychPreload,
-    images: [
-        "1penny.png", 
-        "1pound.png", 
-        "50pence.png",
-        "safe.png", "WM_keys.jpg"
-    ].map(s => "imgs/" + s),
-    post_trial_gap: 800,
-    data: {
-        trialphase: "preload_WM_LTM"
-    },
-    on_start: () => {
-
-        // Report to tests
-        console.log("load_successful")
-
-        // Report to relmed.ac.uk
-        postToParent({message: "load_successful"})
-    },
-    continue_after_error: true
-}
+};
 
 
 // Message between blocks
