@@ -1,17 +1,7 @@
 // tasks/card_choosing.js
 import { card_choosing_instructions } from './card_choosing_instructions.js';
 
-export function runCardChoosing(config = {}) {
-  const defaults = {
-    n_choices: 2,
-    valence: "mixed",
-    present_pavlovian: true,
-    test_confidence_every: 4,
-    include_instructions: true,
-    extra_media_assets = []
-  };
-  
-  const settings = { ...defaults, ...config };
+export function runCardChoosing(settings) {
   let timeline = [];
   
   
