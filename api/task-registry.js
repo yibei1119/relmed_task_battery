@@ -43,7 +43,7 @@ export function getTask(taskName) {
   return TaskRegistry[taskName];
 }
 
-export function runTask(taskName, config = {}) {
+export function createTaskTimeline(taskName, config = {}) {
   const task = getTask(taskName);
   
   // Merge with defaults
