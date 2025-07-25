@@ -97,7 +97,7 @@ const inter_block_msg = {
     on_finish: () => { window.skipThisBlock = false }
 }
 
-
+// Trial for post-learning test phase at notional extinction
 const test_trial = (task) => {
     return {
         timeline: [
@@ -209,10 +209,8 @@ const test_trial = (task) => {
 }
     
 
-// Post-PILT test confidence trial
-
-// Build post_PILT test block
-function build_post_PILT_test(structure, task_name = "pilt") {
+// Build post-learning test phase block
+function build_post_learning_test(structure, task_name = "pilt") {
 
     // Preload images
     let test = [
@@ -241,8 +239,10 @@ function build_post_PILT_test(structure, task_name = "pilt") {
     return test
 }
 
-
-// PILT trial
+// Function to get pavlovian images
+// This function returns an object mapping magnitudes to image paths
+// It assumes that the images are stored in a specific directory structure
+// and that the session is stored in a global variable `window.session`.
 const pavlovian_images_f = () => {
     let PIT_imgs = {
         0.01: "PIT3.png",
@@ -252,20 +252,21 @@ const pavlovian_images_f = () => {
         "-1": "PIT6.png",
         "-0.5": "PIT5.png"
     };
-    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "Pav_stims/" + window.session + "/" + v]));
+    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "assets/images/pavlovian_stims/" + window.session + "/" + v]));
     return PIT_imgs;
 };
 
-const PILT_trial = (task) => {
+// Card choosing trial
+const card_choosing_trial = (task) => {
     return {
         timeline: [
             kick_out,
             fullscreen_prompt,
         {
             type: jsPsychCardChoosing,
-            stimulus_right: () => 'imgs/PILT_stims/'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
-            stimulus_left: () => 'imgs/PILT_stims/'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
-            stimulus_middle: () => 'imgs/PILT_stims/'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
+            stimulus_right: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
+            stimulus_left: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
+            stimulus_middle: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
             feedback_left: jsPsych.timelineVariable('feedback_left'),
             feedback_right: jsPsych.timelineVariable('feedback_right'),
             feedback_middle: jsPsych.timelineVariable('feedback_middle'),
@@ -342,7 +343,7 @@ const PILT_trial = (task) => {
 
                 // Find all sitmulus-pairs in block
                 let unique_stimulus_pairs = [...new Set(jsPsych.data.get().filter({
-                    trial_type: "PILT",
+                    trial_type: "card-choosing",
                     block: block
                 }).select('stimulus_group').values)]
 
@@ -354,7 +355,7 @@ const PILT_trial = (task) => {
 
                     // Filter data for the current stimulus_group
                     let num_optimal = jsPsych.data.get().filter({
-                        trial_type: "PILT",
+                        trial_type: "card-choosing",
                         block: block,
                         stimulus_group: g
                     }).last(5).select('response_optimal').sum();
@@ -379,16 +380,16 @@ const PILT_trial = (task) => {
 }
 
 
-// Build PILT task block
-function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
+// Build card-choosing task block
+function build_card_choosing_task(structure, insert_msg = true, task_name = "pilt") {
 
-    let PILT_task = [];
+    let card_choosing_task = [];
     for (let i = 0; i < structure.length; i++) {
 
         // Skip this block if task is pilt, and was relaunched
         if (task_name === "pilt"){
             // Extract the block number from the state string
-            const state_match = window.last_state.match(/pilt_block_(\d+)_start/);
+            const state_match = window.last_state.match(new RegExp(`${task_name}_block_(\\d+)_start`));
 
             if (state_match){
                 const last_block = parseInt(state_match[1]);
@@ -405,7 +406,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
 
         // Get list of unique images in block to preload
         let preload_images = structure[i].flatMap(item => [item.stimulus_right, item.stimulus_left]);
-        preload_images = [...new Set(preload_images)].map(value => `imgs/PILT_stims/${value}`);
+        preload_images = [...new Set(preload_images)].map(value => `assets/images/card_choosing/stimuli/${value}`);
 
         // Get valence for the block
         const valence = structure[i][0]["valence"];
@@ -442,7 +443,7 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
         block.push(
             {
                 timeline: [
-                    PILT_trial(task_name)
+                    card_choosing_trial(task_name)
                 ],
                 timeline_variables: structure[i],
                 on_start: (i === (structure.length - 1)) ? () => {
@@ -471,10 +472,10 @@ function build_PILT_task(structure, insert_msg = true, task_name = "pilt") {
             block.push(inter_block_msg);
         }
 
-        PILT_task = PILT_task.concat(block)
+        card_choosing_task = card_choosing_task.concat(block)
     }
 
-    return PILT_task
+    return card_choosing_task
 }
 
 
@@ -532,14 +533,14 @@ function return_PILT_full_sequence() {
 
     // Add PILT
     if (PILT_structure != null){
-        let PILT_blocks = build_PILT_task(PILT_structure);
+        let PILT_blocks = build_card_choosing_task(PILT_structure);
         console.log(PILT_blocks)
         if (PILT_blocks.length === 0){
             console.log("No blocks to add");
             PILT_procedure = []
         } else { 
             PILT_blocks[0]["on_start"] = () => {
-                updateState("pilt_task_start")
+                updateState("card_choosing_task_start")
             };
             PILT_procedure = PILT_procedure.concat(PILT_blocks);  
         }  
@@ -572,7 +573,7 @@ function return_PILT_full_sequence() {
     // WM block
     let WM_procedure;
     if (WM_structure != null){
-        let WM_blocks = build_PILT_task(WM_structure, true, "wm");
+        let WM_blocks = build_card_choosing_task(WM_structure, true, "wm");
         WM_blocks[0]["on_start"] = () => {
 
             if (!(["wk24", "wk28"].includes(window.session))) {
