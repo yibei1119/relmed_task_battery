@@ -1,5 +1,22 @@
 // tasks/card_choosing.js
 import { card_choosing_instructions } from './card_choosing_instructions.js';
+import jsPsychPreload from '@jspsych/plugin-preload';
+import jsPsychHtmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
+import jsPsychHtmlButtonResponse from '@jspsych/plugin-html-button-response';
+import jsPsychCardChoosing from './plugin-card-choosing.js'; 
+import { 
+  postToParent, 
+  saveDataREDCap, 
+  updateBonusState,
+  can_be_warned,
+  noChoiceWarning,
+  kick_out,
+  fullscreen_prompt,
+  createPressBothTrial,
+  updateState,
+  isValidNumber,
+  computeBestRest
+} from '../utils/index.js'; // Adjust path as needed
 
 export function runCardChoosing(settings) {
   let timeline = [];
