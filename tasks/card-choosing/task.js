@@ -1,5 +1,5 @@
 // tasks/card_choosing.js
-import { card_choosing_instructions } from './card_choosing_instructions.js';
+import { card_choosing_instructions } from './instructions.js';
 import { 
   postToParent, 
   saveDataREDCap, 
