@@ -4,7 +4,7 @@ import {
   postToParent, 
   saveDataREDCap, 
   updateBonusState,
-  can_be_warned,
+  canBeWarned,
   noChoiceWarning,
   kick_out,
   fullscreen_prompt,
@@ -294,14 +294,14 @@ const testTrial = (task, test_confidence_every = 4) => {
                     } 
     
                     // Use default deadlines based on warning eligibility
-                    if (can_be_warned(`${task}_test`)){
+                    if (canBeWarned(`${task}_test`)){
                         return window.default_response_deadline
                     } else {
                         return window.default_long_response_deadline
                     }
                 },
                 show_warning: () => {
-                    return can_be_warned(`${task}_test`)
+                    return canBeWarned(`${task}_test`)
                 },    
                 data: {
                     trialphase: `${task}_test`,
@@ -404,7 +404,7 @@ const cardChoosingTrial = (task) => {
                 } 
 
                 // Use default deadlines based on warning eligibility
-                if (can_be_warned(task)){
+                if (canBeWarned(task)){
                     return window.default_response_deadline
                 } else {
                     return window.default_long_response_deadline
