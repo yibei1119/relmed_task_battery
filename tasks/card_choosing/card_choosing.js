@@ -51,7 +51,7 @@ export function runCardChoosing(settings) {
       // Set on_start for first block
       if (settings.task_name === "pilt") {
         task_blocks[0]["on_start"] = () => {
-          updateState("card_choosing_task_start");
+          updateState("pilt_task_start");
         };
       } else if (settings.task_name === "wm") {
         task_blocks[0]["on_start"] = () => {
