@@ -18,7 +18,7 @@ import {
   computeBestRest
 } from '../utils/index.js'; // Adjust path as needed
 
-// CONSTANTS AND PRELOAD
+// CONSTANTS
 const preload_card_choosing = {
     type: jsPsychPreload,
     images: (() => {
@@ -66,6 +66,10 @@ const preload_card_choosing = {
 };
 
 // UTILITY FUNCTIONS
+/**
+ * Get mapping of pavlovian image magnitudes to file paths
+ * @returns {Object} Object mapping magnitude values to image paths
+ */
 function getPavlovianImages() {
     let PIT_imgs = {
         0.01: "PIT3.png",
@@ -79,6 +83,12 @@ function getPavlovianImages() {
     return PIT_imgs;
 }
 
+/**
+ * Adjust stimulus paths by prefixing with assets/images folder
+ * @param {Array|null} structure - Trial structure containing stimulus paths
+ * @param {string} folder - Folder name to prefix paths with
+ * @returns {null|undefined} Returns null if structure is null, otherwise modifies in place
+ */
 function adjustStimuliPaths(structure, folder) {
     // Return null if null
     if (structure == null) {
@@ -94,8 +104,12 @@ function adjustStimuliPaths(structure, folder) {
     });
 }
 
+/**
+ * Generate HTML stimulus for inter-block feedback display
+ * @returns {string} HTML string showing coin outcomes and instructions
+ */
 function interBlockStimulus(){
-
+    // Get data from last card choosing trial
     const last_trial = jsPsych.data.get().filter({trial_type: "card-choosing"}).last(1);
 
     // Valence of block
@@ -149,11 +163,13 @@ function interBlockStimulus(){
         }
 
     } else if (valence != 0) {
+        // Show standard feedback for non-neutral valence blocks
         txt += `<p><img src='imgs/safe.png' style='width:100px; height:100px;'></p>
         <p>These coins ${isValidNumber(block) ? "were" : "would have been"} 
         ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:</p>`
     }
 
+    // Display coin counts based on block valence
     if (valence == 1){
 
         txt += `<div style='display: grid'><table><tr>
@@ -194,6 +210,7 @@ function interBlockStimulus(){
         txt += `<td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
             </tr></table></div>`;
     } else {
+        // Calculate and display total earnings for neutral blocks
         const earnings = Object.entries(chosen_outcomes).reduce((sum, [value, count]) => {
             // Convert string keys to numbers explicitly for reliable calculation
             return sum + (Number(value) * count);
@@ -203,6 +220,7 @@ function interBlockStimulus(){
         
     }
 
+    // Add continuation instructions based on number of stimuli
     if (isValidNumber(block)){
         txt += n_stimuli === 2 ? `<p>Press the right arrow to continue.</p>` :
          `<p>Place your fingers on the left, right, and up arrow keys, and press either one to continue.</p>`
@@ -212,11 +230,12 @@ function interBlockStimulus(){
 }
 
 // TRIAL COMPONENTS
-// Message between blocks
+// Message between blocks - saves data and shows outcome summary
 const inter_block_msg = {
     type: jsPsychHtmlKeyboardResponse,
     choices: () => {
 
+        // Determine response keys based on number of stimuli in last trial
         const n_stimuli = jsPsych.data.get().filter({ trial_type: "card-choosing" }).last(1).select("n_stimuli").values[0];
 
         return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
@@ -227,19 +246,28 @@ const inter_block_msg = {
         trialphase: "card_choosing_inter_block",
     },
     on_start: () => {
+        // Save progress and update bonus calculations
         saveDataREDCap();
         updateBonusState();
     },
-    on_finish: () => { window.skipThisBlock = false }
+    on_finish: () => { 
+        // Reset early stop flag for next block
+        window.skipThisBlock = false 
+    }
 }
 
-// Trial for post-learning test phase at notional extinction
+/**
+ * Create a test trial for post-learning phase
+ * @param {string} task - Task name (e.g., 'pilt', 'wm')
+ * @param {number} test_confidence_every - Show confidence rating every N trials
+ * @returns {Object} jsPsych timeline object for test trial
+ */
 const testTrial = (task, test_confidence_every = 4) => {
     return {
         timeline: [
             kick_out,
             fullscreen_prompt,
-            // Test trial
+            // Main test trial - no feedback given
             {
                 type: jsPsychCardChoosing,
                 stimulus_right: jsPsych.timelineVariable('stimulus_right'),
@@ -256,20 +284,20 @@ const testTrial = (task, test_confidence_every = 4) => {
                 present_feedback: false,
                 response_deadline: () => {
                 
-                    // Try to fetch deadline from timeline
+                    // Try to get custom deadline from timeline variables
                     let deadline_from_timeline;
                     try {
                         deadline_from_timeline = jsPsych.evaluateTimelineVariable('response_deadline') ?? null;
                     } catch (error) {
                         deadline_from_timeline = null;
                     }
-                    // Return if found
+                    // Return custom deadline if found
                     if (deadline_from_timeline !== null){
                         
                         return deadline_from_timeline
                     } 
     
-                    // Use defaults otherwise
+                    // Use default deadlines based on warning eligibility
                     if (can_be_warned(`${task}_test`)){
                         return window.default_response_deadline
                     } else {
@@ -293,6 +321,7 @@ const testTrial = (task, test_confidence_every = 4) => {
                     original_block_right: jsPsych.timelineVariable("original_block_right"),
                 },
                 on_finish: function(data) {
+                    // Track missed responses
                     if (data.response === "noresp") {
                         var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
                         jsPsych.data.addProperties({
@@ -300,6 +329,7 @@ const testTrial = (task, test_confidence_every = 4) => {
                         });
                     }
 
+                    // Track deadline warnings for this specific test
                     if (data.response_deadline_warning) {
                         const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${task}_test_n_warnings`).values);
                         jsPsych.data.addProperties({
@@ -310,6 +340,7 @@ const testTrial = (task, test_confidence_every = 4) => {
                 post_trial_gap: () => {return (window.simulating || false) ? 50 : 600}
             },
             {
+                // Confidence rating - only shown periodically
                 timeline: [
                     {
                         type: jsPsychHtmlButtonResponse,
@@ -321,6 +352,7 @@ const testTrial = (task, test_confidence_every = 4) => {
                             trialphase: "test-confidence"
                         },
                         on_finish: function (data) {
+                            // Track missed confidence ratings
                             if (data.response === null) {
                               var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
                               console.log("n_warnings: " + up_to_now);
@@ -333,6 +365,7 @@ const testTrial = (task, test_confidence_every = 4) => {
                     noChoiceWarning("response", "", task)
                 ],
                 conditional_function: () => {
+                    // Only show confidence rating if response was made and it's time for rating
                     let missed = jsPsych.data.get().last(1).select("response").values[0] == null
     
                     let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
@@ -343,13 +376,120 @@ const testTrial = (task, test_confidence_every = 4) => {
         ]
     };
 }
-    
+
+/**
+ * Create a card choosing trial for the main task
+ * @param {string} task - Task name (e.g., 'pilt', 'wm')
+ * @returns {Object} jsPsych timeline object for card choosing trial
+ */
+const cardChoosingTrial = (task) => {
+    return {
+        timeline: [
+            kick_out,
+            fullscreen_prompt,
+        {
+            type: jsPsychCardChoosing,
+            // Construct stimulus paths dynamically
+            stimulus_right: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
+            stimulus_left: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
+            stimulus_middle: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
+            // ...existing code...
+            response_deadline: () => {
+                // Try to get custom deadline from timeline variables
+                let deadline_from_timeline;
+                try {
+                    deadline_from_timeline = jsPsych.evaluateTimelineVariable('response_deadline') ?? null;
+                } catch (error) {
+                    deadline_from_timeline = null;
+                }
+                // Return custom deadline if available
+                if (deadline_from_timeline !== null){
+                    return deadline_from_timeline
+                } 
+
+                // Use default deadlines based on warning eligibility
+                if (can_be_warned(task)){
+                    return window.default_response_deadline
+                } else {
+                    return window.default_long_response_deadline
+                }
+            },
+            // ...existing code...
+            on_finish: function(data) {
+                // Track missed responses
+                if (data.response === "noresp") {
+                    var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+                    jsPsych.data.addProperties({
+                        n_warnings: up_to_now + 1
+                    });
+                }
+
+                // Track deadline warnings for this specific task
+                if (data.response_deadline_warning) {
+                    const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${task}_n_warnings`).values);
+                    jsPsych.data.addProperties({
+                        [`${task}_n_warnings`]: up_to_now + 1
+                    });
+                }
+            },
+            // ...existing code...
+        }
+        ],
+        conditional_function: function () {
+            // Implement early stopping logic for eligible blocks
+            if (jsPsych.evaluateTimelineVariable('early_stop') &&
+                Number.isInteger(jsPsych.evaluateTimelineVariable('block')) &&
+                jsPsych.evaluateTimelineVariable('trial') > 5
+            ) {
+                // Get current block for filtering
+                const block = jsPsych.data.get().last(1).select('block').values[0];
+
+                // Find all unique stimulus pairs in this block
+                let unique_stimulus_pairs = [...new Set(jsPsych.data.get().filter({
+                    trial_type: "card-choosing",
+                    block: block
+                }).select('stimulus_group').values)]
+
+                // Check if all stimulus groups have 5 consecutive optimal choices
+                let all_optimal = true;
+
+                unique_stimulus_pairs.forEach(g => {
+                    // Count optimal responses in last 5 trials for this stimulus group
+                    let num_optimal = jsPsych.data.get().filter({
+                        trial_type: "card-choosing",
+                        block: block,
+                        stimulus_group: g
+                    }).last(5).select('response_optimal').sum();
+
+                    // Mark as not ready for early stop if any group lacks 5 optimal
+                    if (num_optimal < 5) {
+                        all_optimal = false;
+                    }
+                });
+
+                // Set early stop flag if criteria met
+                if (all_optimal) {
+                    window.skipThisBlock = true;
+                }
+
+                return !all_optimal
+            } else {
+                return true
+            }
+        }
+    }
+}
 
 // BUILDING TASK FUNCTIONS
-// Build post-learning test phase block
+/**
+ * Build timeline for post-learning test phase
+ * @param {Array} structure - Test trial structure
+ * @param {string} task_name - Task name (default: 'pilt')
+ * @param {Object} settings - Settings object with test_confidence_every property
+ * @returns {Array} Timeline array for test phase
+ */
 function buildPostLearningTest(structure, task_name = "pilt", settings = {test_confidence_every: 4}) {
-
-    // Preload images
+    // Preload all test images upfront
     let test = [
         {
             type: jsPsychPreload,
@@ -361,10 +501,8 @@ function buildPostLearningTest(structure, task_name = "pilt", settings = {test_c
         }
     ];
 
-    // Push blocks from structure
+    // Add each test block to timeline
     for (let i = 0; i < structure.length; i++) {
-
-        // Push block                
         test.push({
             timeline: [
                 testTrial(task_name, settings.test_confidence_every)
@@ -376,13 +514,18 @@ function buildPostLearningTest(structure, task_name = "pilt", settings = {test_c
     return test
 }
 
-// Build card-choosing task block
+/**
+ * Build timeline for main card choosing task
+ * @param {Array} structure - Task structure with blocks and trials
+ * @param {boolean} insert_msg - Whether to insert inter-block messages
+ * @param {string} task_name - Task name (default: 'pilt')
+ * @returns {Array} Timeline array for main task
+ */
 function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt") {
-
     let card_choosing_task = [];
+    
     for (let i = 0; i < structure.length; i++) {
-
-        // Skip this block if task is pilt, and was relaunched
+        // Skip blocks already completed (for task resumption)
         if (task_name === "pilt"){
             // Extract the block number from the state string
             const state_match = window.last_state.match(new RegExp(`${task_name}_block_(\\d+)_start`));
@@ -397,23 +540,19 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
             }
         }
 
-        // Print adding block
+        // Log block addition for debugging
         console.log(`Adding block ${structure[i][0]["block"]} of ${task_name} to the timeline.`);
 
-        // Get list of unique images in block to preload
+        // Extract unique images for preloading
         let preload_images = structure[i].flatMap(item => [item.stimulus_right, item.stimulus_left]);
         preload_images = [...new Set(preload_images)].map(value => `assets/images/card_choosing/stimuli/${value}`);
 
-        // Get valence for the block
+        // Extract block properties
         const valence = structure[i][0]["valence"];
-
-        // Get n_stimuli for this block
         const n_stimuli = structure[i][0]["n_stimuli"];
-
-        // Get block number
         const block_number = structure[i][0]["block"];
 
-        // Build block
+        // Initialize block with preloading
         block = [
             {
                 type: jsPsychPreload,
@@ -423,6 +562,7 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
             }
         ];
 
+        // Add pre-block instructions for numbered blocks
         if (isValidNumber(block_number) & task_name === "pilt" && (window.session !== "screening")){
             block.push(
                 createPressBothTrial(
@@ -435,25 +575,25 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
                 )
             )
         }
-            
+        
+        // Add main block trials
         block.push(
             {
                 timeline: [
                     cardChoosingTrial(task_name)
                 ],
                 timeline_variables: structure[i],
+                // Set state tracking on block start
                 on_start: (i === (structure.length - 1)) ? () => {
-
+                    // Handle last block specially
                     const block = jsPsych.evaluateTimelineVariable('block');
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
                         updateState(`${task_name}_block_${block}_start`)
-
-                        // Add last block message
                         updateState(`${task_name}_last_block_start`)
                     }
                 } : () => {
-
+                    // Standard block start tracking
                     const block = jsPsych.evaluateTimelineVariable('block');
 
                     if ((jsPsych.evaluateTimelineVariable('trial') == 1) && (typeof block === "number")){
@@ -463,7 +603,7 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
             }
         );
         
-        // Add message
+        // Add inter-block message if requested
         if (insert_msg) {
             block.push(inter_block_msg);
         }
@@ -474,8 +614,12 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
     return card_choosing_task
 }
 
-
 // MAIN EXPORT FUNCTIONS
+/**
+ * Main function to run card choosing task
+ * @param {Object} settings - Settings object containing task_name and other parameters
+ * @returns {Array} Timeline array for the complete task
+ */
 export function runCardChoosing(settings) {
   let timeline = [];
   
@@ -491,22 +635,22 @@ export function runCardChoosing(settings) {
     return timeline; // Return empty timeline for unknown task
   }
 
-  // Compute best-rest
+  // Compute best-rest outcomes for early stopping
   if (structure != null) {
     computeBestRest(structure);
   }
 
-  // Add instructions
+  // Add instructions to timeline
   timeline = timeline.concat(instructions);
 
-  // Add task blocks
+  // Build and add main task blocks
   if (structure != null) {
     let task_blocks = buildCardChoosingTask(structure, true, settings.task_name);
     if (task_blocks.length === 0) {
       console.log("No blocks to add");
       timeline = [];
     } else {
-      // Set on_start for first block
+      // Set task start state tracking for first block
       if (settings.task_name === "pilt") {
         task_blocks[0]["on_start"] = () => {
           updateState("pilt_task_start");
@@ -528,21 +672,27 @@ export function runCardChoosing(settings) {
   return timeline;
 }
 
+/**
+ * Main function to run post-learning test phase
+ * @param {Object} settings - Settings object containing task_name and test parameters
+ * @returns {Array} Timeline array for the test phase
+ */
 export function runPostLearningTest(settings) {
   let timeline = [];
   
-  // Parse json sequence based on task_name
+  // Parse test structure based on task type
   let test_structure;
   if (settings.task_name === "pilt") {
     test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
     let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
     
-    // Adjust stimuli paths
+    // Adjust stimulus paths for main test
     adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
     
-    // Process pavlovian test structure
+    // Process and add pavlovian test if available
     if (pav_test_structure) {
       pav_test_structure.forEach(trial => {
+        // Set pavlovian-specific paths and properties
         trial.stimulus_left = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_left}`;
         trial.stimulus_right = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_right}`;
         trial.block = "pavlovian";
@@ -553,6 +703,7 @@ export function runPostLearningTest(settings) {
         trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
       });
       
+      // Prepend pavlovian test to main test (except in demo mode)
       if (!window.demo) {
         test_structure = [pav_test_structure].concat(test_structure);
       }
@@ -564,10 +715,11 @@ export function runPostLearningTest(settings) {
     return timeline; // Return empty timeline for unknown task
   }
 
-  // Generate test procedure
+  // Build test timeline if structure is valid
   if ((test_structure != null) && (test_structure.length == 1 || test_structure[1] != null)) {
     timeline.push(test_instructions(settings.task_name));
     let test_blocks = buildPostLearningTest(test_structure, settings.task_name, settings);
+    // Set test start state tracking
     test_blocks[0]["on_start"] = () => {
       updateState(`${settings.task_name}_test_task_start`);
     };
@@ -577,16 +729,18 @@ export function runPostLearningTest(settings) {
   return timeline;
 }
 
-
+/**
+ * Compute relative performance bonus for card choosing task
+ * @returns {Object} Object with earned, min, and max possible scores
+ */
 export const computeRelativeCardChoosingBonus = () => {
-
-    // Compute lowest and highest sum of coins possible to earn
-    // Get all relevant trials: card choosing plugin, and numeric block
+    // Get all relevant trials: card choosing plugin with numeric blocks only
     const trials = jsPsych.data.get().filter({trial_type: "card_choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
 
     let max_sum = 0;
     let min_sum = 0;
 
+    // Calculate theoretical minimum and maximum possible earnings
     trials.forEach(trial => {
         let feedbacks = [];
         if (trial.n_stimuli === 2) {
@@ -594,7 +748,7 @@ export const computeRelativeCardChoosingBonus = () => {
         } else if (trial.n_stimuli !== 2) {
             feedbacks = [trial.feedback_left, trial.feedback_right, trial.feedback_middle];
         }
-        // Only consider numeric feedbacks
+        // Only consider numeric feedbacks for calculations
         feedbacks = feedbacks.filter(f => typeof f === "number" && !isNaN(f));
         if (feedbacks.length > 0) {
             max_sum += Math.max(...feedbacks);
