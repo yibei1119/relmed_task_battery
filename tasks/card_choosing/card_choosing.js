@@ -21,12 +21,103 @@ import {
 export function runCardChoosing(settings) {
   let timeline = [];
   
-  
+  // Parse json sequence based on task_name
+  let structure, instructions;
+  if (settings.task_name === "pilt") {
+    structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
+    instructions = prepare_PILT_instructions();
+  } else if (settings.task_name === "wm") {
+    structure = typeof WM_json !== "undefined" ? JSON.parse(WM_json) : null;
+    instructions = WM_instructions;
+  } else {
+    return timeline; // Return empty timeline for unknown task
+  }
+
+  // Compute best-rest
+  if (structure != null) {
+    computeBestRest(structure);
+  }
+
+  // Add instructions
+  timeline = timeline.concat(instructions);
+
+  // Add task blocks
+  if (structure != null) {
+    let task_blocks = build_card_choosing_task(structure, true, settings.task_name);
+    if (task_blocks.length === 0) {
+      console.log("No blocks to add");
+      timeline = [];
+    } else {
+      // Set on_start for first block
+      if (settings.task_name === "pilt") {
+        task_blocks[0]["on_start"] = () => {
+          updateState("card_choosing_task_start");
+        };
+      } else if (settings.task_name === "wm") {
+        task_blocks[0]["on_start"] = () => {
+          if (!(["wk24", "wk28"].includes(window.session))) {
+            updateState("no_resume_10_minutes");
+          }
+          updateState("wm_task_start");
+        };
+      }
+      timeline = timeline.concat(task_blocks);
+    }
+  } else {
+    timeline = [];
+  }
   
   return timeline;
 }
 
-window.skipThisBlock = false;
+export function runPostLearningTest(settings) {
+  let timeline = [];
+  
+  // Parse json sequence based on task_name
+  let test_structure;
+  if (settings.task_name === "pilt") {
+    test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
+    let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
+    
+    // Adjust stimuli paths
+    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
+    
+    // Process pavlovian test structure
+    if (pav_test_structure) {
+      pav_test_structure.forEach(trial => {
+        trial.stimulus_left = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_left}`;
+        trial.stimulus_right = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_right}`;
+        trial.block = "pavlovian";
+        trial.feedback_left = trial.magnitude_left;
+        trial.feedback_right = trial.magnitude_right;
+        trial.EV_left = trial.magnitude_left;
+        trial.EV_right = trial.magnitude_right;
+        trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
+      });
+      
+      if (!window.demo) {
+        test_structure = [pav_test_structure].concat(test_structure);
+      }
+    }
+  } else if (settings.task_name === "wm") {
+    test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
+    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
+  } else {
+    return timeline; // Return empty timeline for unknown task
+  }
+
+  // Generate test procedure
+  if ((test_structure != null) && (test_structure.length == 1 || test_structure[1] != null)) {
+    timeline.push(test_instructions(settings.task_name));
+    let test_blocks = buildPostLearningTest(test_structure, settings.task_name, settings);
+    test_blocks[0]["on_start"] = () => {
+      updateState(`${settings.task_name}_test_task_start`);
+    };
+    timeline = timeline.concat(test_blocks);
+  }
+
+  return timeline;
+}
 
 // First preload for task
 const preload_card_choosing = {
