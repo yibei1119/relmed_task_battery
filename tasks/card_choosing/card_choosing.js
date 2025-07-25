@@ -1,9 +1,5 @@
 // tasks/card_choosing.js
 import { card_choosing_instructions } from './card_choosing_instructions.js';
-import jsPsychPreload from '@jspsych/plugin-preload';
-import jsPsychHtmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
-import jsPsychHtmlButtonResponse from '@jspsych/plugin-html-button-response';
-import jsPsychCardChoosing from './plugin-card-choosing.js'; 
 import { 
   postToParent, 
   saveDataREDCap, 
@@ -16,7 +12,7 @@ import {
   updateState,
   isValidNumber,
   computeBestRest
-} from '../utils/index.js'; // Adjust path as needed
+} from 'core/utils/index.js'; // Adjust path as needed
 
 // CONSTANTS
 const preload_card_choosing = {
