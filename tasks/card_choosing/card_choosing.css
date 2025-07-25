@@ -1,0 +1,83 @@
+/* CSS styles for PILT plugin */
+
+.PILTOptionBox {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.PILTOptionSide {
+    display: grid;
+    flex-direction: column;
+    width: 25vw;
+    max-width: 1000px;
+    position: relative;
+    justify-content: center;
+}
+
+.PILTOptionSide img {
+    height: auto;
+    width: 20vw;
+    max-width: 500px;
+   /* flex-direction: column;*/
+    margin: auto;
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#PILTRightImg, #PILTLeftImg, #PILTMiddleImg {
+    border: 1px solid darkgrey;
+}
+
+.PILTHelperTxt2 {
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+    width: 12vw;
+    max-width: 325px;
+    
+    text-wrap: normal;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 3rem;
+}
+
+.PILTHelperTxt3 {
+    display: flex;
+    justify-content: space-around;
+    margin: auto;    
+    text-wrap: normal;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 3rem;
+}
+
+
+.PILTCoin {
+    visibility: hidden;
+    margin: auto;
+    z-index: 3;
+}
+
+.PILTOptionSide .PILTCoinCircle {
+    visibility: hidden;
+    height: 21vw;
+    width: 21vw;
+    max-width: 500px;
+    margin: auto;
+    grid-column: 1;
+    grid-row: 1;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.PILTOptionSide img.PILTCoinBackground {
+    visibility: hidden;
+    width: 30vw;
+    max-width: 30vw;
+    z-index: 1;
+    overflow: hidden;
+    border: 1px solid darkgrey;
+}

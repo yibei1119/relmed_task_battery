@@ -1,7 +1,7 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { runPILT } from '../tasks/pilt.js';
+import { runPILT } from '../tasks/pilt/pilt.js';
 
 export const TaskRegistry = {
   pilt: {
@@ -9,13 +9,19 @@ export const TaskRegistry = {
     description: 'A task measuring learning from probabilistic rewards and punishments',
     run: runPILT,
     defaultConfig: {
-      test_confidence_every: 4
+        include_instructions: true,
+        test_confidence_every: 4
+    },
+    requirements: {
+      css: ['tasks/pilt/pilt.css'],
+      note: 'Make sure to include pilt.css in your HTML file'
     },
     resumptionRules: {
       enabled: true,
       granularity: 'block'
     },
     configOptions: {
+        include_instructions: "Whether to show instructions before the task. Default is true.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials."
     }
   }
