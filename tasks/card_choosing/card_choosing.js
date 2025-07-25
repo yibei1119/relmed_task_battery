@@ -81,14 +81,14 @@ const inter_block_msg = {
     type: jsPsychHtmlKeyboardResponse,
     choices: () => {
 
-        const n_stimuli = jsPsych.data.get().filter({ trial_type: "PILT" }).last(1).select("n_stimuli").values[0];
+        const n_stimuli = jsPsych.data.get().filter({ trial_type: "card-choosing" }).last(1).select("n_stimuli").values[0];
 
         return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
     },
     css_classes: ['instructions'],
     stimulus: inter_block_stimulus,
     data: {
-        trialphase: "pilt_inter_block",
+        trialphase: "card_choosing_inter_block",
     },
     on_start: () => {
         saveDataREDCap();
@@ -97,12 +97,6 @@ const inter_block_msg = {
     on_finish: () => { window.skipThisBlock = false }
 }
 
-// Post-PILT test trial
-const id_from_stimulus = () => {
-    const is_pit = jsPsych.evaluateTimelineVariable('stimulus_left').includes("PIT");
-
-    return is_pit ? "imgPIT" : "imgPILT"
-}
 
 const test_trial = (task) => {
     return {
@@ -111,7 +105,7 @@ const test_trial = (task) => {
             fullscreen_prompt,
             // Test trial
             {
-                type: jsPsychPILT,
+                type: jsPsychCardChoosing,
                 stimulus_right: jsPsych.timelineVariable('stimulus_right'),
                 stimulus_left: jsPsych.timelineVariable('stimulus_left'),
                 stimulus_middle: '',
@@ -268,7 +262,7 @@ const PILT_trial = (task) => {
             kick_out,
             fullscreen_prompt,
         {
-            type: jsPsychPILT,
+            type: jsPsychCardChoosing,
             stimulus_right: () => 'imgs/PILT_stims/'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
             stimulus_left: () => 'imgs/PILT_stims/'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
             stimulus_middle: () => 'imgs/PILT_stims/'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
