@@ -616,7 +616,7 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
  * @param {Object} settings - Settings object containing task_name and other parameters
  * @returns {Array} Timeline array for the complete task
  */
-export function runCardChoosing(settings) {
+export function createCardChoosingTimeline(settings) {
   let timeline = [];
   
   // Parse json sequence based on task_name
@@ -673,7 +673,7 @@ export function runCardChoosing(settings) {
  * @param {Object} settings - Settings object containing task_name and test parameters
  * @returns {Array} Timeline array for the test phase
  */
-export function runPostLearningTest(settings) {
+export function createPostLearningTestTimeline(settings) {
   let timeline = [];
   
   // Parse test structure based on task type
