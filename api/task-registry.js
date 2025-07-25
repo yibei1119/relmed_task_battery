@@ -1,13 +1,13 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { runCardChoosing } from '../tasks/card_choosing/card_choosing.js';
+import { createCardChoosingTimeline } from '../tasks/card_choosing/task.js';
 
 export const TaskRegistry = {
   card_choosing: {
     name: 'Card Choosing Task',
     description: 'A task measuring learning and decision making in a card choosing scenario',
-    run: runCardChoosing,
+    run: createCardChoosingTimeline,
     defaultConfig: {
         n_choices: 2,
         valence: "mixed",
