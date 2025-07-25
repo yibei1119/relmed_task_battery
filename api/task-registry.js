@@ -1,7 +1,7 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { runPILT } from '../tasks/card_choosing/card_choosing.js';
+import { runCardChoosing } from '../tasks/card_choosing/card_choosing.js';
 
 export const TaskRegistry = {
   card_choosing: {
