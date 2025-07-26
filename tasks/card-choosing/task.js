@@ -11,54 +11,43 @@ import {
   createPressBothTrial,
   updateState,
   isValidNumber,
-  computeBestRest
+  computeBestRest,
+  createPreloadTrial
 } from 'core/utils/index.js'; // Adjust path as needed
 
 // CONSTANTS
-const preload_card_choosing = {
-    type: jsPsychPreload,
-    images: (() => {
-        // Base coin images
-        let images = [
-            "1penny.png", "1pound.png", "50pence.png", "safe.png"
-        ];
+const preload_assets = (settings) => {
+            // Base coin images
+            let images = [
+                "1penny.png", "1pound.png", "50pence.png", "safe.png"
+            ];
 
-        // Add broken coins if valence is "both" or "mixed"
-        if (["both", "mixed"].includes(settings.valence)) {
-            images.push("1pennybroken.png", "1poundbroken.png", "50pencebroken.png").map(s => `card_chosing/outcomes/${s}`);
-        }
+            // Add broken coins if valence is "both" or "mixed"
+            if (["both", "mixed"].includes(settings.valence)) {
+                images.push("1pennybroken.png", "1poundbroken.png", "50pencebroken.png").map(s => `card_chosing/outcomes/${s}`);
+            }
 
-        // Add key images according to n_choices
-        if (settings.n_choices === 2) {
-            images.push("2_finger_keys.jpg");
-        } else if (settings.n_choices === 3) {
-            images.push("3_finger_keys.jpg");
-        }
+            // Add key images according to n_choices
+            if (settings.n_choices === 2) {
+                images.push("2_finger_keys.jpg");
+            } else if (settings.n_choices === 3) {
+                images.push("3_finger_keys.jpg");
+            }
 
-        // Add PIT images if present_pavlovian is true
-        if (settings.present_pavlovian) {
-            images = images.concat([
-                "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
-            ].map(s => `pavlovian_stims/${window.session}/${s}`));
-        }
+            // Add PIT images if present_pavlovian is true
+            if (settings.present_pavlovian) {
+                images = images.concat([
+                    "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
+                ].map(s => `pavlovian_stims/${window.session}/${s}`));
+            }
 
-        // Add any extra media assets
-        if (Array.isArray(settings.extra_media_assets)) {
-            images = images.concat(settings.extra_media_assets);
-        }
+            // Add any extra media assets
+            if (Array.isArray(settings.extra_media_assets)) {
+                images = images.concat(settings.extra_media_assets);
+            }
 
-        // Prefix all with assets/images/
-        return images.map(s => `assets/images/${s}`);
-    })(),
-    post_trial_gap: 800,
-    data: {
-        trialphase: "preload_card_choosing"
-    },
-    on_start: () => {
-        console.log("load_successful");
-        postToParent({ message: "load_successful" });
-    },
-    continue_after_error: true
+            // Prefix all with assets/images/
+            return images.map(s => `assets/images/${s}`);
 };
 
 // UTILITY FUNCTIONS
@@ -618,6 +607,11 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
  */
 export function createCardChoosingTimeline(settings) {
   let timeline = [];
+
+  // Add preload trial for assets
+  timeline.push(
+    createPreloadTrial(preload_assets(settings), settings.task_name)
+  );
   
   // Parse json sequence based on task_name
   let structure, instructions;

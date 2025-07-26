@@ -31,9 +31,26 @@ function loadSequence(scriptSrc) {
 
 }
 
+function createPreloadTrial(images, task_name) {
+    return {
+        type: jsPsychPreload,
+        images: images,
+        post_trial_gap: 800,
+        data: {
+            trialphase: `${task_name}_preload`,
+        },
+        on_start: () => {
+            console.log("load_successful");
+            postToParent({ message: "load_successful" });
+        },
+        continue_after_error: true
+    };
+}
+
 // Export functions for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        loadSequence
+        loadSequence,
+        createPreloadTrial
     };
 }
