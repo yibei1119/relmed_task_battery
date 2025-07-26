@@ -7,7 +7,7 @@ export const TaskRegistry = {
   card_choosing: {
     name: 'Card Choosing Task',
     description: 'A task measuring learning and decision making in a card choosing scenario',
-    run: createCardChoosingTimeline,
+    createTimeline: createCardChoosingTimeline,
     defaultConfig: {
         n_choices: 2,
         valence: "mixed",
@@ -50,7 +50,7 @@ export function createTaskTimeline(taskName, config = {}) {
   const mergedConfig = { ...task.defaultConfig, ...config };
   
   // Run the task with merged config
-  return task.run(mergedConfig);
+  return task.createTimeline(mergedConfig);
 }
 
 export function listTasks() {
