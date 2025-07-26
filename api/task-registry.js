@@ -9,6 +9,7 @@ export const TaskRegistry = {
     description: 'A task measuring learning and decision making in a card choosing scenario',
     createTimeline: createCardChoosingTimeline,
     defaultConfig: {
+        task_name: "pilt",
         n_choices: 2,
         valence: "mixed",
         present_pavlovian: true,
@@ -23,6 +24,7 @@ export const TaskRegistry = {
       granularity: 'block'
     },
     configOptions: {
+        task_name: "The name of the task being tested. Default is 'pilt'.",
         n_choices: "Number of choice options presented. Default is 2.",
         valence: "Valence of the stimuli - can be 'both' (includes both punishment and reward blocks), 'mixed' (includes mixed valence blocks), 'punishment', or 'reward'. Default is 'mixed'.",
         present_pavlovian: "Whether to present stimuli for pavlovian conditioning along with trial outcomes. Default is true.",
