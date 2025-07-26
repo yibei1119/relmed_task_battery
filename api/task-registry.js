@@ -1,7 +1,7 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { createCardChoosingTimeline } from '../tasks/card_choosing/task.js';
+import { createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card_choosing/task.js';
 
 export const TaskRegistry = {
   card_choosing: {
@@ -12,13 +12,12 @@ export const TaskRegistry = {
         n_choices: 2,
         valence: "mixed",
         present_pavlovian: true,
-        test_confidence_every: 4,
         include_instructions: true,
         extra_media_assets: []
     },
     requirements: {
-      css: ['tasks/card_choosing/card_choosing.css'],
-      note: 'Make sure to include card_choosing.css in your HTML file'
+      css: ['tasks/card-choosing/styles.css'],
+      note: 'Make sure to include card-choosing/styles.css in your HTML file'
     },
     resumptionRules: {
       enabled: true,
@@ -30,6 +29,28 @@ export const TaskRegistry = {
         present_pavlovian: "Whether to present stimuli for pavlovian conditioning along with trial outcomes. Default is true.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
         include_instructions: "Whether to show instructions before the task. Default is true.",
+        extra_media_assets: "Additional media assets to preload for the task. Default is an empty array."
+    }
+  },
+  post_learning_test: {
+    name: 'Post Learning Test',
+    description: 'A test phase that evaluates learning performance in notional exinction after completing a card-choosing learning phase',
+    createTimeline: createPostLearningTestTimeline,
+    defaultConfig: {
+        task_name: "pilt",
+        test_confidence_every: 4,
+        extra_media_assets: []
+    },
+    requirements: {
+      css: ['tasks/card-choosing/styles.css'],
+      note: 'Make sure to include card-choosing/styles.css in your HTML file'
+    },
+    resumptionRules: {
+      enabled: true
+    },
+    configOptions: {
+        task_name: "The name of the task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
+        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
         extra_media_assets: "Additional media assets to preload for the task. Default is an empty array."
     }
   }
