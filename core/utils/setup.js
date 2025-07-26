@@ -31,6 +31,12 @@ function loadSequence(scriptSrc) {
 
 }
 
+/**
+ * Creates a jsPsych preload trial for loading images before task execution
+ * @param {string[]} images - Array of image file paths to preload
+ * @param {string} task_name - Name of the task for trial identification
+ * @returns {Object} jsPsych preload trial configuration object
+ */
 function createPreloadTrial(images, task_name) {
     return {
         type: jsPsychPreload,
