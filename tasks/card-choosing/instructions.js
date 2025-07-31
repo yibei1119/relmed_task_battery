@@ -7,7 +7,7 @@ import {
 } from '../utils/index.js';
 import { 
     build_PILT_task,
-    pavlovian_images_f 
+    getPavlovianImages 
 } from './utils.js';
 
 // Configuration constants for PILT instructions
@@ -102,7 +102,7 @@ function preparePILTInstructions() {
                             feedback_middle: "",
                             n_stimuli: 2,
                             present_pavlovian: window.session !== "screening",
-                            pavlovian_images: pavlovian_images_f(),
+                            pavlovian_images: getPavlovianImages(),
                             optimal_side: "",
                             feedback_left: 1,
                             feedback_right: 1,
@@ -170,7 +170,7 @@ function preparePILTInstructions() {
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: window.session !== "screening",
-                            pavlovian_images: pavlovian_images_f(),
+                            pavlovian_images: getPavlovianImages(),
                             n_stimuli: 2,
                             optimal_side: "",
                             // Set feedback values based on card position and session type

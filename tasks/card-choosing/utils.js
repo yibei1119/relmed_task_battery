@@ -233,23 +233,6 @@ const testTrial = (task, test_confidence_every = 4) => {
     };
 }
 
-/**
- * Get mapping of pavlovian image magnitudes to file paths with session prefix
- * @returns {Object} Object mapping magnitude values to image paths
- */
-const pavlovian_images_f = () => {
-    let PIT_imgs = {
-        0.01: "PIT3.png",
-        1.0: "PIT1.png",
-        0.5: "PIT2.png",
-        "-0.01": "PIT4.png",
-        "-1": "PIT6.png",
-        "-0.5": "PIT5.png"
-    };
-    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "Pav_stims/" + window.session + "/" + v]));
-    return PIT_imgs;
-};
-
 
 /**
  * Create a card choosing trial for the main task
