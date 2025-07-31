@@ -8,8 +8,8 @@ import { build_PILT_task } from './timeline.js';
 import { pavlovian_images_f } from '../utils/pavlovian.js';
 import { shuffleArray } from '../utils/helpers.js';
 
-// Instructions for the PILT
-const small_coin_size = 100;
+// Configuration constants for PILT instructions
+const small_coin_size = 100; // Size of coin images in pixels
 const demo_stimuli = [
     "almond_1.jpg",
     "envelope_1.jpg",
@@ -19,7 +19,16 @@ const demo_stimuli = [
     "cantaloupe_1.jpg"
 ]
 
+/**
+ * Prepares the complete instruction sequence for the PILT (Pavlovian-Instrumental Learning Task)
+ * @returns {Array} Array of jsPsych trial objects containing all instruction pages, practice trials, and quiz
+ */
+/**
+ * Prepares the complete instruction sequence for the PILT (Pavlovian-Instrumental Learning Task)
+ * @returns {Array} Array of jsPsych trial objects containing all instruction pages, practice trials, and quiz
+ */
 function preparePILTInstructions() {
+    // Create inter-block instruction stimulus
     const inter_block_instruct = {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
@@ -28,6 +37,7 @@ function preparePILTInstructions() {
         data: {trialphase: "pilt_instruction"}
     }
 
+    // Main instruction sequence
     let inst =  [
         {
             type: jsPsychInstructions,
@@ -48,6 +58,7 @@ function preparePILTInstructions() {
                 <td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td></tr></table></div>`,
         ];
 
+        // Add broken coin instructions for non-screening sessions
         if (window.session !== "screening"){
             pages.push(`<p>When you flip a card, you might see broken coins like these:</p>\
                 <div style='display: grid;'><table style='width: 200px; grid-column: 2;'><tr>
@@ -67,6 +78,7 @@ function preparePILTInstructions() {
     }
     ];
 
+    // Add initial practice trial for screening sessions only
     if (window.session === "screening"){
         inst.push(
             createPressBothTrial(
@@ -78,6 +90,7 @@ function preparePILTInstructions() {
                 "pilt_instruction"
             ),
             {
+                // Simple demonstration trial with both cards giving £1
                 timeline: build_PILT_task(
                     [[
                         {   
@@ -109,6 +122,7 @@ function preparePILTInstructions() {
         );
     }
 
+    // Add explanation and practice instructions
     inst = inst.concat([{
         type: jsPsychInstructions,
         css_classes: ['instructions'],
@@ -131,20 +145,22 @@ function preparePILTInstructions() {
     )
    ]);
 
+    // Generate randomized practice trial sequences
     let dumbbell_on_right = shuffleArray([true, true, false, true, false, false], window.session);
     let reward_magnitude = shuffleArray([1, 1, 1, 0.5, 1, 1.], window.session + "b");
 
-    // Shorter paractise for non screening sessions
+    // Shorter practice for non-screening sessions
     if (window.session !== "screening"){
         dumbbell_on_right = dumbbell_on_right.slice(0, 4);
         reward_magnitude = reward_magnitude.slice(0, 4);
     }
 
-    // Practice task
+    // Add main practice task
     inst.push(
         {
             timeline: build_PILT_task(
                 [
+                    // Map trials with alternating good/bad card positions
                     dumbbell_on_right.map((e, i) => 
                         ({
                             stimulus_left: e ? demo_stimuli[2] : demo_stimuli[3],
@@ -155,6 +171,7 @@ function preparePILTInstructions() {
                             pavlovian_images: pavlovian_images_f(),
                             n_stimuli: 2,
                             optimal_side: "",
+                            // Set feedback values based on card position and session type
                             feedback_left: e ? (window.session === "screening" ? 0.5 : -1. ) : reward_magnitude[i],
                             feedback_right: e ? reward_magnitude[i] : (window.session === "screening" ? 0.5 : -1. ),
                             optimal_right: e,
@@ -174,10 +191,10 @@ function preparePILTInstructions() {
         }
     );
 
-    // Block summary message
+    // Add block summary message
     inst.push(inter_block_instruct);
 
-    // Quiz introduction
+    // Add quiz introduction
     inst.push({
                 type: jsPsychInstructions,
                 css_classes: ['instructions'],
@@ -188,7 +205,7 @@ function preparePILTInstructions() {
                 data: {trialphase: "pilt_instruction"}
             });
     
-    // Instruciton comprehension quiz
+    // Create instruction comprehension quiz questions
     let quiz_questions = [
         {
             prompt: `Some cards are better than others, but even the best cards might only give a penny${window.session !== "screening" ? " or break a £1 coin" : ''}.`,
@@ -202,6 +219,7 @@ function preparePILTInstructions() {
         },
     ];
 
+    // Add broken coin question for non-screening sessions
     if (window.session !== "screening"){
         quiz_questions.splice(1, 0, {
             prompt: "If I find a broken coin, that means I lose that amount.",
@@ -210,6 +228,7 @@ function preparePILTInstructions() {
         });
     }
 
+    // Create quiz trial object
     let quiz = [
         {
             type: jsPsychSurveyMultiChoice,
@@ -286,37 +305,39 @@ function preparePILTInstructions() {
     );
 
 
+    // Create instruction loop with quiz feedback and retry logic
     const inst_loop = {
         timeline: window.session === "screening" ? inst.concat(quiz) : quiz,
         loop_function: () => {
             if (!check_quiz_failed()){
-                return false;
+                return false; // Quiz passed, exit loop
             }
 
-            // Since in non-screening sessions only the quiz is repeated, don't limit the number of attempts
+            // For non-screening sessions, allow unlimited quiz attempts
             if (window.session !== "screening"){
                 return true;
             }
 
-            // Compute the number of attempts
+            // For screening sessions, limit to 3 attempts
             const attempts = jsPsych.data.get().select('trialphase').values.filter(item => item === "instruction_quiz").length;
             
-            // Allow up to 3 attempts on screening session
             if (attempts < 3){
-                return true;
+                return true; // Continue loop
             } else {
-                return false;
+                return false; // Exit after 3 attempts
             }
         }
     }
 
+    // Build final instruction timeline
     let inst_total = [];
 
+    // Add main instructions for non-screening sessions
     if (window.session !== "screening"){
         inst_total = inst_total.concat(inst);
     }
 
-
+    // Add instruction loop and final ready message
     inst_total = inst_total.concat(
         [
             inst_loop,
@@ -334,12 +355,19 @@ function preparePILTInstructions() {
     return inst_total
 } 
 
+/**
+ * Checks if the participant failed the instruction comprehension quiz
+ * @returns {boolean} True if any quiz answer is incorrect, false if all answers are "True"
+ */
 function check_quiz_failed() {
     const data = jsPsych.data.get().filter({trialphase: "instruction_quiz"}).last(1).select('response').values[0];
 
     return !Object.values(data).every(value => value === "True");
 }
 
+/**
+ * Instructions for the lottery/bonus selection at the end of the session
+ */
 const lottery_instructions = {
     type: jsPsychInstructions,
     css_classes: ['instructions'],
@@ -354,7 +382,11 @@ const lottery_instructions = {
     data: {trialphase: "lottery_instructions"}
 }
 
-// Post-PILT test instructions
+/**
+ * Creates instructions for post-PILT test phase
+ * @param {string} task - The task identifier (e.g., "pilt", "ltm", "wm")
+ * @returns {Object} jsPsych instruction trial object for test phase
+ */
 const test_instructions = (task) => {
     return {
         type: jsPsychInstructions,
@@ -379,7 +411,10 @@ const test_instructions = (task) => {
     }
 }
 
-// LTM instructions
+/**
+ * Instructions for the Long-Term Memory (LTM) task variant
+ * Uses three-card choice with arrow key controls (left, right, up)
+ */
 const LTM_instructions = [
     {
         type: jsPsychInstructions,
@@ -414,7 +449,10 @@ const LTM_instructions = [
     }
 ]
 
-// WM instructions
+/**
+ * Instructions for the Working Memory (WM) task variant
+ * Single card presented with three possible key responses (left, right, up arrows)
+ */
 const WM_instructions = [
     {
         type: jsPsychInstructions,
