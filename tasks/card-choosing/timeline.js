@@ -8,13 +8,15 @@ import {
   preload_assets,
   buildCardChoosingTask,
   adjustStimuliPaths,
-  buildPostLearningTest
+  buildPostLearningTest,
+  applyWithinTaskResumptionRules, 
+  getResumptionState
 } from './utils.js';
 import { 
   updateState,
   computeBestRest,
   createPreloadTrial
-} from '../../core/utils/index.js'; // Adjust path as needed
+} from '../../core/utils/index.js';
 
 // MAIN EXPORT FUNCTIONS
 /**
@@ -50,13 +52,14 @@ export function createCardChoosingTimeline(settings) {
     computeBestRest(structure);
   }
 
-   // Apply resumption rules if enabled
-  if (taskInfo.resumptionRules?.enabled) {
-      structure = applyResumptionRules(
+  // Apply resumption rules if enabled
+  const lastState = getResumptionState();
+  if (settings.resumptionRules?.enabled) {
+      structure = applyWithinTaskResumptionRules(
           structure, 
           lastState, 
           settings.task_name, 
-          taskInfo.resumptionRules
+          settings.resumptionRules
       );
       
       console.log(`Applied resumption rules. ${structure.length} blocks remaining.`);
