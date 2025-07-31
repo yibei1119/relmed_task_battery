@@ -4,33 +4,36 @@
  */
 
 /**
- * Dynamically loads a JavaScript file and runs the experiment once loaded
- * Used for loading task-specific sequence files before experiment execution
+ * Dynamically loads a JavaScript file with Promise-based interface
+ * More robust than fetch() for loading sequence files
  * @param {string} scriptSrc - Path to the JavaScript file to load
+ * @returns {Promise} Resolves when script is loaded successfully
  */
-function loadSequence(scriptSrc) {
-    // Create a new script element for dynamic loading
-    const script = document.createElement("script");
-
-    // Set the src attribute to the provided script path
-    script.src = scriptSrc;
-
-    // Optionally, set the type attribute (default is "text/javascript")
-    script.type = "text/javascript";
-
-    // Ensure the script is loaded before running experiment
-    script.onload = () => {
-        console.log("Script loaded successfully, running experiment.");
+export function loadSequence(scriptSrc) {
+    return new Promise((resolve, reject) => {
+        // Create a new script element for dynamic loading
+        const script = document.createElement("script");
         
-        // Execute the main experiment function once sequence is loaded
-        run_full_experiment();
-    };
-    
-    // Append the script to the document's head to trigger loading
-    document.head.appendChild(script); 
-
+        // Set the src attribute to the provided script path
+        script.src = scriptSrc;
+        script.type = "text/javascript";
+        
+        // Success handler
+        script.onload = () => {
+            console.log("Script loaded successfully:", scriptSrc);
+            resolve();
+        };
+        
+        // Error handler
+        script.onerror = () => {
+            console.error("Failed to load script:", scriptSrc);
+            reject(new Error(`Failed to load sequence script: ${scriptSrc}`));
+        };
+        
+        // Append the script to the document's head to trigger loading
+        document.head.appendChild(script);
+    });
 }
-
 /**
  * Creates a jsPsych preload trial for loading images before task execution
  * @param {string[]} images - Array of image file paths to preload

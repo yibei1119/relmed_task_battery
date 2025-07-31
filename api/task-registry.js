@@ -2,6 +2,7 @@
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
 import { createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card_choosing/task.js';
+import { loadSequence } from '../core/utils/setup.js';
 
 export const TaskRegistry = {
   card_choosing: {
@@ -13,7 +14,16 @@ export const TaskRegistry = {
         n_choices: 2,
         valence: "mixed",
         present_pavlovian: true,
-        include_instructions: true
+        include_instructions: true,
+        sequence: 'wk0'
+    },
+    sequences: {
+        screening: 'sequences/trial1_screening_sequences.js',
+        wk0: 'sequences/trial1_wk0_sequences.js',
+        wk2: 'sequences/trial1_wk2_sequences.js',
+        wk4: 'sequences/trial1_wk4_sequences.js',
+        wk24: 'sequences/trial1_wk24_sequences.js',
+        wk28: 'sequences/trial1_wk28_sequences.js',
     },
     requirements: {
       css: ['tasks/card-choosing/styles.css'],
@@ -38,7 +48,8 @@ export const TaskRegistry = {
     createTimeline: createPostLearningTestTimeline,
     defaultConfig: {
         task_name: "pilt",
-        test_confidence_every: 4
+        test_confidence_every: 4,
+        sequence: 'wk0'
     },
     requirements: {
       css: ['tasks/card-choosing/styles.css'],
@@ -62,19 +73,32 @@ export function getTask(taskName) {
   return TaskRegistry[taskName];
 }
 
-export function createTaskTimeline(taskName, config = {}) {
-  const task = getTask(taskName);
-  
-  // Add universal defaults for all tasks
-  const universalDefaults = {
-    extra_media_assets: []
-  };
-  
-  // Merge with defaults: universal defaults, then task defaults, then user config
-  const mergedConfig = { ...universalDefaults, ...task.defaultConfig, ...config };
-  
-  // Run the task with merged config
-  return task.createTimeline(mergedConfig);
+export async function createTaskTimeline(taskName, config = {}) {
+    // Get task
+    const task = getTask(taskName);
+
+    // Merge configurations with defaults 
+    const mergedConfig = { ...task.defaultConfig, ...config };
+
+    // Load required sequence using robust script loading
+    if (task.sequences && mergedConfig.task_name) {
+        const sequenceName = mergedConfig.sequence;
+        const sequencePath = task.sequences[mergedConfig.task_name]?.[sequenceName];
+
+        if (sequencePath) {
+            console.log(`Loading sequence using script loading: ${sequencePath}`);
+            
+            try {
+                await loadSequence(sequencePath);
+                console.log(`Successfully loaded sequence: ${sequenceName}`);
+            } catch (error) {
+                console.warn(`Failed to load sequence ${sequencePath}, continuing without it:`, error);
+                // Continue without the sequence - let the task handle missing sequences gracefully
+            }
+        }
+    }
+    
+    return task.createTimeline(mergedConfig);
 }
 
 export function listTasks() {
