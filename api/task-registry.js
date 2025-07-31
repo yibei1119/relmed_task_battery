@@ -19,12 +19,12 @@ export const TaskRegistry = {
         session: 'wk0'
     },
     sequences: {
-        screening: 'sequences/trial1_screening_sequences.js',
-        wk0: 'sequences/trial1_wk0_sequences.js',
-        wk2: 'sequences/trial1_wk2_sequences.js',
-        wk4: 'sequences/trial1_wk4_sequences.js',
-        wk24: 'sequences/trial1_wk24_sequences.js',
-        wk28: 'sequences/trial1_wk28_sequences.js',
+        screening: '../assets/sequences/trial1_screening_sequences.js',
+        wk0: '../assets/sequences/trial1_wk0_sequences.js',
+        wk2: '../assets/sequences/trial1_wk2_sequences.js',
+        wk4: '../assets/sequences/trial1_wk4_sequences.js',
+        wk24: '../assets/sequences/trial1_wk24_sequences.js',
+        wk28: '../assets/sequences/trial1_wk28_sequences.js',
     },
     requirements: {
       css: ['tasks/card-choosing/styles.css'],
@@ -90,7 +90,9 @@ export async function createTaskTimeline(taskName, config = {}) {
     // Load required sequence using robust script loading
     if (task.sequences && mergedConfig.task_name) {
         const sequenceName = mergedConfig.sequence;
-        const sequencePath = task.sequences[mergedConfig.task_name]?.[sequenceName];
+        const sequencePath = task.sequences?.[sequenceName];
+
+        console.log(`Loading sequence for task ${taskName}: ${sequenceName} from ${sequencePath}`);
 
         if (sequencePath) {
             console.log(`Loading sequence using script loading: ${sequencePath}`);
