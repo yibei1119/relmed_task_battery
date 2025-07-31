@@ -521,7 +521,7 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
         const block_number = structure[i][0]["block"];
 
         // Initialize block with preloading
-        block = [
+        let block = [
             {
                 type: jsPsychPreload,
                 images: preload_images,
