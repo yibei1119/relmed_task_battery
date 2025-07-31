@@ -56,7 +56,7 @@
         import { createTaskTimeline, getTaskInfo } from '../api/index.js';
         
         // Initialize jsPsych
-        const jsPsych = initJsPsych({
+        window.jsPsych = initJsPsych({
             display_element: 'display_element',
             on_finish: function(data) {
                 // Display results
