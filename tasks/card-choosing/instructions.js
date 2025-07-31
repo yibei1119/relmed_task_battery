@@ -102,7 +102,7 @@ function preparePILTInstructions(settings) {
                             feedback_middle: "",
                             n_stimuli: 2,
                             present_pavlovian: settings.session !== "screening",
-                            pavlovian_images: getPavlovianImages(),
+                            pavlovian_images: getPavlovianImages(settings),
                             optimal_side: "",
                             feedback_left: 1,
                             feedback_right: 1,
@@ -170,7 +170,7 @@ function preparePILTInstructions(settings) {
                             stimulus_middle: "",
                             feedback_middle: "",
                             present_pavlovian: settings.session !== "screening",
-                            pavlovian_images: getPavlovianImages(),
+                            pavlovian_images: getPavlovianImages(settings),
                             n_stimuli: 2,
                             optimal_side: "",
                             // Set feedback values based on card position and session type

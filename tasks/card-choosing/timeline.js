@@ -68,7 +68,7 @@ export function createCardChoosingTimeline(settings) {
 
   // Build and add main task blocks
   if (structure != null) {
-    let task_blocks = buildCardChoosingTask(structure, true, settings.task_name);
+    let task_blocks = buildCardChoosingTask(structure, true, settings);
 
     if (task_blocks.length === 0) {
       console.log("No blocks to add");
@@ -81,7 +81,7 @@ export function createCardChoosingTimeline(settings) {
         };
       } else if (settings.task_name === "wm") {
         task_blocks[0]["on_start"] = () => {
-          if (!(["wk24", "wk28"].includes(window.session))) {
+          if (!(["wk24", "wk28"].includes(settings.session))) {
             updateState("no_resume_10_minutes");
           }
           updateState("wm_task_start");

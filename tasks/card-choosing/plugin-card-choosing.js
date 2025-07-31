@@ -119,12 +119,12 @@ jsPsychCardChoosing = (function (jspsych) {
             coin_images: {
                 type: jspsych.ParameterType.OBJECT,
                 default: {
-                    0.01: "1penny.png",
-                    1.0: "1pound.png",
-                    0.5: "50pence.png",
-                    "-0.01": "1pennybroken.png",
-                    "-1": "1poundbroken.png",
-                    "-0.5": "50pencebroken.png"
+                    0.01: "/assets/images/card-choosing/outcomes/1penny.png",
+                    1.0: "/assets/images/card-choosing/outcomes/1pound.png",
+                    0.5: "/assets/images/card-choosing/outcomes/50pence.png",
+                    "-0.01": "/assets/images/card-choosing/outcomes/1pennybroken.png",
+                    "-1": "/assets/images/card-choosing/outcomes/1poundbroken.png",
+                    "-0.5": "/assets/images/card-choosing/outcomes/50pencebroken.png"
                 },
             },
             /** Coin image filenames */
@@ -238,7 +238,7 @@ jsPsychCardChoosing = (function (jspsych) {
                 img: [trial.stimulus_left, trial.stimulus_right, trial.stimulus_middle],
                 outcome: [trial.feedback_left, trial.feedback_right, trial.feedback_middle],
             }
-
+            
             // Set data values
             this.data.stimulus_left = this.contingency.img[0];
             this.data.stimulus_right = this.contingency.img[1];
@@ -346,11 +346,12 @@ jsPsychCardChoosing = (function (jspsych) {
                         coinBackground.id = "cardChoosingCoinBackground"
                         coinBackground.className = "cardChoosingCoinBackground"
 
-                        coin.src = `imgs/${trial.coin_images[this.data.chosen_feedback]}`;
+                        coin.src = trial.coin_images[this.data.chosen_feedback];
 
                         if (trial.present_pavlovian) {
-                            coinBackground.src = `imgs/${trial.pavlovian_images[this.data.chosen_feedback]}`;
-                            
+                            coinBackground.src = trial.pavlovian_images[this.data.chosen_feedback];
+                            console.log("Pavlovian stimulus:", coinBackground.src);
+
                             document.getElementById(this.data.response).appendChild(coinBackground)
                             document.getElementById(this.data.response).appendChild(coinCircle)
                         }
