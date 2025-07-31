@@ -8,14 +8,14 @@ import {
   preload_assets,
   buildCardChoosingTask,
   adjustStimuliPaths,
-  buildPostLearningTest,
-  applyWithinTaskResumptionRules, 
-  getResumptionState
+  buildPostLearningTest
 } from './utils.js';
 import { 
   updateState,
   computeBestRest,
-  createPreloadTrial
+  createPreloadTrial,
+  applyWithinTaskResumptionRules, 
+  getResumptionState
 } from '../../core/utils/index.js';
 
 // MAIN EXPORT FUNCTIONS
