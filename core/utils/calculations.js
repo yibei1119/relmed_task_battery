@@ -140,16 +140,14 @@ function shuffleArray(arr, seedString) {
 }
 
 // Export functions for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        formatDateString,
-        computeBestRest,
-        countOccurrences,
-        isValidNumber,
-        stringToSeed,
-        seededRandom,
-        shuffleArray
-    };
-}
+export {
+    formatDateString,
+    computeBestRest,
+    countOccurrences,
+    isValidNumber,
+    stringToSeed,
+    seededRandom,
+    shuffleArray
+};
 
 

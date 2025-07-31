@@ -200,13 +200,11 @@ const bonus_trial = {
   };
 
 // Export functions for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        getTaskBonusData,
-        roundDigits,
-        deepCopySessionState,
-        computeTotalBonus,
-        updateBonusState,
-        bonus_trial
-    };
-}
+export {
+    getTaskBonusData,
+    roundDigits,
+    deepCopySessionState,
+    computeTotalBonus,
+    updateBonusState,
+    bonus_trial
+};

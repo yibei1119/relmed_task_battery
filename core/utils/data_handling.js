@@ -206,13 +206,11 @@ function endExperiment() {
 }
 
 // Export functions for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        postToParent,
-        updateState,
-        saveDataREDCap,
-        endExperiment
-    };
-}
+export {
+    postToParent,
+    updateState,
+    saveDataREDCap,
+    endExperiment
+};
 
 

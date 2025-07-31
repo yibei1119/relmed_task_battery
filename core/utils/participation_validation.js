@@ -13,6 +13,27 @@ function preventRefresh(e) {
     e.returnValue = '';
 }
 
+  // Function that checks for fullscreen
+function check_fullscreen(){
+    if (window.debug || window.context === "relmed"){
+        return false
+    }
+
+    var int = jsPsych.data.getInteractionData(),
+    exit = int.values().filter(function(e){
+        return e.event == "fullscreenexit"
+    }),
+    enter = int.values().filter(function(e){
+        return e.event == "fullscreenenter"
+    });
+
+    if (exit.length > 0){
+        return exit[exit.length - 1].time > enter[enter.length - 1].time
+    }else{
+        return false
+    }
+}
+
 /**
  * jsPsych trial configuration for fullscreen enforcement
  * Prompts participants to return to fullscreen mode when they exit
@@ -453,19 +474,17 @@ function createPressBothTrial(stimulus, trialphase){
 }
 
 // Export functions for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        preventRefresh,
-        fullscreen_prompt,
-        pre_kick_out_warning,
-        kick_out_warning,
-        kick_out,
-        createInstructionsKickOut,
-        checkFullscreen,
-        canBeWarned,
-        showTemporaryWarning,
-        noChoiceWarning,
-        setupMultiKeysListener,
-        createPressBothTrial
-    };
-}
+export {
+    preventRefresh,
+    fullscreen_prompt,
+    pre_kick_out_warning,
+    kick_out_warning,
+    kick_out,
+    createInstructionsKickOut,
+    checkFullscreen,
+    canBeWarned,
+    showTemporaryWarning,
+    noChoiceWarning,
+    setupMultiKeysListener,
+    createPressBothTrial
+};

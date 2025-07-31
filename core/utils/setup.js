@@ -57,9 +57,8 @@ function createPreloadTrial(images, task_name) {
 }
 
 // Export functions for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        loadSequence,
-        createPreloadTrial
-    };
-}
+export {
+    loadSequence,
+    createPreloadTrial
+};
+
