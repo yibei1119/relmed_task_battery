@@ -507,20 +507,6 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
     let card_choosing_task = [];
     
     for (let i = 0; i < structure.length; i++) {
-        // Skip blocks already completed (for task resumption)
-        if (task_name === "pilt"){
-            // Extract the block number from the state string
-            const state_match = window.last_state.match(new RegExp(`${task_name}_block_(\\d+)_start`));
-
-            if (state_match){
-                const last_block = parseInt(state_match[1]);
-                const this_block = structure[i][0]["block"];
-
-                if (typeof this_block === "number" && this_block <= last_block){
-                    continue;
-                }
-            }
-        }
 
         // Log block addition for debugging
         console.log(`Adding block ${structure[i][0]["block"]} of ${task_name} to the timeline.`);

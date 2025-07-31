@@ -31,8 +31,13 @@ export const TaskRegistry = {
       note: 'Make sure to include card-choosing/styles.css in your HTML file'
     },
     resumptionRules: {
-      enabled: true,
-      granularity: 'block'
+        enabled: true,
+        granularity: 'block', // or 'trial' for finer control
+        statePattern: (taskName) => `${taskName}_block_(\\d+)_start`,
+        extractProgress: (lastState, taskName) => {
+            const match = lastState.match(new RegExp(`${taskName}_block_(\\d+)_start`));
+            return match ? parseInt(match[1]) : 0;
+        }
     },
     configOptions: {
         task_name: "The name of the task being tested. Default is 'pilt'.",

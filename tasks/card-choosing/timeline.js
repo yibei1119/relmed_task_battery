@@ -42,13 +42,26 @@ export function createCardChoosingTimeline(settings) {
     return timeline; // Return empty timeline for unknown task
   }
 
+  // Add instructions to timeline
+  timeline = timeline.concat(instructions);
+
   // Compute best-rest outcomes for early stopping
   if (structure != null) {
     computeBestRest(structure);
   }
 
-  // Add instructions to timeline
-  timeline = timeline.concat(instructions);
+   // Apply resumption rules if enabled
+  if (taskInfo.resumptionRules?.enabled) {
+      structure = applyResumptionRules(
+          structure, 
+          lastState, 
+          settings.task_name, 
+          taskInfo.resumptionRules
+      );
+      
+      console.log(`Applied resumption rules. ${structure.length} blocks remaining.`);
+  }
+
 
   // Build and add main task blocks
   if (structure != null) {
