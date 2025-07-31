@@ -69,6 +69,7 @@ export function createCardChoosingTimeline(settings) {
   // Build and add main task blocks
   if (structure != null) {
     let task_blocks = buildCardChoosingTask(structure, true, settings.task_name);
+
     if (task_blocks.length === 0) {
       console.log("No blocks to add");
       timeline = [];
