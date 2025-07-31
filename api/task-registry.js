@@ -1,7 +1,7 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/task.js';
+import { createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
 import { loadSequence } from '../core/utils/setup.js';
 
 export const TaskRegistry = {

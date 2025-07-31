@@ -1,3 +1,13 @@
+// Import necessary functions and components
+import { interBlockStimulus } from './utils.js';
+import { 
+    updateState,
+    createPressBothTrial
+} from '../utils/index.js';
+import { build_PILT_task } from './timeline.js';
+import { pavlovian_images_f } from '../utils/pavlovian.js';
+import { shuffleArray } from '../utils/helpers.js';
+
 // Instructions for the PILT
 const small_coin_size = 100;
 const demo_stimuli = [
@@ -9,11 +19,11 @@ const demo_stimuli = [
     "cantaloupe_1.jpg"
 ]
 
-function prepare_PILT_instructions() {
+function preparePILTInstructions() {
     const inter_block_instruct = {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
-        pages: () => [inter_block_stimulus()],
+        pages: () => [interBlockStimulus()],
         show_clickable_nav: true,
         data: {trialphase: "pilt_instruction"}
     }
@@ -436,5 +446,11 @@ const WM_instructions = [
         }
     }
 ]
+
+export {
+    preparePILTInstructions,
+    test_instructions,
+    WM_instructions
+};
 
 
