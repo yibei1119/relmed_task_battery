@@ -2,11 +2,13 @@
 import { interBlockStimulus } from './utils.js';
 import { 
     updateState,
-    createPressBothTrial
+    createPressBothTrial,
+    shuffleArray
 } from '../utils/index.js';
-import { build_PILT_task } from './timeline.js';
-import { pavlovian_images_f } from '../utils/pavlovian.js';
-import { shuffleArray } from '../utils/helpers.js';
+import { 
+    build_PILT_task,
+    pavlovian_images_f 
+} from './utils.js';
 
 // Configuration constants for PILT instructions
 const small_coin_size = 100; // Size of coin images in pixels
