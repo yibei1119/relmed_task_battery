@@ -7,7 +7,9 @@
  * @returns {Array} Filtered structure with completed blocks removed
  */
 export function applyWithinTaskResumptionRules(structure, lastState, taskName, resumptionRules) {
+    console.log(structure, lastState, taskName, resumptionRules);
     if (!resumptionRules?.enabled || !lastState || lastState === "none") {
+        console.log("Resumption rules not enabled or no last state found.");
         return structure;
     }
 
