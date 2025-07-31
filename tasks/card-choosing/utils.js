@@ -579,6 +579,7 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
         card_choosing_task = card_choosing_task.concat(block)
     }
 
+    console.log(`Built card choosing task with ${card_choosing_task.length} trials.`);
     return card_choosing_task
 }
 
