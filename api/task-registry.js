@@ -15,7 +15,8 @@ export const TaskRegistry = {
         valence: "mixed",
         present_pavlovian: true,
         include_instructions: true,
-        sequence: 'wk0'
+        sequence: 'wk0',
+        session: 'wk0'
     },
     sequences: {
         screening: 'sequences/trial1_screening_sequences.js',
@@ -49,7 +50,8 @@ export const TaskRegistry = {
     defaultConfig: {
         task_name: "pilt",
         test_confidence_every: 4,
-        sequence: 'wk0'
+        sequence: 'wk0',
+        session: 'wk0'
     },
     requirements: {
       css: ['tasks/card-choosing/styles.css'],

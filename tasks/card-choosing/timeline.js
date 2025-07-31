@@ -34,7 +34,7 @@ export function createCardChoosingTimeline(settings) {
   let structure, instructions;
   if (settings.task_name === "pilt") {
     structure = typeof PILT_json !== "undefined" ? JSON.parse(PILT_json) : null;
-    instructions = preparePILTInstructions();
+    instructions = preparePILTInstructions(settings);
   } else if (settings.task_name === "wm") {
     structure = typeof WM_json !== "undefined" ? JSON.parse(WM_json) : null;
     instructions = WM_instructions;
