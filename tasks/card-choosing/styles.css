@@ -1,13 +1,13 @@
-/* CSS styles for PILT plugin */
+/* CSS styles for cardChoosing plugin */
 
-.PILTOptionBox {
+.cardChoosingOptionBox {
     margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.PILTOptionSide {
+.cardChoosingOptionSide {
     display: grid;
     flex-direction: column;
     width: 25vw;
@@ -16,7 +16,7 @@
     justify-content: center;
 }
 
-.PILTOptionSide img {
+.cardChoosingOptionSide img {
     height: auto;
     width: 20vw;
     max-width: 500px;
@@ -26,11 +26,11 @@
     grid-row: 1;
 }
 
-#PILTRightImg, #PILTLeftImg, #PILTMiddleImg {
+#cardChoosingRightImg, #cardChoosingLeftImg, #cardChoosingMiddleImg {
     border: 1px solid darkgrey;
 }
 
-.PILTHelperTxt2 {
+.cardChoosingHelperTxt2 {
     display: flex;
     justify-content: space-around;
     margin: auto;
@@ -43,7 +43,7 @@
     line-height: 3rem;
 }
 
-.PILTHelperTxt3 {
+.cardChoosingHelperTxt3 {
     display: flex;
     justify-content: space-around;
     margin: auto;    
@@ -54,13 +54,13 @@
 }
 
 
-.PILTCoin {
+.cardChoosingCoin {
     visibility: hidden;
     margin: auto;
     z-index: 3;
 }
 
-.PILTOptionSide .PILTCoinCircle {
+.cardChoosingOptionSide .cardChoosingCoinCircle {
     visibility: hidden;
     height: 21vw;
     width: 21vw;
@@ -73,7 +73,7 @@
     z-index: 2;
 }
 
-.PILTOptionSide img.PILTCoinBackground {
+.cardChoosingOptionSide img.cardChoosingCoinBackground {
     visibility: hidden;
     width: 30vw;
     max-width: 30vw;

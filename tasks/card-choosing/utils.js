@@ -12,6 +12,8 @@ import {
 
 
 // CONSTANTS
+const STIMULI_PATH = '/assets/images/card-choosing/stimuli/';
+
 const preload_assets = (settings) => {
             // Base coin images
             let images = [
@@ -34,7 +36,7 @@ const preload_assets = (settings) => {
             if (settings.present_pavlovian) {
                 images = images.concat([
                     "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
-                ].map(s => `pavlovian_stims/${settings.session}/${s}`));
+                ].map(s => `pavlovian-stims/${settings.session}/${s}`));
             }
 
             // Add any extra media assets
@@ -247,9 +249,9 @@ const cardChoosingTrial = (task) => {
         {
             type: jsPsychCardChoosing,
             // Construct stimulus paths dynamically
-            stimulus_right: () => '/assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
-            stimulus_left: () => '/assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
-            stimulus_middle: () => '/assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
+            stimulus_right: () => STIMULI_PATH + jsPsych.evaluateTimelineVariable('stimulus_right'),
+            stimulus_left: () => STIMULI_PATH + jsPsych.evaluateTimelineVariable('stimulus_left'),
+            stimulus_middle: () => STIMULI_PATH + jsPsych.evaluateTimelineVariable('stimulus_middle'),
             // ...existing code...
             response_deadline: () => {
                 // Try to get custom deadline from timeline variables
@@ -513,7 +515,7 @@ function buildCardChoosingTask(structure, insert_msg = true, task_name = "pilt")
 
         // Extract unique images for preloading
         let preload_images = structure[i].flatMap(item => [item.stimulus_right, item.stimulus_left]);
-        preload_images = [...new Set(preload_images)].map(value => `assets/images/card_choosing/stimuli/${value}`);
+        preload_images = [...new Set(preload_images)].map(value => `assets/images/card-choosing/stimuli//${value}`);
 
         // Extract block properties
         const valence = structure[i][0]["valence"];
