@@ -29,7 +29,7 @@ const demo_stimuli = [
  * Prepares the complete instruction sequence for the PILT (Pavlovian-Instrumental Learning Task)
  * @returns {Array} Array of jsPsych trial objects containing all instruction pages, practice trials, and quiz
  */
-function preparePILTInstructions() {
+function preparePILTInstructions(settings) {
     // Create inter-block instruction stimulus
     const inter_block_instruct = {
         type: jsPsychInstructions,
