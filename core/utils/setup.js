@@ -3,6 +3,9 @@
  * Handles dynamic script loading and experiment launch coordination
  */
 
+// Import communication utility for sending messages to parent window
+import { postToParent } from './data_handling.js';
+
 /**
  * Dynamically loads a JavaScript file with Promise-based interface
  * More robust than fetch() for loading sequence files
