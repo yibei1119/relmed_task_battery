@@ -580,7 +580,7 @@ jsPsychCardChoosing = (function (jspsych) {
             return html
         }
     }
-    CardChoosingPlugin.info = info;
+    cardChoosingPlugin.info = info;
 
     return cardChoosingPlugin;
 })(jsPsychModule);
