@@ -4,9 +4,9 @@ import {
     updateState,
     createPressBothTrial,
     shuffleArray
-} from '../utils/index.js';
+} from '../../core/utils/index.js';
 import { 
-    build_PILT_task,
+    buildCardChoosingTask,
     getPavlovianImages 
 } from './utils.js';
 
@@ -93,7 +93,7 @@ function preparePILTInstructions() {
             ),
             {
                 // Simple demonstration trial with both cards giving £1
-                timeline: build_PILT_task(
+                timeline: buildCardChoosingTask(
                     [[
                         {   
                             stimulus_left: demo_stimuli[0],
@@ -160,7 +160,7 @@ function preparePILTInstructions() {
     // Add main practice task
     inst.push(
         {
-            timeline: build_PILT_task(
+            timeline: buildCardChoosingTask(
                 [
                     // Map trials with alternating good/bad card positions
                     dumbbell_on_right.map((e, i) => 

@@ -606,6 +606,5 @@ export {
     cardChoosingTrial,
     buildPostLearningTest,
     interBlockStimulus,
-    buildCardChoosingTask,
-    pavlovian_images_f
+    buildCardChoosingTask
  };
