@@ -9,7 +9,7 @@
  * @param {string} scriptSrc - Path to the JavaScript file to load
  * @returns {Promise} Resolves when script is loaded successfully
  */
-export function loadSequence(scriptSrc) {
+function loadSequence(scriptSrc) {
     return new Promise((resolve, reject) => {
         // Create a new script element for dynamic loading
         const script = document.createElement("script");
