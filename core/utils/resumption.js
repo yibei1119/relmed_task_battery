@@ -34,11 +34,6 @@ export function applyWithinTaskResumptionRules(structure, lastState, taskName, r
  * @returns {string} Current resumption state
  */
 export function getResumptionState() {
-    // For jsPsych integration
-    if (typeof jsPsych !== 'undefined' && jsPsych.data?.getURLVariable) {
-        return jsPsych.data.getURLVariable('state') || "none";
-    }
-    
     // For direct URL parameter access
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('state') || "none";
