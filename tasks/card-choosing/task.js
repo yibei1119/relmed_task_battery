@@ -13,7 +13,7 @@ import {
   isValidNumber,
   computeBestRest,
   createPreloadTrial
-} from 'core/utils/index.js'; // Adjust path as needed
+} from '../../core/utils/index.js'; // Adjust path as needed
 
 // CONSTANTS
 const preload_assets = (settings) => {
