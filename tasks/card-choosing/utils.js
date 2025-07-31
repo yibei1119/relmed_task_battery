@@ -8,7 +8,7 @@ import {
   createPressBothTrial,
   updateState,
   isValidNumber,
-} from '../../core/utils/index.js'; // Adjust path as needed
+} from '/core/utils/index.js'; // Adjust path as needed
 
 
 // CONSTANTS
@@ -34,7 +34,7 @@ const preload_assets = (settings) => {
             if (settings.present_pavlovian) {
                 images = images.concat([
                     "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
-                ].map(s => `pavlovian_stims/${window.session}/${s}`));
+                ].map(s => `pavlovian_stims/${settings.session}/${s}`));
             }
 
             // Add any extra media assets
@@ -43,7 +43,7 @@ const preload_assets = (settings) => {
             }
 
             // Prefix all with assets/images/
-            return images.map(s => `assets/images/${s}`);
+            return images.map(s => `/assets/images/${s}`);
 };
 
 // UTILITY FUNCTIONS
@@ -60,7 +60,7 @@ function getPavlovianImages() {
         "-1": "PIT6.png",
         "-0.5": "PIT5.png"
     };
-    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "assets/images/pavlovian_stims/" + window.session + "/" + v]));
+    PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "/assets/images/pavlovian_stims/" + window.session + "/" + v]));
     return PIT_imgs;
 }
 
@@ -79,8 +79,8 @@ function adjustStimuliPaths(structure, folder) {
     // Adjust stimuli paths otherwise
     structure.forEach(block => {
         block.forEach(trial => {
-            trial.stimulus_left = `assets/images/${folder}/${trial.stimulus_left}`;
-            trial.stimulus_right = `assets/images/${folder}/${trial.stimulus_right}`;
+            trial.stimulus_left = `/assets/images/${folder}/${trial.stimulus_left}`;
+            trial.stimulus_right = `/assets/images/${folder}/${trial.stimulus_right}`;
         });
     });
 }
@@ -247,9 +247,9 @@ const cardChoosingTrial = (task) => {
         {
             type: jsPsychCardChoosing,
             // Construct stimulus paths dynamically
-            stimulus_right: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
-            stimulus_left: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
-            stimulus_middle: () => 'assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
+            stimulus_right: () => '/assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_right'),
+            stimulus_left: () => '/assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_left'),
+            stimulus_middle: () => '/assets/images/card_choosing/stimuli'+ jsPsych.evaluateTimelineVariable('stimulus_middle'),
             // ...existing code...
             response_deadline: () => {
                 // Try to get custom deadline from timeline variables
@@ -431,7 +431,7 @@ function interBlockStimulus(){
 
     } else if (valence != 0) {
         // Show standard feedback for non-neutral valence blocks
-        txt += `<p><img src='imgs/safe.png' style='width:100px; height:100px;'></p>
+        txt += `<p><img src='/assets/images/safe.png' style='width:100px; height:100px;'></p>
         <p>These coins ${isValidNumber(block) ? "were" : "would have been"} 
         ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:</p>`
     }
@@ -440,13 +440,13 @@ function interBlockStimulus(){
     if (valence == 1){
 
         txt += `<div style='display: grid'><table><tr>
-            <td><img src='imgs/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+            <td><img src='/assets/images/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
         
         if (fifty){
-            txt +=  `<td><img src='imgs/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`
+            txt +=  `<td><img src='/assets/images/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`
         }
            
-        txt += `<td><img src='imgs/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+        txt += `<td><img src='/assets/images/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
             </tr>
             <tr>
             <td>${isValidNumber(chosen_outcomes[1]) ? chosen_outcomes[1] : 0}</td>`;
@@ -459,13 +459,13 @@ function interBlockStimulus(){
             </tr></table></div>`;
     } else if (valence == -1) {
         txt += `<div style='display: grid'><table>
-            <tr><td><img src='imgs/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+            <tr><td><img src='/assets/images/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
             
         if (fifty){
-            txt += `<td><img src='imgs/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`;
+            txt += `<td><img src='/assets/images/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`;
         }
             
-        txt += `<td><img src='imgs/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+        txt += `<td><img src='/assets/images/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
             </tr>
             <tr>
             <td>${isValidNumber(chosen_outcomes[-1]) ? chosen_outcomes[-1] : 0}</td>`
