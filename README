@@ -1,0 +1,46 @@
+# RELMED Task Battery
+
+## Overview
+This repository provides a unified framework for building and managing experimental task timelines. The core architecture centers around a task registry system located in the `api` folder, which offers a standardized interface for creating timelines across all tasks.
+
+## Repository Structure
+The codebase is organized into distinct folders, each serving a specific purpose:
+
+- **`api/`** - Contains the task registry and unified interface tools for timeline creation
+- **`tasks/`** - Houses individual task implementations, each in its own folder with an `index.js` entry point
+- **`core/`** - Shared code and utilities used across multiple tasks
+- **`assets/`** - Static resources including images, sequences, and other non-code files
+
+### File Structure Diagram
+```
+relmed_task_battery/
+├── README
+├── api/
+│   ├── task-registry.js
+│   └── index.js
+├── tasks/
+│   ├── task-1/
+│   │   ├── index.js
+│   │   ├── components/
+│   │   └── config/
+│   ├── task-2/
+│   │   ├── index.js
+│   │   ├── components/
+│   │   └── config/
+│   └── task-n/
+│       ├── index.js
+│       └── ...
+├── core/
+│   ├── utils/
+│   └── jspsych/
+└── assets/
+    ├── images/
+    └── sequences/
+```
+
+## Task Registration
+Each task must be registered in the system to be usable. Task folders under `tasks/` can have any internal structure, but must expose their functionality through an `index.js` file for consistent importing across the system.
+
+jsPsych plugins need to be loaded in the html file, for now.
+
+See `examples/PILT.html` for how the api should be used. Note that this is not yet working.
