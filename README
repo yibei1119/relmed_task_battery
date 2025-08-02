@@ -21,12 +21,12 @@ relmed_task_battery/
 ├── tasks/
 │   ├── task-1/
 │   │   ├── index.js
-│   │   ├── components/
-│   │   └── config/
+│   │   ├── other_file1.js
+│   │   └── other_file2.js
 │   ├── task-2/
 │   │   ├── index.js
-│   │   ├── components/
-│   │   └── config/
+│   │   ├── other_file1.js
+│   │   └── other_file2.js
 │   └── task-n/
 │       ├── index.js
 │       └── ...
