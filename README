@@ -38,8 +38,11 @@ relmed_task_battery/
     └── sequences/
 ```
 
+## Task Configuration
+Task behavior across different variants is controlled through a configuration object called `settings`. This object is passed to each task's functions and allows for flexible customization of task parameters, experimental conditions, and behavioral variations without modifying the core task code.
+
 ## Task Registration
-Each task must be registered in the system to be usable. Task folders under `tasks/` can have any internal structure, but must expose their functionality through an `index.js` file for consistent importing across the system.
+Each task must be registered in the system to be usable. Task folders under `tasks/` can have any internal structure, but must expose their functionality through an `index.js` file for consistent importing across the system. Tasks should accept a `settings` configuration object to control their behavior and variants.
 
 jsPsych plugins need to be loaded in the html file, for now.
 
