@@ -118,7 +118,8 @@ function preparePILTInstructions(settings) {
                             early_stop: false
                         }
                     ]],
-                    false
+                    false,
+                    settings
                 )
             }
         );
@@ -188,7 +189,8 @@ function preparePILTInstructions(settings) {
                         })
                     )
                 ],
-                false
+                false,
+                settings
             )
         }
     );
