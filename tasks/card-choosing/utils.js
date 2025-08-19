@@ -542,7 +542,7 @@ function buildCardChoosingTask(structure, insert_msg = true, settings = {task_na
 
         // Extract unique images for preloading
         let preload_images = structure[i].flatMap(item => [item.stimulus_right, item.stimulus_left]);
-        preload_images = [...new Set(preload_images)].map(value => `assets/images/card-choosing/stimuli//${value}`);
+        preload_images = [...new Set(preload_images)].map(value => `/assets/images/card-choosing/stimuli/${value}`);
 
         // Extract block properties
         const valence = structure[i][0]["valence"];
