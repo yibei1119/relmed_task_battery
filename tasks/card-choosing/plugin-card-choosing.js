@@ -350,7 +350,6 @@ jsPsychCardChoosing = (function (jspsych) {
 
                         if (trial.present_pavlovian) {
                             coinBackground.src = trial.pavlovian_images[this.data.chosen_feedback];
-                            console.log("Pavlovian stimulus:", coinBackground.src);
 
                             document.getElementById(this.data.response).appendChild(coinBackground)
                             document.getElementById(this.data.response).appendChild(coinCircle)
