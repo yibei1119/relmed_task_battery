@@ -116,13 +116,13 @@ function computeTotalBonus() {
  * Sends updated bonus data to parent window via postMessage
  */
 
-function updateBonusState() {
+function updateBonusState(settings) {
     // Initialize an updated session state object
     const updated_session_state_obj = deepCopySessionState();
 
     // Initialize the task-specific object if it doesn't exist
-    if (!updated_session_state_obj[window.task]) {
-        updated_session_state_obj[window.task] = {
+    if (!updated_session_state_obj[settings.task]) {
+        updated_session_state_obj[settings.task] = {
             earned: 0,
             min: 0,
             max: 0
@@ -131,14 +131,14 @@ function updateBonusState() {
     
     // Get the previous bonus values from session state for this specific task
     const prevBonus = {
-        earned: updated_session_state_obj[window.task].earned || 0,
-        min: updated_session_state_obj[window.task].min || 0,
-        max: updated_session_state_obj[window.task].max || 0
+        earned: updated_session_state_obj[settings.task].earned || 0,
+        min: updated_session_state_obj[settings.task].min || 0,
+        max: updated_session_state_obj[settings.task].max || 0
     };
-    console.log(`Last saved bonus for ${window.task}:`, prevBonus);
+    console.log(`Last saved bonus for ${settings.task}:`, prevBonus);
 
     // Get task-specific bonus data
-    const taskBonus = getTaskBonusData(window.task);
+    const taskBonus = getTaskBonusData(settings.task);
     
     // Calculate the new bonus values
     const newBonus = {
@@ -148,11 +148,11 @@ function updateBonusState() {
     };
 
     // Update the task-specific values in the session state
-    updated_session_state_obj[window.task].earned = roundDigits(newBonus.earned);
-    if (window.task !== "reversal") {
+    updated_session_state_obj[settings.task].earned = roundDigits(newBonus.earned);
+    if (settings.task !== "reversal") {
         // For all tasks except reversal, we update the min and max in bonus state
-        updated_session_state_obj[window.task].min = roundDigits(newBonus.min);
-        updated_session_state_obj[window.task].max = roundDigits(newBonus.max);
+        updated_session_state_obj[settings.task].min = roundDigits(newBonus.min);
+        updated_session_state_obj[settings.task].max = roundDigits(newBonus.max);
     }
 
     // Send the updated state back to the parent window

@@ -90,29 +90,31 @@ function adjustStimuliPaths(structure, folder) {
 
 // TRIAL COMPONENTS
 // Message between blocks - saves data and shows outcome summary
-const inter_block_msg = {
-    type: jsPsychHtmlKeyboardResponse,
-    choices: () => {
+const interBlockMsg = (settings) => {
+    return {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: () => {
 
-        // Determine response keys based on number of stimuli in last trial
-        const n_stimuli = jsPsych.data.get().filter({ trial_type: "card-choosing" }).last(1).select("n_stimuli").values[0];
+            // Determine response keys based on number of stimuli in last trial
+            const n_stimuli = jsPsych.data.get().filter({ trial_type: "card-choosing" }).last(1).select("n_stimuli").values[0];
 
-        return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
-    },
-    css_classes: ['instructions'],
-    stimulus: interBlockStimulus,
-    data: {
-        trialphase: "card_choosing_inter_block",
-    },
-    on_start: () => {
-        // Save progress and update bonus calculations
-        saveDataREDCap();
-        updateBonusState();
-    },
-    on_finish: () => { 
-        // Reset early stop flag for next block
-        window.skipThisBlock = false 
-    }
+            return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
+        },
+        css_classes: ['instructions'],
+        stimulus: interBlockStimulus,
+        data: {
+            trialphase: "card_choosing_inter_block",
+        },
+        on_start: () => {
+            // Save progress and update bonus calculations
+            saveDataREDCap();
+            updateBonusState(settings);
+        },
+        on_finish: () => { 
+            // Reset early stop flag for next block
+            window.skipThisBlock = false 
+        }
+    };
 }
 
 /**
@@ -602,7 +604,7 @@ function buildCardChoosingTask(structure, insert_msg = true, settings = {task_na
         
         // Add inter-block message if requested
         if (insert_msg) {
-            block.push(inter_block_msg);
+            block.push(interBlockMsg(settings));
         }
 
         card_choosing_task = card_choosing_task.concat(block)
@@ -617,7 +619,7 @@ export {
     preload_assets,
     getPavlovianImages,
     adjustStimuliPaths,
-    inter_block_msg,
+    interBlockMsg,
     testTrial,
     cardChoosingTrial,
     buildPostLearningTest,
