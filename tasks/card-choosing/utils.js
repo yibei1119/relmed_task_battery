@@ -434,7 +434,6 @@ function interBlockStimulus(settings){
 
     // Summarize into counts
     chosen_outcomes = countOccurrences(chosen_outcomes);
-    console.log(chosen_outcomes);
 
     // Initiate text
     let txt = ``
