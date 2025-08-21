@@ -434,6 +434,7 @@ function interBlockStimulus(){
 
     // Summarize into counts
     chosen_outcomes = countOccurrences(chosen_outcomes);
+    console.log(chosen_outcomes);
 
     // Initiate text
     let txt = ``
@@ -508,11 +509,14 @@ function interBlockStimulus(){
         txt += `<td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
             </tr></table></div>`;
     } else {
+        console.log(chosen_outcomes)
         // Calculate and display total earnings for neutral blocks
         const earnings = Object.entries(chosen_outcomes).reduce((sum, [value, count]) => {
             // Convert string keys to numbers explicitly for reliable calculation
             return sum + (Number(value) * count);
         }, 0);
+
+        console.log(earnings);
 
         txt += `<p>Altogether on this round, you've ${earnings >= 0 ? "collected" : "lost"} coins worth £${Math.abs(earnings).toFixed(2)}.</p>`;
         

@@ -138,7 +138,7 @@ function updateBonusState(settings) {
     console.log(`Last saved bonus for ${settings.task_name}:`, prevBonus);
 
     // Get task-specific bonus data
-    const taskBonus = getTaskBonusData(settings.task_name);
+    const taskBonus = settings.__task.computeBonus() || {earned: 0, min: 0, max: 0};
     
     // Calculate the new bonus values
     const newBonus = {
