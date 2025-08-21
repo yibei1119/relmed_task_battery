@@ -55,7 +55,7 @@
         // Import task registry functions
         import { createTaskTimeline, getTaskInfo } from '../api/index.js';
 
-        // Get parmaeters from URL
+        // Get parameters from URL
         window.participantID = new URLSearchParams(window.location.search).get('participant_id') || '';
         window.simulating = window.participantID.includes("simulate") || false;
         console.log(window.simulating);
