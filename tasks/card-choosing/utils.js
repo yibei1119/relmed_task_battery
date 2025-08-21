@@ -101,7 +101,7 @@ const interBlockMsg = (settings) => {
             return n_stimuli === 2 ? ['arrowright'] : ['arrowright', 'arrowleft', 'arrowup']
         },
         css_classes: ['instructions'],
-        stimulus: interBlockStimulus,
+        stimulus: () => interBlockStimulus(settings),
         data: {
             trialphase: "card_choosing_inter_block",
         },
@@ -331,7 +331,7 @@ const cardChoosingTrial = (settings) => {
 
                 // Find all sitmulus-pairs in block
                 let unique_stimulus_pairs = [...new Set(jsPsych.data.get().filter({
-                    trial_type: "PILT",
+                    trial_type: "card-choosing",
                     block: block
                 }).select('stimulus_group').values)]
 
@@ -343,7 +343,7 @@ const cardChoosingTrial = (settings) => {
 
                     // Filter data for the current stimulus_group
                     let num_optimal = jsPsych.data.get().filter({
-                        trial_type: "PILT",
+                        trial_type: "card-choosing",
                         block: block,
                         stimulus_group: g
                     }).last(5).select('response_optimal').sum();
@@ -406,7 +406,7 @@ function buildPostLearningTest(structure, task_name = "pilt", settings = {test_c
  * Generate HTML stimulus for inter-block feedback display
  * @returns {string} HTML string showing coin outcomes and instructions
  */
-function interBlockStimulus(){
+function interBlockStimulus(settings){
     // Get data from last card choosing trial
     const last_trial = jsPsych.data.get().filter({trial_type: "card-choosing"}).last(1);
 
@@ -440,7 +440,7 @@ function interBlockStimulus(){
     let txt = ``
 
     // Add text and tallies for early stop
-    if (window.skipThisBlock && window.task !== "screening"){
+    if (window.skipThisBlock && (settings.module_name ? settings.module_name !== "screening" : true)){
         
         txt += `<p>You've found the better ${n_groups > 1 ? "cards" : "card"}.</p><p>You will skip the remaining turns and `;
         
