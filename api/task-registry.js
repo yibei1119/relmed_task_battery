@@ -1,7 +1,7 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
+import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
 import { loadSequence } from '../core/utils/setup.js';
 
 export const TaskRegistry = {
@@ -9,6 +9,7 @@ export const TaskRegistry = {
     name: 'Card Choosing Task',
     description: 'A task measuring learning and decision making in a card choosing scenario',
     createTimeline: createCardChoosingTimeline,
+    computeBonus: computeRelativeCardChoosingBonus,
     defaultConfig: {
         task_name: "pilt",
         n_choices: 2,
@@ -87,6 +88,9 @@ export async function createTaskTimeline(taskName, config = {}) {
     // Merge configurations with defaults 
     const mergedConfig = { ...task.defaultConfig, ...config };
 
+    // Attach task object for internal use
+    mergedConfig.__task = task;
+    
     // Load required sequence using robust script loading
     if (task.sequences && mergedConfig.task_name) {
         const sequenceName = mergedConfig.sequence;

@@ -54,7 +54,12 @@
     <script type="module">
         // Import task registry functions
         import { createTaskTimeline, getTaskInfo } from '../api/index.js';
-        
+
+        // Get parameters from URL
+        window.participantID = new URLSearchParams(window.location.search).get('participant_id') || '';
+        window.simulating = window.participantID.includes("simulate") || false;
+        console.log(window.simulating);
+
         // Initialize jsPsych
         window.jsPsych = initJsPsych({
             display_element: 'display_element',
@@ -109,7 +114,23 @@
                 ];
                 
                 // Run the experiment
-                await jsPsych.run(fullTimeline);
+                if (window.simulating) {
+                    console.log('Simulating experiment run...');
+                    
+                    // Simulation options
+                    let simulation_options = {
+                            default: {
+                                data: {
+                                rt: 200
+                                }
+                            }
+                    }
+
+                    await jsPsych.simulate(fullTimeline, "visual", simulation_options);
+                } else {
+                    console.log('Running experiment...');
+                    await jsPsych.run(fullTimeline);
+                }
                 
             } catch (error) {
                 console.error('Error running experiment:', error);

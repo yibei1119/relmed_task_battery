@@ -1,11 +1,11 @@
 // tasks/card_choosing.js
 import { 
   preparePILTInstructions,
-  test_instructions,
+  testInstructions,
   WM_instructions
 } from './instructions.js';
 import { 
-  preload_assets,
+  preloadAssets,
   buildCardChoosingTask,
   adjustStimuliPaths,
   buildPostLearningTest
@@ -29,7 +29,7 @@ export function createCardChoosingTimeline(settings) {
 
   // Add preload trial for assets
   timeline.push(
-    createPreloadTrial(preload_assets(settings), settings.task_name)
+    createPreloadTrial(preloadAssets(settings), settings.task_name)
   );
   
   // Parse json sequence based on task_name
@@ -141,7 +141,7 @@ export function createPostLearningTestTimeline(settings) {
 
   // Build test timeline if structure is valid
   if ((test_structure != null) && (test_structure.length == 1 || test_structure[1] != null)) {
-    timeline.push(test_instructions(settings.task_name));
+    timeline.push(testInstructions(settings.task_name));
     let test_blocks = buildPostLearningTest(test_structure, settings.task_name, settings);
     // Set test start state tracking
     test_blocks[0]["on_start"] = () => {
@@ -159,7 +159,7 @@ export function createPostLearningTestTimeline(settings) {
  */
 export const computeRelativeCardChoosingBonus = () => {
     // Get all relevant trials: card choosing plugin with numeric blocks only
-    const trials = jsPsych.data.get().filter({trial_type: "card_choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
+    const trials = jsPsych.data.get().filter({trial_type: "card-choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
 
     let max_sum = 0;
     let min_sum = 0;
