@@ -514,7 +514,6 @@ function interBlockStimulus(settings){
             return sum + (Number(value) * count);
         }, 0);
 
-        console.log(earnings);
 
         txt += `<p>Altogether on this round, you've ${earnings >= 0 ? "collected" : "lost"} coins worth £${Math.abs(earnings).toFixed(2)}.</p>`;
         
