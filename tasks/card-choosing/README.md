@@ -36,15 +36,15 @@ The card-choosing task is a behavioral paradigm that implements both Pavlovian-I
 **Purpose**: Utility functions for task construction, trial building, and asset management.
 
 **Main Export Functions**:
-- **`preload_assets(settings)`**: Generates list of image assets to preload based on task settings
+- **`preloadAssets(settings)`**: Generates list of image assets to preload based on task settings
 - **`buildCardChoosingTask(structure, learning, settings)`**: Constructs the main task blocks from JSON structure
 - **`buildPostLearningTest(test_structure, task_name, settings)`**: Creates test phase trials
 - **`adjustStimuliPaths(structure, base_path)`**: Updates stimulus file paths in trial structures
 - **`cardChoosingTrial(trial_info, learning, settings)`**: Creates individual card-choosing trial objects
 - **`testTrial(trial_info, task_name, settings)`**: Creates individual test trial objects
 - **`getPavlovianImages(session)`**: Retrieves pavlovian stimulus images for given session
-- **`interBlockStimulus()`**: Generates inter-block instruction content
-- **`inter_block_msg(block_n, total_blocks)`**: Creates block progress messages
+- **`interBlockStimulus(settings)`**: Generates inter-block instruction content
+- **`interBlockMsg(settings)`**: Creates block progress messages
 
 #### `instructions.js`
 **Purpose**: Manages all instruction sequences, practice trials, and comprehension checks.
@@ -54,7 +54,7 @@ The card-choosing task is a behavioral paradigm that implements both Pavlovian-I
   - Includes tutorial pages, practice trials, and comprehension quiz
   - Adapts content based on task settings (n_choices, valence, etc.)
   
-- **`test_instructions(task_name)`**: Generates instructions for test phase
+- **`testInstructions(task_name)`**: Generates instructions for test phase
   - Task-specific instructions for PILT vs WM testing
   
 - **`WM_instructions`**: Static instruction sequence for Working Memory task variant

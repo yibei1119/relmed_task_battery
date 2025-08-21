@@ -15,7 +15,7 @@ import {
 // CONSTANTS
 const STIMULI_PATH = '/assets/images/card-choosing/stimuli/';
 
-const preload_assets = (settings) => {
+const preloadAssets = (settings) => {
             // Base coin images
             let images = [
                 "1penny.png", "1pound.png", "50pence.png"
@@ -620,7 +620,7 @@ function buildCardChoosingTask(structure, insert_msg = true, settings = {task_na
 
 
 export { 
-    preload_assets,
+    preloadAssets,
     getPavlovianImages,
     adjustStimuliPaths,
     interBlockMsg,

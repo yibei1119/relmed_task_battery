@@ -375,7 +375,7 @@ function check_quiz_failed() {
  * @param {string} task - The task identifier (e.g., "pilt", "ltm", "wm")
  * @returns {Object} jsPsych instruction trial object for test phase
  */
-const test_instructions = (task) => {
+const testInstructions = (task) => {
     return {
         type: jsPsychInstructions,
         css_classes: ['instructions'],
@@ -475,7 +475,7 @@ const WM_instructions = [
 
 export {
     preparePILTInstructions,
-    test_instructions,
+    testInstructions,
     WM_instructions
 };
 
