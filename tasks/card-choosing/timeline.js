@@ -159,7 +159,7 @@ export function createPostLearningTestTimeline(settings) {
  */
 export const computeRelativeCardChoosingBonus = () => {
     // Get all relevant trials: card choosing plugin with numeric blocks only
-    const trials = jsPsych.data.get().filter({trial_type: "card_choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
+    const trials = jsPsych.data.get().filter({trial_type: "card-choosing"}).filterCustom((trial) => {return typeof trial["block"] === "number"}).values();
 
     let max_sum = 0;
     let min_sum = 0;
