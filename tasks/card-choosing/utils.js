@@ -508,7 +508,6 @@ function interBlockStimulus(settings){
         txt += `<td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
             </tr></table></div>`;
     } else {
-        console.log(chosen_outcomes)
         // Calculate and display total earnings for neutral blocks
         const earnings = Object.entries(chosen_outcomes).reduce((sum, [value, count]) => {
             // Convert string keys to numbers explicitly for reliable calculation
