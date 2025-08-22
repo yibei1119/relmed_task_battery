@@ -2,6 +2,7 @@
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
+import { createDelayDiscountingTimeline } from '../tasks/delay-discounting/index.js';
 import { loadSequence } from '../core/utils/setup.js';
 
 export const TaskRegistry = {
@@ -70,7 +71,28 @@ export const TaskRegistry = {
         task_name: "The name of the task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials."
     }
-  }
+  },
+  delay_discounting: {
+    name: 'Delay Discounting Task',
+    description: 'Measure preferences for smaller-sooner vs larger-later monetary rewards',
+    createTimeline: createDelayDiscountingTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+      default_response_deadline: 4000,
+      long_response_deadline: 6000,
+    },
+    requirements: {
+      css: ['tasks/delay-discounting/styles.css'],
+      note: 'Make sure to include delay-discounting/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    },
+    configOptions: {
+        default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
+        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
+    }
+  },
 };
 
 // Helper functions
