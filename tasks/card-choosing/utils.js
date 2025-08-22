@@ -461,65 +461,17 @@ function interBlockStimulus(settings){
             });
         }
 
-    } else if (valence != 0) {
-        // Show standard feedback for non-neutral valence blocks
-        txt += `<p><img src='/assets/images/safe.png' style='width:100px; height:100px;'></p>
-        <p>These coins ${isValidNumber(block) ? "were" : "would have been"} 
-        ${valence == 1 ? "added to your safe" : "broken in your safe"} on this round:</p>`
     }
 
-    // Display coin counts based on block valence
-    if (valence == 1){
+    // Calculate and display total earnings for neutral blocks
+    const earnings = Object.entries(chosen_outcomes).reduce((sum, [value, count]) => {
+        // Convert string keys to numbers explicitly for reliable calculation
+        return sum + (Number(value) * count);
+    }, 0);
 
-        txt += `<div style='display: grid'><table><tr>
-            <td><img src='/assets/images/1pound.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>`
+
+    txt += `<p>Altogether on this round, you've ${earnings >= 0 ? "collected" : "lost"} coins worth £${Math.abs(earnings).toFixed(2)}.</p>`;
         
-        if (fifty){
-            txt +=  `<td><img src='/assets/images/50pence.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'</td>`
-        }
-           
-        txt += `<td><img src='/assets/images/1penny.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>
-            </tr>
-            <tr>
-            <td>${isValidNumber(chosen_outcomes[1]) ? chosen_outcomes[1] : 0}</td>`;
-
-        if (fifty) {
-            txt += `<td>${isValidNumber(chosen_outcomes[0.5]) ? chosen_outcomes[0.5] : 0}</td>`
-        }    
-            
-        txt += `<td>${isValidNumber(chosen_outcomes[0.01]) ? chosen_outcomes[0.01] : 0}</td>
-            </tr></table></div>`;
-    } else if (valence == -1) {
-        txt += `<div style='display: grid'><table>
-            <tr><td><img src='/assets/images/1poundbroken.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>`
-            
-        if (fifty){
-            txt += `<td><img src='/assets/images/50pencebroken.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'</td>`;
-        }
-            
-        txt += `<td><img src='/assets/images/1pennybroken.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>
-            </tr>
-            <tr>
-            <td>${isValidNumber(chosen_outcomes[-1]) ? chosen_outcomes[-1] : 0}</td>`
-
-        if (fifty){
-            txt += `<td>${isValidNumber(chosen_outcomes[-0.5]) ? chosen_outcomes[-0.5] : 0}</td>`;
-        }
-            
-        txt += `<td>${isValidNumber(chosen_outcomes[-0.01]) ? chosen_outcomes[-0.01] : 0}</td>
-            </tr></table></div>`;
-    } else {
-        // Calculate and display total earnings for neutral blocks
-        const earnings = Object.entries(chosen_outcomes).reduce((sum, [value, count]) => {
-            // Convert string keys to numbers explicitly for reliable calculation
-            return sum + (Number(value) * count);
-        }, 0);
-
-
-        txt += `<p>Altogether on this round, you've ${earnings >= 0 ? "collected" : "lost"} coins worth £${Math.abs(earnings).toFixed(2)}.</p>`;
-        
-    }
-
     // Add continuation instructions based on number of stimuli
     if (isValidNumber(block)){
         txt += n_stimuli === 2 ? `<p>Press the right arrow to continue.</p>` :
