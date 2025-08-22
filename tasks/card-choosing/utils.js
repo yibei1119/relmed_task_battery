@@ -14,6 +14,7 @@ import {
 
 // CONSTANTS
 const STIMULI_PATH = '/assets/images/card-choosing/stimuli/';
+const SMALL_COIN_SIZE = 100; // Size for coin images in feedback display
 
 const preloadAssets = (settings) => {
             // Base coin images
@@ -471,13 +472,13 @@ function interBlockStimulus(settings){
     if (valence == 1){
 
         txt += `<div style='display: grid'><table><tr>
-            <td><img src='/assets/images/1pound.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+            <td><img src='/assets/images/1pound.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>`
         
         if (fifty){
-            txt +=  `<td><img src='/assets/images/50pence.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`
+            txt +=  `<td><img src='/assets/images/50pence.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'</td>`
         }
            
-        txt += `<td><img src='/assets/images/1penny.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+        txt += `<td><img src='/assets/images/1penny.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>
             </tr>
             <tr>
             <td>${isValidNumber(chosen_outcomes[1]) ? chosen_outcomes[1] : 0}</td>`;
@@ -490,13 +491,13 @@ function interBlockStimulus(settings){
             </tr></table></div>`;
     } else if (valence == -1) {
         txt += `<div style='display: grid'><table>
-            <tr><td><img src='/assets/images/1poundbroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>`
+            <tr><td><img src='/assets/images/1poundbroken.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>`
             
         if (fifty){
-            txt += `<td><img src='/assets/images/50pencebroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'</td>`;
+            txt += `<td><img src='/assets/images/50pencebroken.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'</td>`;
         }
             
-        txt += `<td><img src='/assets/images/1pennybroken.png' style='width:${small_coin_size}px; height:${small_coin_size}px;'></td>
+        txt += `<td><img src='/assets/images/1pennybroken.png' style='width:${SMALL_COIN_SIZE}px; height:${SMALL_COIN_SIZE}px;'></td>
             </tr>
             <tr>
             <td>${isValidNumber(chosen_outcomes[-1]) ? chosen_outcomes[-1] : 0}</td>`
