@@ -14,7 +14,6 @@ import {
 
 // CONSTANTS
 const STIMULI_PATH = '/assets/images/card-choosing/stimuli/';
-const SMALL_COIN_SIZE = 100; // Size for coin images in feedback display
 
 const preloadAssets = (settings) => {
             // Base coin images
