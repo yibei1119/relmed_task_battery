@@ -93,6 +93,29 @@ export const TaskRegistry = {
         long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
     }
   },
+  max_press_test: {
+    name: 'Max Press Test',
+    description: 'A test of maximum key press speed',
+    createTimeline: createMaxPressTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+      duration: 7000,  
+      validKey: 'j',
+      minSpeed: 3.0 
+    },
+    configOptions: {
+        duration: "Duration of the max press test in milliseconds. Default is 7000 (7 seconds).",
+        validKey: "The key that participants should press during the test. Default is 'j'.",
+        minSpeed: "Minimum speed in presses per second required to pass the test. Default is 3.0, which was the 5th percentile in pilots 7 & 8."
+    },
+    requirements: {
+      css: ['tasks/max-press-test/styles.css'],
+      note: 'Make sure to include max-press-test/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    }
+  }
 };
 
 // Helper functions
