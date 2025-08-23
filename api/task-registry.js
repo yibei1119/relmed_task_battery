@@ -3,6 +3,7 @@
 
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
 import { createDelayDiscountingTimeline } from '../tasks/delay-discounting/index.js';
+import { createMaxPressTimeline } from '../tasks/max-press-test/task.js';
 import { loadSequence } from '../core/utils/setup.js';
 
 export const TaskRegistry = {
