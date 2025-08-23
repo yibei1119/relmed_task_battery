@@ -149,38 +149,40 @@ const maxPressFeedback = {
     choices: ['Continue']
 };
 
-const maxPressRetakeMessage = {
-    timeline: [{
-        type: jsPsychHtmlButtonResponse,
-        stimulus: function () {
-            const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
-            return `
-        <div id="instruction-container">
-            <div id="instruction-text" style="text-align: center;">
-                <p>On average, you pressed <strong>${avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
-                <p>To ensure the accuracy of the test,</br>we kindly ask you to retake it <span class="highlight-txt">with your best effort as much as possible</span>.</p>
-                <p>Press <strong>Continue</strong> to retake the test.</p>
+const maxPressRetakeMessage = (settings) => {
+    return {
+        timeline: [{
+            type: jsPsychHtmlButtonResponse,
+            stimulus: function () {
+                const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
+                return `
+            <div id="instruction-container">
+                <div id="instruction-text" style="text-align: center;">
+                    <p>On average, you pressed <strong>${avgSpeed.toFixed(2)} times per second</strong> during the keyboard test.</p>
+                    <p>To ensure the accuracy of the test,</br>we kindly ask you to retake it <span class="highlight-txt">with your best effort as much as possible</span>.</p>
+                    <p>Press <strong>Continue</strong> to retake the test.</p>
+                </div>
             </div>
-        </div>
-        `;
-        },
-        post_trial_gap: 800,
-        choices: ['Continue']
-    }],
-    conditional_function: () => {
-        const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
-        const retakeCount = jsPsych.data.get().filter({trialphase: 'max_press_rate'}).count();
-        if (avgSpeed < settings.minSpeed && retakeCount < 2) {
-            return true;
-        } else {
-            return false;
+            `;
+            },
+            post_trial_gap: 800,
+            choices: ['Continue']
+        }],
+        conditional_function: () => {
+            const avgSpeed = jsPsych.data.get().select("avgSpeed").values.reverse()[0];
+            const retakeCount = jsPsych.data.get().filter({trialphase: 'max_press_rate'}).count();
+            if (avgSpeed < settings.minSpeed && retakeCount < 2) {
+                return true;
+            } else {
+                return false;
+            }
         }
-    }
-};
+    };
+}
 
 const maxPressRetakeLoop = (settings) => {
     return {
-        timeline: [maxPressRateTrial(settings), maxPressRetakeMessage],
+        timeline: [maxPressRateTrial(settings), maxPressRetakeMessage(settings)],
         loop_function: (data) => {
             const retakeCount = jsPsych.data.get().filter({trialphase: 'max_press_rate'}).count();
             if (data.select('avgSpeed').values.reverse()[0] < settings.minSpeed && retakeCount < 2) {
