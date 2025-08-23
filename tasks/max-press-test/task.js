@@ -69,8 +69,6 @@ const maxPressRateTrial = (settings) => {
 
                     // Set trial duration from first press
                     jsPsych.pluginAPI.setTimeout(function() {
-                        // const totalTime = getDifferences(RTs).reduce((a, b) => a + b, 0);
-                        // console.log(totalTime);
                         jsPsych.finishTrial({responseTime: getDifferences(RTs), trialPresses: pressCount - 1, avgSpeed: (pressCount - 1) / (settings.duration / 1000)});
                     }, settings.duration + 1000);
                     
