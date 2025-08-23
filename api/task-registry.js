@@ -1,10 +1,10 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
-import { createDelayDiscountingTimeline } from '../tasks/delay-discounting/index.js';
-import { createMaxPressTimeline } from '../tasks/max-press-test/task.js';
-import { loadSequence } from '../core/utils/setup.js';
+import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '/tasks/card-choosing/index.js';
+import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
+import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
+import { loadSequence } from '/core/utils/setup.js';
 
 export const TaskRegistry = {
   card_choosing: {
