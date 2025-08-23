@@ -1,9 +1,4 @@
-// Configuration object
-const settings = {
-    duration: 7000,  // 7 seconds in milliseconds
-    validKey: 'j',
-    minSpeed: 3.0 // 5% in pilots 7 & 8 max press rates
-};
+import { updateState } from '/core/utils/index.js';
 
 // Function to get each key press RT
 function getDifferences(array) {
@@ -66,12 +61,11 @@ const maxPressRateTrial = (settings) => {
                     // First press - start the countdown
                     isStarted = true;
                     startTime = performance.now();
-                    lastPressTime = startTime;
                     timeLeft = settings.duration/1000;
                     updateState('max_press_rate_start');
                     
                     // Start animation loop
-                    animationFrameId = requestAnimationFrame(updateSpeed);
+                    let animationFrameId = requestAnimationFrame(updateSpeed);
 
                     // Set trial duration from first press
                     jsPsych.pluginAPI.setTimeout(function() {
@@ -130,7 +124,7 @@ const maxPressInstructions = {
         <div id="instruction-text" style="text-align: center;">
             <p>Before we start the first game, we need to complete a short test of your keyboard.</p>
             <p>On the next screen, you will need to <span class="highlight-txt">press the <span class="spacebar-icon">J</span> key repeatedly as fast as you can</span>, as shown below.</p>
-            <img src="imgs/max_press_key.gif" alt="Max Press Key Example" style="width:250px;">
+            <img src="/assets/images/max_press_key.gif" alt="Max Press Key Example" style="width:250px;">
         </div>
     </div>
     `,
@@ -200,7 +194,7 @@ const maxPressRetakeLoop = (settings) => {
 }
 
 // Define the timeline
-const createMaxPressTimeline = (settings) => {
+export const createMaxPressTimeline = (settings) => {
     return [
         maxPressInstructions,
         maxPressRetakeLoop(settings),
