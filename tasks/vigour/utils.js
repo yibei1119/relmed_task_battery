@@ -338,7 +338,7 @@ function createVigourCoreTimeline() {
     let experimentTimeline = [];
     VIGOUR_TRIALS.forEach(trial => {
         experimentTimeline.push({
-            timeline: [kick_out, fullscreen_prompt, piggyBankTrial], 
+            timeline: [kick_out, fullscreen_prompt, piggyBankTrial()], 
             timeline_variables: [trial]
         });
     });
