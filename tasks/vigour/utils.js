@@ -213,122 +213,124 @@ function generateTrialStimulus(magnitude, ratio) {
 let vigourTrialCounter = 0;
 let fsChangeHandler = null;
 
-const piggyBankTrial = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: function () {
-    return generateTrialStimulus(jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio'));
-  },
-  choices: 'NO_KEYS',
-  // response_ends_trial: false,
-  trial_duration: jsPsych.timelineVariable('trialDuration'),
-  save_timeline_variables: ["magnitude", "ratio"],
-  data: {
-    trialphase: 'vigour_trial',
+function piggyBankTrial() {
+  return {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: function () {
+      return generateTrialStimulus(jsPsych.evaluateTimelineVariable('magnitude'), jsPsych.evaluateTimelineVariable('ratio'));
+    },
+    choices: 'NO_KEYS',
+    // response_ends_trial: false,
     trial_duration: jsPsych.timelineVariable('trialDuration'),
-    response_time: function() { return this.trialState?.responseTime || [] },
-    trial_presses: function() { return this.trialState?.trialPresses || 0 },
-    trial_reward: function() { return this.trialState?.trialReward || 0 },
-    // Record global data
-    total_presses: function() { return taskTotalPresses },
-    total_reward: function() { return taskTotalReward }
-  },
-  on_start: function (trial) {
-    if (window.simulating) {
-      trial.trial_duration = 500;
-    }
-    // Create trial state
-    const trialState = {
-      trialPresses: 0,
-      trialReward: 0,
-      responseTime: []
-    };
-    
-    // Store trial state in trial data for access by data functions
-    trial.data.trialState = trialState;
-
-    let lastPressTime = 0;
-    let pressCount = 0;
-
-    const ratio = jsPsych.evaluateTimelineVariable('ratio');
-    const magnitude = jsPsych.evaluateTimelineVariable('magnitude');
-
-    const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-      callback_function: function (info) {
-        trialState.responseTime.push(info.rt - lastPressTime);
-        lastPressTime = info.rt;
-        // wigglePiggy();
-        shakePiggy();
-        pressCount++;
-        trialState.trialPresses++;
-        taskTotalPresses++;
-
-        if (pressCount === ratio) {
-          trialState.trialReward += magnitude;
-          taskTotalReward += magnitude;
-          pressCount = 0;
-          dropCoin(magnitude, true);
-        }
-      },
-      valid_responses: ['b'],
-      rt_method: 'performance',
-      persist: true,
-      allow_held_key: false,
-      minimum_valid_rt: 0
-    });
-  },
-  on_load: function () {
-    const currentMag = jsPsych.evaluateTimelineVariable('magnitude');
-    const currentRatio = jsPsych.evaluateTimelineVariable('ratio');
-    updatePiggyTails(currentMag, currentRatio);
-    updatePersistentCoinContainer(); // Update the persistent coin container
-    observeResizing('coin-container', updatePersistentCoinContainer);
-
-    // Add fullscreen change listener to re-update piggy tails
-    fsChangeHandler = () => {
-      if (document.fullscreenElement || document.webkitFullscreenElement) {
-        updatePiggyTails(currentMag, currentRatio);
+    save_timeline_variables: ["magnitude", "ratio"],
+    data: {
+      trialphase: 'vigour_trial',
+      trial_duration: jsPsych.timelineVariable('trialDuration'),
+      response_time: function() { return this.trialState?.responseTime || [] },
+      trial_presses: function() { return this.trialState?.trialPresses || 0 },
+      trial_reward: function() { return this.trialState?.trialReward || 0 },
+      // Record global data
+      total_presses: function() { return taskTotalPresses },
+      total_reward: function() { return taskTotalReward }
+    },
+    on_start: function (trial) {
+      if (window.simulating) {
+        trial.trial_duration = 500;
       }
-    };
-    document.addEventListener('fullscreenchange', fsChangeHandler);
-    document.addEventListener('webkitfullscreenchange', fsChangeHandler);
-
-    // Simulating keypresses
-    if (window.simulating) {
-      trial_presses = jsPsych.randomization.randomInt(1, 8);
-      avg_rt = 500/trial_presses;
-      for (let i = 0; i < trial_presses; i++) {
-        jsPsych.pluginAPI.pressKey('b', avg_rt * i + 1);
-      }
-    }
-  },
-  on_finish: function (data) {
-    // Clean up listener
-    jsPsych.pluginAPI.cancelAllKeyboardResponses();
-    vigourTrialCounter += 1;
-    data.trial_number = vigourTrialCounter;
-    if (vigourTrialCounter % (VIGOUR_TRIALS.length / 3) == 0 || vigourTrialCounter == VIGOUR_TRIALS.length) {
-      saveDataREDCap(retry = 3);
+      // Create trial state
+      const trialState = {
+        trialPresses: 0,
+        trialReward: 0,
+        responseTime: []
+      };
       
-      updateBonusState();
-    }
-    if (fsChangeHandler) {
-      document.removeEventListener('fullscreenchange', fsChangeHandler);
-      document.removeEventListener('webkitfullscreenchange', fsChangeHandler);
-      fsChangeHandler = null;
-    }
+      // Store trial state in trial data for access by data functions
+      trial.data.trialState = trialState;
 
-    // No response
-    if (data.trial_presses === 0 && data.timeline_variables.ratio === 1) {
-      var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-      jsPsych.data.addProperties({
-        n_warnings: up_to_now + 1
+      let lastPressTime = 0;
+      let pressCount = 0;
+
+      const ratio = jsPsych.evaluateTimelineVariable('ratio');
+      const magnitude = jsPsych.evaluateTimelineVariable('magnitude');
+
+      const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: function (info) {
+          trialState.responseTime.push(info.rt - lastPressTime);
+          lastPressTime = info.rt;
+          // wigglePiggy();
+          shakePiggy();
+          pressCount++;
+          trialState.trialPresses++;
+          taskTotalPresses++;
+
+          if (pressCount === ratio) {
+            trialState.trialReward += magnitude;
+            taskTotalReward += magnitude;
+            pressCount = 0;
+            dropCoin(magnitude, true);
+          }
+        },
+        valid_responses: ['b'],
+        rt_method: 'performance',
+        persist: true,
+        allow_held_key: false,
+        minimum_valid_rt: 0
       });
-      // console.log(jsPsych.data.get().last(1).select('n_warnings').values[0]);
-      showTemporaryWarning("Didn't catch a response - moving on", 800); // Enable this line for non-stopping warning
+    },
+    on_load: function () {
+      const currentMag = jsPsych.evaluateTimelineVariable('magnitude');
+      const currentRatio = jsPsych.evaluateTimelineVariable('ratio');
+      updatePiggyTails(currentMag, currentRatio);
+      updatePersistentCoinContainer(); // Update the persistent coin container
+      observeResizing('coin-container', updatePersistentCoinContainer);
+
+      // Add fullscreen change listener to re-update piggy tails
+      fsChangeHandler = () => {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          updatePiggyTails(currentMag, currentRatio);
+        }
+      };
+      document.addEventListener('fullscreenchange', fsChangeHandler);
+      document.addEventListener('webkitfullscreenchange', fsChangeHandler);
+
+      // Simulating keypresses
+      if (window.simulating) {
+        trial_presses = jsPsych.randomization.randomInt(1, 8);
+        avg_rt = 500/trial_presses;
+        for (let i = 0; i < trial_presses; i++) {
+          jsPsych.pluginAPI.pressKey('b', avg_rt * i + 1);
+        }
+      }
+    },
+    on_finish: function (data) {
+      // Clean up listener
+      jsPsych.pluginAPI.cancelAllKeyboardResponses();
+      vigourTrialCounter += 1;
+      data.trial_number = vigourTrialCounter;
+      if (vigourTrialCounter % (VIGOUR_TRIALS.length / 3) == 0 || vigourTrialCounter == VIGOUR_TRIALS.length) {
+        saveDataREDCap(retry = 3);
+        
+        updateBonusState();
+      }
+      if (fsChangeHandler) {
+        document.removeEventListener('fullscreenchange', fsChangeHandler);
+        document.removeEventListener('webkitfullscreenchange', fsChangeHandler);
+        fsChangeHandler = null;
+      }
+
+      // No response
+      if (data.trial_presses === 0 && data.timeline_variables.ratio === 1) {
+        var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+        jsPsych.data.addProperties({
+          n_warnings: up_to_now + 1
+        });
+        // console.log(jsPsych.data.get().last(1).select('n_warnings').values[0]);
+        showTemporaryWarning("Didn't catch a response - moving on", 800); // Enable this line for non-stopping warning
+      }
+      
+      // Clean up trial state reference
+      delete data.trialState;
     }
-    
-    // Clean up trial state reference
-    delete data.trialState;
   }
 };
 
