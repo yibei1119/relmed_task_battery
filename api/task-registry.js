@@ -4,7 +4,8 @@
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '/tasks/card-choosing/index.js';
 import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
-import { loadSequence } from '/core/utils/setup.js';
+import { createVigourTimeline } from '/tasks/vigour/index.js';
+import { loadSequence, computeRelativePiggyTasksBonus } from '/core/utils/index.js';
 
 export const TaskRegistry = {
   card_choosing: {
@@ -92,6 +93,25 @@ export const TaskRegistry = {
     configOptions: {
         default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
         long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
+    }
+  },
+  vigour: {
+    name: 'Vigour Task',
+    description: 'A task measuring instrumental action vigour as a function of reward rate',
+    createTimeline: createVigourTimeline,
+    computeBonus: () => computeRelativePiggyTasksBonus('vigour_trial'), // No bonus computation for this task
+    defaultConfig: {
+      task_name: "vigour",
+    },
+    configOptions: {
+      task_name: "The name of the task as it would appear in the bonus object. Default is 'vigour'."
+    },
+    requirements: {
+      css: ['tasks/vigour/styles.css'],
+      note: 'Make sure to include vigour/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
     }
   },
   max_press_test: {
