@@ -81,7 +81,7 @@ function dropCoin(magnitude, persist = false) {
 function createCoin(magnitude) {
   const coin = document.createElement('img');
   coin.className = 'vigour_coin';
-  coin.src = magnitude === 0 ? 'imgs/ooc_2p.png' : `imgs/${magnitude}p-num.png`;
+  coin.src = magnitude === 0 ? '/assets/images/vigour/ooc_2p.png' : `/assets/images/vigour/${magnitude}p-num.png`;
   coin.alt = `Coin of value ${magnitude}`;
   return coin;
 }
@@ -170,7 +170,7 @@ function updatePiggyTails(magnitude, ratio) {
     const spacing = tailWidth * 0; // Adjust spacing between tails
     for (let i = 0; i < magnitude_index + 1; i++) {
       const tail = document.createElement('img');
-      tail.src = 'imgs/piggy-tail2.png';
+      tail.src = '/assets/images/vigour/piggy-tail2.png';
       tail.alt = 'Piggy Tail';
       tail.className = 'piggy-tail';
 
@@ -202,7 +202,7 @@ function generateTrialStimulus(magnitude, ratio) {
         <div id="coin-container"></div>
         <div id="piggy-container">
           <!-- Piggy Bank Image -->
-          <img id="piggy-bank" src="imgs/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
+          <img id="piggy-bank" src="/assets/images/vigour/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
         </div>
       </div>
     </div>
