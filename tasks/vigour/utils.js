@@ -12,6 +12,12 @@ const ratios = [...new Set(VIGOUR_TRIALS.map(trial => trial.ratio))].sort((a, b)
 // Task state tracking
 let taskTotalReward = 0;
 let taskTotalPresses = 0;
+let trialState = {
+  trialPresses: 0,
+  trialReward: 0,
+  responseTime: []
+};
+
 
 // First preload for task
 function preloadVigour(settings) {
@@ -226,9 +232,10 @@ function piggyBankTrial() {
     data: {
       trialphase: 'vigour_trial',
       trial_duration: jsPsych.timelineVariable('trialDuration'),
-      response_time: function() { return this.trialState?.responseTime || [] },
-      trial_presses: function() { return this.trialState?.trialPresses || 0 },
-      trial_reward: function() { return this.trialState?.trialReward || 0 },
+            // Update data
+      responseTime: () => { return trialState.responseTime },
+      trial_presses: () => { return trialState.trialPresses },
+      trial_reward: () => { return trialState.trialReward },
       // Record global data
       total_presses: function() { return taskTotalPresses },
       total_reward: function() { return taskTotalReward }
@@ -237,8 +244,9 @@ function piggyBankTrial() {
       if (window.simulating) {
         trial.trial_duration = 500;
       }
-      // Create trial state
-      const trialState = {
+
+      // Reset trial state
+      trialState = {
         trialPresses: 0,
         trialReward: 0,
         responseTime: []
