@@ -98,7 +98,7 @@ export const TaskRegistry = {
     name: 'Vigour Task',
     description: 'A task measuring instrumental action vigour as a function of reward rate',
     createTimeline: createVigourTimeline,
-    computeBonus: () => 0, // No bonus computation for this task
+    computeBonus: () => computeRelativePiggyTasksBonus('vigour_trial'), // No bonus computation for this task
     defaultConfig: {
     },
     configOptions: {
