@@ -22,7 +22,7 @@ function preloadVigour(settings) {
         "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", 
         "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
         "occluding_clouds.png"
-      ].map(s => "imgs/" + s),
+      ].map(s => "/assets/images/vigour/" + s),
       [
         "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
       ].map(s => "/assets/images/pavlovian-stims/" + settings.session + "/" + s)
@@ -333,8 +333,6 @@ function piggyBankTrial() {
     }
   }
 };
-
-
 
 function createVigourCoreTimeline() {
     let experimentTimeline = [];
