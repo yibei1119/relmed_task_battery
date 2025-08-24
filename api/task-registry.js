@@ -101,8 +101,10 @@ export const TaskRegistry = {
     createTimeline: createVigourTimeline,
     computeBonus: () => computeRelativePiggyTasksBonus('vigour_trial'), // No bonus computation for this task
     defaultConfig: {
+      task_name: "vigour",
     },
     configOptions: {
+      task_name: "The name of the task as it would appear in the bonus object. Default is 'vigour'."
     },
     requirements: {
       css: ['tasks/vigour/styles.css'],

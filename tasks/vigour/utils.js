@@ -219,7 +219,7 @@ function generateTrialStimulus(magnitude, ratio) {
 let vigourTrialCounter = 0;
 let fsChangeHandler = null;
 
-function piggyBankTrial() {
+function piggyBankTrial(settings) {
   return {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: function () {
@@ -316,9 +316,9 @@ function piggyBankTrial() {
       vigourTrialCounter += 1;
       data.trial_number = vigourTrialCounter;
       if (vigourTrialCounter % (VIGOUR_TRIALS.length / 3) == 0 || vigourTrialCounter == VIGOUR_TRIALS.length) {
-        saveDataREDCap(retry = 3);
+        saveDataREDCap(3);
         
-        updateBonusState();
+        updateBonusState(settings);
       }
       if (fsChangeHandler) {
         document.removeEventListener('fullscreenchange', fsChangeHandler);
@@ -342,11 +342,11 @@ function piggyBankTrial() {
   }
 };
 
-function createVigourCoreTimeline() {
+function createVigourCoreTimeline(settings) {
     let experimentTimeline = [];
     VIGOUR_TRIALS.forEach(trial => {
         experimentTimeline.push({
-            timeline: [kick_out, fullscreen_prompt, piggyBankTrial()], 
+            timeline: [kick_out, fullscreen_prompt, piggyBankTrial(settings)], 
             timeline_variables: [trial]
         });
     });
