@@ -67,23 +67,6 @@ function shakePiggy() {
   ], { duration: 80, easing: 'linear' });
 }
 
-// Wiggle piggy bank animation
-function wigglePiggy() {
-  animatePiggy([
-    `translate(0.5%, 0.5%) rotate(0deg)`,
-    `translate(-0.5%, -1%) rotate(-2deg)`,
-    `translate(-1.5%, 0%) rotate(2deg)`,
-    `translate(1.5%, 1%) rotate(0deg)`,
-    `translate(0.5%, -0.5%) rotate(2deg)`,
-    `translate(-0.5%, 1%) rotate(-2deg)`,
-    `translate(-1.5%, 0.5%) rotate(0deg)`,
-    `translate(1.5%, 0.5%) rotate(-2deg)`,
-    `translate(-0.5%, -0.5%) rotate(2deg)`,
-    `translate(0.5%, 1%) rotate(0deg)`,
-    `translate(0.5%, -1%) rotate(-2deg)`
-  ], { duration: 100, easing: 'linear' });
-}
-
 // Drop coin animation
 function dropCoin(magnitude, persist = false) {
   const containerType = persist ? 'persist-coin-container' : 'coin-container';
