@@ -418,3 +418,13 @@ function getFracVigourReward(prop = 0.0213) {
   }
   return total_reward / 100 * prop;
 }
+
+export {
+  createPersistentCoinContainer, 
+  removePersistentCoinContainer, 
+  piggyBankTrial,
+  updatePersistentCoinContainer, 
+  observeResizing, 
+  shakePiggy, 
+  dropCoin
+}
