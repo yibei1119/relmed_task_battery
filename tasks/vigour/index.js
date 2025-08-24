@@ -6,3 +6,5 @@
 
 // Import and re-export all utility modules
 export * from './instructions.js';
+export * from './utils.js';
+export * from './timeline.js';
