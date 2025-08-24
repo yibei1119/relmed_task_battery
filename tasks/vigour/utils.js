@@ -1,10 +1,11 @@
-// Configuration object
-const experimentConfig = {
-  magnitudes: [1, 2, 5],
-  ratios: [1, 8, 16],
-  trialDuration: 7000 // in milliseconds on average, U[9500, 10500]
-};
-experimentConfig.ratios.reverse();
+
+// Trial plan for Vigour task
+const VIGOUR_TRIALS = [{ "magnitude": 1, "ratio": 1, "trialDuration": 6825 }, { "magnitude": 2, "ratio": 8, "trialDuration": 6956 }, { "magnitude": 1, "ratio": 16, "trialDuration": 7228 }, { "magnitude": 5, "ratio": 1, "trialDuration": 7221 }, { "magnitude": 5, "ratio": 16, "trialDuration": 7261 }, { "magnitude": 2, "ratio": 1, "trialDuration": 7386 }, { "magnitude": 1, "ratio": 8, "trialDuration": 7009 }, { "magnitude": 5, "ratio": 8, "trialDuration": 7376 }, { "magnitude": 2, "ratio": 16, "trialDuration": 6666 }, { "magnitude": 1, "ratio": 1, "trialDuration": 6962 }, { "magnitude": 2, "ratio": 8, "trialDuration": 6501 }, { "magnitude": 2, "ratio": 1, "trialDuration": 7236 }, { "magnitude": 5, "ratio": 1, "trialDuration": 7490 }, { "magnitude": 1, "ratio": 16, "trialDuration": 6902 }, { "magnitude": 1, "ratio": 8, "trialDuration": 6888 }, { "magnitude": 2, "ratio": 16, "trialDuration": 6891 }, { "magnitude": 5, "ratio": 8, "trialDuration": 6535 }, { "magnitude": 5, "ratio": 16, "trialDuration": 6652 }, { "magnitude": 1, "ratio": 8, "trialDuration": 6890 }, { "magnitude": 5, "ratio": 8, "trialDuration": 7452 }, { "magnitude": 5, "ratio": 16, "trialDuration": 6954 }, { "magnitude": 2, "ratio": 1, "trialDuration": 6827 }, { "magnitude": 5, "ratio": 1, "trialDuration": 6679 }, { "magnitude": 1, "ratio": 16, "trialDuration": 7199 }, { "magnitude": 2, "ratio": 16, "trialDuration": 7207 }, { "magnitude": 1, "ratio": 1, "trialDuration": 7145 }, { "magnitude": 2, "ratio": 8, "trialDuration": 7465 }, { "magnitude": 1, "ratio": 8, "trialDuration": 6870 }, { "magnitude": 5, "ratio": 8, "trialDuration": 6726 }, { "magnitude": 2, "ratio": 16, "trialDuration": 6688 }, { "magnitude": 2, "ratio": 8, "trialDuration": 6506 }, { "magnitude": 5, "ratio": 1, "trialDuration": 7044 }, { "magnitude": 2, "ratio": 1, "trialDuration": 7293 }, { "magnitude": 1, "ratio": 1, "trialDuration": 7182 }, { "magnitude": 1, "ratio": 16, "trialDuration": 6862 }, { "magnitude": 5, "ratio": 16, "trialDuration": 6985 }];
+
+// Find unique magnitudes and ratios for piggy tails
+const magnitudes = [...new Set(VIGOUR_TRIALS.map(trial => trial.magnitude))].sort((a, b) => a - b);
+const ratios = [...new Set(VIGOUR_TRIALS.map(trial => trial.ratio))].sort((a, b) => b - a);
+
 
 // Global variables
 window.totalReward = 0;
@@ -168,10 +169,10 @@ function updatePiggyTails(magnitude, ratio) {
   const piggyContainer = document.getElementById('piggy-container');
   const piggyBank = document.getElementById('piggy-bank');
 
-  const magnitude_index = experimentConfig.magnitudes.indexOf(magnitude);
-  const ratio_index = experimentConfig.ratios.indexOf(ratio);
+  const magnitude_index = magnitudes.indexOf(magnitude);
+  const ratio_index = ratios.indexOf(ratio);
   // Calculate saturation based on ratio
-  const ratio_factor = ratio_index / (experimentConfig.ratios.length - 1);
+  const ratio_factor = ratio_index / (ratios.length - 1);
 
   // Remove existing tails
   document.querySelectorAll('.piggy-tail').forEach(tail => tail.remove());
@@ -204,9 +205,9 @@ function updatePiggyTails(magnitude, ratio) {
 
 // Trial stimulus function
 function generateTrialStimulus(magnitude, ratio) {
-  const ratio_index = experimentConfig.ratios.indexOf(ratio);
+  const ratio_index = ratios.indexOf(ratio);
   // Calculate saturation based on ratio
-  const ratio_factor = ratio_index / (experimentConfig.ratios.length - 1);
+  const ratio_factor = ratio_index / (ratios.length - 1);
   const piggy_style = `filter: saturate(${50 * (400 / 50) ** ratio_factor}%) brightness(${115 * (90 / 115) ** ratio_factor}%);`;
   return `
     <div class="experiment-wrapper">
@@ -419,10 +420,31 @@ function getFracVigourReward(prop = 0.0213) {
   return total_reward / 100 * prop;
 }
 
+function createVigourCoreTimeline() {
+    let experimentTimeline = [];
+    VIGOUR_TRIALS.forEach(trial => {
+        experimentTimeline.push({
+            timeline: [kick_out, fullscreen_prompt, piggyBankTrial], 
+            timeline_variables: [trial]
+        });
+    });
+
+    experimentTimeline[0]["on_timeline_start"] = () => {
+        updateState("no_resume_10_minutes");
+        updateState(`vigour_task_start`);
+        createPersistentCoinContainer();
+    };
+
+    experimentTimeline.at(-1)["on_timeline_finish"] = () => {
+        removePersistentCoinContainer();
+    };
+    
+    return experimentTimeline;
+}
+
+
 export {
-  createPersistentCoinContainer, 
-  removePersistentCoinContainer, 
-  piggyBankTrial,
+  createVigourCoreTimeline,
   updatePersistentCoinContainer, 
   observeResizing, 
   shakePiggy, 
