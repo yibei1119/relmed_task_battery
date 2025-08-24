@@ -319,7 +319,7 @@ const piggyBankTrial = {
     jsPsych.pluginAPI.cancelAllKeyboardResponses();
     vigourTrialCounter += 1;
     data.trial_number = vigourTrialCounter;
-    if (vigourTrialCounter % (vigourTrials.length / 3) == 0 || vigourTrialCounter == vigourTrials.length) {
+    if (vigourTrialCounter % (VIGOUR_TRIALS.length / 3) == 0 || vigourTrialCounter == VIGOUR_TRIALS.length) {
       saveDataREDCap(retry = 3);
       
       updateBonusState();
