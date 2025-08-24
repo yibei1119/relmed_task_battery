@@ -156,7 +156,7 @@ const startConfirmation = {
       <p>When you're ready, place the <strong>index finger of the hand you write with</strong> comfortably on the <span class="spacebar-icon">B</span> key, as shown below.</p>
       <p>Use only this finger to press during the game.</p>
       <p>Press it once to begin.</p>
-      <img src="/assets/images/vigour/Vigour_key.png" style="width:250px;" alt="Key press illustration">
+      <img src="/assets/images/vigour/vigour_key.png" style="width:250px;" alt="Key press illustration">
       <p>If you want to start over from the beginning, press <span class="spacebar-icon">R</span>.</p>
   </div>
     `,
