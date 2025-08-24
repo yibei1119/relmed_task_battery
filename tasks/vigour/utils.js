@@ -325,22 +325,6 @@ const piggyBankTrial = {
   }
 };
 
-const noPressWarning = {
-  timeline: [{
-    type: jsPsychHtmlKeyboardResponse,
-    choices: "NO_KEYS",
-    stimulus: "",
-    trial_duration: 1000,
-    on_load: function () {
-      showTemporaryWarning("Didn't catch a response - moving on", 800);
-    }
-  }],
-  conditional_function: function () {
-    const last_trial_presses = jsPsych.data.get().last(1).select('trial_presses').values[0];
-    const last_ratio = jsPsych.data.get().last(1).select('timeline_variables').values[0].ratio;
-    return last_trial_presses === 0 && last_ratio === 1;
-  }
-};
 
 // Debriefing
 const vigour_bonus = {
