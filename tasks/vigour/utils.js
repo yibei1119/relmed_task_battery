@@ -15,31 +15,33 @@ window.totalPresses = 0;
 window.sampledVigourReward = 0;
 
 // First preload for task
-const preload_vigour = {
-  type: jsPsychPreload,
-  images: [
-    [
-      "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", 
-      "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
-      "occluding_clouds.png"
-    ].map(s => "imgs/" + s),
-    [
-      "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
-    ].map(s => "imgs/Pav_stims/" + window.session + "/" + s)
-  ].flat(),
-  post_trial_gap: 800,
-  data: {
-      trialphase: "preload_PILT"
-  },
-  on_start: () => {
+function preloadVigour(settings) {
+  return {
+    type: jsPsychPreload,
+    images: [
+      [
+        "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", 
+        "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
+        "occluding_clouds.png"
+      ].map(s => "imgs/" + s),
+      [
+        "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
+      ].map(s => "/assets/images/pavlovian-stims/" + settings.session + "/" + s)
+    ].flat(),
+    post_trial_gap: 800,
+    data: {
+        trialphase: "preload_PILT"
+    },
+    on_start: () => {
 
-      // Report to tests
-      console.log("load_successful")
+        // Report to tests
+        console.log("load_successful")
 
-      // Report to relmed.ac.uk
-      postToParent({message: "load_successful"})
-  },
-  continue_after_error: true
+        // Report to relmed.ac.uk
+        postToParent({message: "load_successful"})
+    },
+    continue_after_error: true
+  };
 }
 
 
