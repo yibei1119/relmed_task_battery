@@ -1,4 +1,4 @@
-import { createCoreVigourTimeline } from './utils.js';
+import { createCoreVigourTimeline, preloadVigour } from './utils.js';
 import { vigour_instructions } from './instructions.js';
 
 export function createVigourTimeline(settings) {

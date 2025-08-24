@@ -449,6 +449,7 @@ function createVigourCoreTimeline() {
 
 export {
   createVigourCoreTimeline,
+  preloadVigour,
   updatePersistentCoinContainer, 
   observeResizing, 
   shakePiggy, 
