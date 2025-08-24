@@ -326,42 +326,6 @@ const piggyBankTrial = {
 };
 
 
-// Debriefing
-const vigour_bonus = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: "Congratulations! You've finished this game!",
-  choices: ['Finish'],
-  data: { trialphase: 'vigour_bonus' },
-  on_start: function (trial) {
-    const selected_trial = getSelectedTrial();
-    trial.stimulus = `
-            <p>It is time to reveal your bonus payment for this round of piggy-bank game.</p>
-            <p>The computer selected piggy bank number ${selected_trial.trial_number}, which means you will earn ${(window.sampledVigourReward / 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} for the game.</p>
-        `;
-  },
-  on_finish: (data) => {
-    data.vigour_bonus = window.sampledVigourReward / 100
-  },
-};
-
-const vigour_bonus2 = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: "Congratulations! You've finished this game!",
-  choices: ['Finish'],
-  data: { trialphase: 'vigour_bonus' },
-  on_start: function (trial) {
-    const total_bonus = getFracVigourReward();
-    trial.stimulus = `
-            <p>It is time to reveal your bonus payment for this round of piggy-bank game.</p>
-            <p>You will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} for the game.</p>
-        `;
-  },
-  on_finish: (data) => {
-    data.vigour_bonus = getFracVigourReward();
-  },
-};
-
-
 // Log-normal probability density function
 function logNormalPDF(x, mu, sigma) {
   return Math.exp(-0.5 * Math.pow((Math.log(x) - mu) / sigma, 2)) / (x * sigma * Math.sqrt(2 * Math.PI));
