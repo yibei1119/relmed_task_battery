@@ -94,6 +94,23 @@ export const TaskRegistry = {
         long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
     }
   },
+  vigour: {
+    name: 'Vigour Task',
+    description: 'A task measuring instrumental action vigour as a function of reward rate',
+    createTimeline: createVigourTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+    },
+    configOptions: {
+    },
+    requirements: {
+      css: ['tasks/vigour/styles.css'],
+      note: 'Make sure to include vigour/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    }
+  },
   max_press_test: {
     name: 'Max Press Test',
     description: 'A test of maximum key press speed',
