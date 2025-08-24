@@ -303,8 +303,8 @@ function piggyBankTrial() {
 
       // Simulating keypresses
       if (window.simulating) {
-        trial_presses = jsPsych.randomization.randomInt(1, 8);
-        avg_rt = 500/trial_presses;
+        const trial_presses = jsPsych.randomization.randomInt(1, 8);
+        const avg_rt = 500/trial_presses;
         for (let i = 0; i < trial_presses; i++) {
           jsPsych.pluginAPI.pressKey('b', avg_rt * i + 1);
         }
