@@ -9,10 +9,9 @@ const magnitudes = [...new Set(VIGOUR_TRIALS.map(trial => trial.magnitude))].sor
 const ratios = [...new Set(VIGOUR_TRIALS.map(trial => trial.ratio))].sort((a, b) => b - a);
 
 
-// Global variables
-window.totalReward = 0;
-window.totalPresses = 0;
-window.sampledVigourReward = 0;
+// Task state tracking
+let taskTotalReward = 0;
+let taskTotalPresses = 0;
 
 // First preload for task
 function preloadVigour(settings) {
@@ -226,21 +225,26 @@ const piggyBankTrial = {
   data: {
     trialphase: 'vigour_trial',
     trial_duration: jsPsych.timelineVariable('trialDuration'),
-    response_time: () => { return window.responseTime },
-    trial_presses: () => { return window.trialPresses },
-    trial_reward: () => { return window.trialReward },
+    response_time: function() { return this.trialState?.responseTime || [] },
+    trial_presses: function() { return this.trialState?.trialPresses || 0 },
+    trial_reward: function() { return this.trialState?.trialReward || 0 },
     // Record global data
-    total_presses: () => { return window.totalPresses },
-    total_reward: () => { return window.totalReward }
+    total_presses: function() { return taskTotalPresses },
+    total_reward: function() { return taskTotalReward }
   },
   on_start: function (trial) {
     if (window.simulating) {
       trial.trial_duration = 500;
     }
-    // Create a shared state object
-    window.trialPresses = 0;
-    window.trialReward = 0;
-    window.responseTime = [];
+    // Create trial state
+    const trialState = {
+      trialPresses: 0,
+      trialReward: 0,
+      responseTime: []
+    };
+    
+    // Store trial state in trial data for access by data functions
+    trial.data.trialState = trialState;
 
     let lastPressTime = 0;
     let pressCount = 0;
@@ -250,17 +254,17 @@ const piggyBankTrial = {
 
     const keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: function (info) {
-        window.responseTime.push(info.rt - lastPressTime);
+        trialState.responseTime.push(info.rt - lastPressTime);
         lastPressTime = info.rt;
         // wigglePiggy();
         shakePiggy();
         pressCount++;
-        window.trialPresses++;
-        window.totalPresses++;
+        trialState.trialPresses++;
+        taskTotalPresses++;
 
         if (pressCount === ratio) {
-          window.trialReward += magnitude;
-          window.totalReward += magnitude;
+          trialState.trialReward += magnitude;
+          taskTotalReward += magnitude;
           pressCount = 0;
           dropCoin(magnitude, true);
         }
@@ -322,6 +326,9 @@ const piggyBankTrial = {
       // console.log(jsPsych.data.get().last(1).select('n_warnings').values[0]);
       showTemporaryWarning("Didn't catch a response - moving on", 800); // Enable this line for non-stopping warning
     }
+    
+    // Clean up trial state reference
+    delete data.trialState;
   }
 };
 
@@ -344,6 +351,9 @@ function createVigourCoreTimeline() {
         updateState("no_resume_10_minutes");
         updateState(`vigour_task_start`);
         createPersistentCoinContainer();
+        // Reset task counters
+        taskTotalReward = 0;
+        taskTotalPresses = 0;
     };
 
     experimentTimeline.at(-1)["on_timeline_finish"] = () => {
