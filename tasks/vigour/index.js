@@ -1,8 +1,7 @@
 /**
- * Core max-press-test task index - centralizes all function exports
- * Provides a single entry point for importing max-press-test task functions across the experiment.
- * Even though this is a very simple task, this index file maintains consistency with other tasks that do have multiple modules.
- */
+ * Core max-press-test (vigour) task index - centralizes all function exports.
+ * Provides a single entry point for importing vigour task functions across the experiment.
+ * This index file centralizes exports from multiple modules (instructions.js, utils.js, timeline.js) for consistency and ease of import. */
 
 // Import and re-export all utility modules
 export * from './instructions.js';
