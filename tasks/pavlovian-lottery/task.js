@@ -323,7 +323,14 @@ export function createPavlovianLotteryTimeline(settings) {
         slotReel.innerHTML = reelContent;
 
         // Calculate the width of the reel for proper positioning
-        const itemWidth = Math.ceil((window.innerWidth * (30 + 1 * 2) / 100)); // 240px width + 20px margin
+        // Constants for slot item sizing
+        const ITEM_BASE_WIDTH_PERCENT = 30; // Base width as percent of window width
+        const ITEM_MARGIN_PX = 1;           // Margin (in px) on each side of item
+        const ITEM_MARGIN_COUNT = 2;        // Number of margins per item (left + right)
+        const PERCENT_DIVISOR = 100;        // For percent calculation
+
+        // Calculate the width of each slot item (base width percent of window + margins)
+        const itemWidth = Math.ceil((window.innerWidth * (ITEM_BASE_WIDTH_PERCENT + ITEM_MARGIN_PX * ITEM_MARGIN_COUNT) / PERCENT_DIVISOR));
         const totalItems = slotReel.children.length;
         slotReel.style.width = (itemWidth * totalItems) + 'px';
 
