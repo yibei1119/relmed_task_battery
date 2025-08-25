@@ -118,7 +118,7 @@ export const TaskRegistry = {
     name: 'Pavlovian-Instrumental Transfer Task',
     description: 'A task measuring instrumental action vigour in notional extinction, as a function of instrumental reward rate and Pavlovian cues',
     createTimeline: createPITTimeline,
-    computeBonus: () => computeRelativePiggyTasksBonus('PIT_trial'),
+    computeBonus: () => computeRelativePiggyTasksBonus('pit_trial'),
     defaultConfig: {
       task_name: "PIT",
     },
