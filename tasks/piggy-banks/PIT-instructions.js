@@ -60,13 +60,13 @@ function PITMainInstructions(settings) {
 
             <div class="pav-stimuli-container">
                   <div class="pit-pav-row">
-                        <img src=${"/assets/images/pavlovian-stims" + settings.session + "/PIT1.png"} class="pit-pav-icon">
-                        <img src=${"/assets/images/pavlovian-stims" + settings.session + "/PIT2.png"} class="pit-pav-icon">
-                        <img src=${"/assets/images/pavlovian-stims" + settings.session + "/PIT3.png"} class="pit-pav-icon">
+                        <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT1.png"} class="pit-pav-icon">
+                        <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT2.png"} class="pit-pav-icon">
+                        <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT3.png"} class="pit-pav-icon">
                         <div class="vertical"></div>
-                        <img src=${"/assets/images/pavlovian-stims" + settings.session + "/PIT4.png"} class="pit-pav-icon">
-                        <img src=${"/assets/images/pavlovian-stims" + settings.session + "/PIT5.png"} class="pit-pav-icon">
-                        <img src=${"/assets/images/pavlovian-stims" + settings.session + "/PIT6.png"} class="pit-pav-icon">
+                        <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT4.png"} class="pit-pav-icon">
+                        <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT5.png"} class="pit-pav-icon">
+                        <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT6.png"} class="pit-pav-icon">
                   </div>
                   <div class="pit-coin-row">
                         <img src="/assets/images/piggy-banks/1pound.png" class="pit-coin-icon">
