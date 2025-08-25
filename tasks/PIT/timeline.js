@@ -3,7 +3,7 @@ import { PIT_instructions } from './instructions.js';
 
 export function createPITTimeline(settings) {
     const PIT_timeline = [
-        PIT_instructions,
+        PITInstructions(settings),
         createPITCoreTimeline(settings)
     ];
 
