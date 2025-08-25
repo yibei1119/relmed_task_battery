@@ -155,7 +155,7 @@ function PITTrial(settings) {
       if (PITtrialCounter % (PIT_TRIAL_LIST.length / 3) == 0 || PITtrialCounter == PIT_TRIAL_LIST.length) {
         saveDataREDCap(3);
 
-        updateBonusState();
+        updateBonusState(settings);
       }
       if (fsChangeHandler) {
         document.removeEventListener('fullscreenchange', fsChangeHandler);
