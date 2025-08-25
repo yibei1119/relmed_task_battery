@@ -1,3 +1,5 @@
+import { updateState} from '/core/utils/index.js';
+
 function PITMainInstructions(settings) { 
   return {
     type: jsPsychInstructions,
