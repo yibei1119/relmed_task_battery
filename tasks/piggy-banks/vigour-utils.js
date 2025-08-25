@@ -51,19 +51,6 @@ function preloadVigour(settings) {
 }
 
 
-// Functions for animation
-function animatePiggy(keyframes, options) {
-  const piggyBank = document.getElementById('piggy-container');
-  if (piggyBank) {
-    let currentTransform = getComputedStyle(piggyBank).transform;
-    currentTransform = currentTransform === 'none' ? '' : currentTransform;
-    const animationKeyframes = keyframes.map(frame => ({
-      transform: `${currentTransform} ${frame}`
-    }));
-    piggyBank.animate(animationKeyframes, options);
-  }
-}
-
 // Drop coin animation
 function dropCoin(magnitude, persist = false) {
   const containerType = persist ? 'persist-coin-container' : 'coin-container';

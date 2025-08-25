@@ -1,5 +1,19 @@
 // Utility functions common to vigour and PIT tasks
 
+// Functions for animation
+function animatePiggy(keyframes, options) {
+  const piggyBank = document.getElementById('piggy-container');
+  if (piggyBank) {
+    let currentTransform = getComputedStyle(piggyBank).transform;
+    currentTransform = currentTransform === 'none' ? '' : currentTransform;
+    const animationKeyframes = keyframes.map(frame => ({
+      transform: `${currentTransform} ${frame}`
+    }));
+    piggyBank.animate(animationKeyframes, options);
+  }
+}
+
+
 // Shake piggy bank animation
 function shakePiggy() {
   animatePiggy([
@@ -16,7 +30,7 @@ function updatePiggyTails(magnitude, ratio, settings) {
   const magnitude_index = settings.magnitudes.indexOf(magnitude);
   const ratio_index = settings.ratios.indexOf(ratio);
   // Calculate saturation based on ratio
-  const ratio_factor = ratio_index / (ratios.length - 1);
+  const ratio_factor = ratio_index / (settings.ratios.length - 1);
 
   // Remove existing tails
   document.querySelectorAll('.piggy-tail').forEach(tail => tail.remove());
