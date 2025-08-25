@@ -372,7 +372,7 @@ export function createPavlovianLotteryTimeline(settings) {
 
   // Build the full experiment timeline
   const timeline = [
-    // prepilt_preload, // Disabled because preloading is currently handled elsewhere. Re-enable this line if additional preloading is required for new stimuli or assets.
+    prepilt_preload, 
     instructions,
     trialSequence,
     endMessage
