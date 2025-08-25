@@ -18,7 +18,7 @@ export const PITPreloadImages = (settings) => {
   return [
       // Piggy bank background images
       [
-        "piggy-clouds.png",
+        "piggy-cloud.png",
         "occluding_clouds.png"
       ].map(s => "/assets/images/piggy-banks/" + s),
       // Coin outcome images (positive and negative)
