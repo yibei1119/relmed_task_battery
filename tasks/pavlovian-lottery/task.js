@@ -92,14 +92,14 @@ export function createPavlovianLotteryTimeline(settings) {
         <div style='display: grid;'>
             <table style='width: 200px; grid-column: 2;'>
                 <tr>
-                    <td><img src='imgs/1pound.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
-                    <td><img src='imgs/50pence.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
-                    <td><img src='imgs/1penny.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
+                    <td><img src='/assets/images/card-choosing/outcomes/1pound.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
+                    <td><img src='/assets/images/card-choosing/outcomes/50pence.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
+                    <td><img src='/assets/images/card-choosing/outcomes/1penny.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
                 </tr>
                 <tr>
-                    <td><img src='imgs/1poundbroken.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
-                    <td><img src='imgs/50pencebroken.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
-                    <td><img src='imgs/1pennybroken.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
+                    <td><img src='/assets/images/card-choosing/outcomes/1poundbroken.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
+                    <td><img src='/assets/images/card-choosing/outcomes/50pencebroken.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
+                    <td><img src='/assets/images/card-choosing/outcomes/1pennybroken.png' style='width:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px; height:${PREPILT_CONFIG.CONSTANTS.SMALL_COIN_SIZE}px;'></td>
                 </tr>
             </table>
         </div>
