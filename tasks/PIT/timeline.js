@@ -1,5 +1,5 @@
 import { createPITCoreTimeline } from './utils.js';
-import { PIT_instructions } from './instructions.js';
+import { PITInstructions } from './instructions.js';
 
 export function createPITTimeline(settings) {
     const PIT_timeline = [
