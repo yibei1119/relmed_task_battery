@@ -150,7 +150,7 @@ export function createPavlovianLotteryTimeline(settings) {
       return PREPILT_CONFIG.CONSTANTS.REEL_SPIN_DURATION;
     },
     on_load: function () {
-      const currentStimulus = "/assets/images/pavlovian-stims/" + window.session + "/" + PREPILT_CONFIG.stimulus[jsPsych.evaluateTimelineVariable('pav_value')];
+      const currentStimulus = "/assets/images/pavlovian-stims/" + settings.session + "/" + PREPILT_CONFIG.stimulus[jsPsych.evaluateTimelineVariable('pav_value')];
       const slotReel = document.getElementById('slot-reel');
       const slotContainer = document.querySelector('.slot-machine-container');
       const selectionFrame = document.querySelector('.selection-frame');
@@ -158,7 +158,7 @@ export function createPavlovianLotteryTimeline(settings) {
       // Create pavlovianStimuli array from PREPILT_CONFIG
       const pavlovianStimuli = Object.values(PREPILT_CONFIG.stimulus).map((filename) => {
         return {
-          stimulus: "/assets/images/pavlovian-stims/" + window.session + "/" + filename
+          stimulus: "/assets/images/pavlovian-stims/" + settings.session + "/" + filename
         };
       });
 
@@ -292,7 +292,7 @@ export function createPavlovianLotteryTimeline(settings) {
   const showResult = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: function () {
-      const stimulusImg = "/assets/images/pavlovian-stims/" + window.session + "/" + PREPILT_CONFIG.stimulus[jsPsych.evaluateTimelineVariable('pav_value')];
+      const stimulusImg = "/assets/images/pavlovian-stims/" + settings.session + "/" + PREPILT_CONFIG.stimulus[jsPsych.evaluateTimelineVariable('pav_value')];
       const rewardImg = "/assets/images/card-choosing/outcomes/" + PREPILT_CONFIG.reward[jsPsych.evaluateTimelineVariable('pav_value')];
       const value = PREPILT_CONFIG.value[jsPsych.evaluateTimelineVariable('pav_value')];
 
