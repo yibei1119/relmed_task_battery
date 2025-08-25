@@ -10,7 +10,8 @@ const unique_magnitudes = [...new Set(PIT_TRIAL_LIST.map(item => item.magnitude)
 const unique_ratios = [...new Set(PIT_TRIAL_LIST.map(item => item.ratio))].sort((a, b) => b - a); // Sort ratios descending
 
 
-export const PRELOAD_IMAGES = [
+export const PITPreloadImages = (settings) => {
+  return [
       [
         "piggy-clouds.png",
         "occluding_clouds.png"
@@ -21,7 +22,8 @@ export const PRELOAD_IMAGES = [
       [
         "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
       ].map(s => "/assets/images/pavlovian-stims/" + settings.session + "/" + s)
-    ].flat();
+    ].flat(); // Assuming vigour stimulus were already preloaded
+}
 
 
 // Trial stimulus function
