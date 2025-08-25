@@ -10,6 +10,20 @@ const unique_magnitudes = [...new Set(PIT_TRIAL_LIST.map(item => item.magnitude)
 const unique_ratios = [...new Set(PIT_TRIAL_LIST.map(item => item.ratio))].sort((a, b) => b - a); // Sort ratios descending
 
 
+export const PRELOAD_IMAGES = [
+      [
+        "piggy-clouds.png",
+        "occluding_clouds.png"
+      ].map(s => "/assets/images/piggy-banks/" + s),
+      [
+        "1pound.png", "50pence.png", "1penny.png", "1pennybroken.png", "50pencebroken.png", "1poundbroken.png"
+      ].map(s => "/assets/images/card-choosing/outcomes/" + s),
+      [
+        "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
+      ].map(s => "/assets/images/pavlovian-stims/" + settings.session + "/" + s)
+    ].flat();
+
+
 // Trial stimulus function
 function generatePITstimulus(coin, ratio, settings) {
   const ratio_index = unique_ratios.indexOf(ratio);

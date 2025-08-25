@@ -24,19 +24,14 @@ let trialState = {
 function preloadVigour(settings) {
   return {
     type: jsPsychPreload,
-    images: [
+    images:
       [
         "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", 
-        "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
-        "occluding_clouds.png"
+        "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png"
       ].map(s => "/assets/images/piggy-banks/" + s),
-      [
-        "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
-      ].map(s => "/assets/images/pavlovian-stims/" + settings.session + "/" + s)
-    ].flat(),
     post_trial_gap: 800,
     data: {
-        trialphase: "preload_PILT"
+        trialphase: "preload_vigour"
     },
     on_start: () => {
 
