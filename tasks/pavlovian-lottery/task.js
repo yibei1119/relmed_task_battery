@@ -8,8 +8,10 @@
  * followed by its associated coin reward with animation effects.
  */
 
+import { createPreloadTrial, updateState } from '/core/utils/index.js';
+
 // Function to create the Pavlovian Lottery experiment timeline
-export function createPavlovianLotteryTimeline() {
+export function createPavlovianLotteryTimeline(settings) {
   // Define the Pavlovian stimuli and their associated rewards
   const getSpeedUpFactor = () => window.simulating ? 10 : 1;
 
@@ -60,11 +62,9 @@ export function createPavlovianLotteryTimeline() {
   }));
 
   // Create preload trial
-  const prepilt_preload = {
-    type: jsPsychPreload,
-    auto_preload: true,
-    images: [
-      [1, 2, 3, 4, 5, 6].map(i => `/assets/images/pavlovian-stims/${window.session}/PIT${i}.png`),
+  const prepilt_preload = createPreloadTrial(
+    [
+      [1, 2, 3, 4, 5, 6].map(i => `/assets/images/pavlovian-stims/${settting.session}/PIT${i}.png`),
       [
         "50pence.png",
         "1pound.png",
@@ -72,18 +72,11 @@ export function createPavlovianLotteryTimeline() {
         "1pennybroken.png",
         "50pencebroken.png",
         "1poundbroken.png",
-      ].map(i => `imgs/${i}`)
+      ].map(i => `/assets/images/card-choosing/outcomes/${i}`)
     ].flat(),
-    message: 'Loading the game... Please wait.',
-    on_start: function () {
-      // Report to tests
-      console.log("load_successful")
+    settings.task_name
+  );
 
-      // Report to relmed.ac.uk
-      postToParent({message: "load_successful"})
-    },
-    continue_after_error: true
-  };
 
   // Create instructions screen
   const instructions = [{
