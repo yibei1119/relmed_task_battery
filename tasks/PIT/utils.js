@@ -201,22 +201,4 @@ function getFracPITReward(prop = 0.0213) {
   return total_reward / 100 * prop;
 }
 
-const PIT_bonus = {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: "Congratulations! You've finished this game!",
-  choices: ['Finish'],
-  data: { trialphase: 'pit_bonus' },
-  on_start: function (trial) {
-    const selected_trial = getSelectedPITtrial();
-    trial.stimulus = `
-            <p>It is time to reveal your bonus payment for this round of cloudy piggy-bank game.</p>
-            <p>The computer selected piggy bank number ${selected_trial.pit_trial_number}, which means you will earn ${(window.sampledPITreward / 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} for the game.</p>
-        `;
-  },
-  on_finish: (data) => {
-    data.PIT_bonus = window.sampledPITreward / 100
-  }
-};
-
-
 
