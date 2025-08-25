@@ -293,7 +293,7 @@ export function createPavlovianLotteryTimeline(settings) {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: function () {
       const stimulusImg = "/assets/images/pavlovian-stims/" + window.session + "/" + PREPILT_CONFIG.stimulus[jsPsych.evaluateTimelineVariable('pav_value')];
-      const rewardImg = "imgs/" + PREPILT_CONFIG.reward[jsPsych.evaluateTimelineVariable('pav_value')];
+      const rewardImg = "/assets/images/card-choosing/outcomes/" + PREPILT_CONFIG.reward[jsPsych.evaluateTimelineVariable('pav_value')];
       const value = PREPILT_CONFIG.value[jsPsych.evaluateTimelineVariable('pav_value')];
 
       return `
