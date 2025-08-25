@@ -68,14 +68,14 @@
         // Function to run the experiment
         async function runExperiment() {
             try {
-                console.log('Starting vigour task...');
+                console.log('Starting PIT task...');
                 
                 // Get task information
-                const taskInfo = getTaskInfo('vigour');
+                const taskInfo = getTaskInfo('PIT');
                 console.log('Task info:', taskInfo);
                 
                 // Create the task timeline with default settings
-                const timeline = await createTaskTimeline('vigour', {session: "wk0"});
+                const timeline = await createTaskTimeline('PIT', {session: "wk0"});
                 console.log('Timeline created:', timeline);
                 
                 // Add fullscreen mode (optional)

@@ -4,8 +4,8 @@
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '/tasks/card-choosing/index.js';
 import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
-import { createVigourTimeline } from '/tasks/vigour/index.js';
-import { loadSequence, computeRelativePiggyTasksBonus } from '/core/utils/index.js';
+import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
+import { loadSequence } from '/core/utils/index.js';
 
 export const TaskRegistry = {
   card_choosing: {
@@ -99,7 +99,7 @@ export const TaskRegistry = {
     name: 'Vigour Task',
     description: 'A task measuring instrumental action vigour as a function of reward rate',
     createTimeline: createVigourTimeline,
-    computeBonus: () => computeRelativePiggyTasksBonus('vigour_trial'), // No bonus computation for this task
+    computeBonus: () => computeRelativePiggyTasksBonus('vigour_trial'), 
     defaultConfig: {
       task_name: "vigour",
     },
@@ -107,8 +107,27 @@ export const TaskRegistry = {
       task_name: "The name of the task as it would appear in the bonus object. Default is 'vigour'."
     },
     requirements: {
-      css: ['tasks/vigour/styles.css'],
-      note: 'Make sure to include vigour/styles.css in your HTML file'
+      css: ['tasks/piggy-banks/styles.css'],
+      note: 'Make sure to include piggy-banks/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    }
+  },
+  PIT: {
+    name: 'Pavlovian-Instrumental Transfer Task',
+    description: 'A task measuring instrumental action vigour in notional extinction, as a function of instrumental reward rate and Pavlovian cues',
+    createTimeline: createPITTimeline,
+    computeBonus: () => computeRelativePiggyTasksBonus('pit_trial'),
+    defaultConfig: {
+      task_name: "PIT",
+    },
+    configOptions: {
+      task_name: "The name of the task as it would appear in the bonus object. Default is 'PIT'."
+    },
+    requirements: {
+      css: ['tasks/piggy-banks/styles.css'],
+      note: 'Make sure to include piggy-banks/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,

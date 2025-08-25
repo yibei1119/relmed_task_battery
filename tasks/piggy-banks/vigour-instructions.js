@@ -1,8 +1,11 @@
-import { updatePersistentCoinContainer, observeResizing, shakePiggy, dropCoin } from './utils.js';
+import { updatePersistentCoinContainer, observeResizing, dropCoin } from './vigour-utils.js';
+import { shakePiggy } from './utils.js';
 import { updateState } from '/core/utils/index.js';
 
-
-// Instruction page configuration
+/**
+ * Interactive instruction page that demonstrates the piggy bank shaking mechanism
+ * Allows users to practice the task with immediate feedback
+ */
 const instructionPage = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: generateInstructStimulus,
@@ -13,8 +16,9 @@ const instructionPage = {
     updatePersistentCoinContainer();
     observeResizing('coin-container', updatePersistentCoinContainer);
 
+    // Demo state variables
     let shakeCount = 0;
-    let FR = 5;
+    let FR = 5; // Fixed ratio - reward every 5 presses
     let timerStarted = false;
     let timer;
     updateInstructionText(shakeCount);
@@ -23,15 +27,21 @@ const instructionPage = {
     const buttonInstruction = document.getElementById('button-instruction');
     let keyboardListener = setupKeyboardListener(handleSpacebar);
 
+    /**
+     * Handles spacebar presses during the instruction demo
+     * Provides immediate feedback and coin rewards
+     */
     function handleSpacebar() {
       shakeCount++;
       shakePiggy();
       updateInstructionText(shakeCount);
 
+      // Give coin reward every FR presses
       if (shakeCount % FR === 0) {
         dropCoin(0);
       }
 
+      // Show continue/restart options after first reward
       if (shakeCount === FR + 1) {
         bottomContainer.style.visibility = 'visible';
 
@@ -42,6 +52,9 @@ const instructionPage = {
       }
     }
 
+    /**
+     * Starts timer to highlight the continue button after 10 seconds
+     */
     function startTimer() {
       timer = setTimeout(() => {
         experimentContainer.style.visibility = 'hidden';
@@ -50,6 +63,9 @@ const instructionPage = {
       }, 10000); // 10 seconds
     }
 
+    /**
+     * Resets the instruction demo to initial state
+     */
     function restart() {
       shakeCount = 0;
       timerStarted = false;
@@ -65,15 +81,15 @@ const instructionPage = {
       coinContainer.innerHTML = '';
     }
 
+    // Set up button event listeners
     document.getElementById('restart-button').addEventListener('click', restart);
     document.getElementById('continue-button').addEventListener('click', jsPsych.finishTrial);
 
-    // Add simulation for the instruction page
+    // Simulate user interaction for testing mode
     if (window.simulating) {
       async function simulateKeyPressesAndClick() {
         const pressKeyPromises = [];
-        // FR is defined in the outer scope (e.g., let FR = 5;)
-        // Loop to schedule FR + 1 key presses
+        // Simulate FR + 1 key presses to trigger coin drop and continue option
         for (let i = 0; i < FR + 1; i++) {
           const scheduledTime = 100 * i + 1; // Delay for this specific key press
 
@@ -88,13 +104,10 @@ const instructionPage = {
           );
         }
 
-        // Wait for all promises in the array to resolve.
-        // This means waiting until the maximum scheduledTime (i.e., 100 * FR) has passed.
-        // At this point, all key presses should have been simulated.
+        // Wait for all key presses to be simulated
         await Promise.all(pressKeyPromises);
 
-        // Now that all key presses are simulated, call clickTarget.
-        // The click will be simulated 100ms after this function call.
+        // Simulate clicking continue button
         jsPsych.pluginAPI.clickTarget(document.getElementById('continue-button'), 100);
       }
 
@@ -107,9 +120,10 @@ const instructionPage = {
   }
 };
 
-// Before starting the first trial
-// If one wants to specify the simulation options, then it should provide view_history (array: {page_index: (starting from 0), viewing_time}) and rt (the time spent on the whole instruction).
-// But setting global simulation options will cause the view_history array in the local simulation options to be an object rather than an array. So the simulation mode would not work.
+/**
+ * Static instruction pages explaining the game rules and coin types
+ * Uses jsPsych instructions plugin with navigation
+ */
 const ruleInstruction = {
   type: jsPsychInstructions,
   data: {trialphase: 'vigour_instructions'},
@@ -120,8 +134,8 @@ const ruleInstruction = {
     
     <p>Throughout the game, you will see different piggy banks with unique appearances:</p>
     <ul>
-        <li><img src="/assets/images/vigour/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Vividness</span> of piggy colors: Indicates how fast you need to shake it.</li>
-        <li><img src="/assets/images/vigour/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Tail length</span>: Longer piggy tails = more valuable coins.</li>
+        <li><img src="/assets/images/piggy-banks/saturate-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Vividness</span> of piggy colors: Indicates how fast you need to shake it.</li>
+        <li><img src="/assets/images/piggy-banks/tail-icon.png" style="height:1.3em; transform: translateY(0.2em)"> <span class="highlight-txt">Tail length</span>: Longer piggy tails = more valuable coins.</li>
     </ul>
     </div>
     `,
@@ -129,15 +143,15 @@ const ruleInstruction = {
     <p>Types of coins you can win:</p>
     <div class="instruct-coin-container">
         <div class="instruct-coin">
-            <img src="/assets/images/vigour/1p-num.png" alt="1 Penny">
+            <img src="/assets/images/piggy-banks/1p-num.png" alt="1 Penny">
             <p>1 Penny</p>
         </div>
         <div class="instruct-coin">
-            <img src="/assets/images/vigour/2p-num.png" alt="2 Pence">
+            <img src="/assets/images/piggy-banks/2p-num.png" alt="2 Pence">
             <p>2 Pence</p>
         </div>
         <div class="instruct-coin">
-            <img src="/assets/images/vigour/5p-num.png" alt="5 Pence">
+            <img src="/assets/images/piggy-banks/5p-num.png" alt="5 Pence">
             <p>5 Pence</p>
         </div>
     </div>
@@ -147,16 +161,20 @@ const ruleInstruction = {
       `]
 };
 
+/**
+ * Final confirmation screen before starting the actual vigour task
+ * Allows user to restart instructions or begin the task
+ */
 const startConfirmation = {
   type: jsPsychHtmlKeyboardResponse,
-  choices: ['b', 'r'],
+  choices: ['b', 'r'], // 'b' to begin, 'r' to restart instructions
   stimulus: `
   <div id="instruction-text">
       <p>You will now play the piggy-bank game without a break for about <strong>four minutes</strong>.</p>
       <p>When you're ready, place the <strong>index finger of the hand you write with</strong> comfortably on the <span class="spacebar-icon">B</span> key, as shown below.</p>
       <p>Use only this finger to press during the game.</p>
       <p>Press it once to begin.</p>
-      <img src="/assets/images/vigour/vigour_key.png" style="width:250px;" alt="Key press illustration">
+      <img src="/assets/images/piggy-banks/vigour_key.png" style="width:250px;" alt="Key press illustration">
       <p>If you want to start over from the beginning, press <span class="spacebar-icon">R</span>.</p>
   </div>
     `,
@@ -168,25 +186,34 @@ const startConfirmation = {
     }
   },
   on_finish: function (data) {
+    // Set RNG seed for reproducible trial sequences
     const seed = jsPsych.randomization.setSeed();
     data.rng_seed = seed;
   },
 }
 
+/**
+ * Main export: Complete vigour task instruction timeline
+ * Includes loop functionality to repeat instructions if user presses 'r'
+ */
 export const vigour_instructions = {
   timeline: [instructionPage, ruleInstruction, startConfirmation],
+  // Loop function to repeat instructions if user presses 'r'
   loop_function: function (data) {
     const last_iter = data.last(1).values()[0];
     if (jsPsych.pluginAPI.compareKeys(last_iter.response, 'r')) {
-      return true;
+      return true; // Repeat instructions
     } else {
-      return false;
+      return false; // Continue to main task
     }
   },
   on_timeline_start: () => {updateState(`vigour_instructions_start`)}
 }
 
-// Function to generate stimulus HTML
+/**
+ * Generates the HTML stimulus for the interactive instruction page
+ * @returns {string} HTML string containing the instruction demo interface
+ */
 function generateInstructStimulus() {
   return `
     <div class="experiment-wrapper">
@@ -200,7 +227,7 @@ function generateInstructStimulus() {
         <div id="coin-container"></div>
         <div id="piggy-container">
           <!-- Piggy Bank Image -->
-          <img id="piggy-bank" src="/assets/images/vigour/piggy-bank.png" alt="Piggy Bank">
+          <img id="piggy-bank" src="/assets/images/piggy-banks/piggy-bank.png" alt="Piggy Bank">
         </div>
       </div>
 
@@ -216,7 +243,10 @@ function generateInstructStimulus() {
   `;
 }
 
-// Function to update instruction text based on shake count
+/**
+ * Updates the instruction text based on user's progress through the demo
+ * @param {number} shakeCount - Number of times user has pressed the key
+ */
 function updateInstructionText(shakeCount) {
   const messages = [
     '<p>Welcome to the piggy bank game!</p><p>Press <span class="spacebar-icon">B</span> on the keyboard to shake this piggy bank!</p>',
@@ -225,16 +255,20 @@ function updateInstructionText(shakeCount) {
   ];
   let messageIndex = 0;
   if (shakeCount < 1) {
-    messageIndex = 0;
+    messageIndex = 0; // Initial welcome message
   } else if (shakeCount >= 1 && shakeCount < 5) {
-    messageIndex = 1;
+    messageIndex = 1; // Encouragement to continue pressing
   } else {
-    messageIndex = 2;
+    messageIndex = 2; // Success message after first coin
   }
   document.getElementById('instruction-text').innerHTML = messages[messageIndex];
 }
 
-// Function to set up keyboard listener
+/**
+ * Sets up keyboard listener for the instruction demo
+ * @param {Function} callback - Function to call when valid key is pressed
+ * @returns {Object} Keyboard listener object for cleanup
+ */
 function setupKeyboardListener(callback) {
   return jsPsych.pluginAPI.getKeyboardResponse({
     callback_function: callback,
