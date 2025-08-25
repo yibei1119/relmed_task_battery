@@ -69,13 +69,13 @@ function PITMainInstructions(settings) {
                         <img src=${"/assets/images/pavlovian-stims/" + settings.session + "/PIT6.png"} class="pit-pav-icon">
                   </div>
                   <div class="pit-coin-row">
-                        <img src="/assets/images/piggy-banks/1pound.png" class="pit-coin-icon">
-                        <img src="/assets/images/piggy-banks/50pence.png" class="pit-coin-icon">
-                        <img src="/assets/images/piggy-banks/1penny.png" class="pit-coin-icon">
+                        <img src="/assets/images/card-choosing/outcomes/1pound.png" class="pit-coin-icon">
+                        <img src="/assets/images/card-choosing/outcomes/50pence.png" class="pit-coin-icon">
+                        <img src="/assets/images/card-choosing/outcomes/1penny.png" class="pit-coin-icon">
                         <div class="vertical"></div>
-                        <img src="/assets/images/piggy-banks/1pennybroken.png" class="pit-coin-icon">
-                        <img src="/assets/images/piggy-banks/50pencebroken.png" class="pit-coin-icon">
-                        <img src="/assets/images/piggy-banks/1poundbroken.png" class="pit-coin-icon">
+                        <img src="/assets/images/card-choosing/outcomes/1pennybroken.png" class="pit-coin-icon">
+                        <img src="/assets/images/card-choosing/outcomes/50pencebroken.png" class="pit-coin-icon">
+                        <img src="/assets/images/card-choosing/outcomes/1poundbroken.png" class="pit-coin-icon">
                   </div>
             </div>
       </div>
