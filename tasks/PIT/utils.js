@@ -218,56 +218,5 @@ const PIT_bonus = {
   }
 };
 
-// Debriefing
-const vigour_PIT_bonus = {
-  type: jsPsychHtmlButtonResponse,
-  css_classes: ['instructions'],
-  stimulus: "Congratulations! You've finished the Piggy-Bank Game!",
-  choices: ['Finish'],
-  data: { trialphase: 'vigour_bonus' },
-  on_start: function (trial) {
-    const selected_trial = getSelectedTrial();
-    const selected_PIT_trial = getSelectedPITtrial();
-    trial.stimulus = `
-            <p>It is time to reveal your total bonus payment for the Piggy-Bank Game.</p>
-            <p>The computer selected piggy bank number ${selected_trial.trial_number} of the no-cloud version and number ${selected_PIT_trial.pit_trial_number} of the cloudy version, which means you will earn ${((window.sampledVigourReward + window.sampledPITreward)/ 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
-        `;
-  },
-  on_start: () => {
-    updateState(`vigour_pit_bonus_start`);
-  },
-  on_finish: (data) => {
 
-    const bonus = (window.sampledVigourReward + window.sampledPITreward)/ 100;
-    
-    data.vigour_bonus = bonus;
-
-    postToParent({bonus: bonus});
-  }
-};
-
-const vigour_PIT_bonus2 = {
-  type: jsPsychHtmlButtonResponse,
-  css_classes: ['instructions'],
-  stimulus: "Congratulations! You've finished the Piggy-Bank Game!",
-  choices: ['Finish'],
-  data: { trialphase: 'vigour_bonus' },
-  on_start: function (trial) {
-    updateState(`vigour_pit_bonus_start`);
-
-    const raw_bonus = computeRelativeVigourPITBonus();
-    const total_bonus = (raw_bonus.earned - raw_bonus.min)/(raw_bonus.max - raw_bonus.min) * (1 - 0.6) + 0.6;
-    trial.stimulus = `
-            <p>It is time to reveal your total bonus payment for the Piggy-Bank Game.</p>
-            <p>With the cloudy version and the no-cloud version combined, you will earn ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })} in total for the game.</p>
-        `;
-  },
-  on_finish: (data) => {
-    const raw_bonus = computeRelativeVigourPITBonus();
-    data.vigour_bonus = (raw_bonus.earned - raw_bonus.min)/(raw_bonus.max - raw_bonus.min) * (1 - 0.6) + 0.6;
-  },
-  simulation_options: {
-    simulate: true
-  }
-};
 
