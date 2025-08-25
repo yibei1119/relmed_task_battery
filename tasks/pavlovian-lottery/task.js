@@ -64,7 +64,7 @@ export function createPavlovianLotteryTimeline(settings) {
   // Create preload trial
   const prepilt_preload = createPreloadTrial(
     [
-      [1, 2, 3, 4, 5, 6].map(i => `/assets/images/pavlovian-stims/${settting.session}/PIT${i}.png`),
+      [1, 2, 3, 4, 5, 6].map(i => `/assets/images/pavlovian-stims/${settings.session}/PIT${i}.png`),
       [
         "50pence.png",
         "1pound.png",

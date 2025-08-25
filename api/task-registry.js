@@ -5,6 +5,7 @@ import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPos
 import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
 import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
+import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
 import { loadSequence } from '/core/utils/index.js';
 
 export const TaskRegistry = {
@@ -151,6 +152,23 @@ export const TaskRegistry = {
     requirements: {
       css: ['tasks/max-press-test/styles.css'],
       note: 'Make sure to include max-press-test/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    }
+  },
+  pavlovian_lottery: {
+    name: 'Pavlovian Conditioning Lottery',
+    description: 'A lottery task for conditioning Pavlovian associations between visual cues and monetary rewards',
+    createTimeline: createPavlovianLotteryTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+    },
+    configOptions: {
+    },
+    requirements: {
+      css: ['tasks/pavlovian-lottery/styles.css'],
+      note: 'Make sure to include pavlovian-lottery/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
