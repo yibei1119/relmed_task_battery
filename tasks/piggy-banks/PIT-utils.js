@@ -25,7 +25,7 @@ function generatePITstimulus(coin, ratio, settings) {
     "-1": "PIT6.png",
     "-0.5": "PIT5.png"
   };
-  PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "/assets/images/PIT/Pav_stims/" + settings.session + "/" + v]));
+  PIT_imgs = Object.fromEntries(Object.entries(PIT_imgs).map(([k, v]) => [k, "/assets/images/pavlovian-stims/" + settings.session + "/" + v]));
   PIT_imgs["0"] = "";
   const piggyBgImg = PIT_imgs[coin];
   return `
@@ -33,15 +33,15 @@ function generatePITstimulus(coin, ratio, settings) {
       <!-- Middle Row (Piggy Bank & Coins) -->
       <div id="experiment-container">
         <div id="bg-container">
-          <img id="piggy-bg-1" src="/assets/images/PIT/piggy-cloud.png" alt="Piggy background" style="transform: translate(0vw, -4vh); position: absolute; height: 120%; width: auto; ${cloud_style}">
-          <img id="piggy-bg-2" src="/assets/images/PIT/piggy-cloud.png" alt="Piggy background" style="transform: translate(0vw, -4vh); position: absolute; height: 120%; width: auto;">
+          <img id="piggy-bg-1" src="/assets/images/piggy-banks/piggy-cloud.png" alt="Piggy background" style="transform: translate(0vw, -4vh); position: absolute; height: 120%; width: auto; ${cloud_style}">
+          <img id="piggy-bg-2" src="/assets/images/piggy-banks/piggy-cloud.png" alt="Piggy background" style="transform: translate(0vw, -4vh); position: absolute; height: 120%; width: auto;">
         </div>
         <div id="piggy-container">
           <!-- Piggy Bank Image -->
           <img id="piggy-bank" src="/assets/images/vigour/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
         </div>
         <div id="obstructor-container">
-          <img id="obstructor" src="/assets/images/PIT/occluding_clouds.png" alt="Obstructor">
+          <img id="obstructor" src="/assets/images/piggy-banks/occluding_clouds.png" alt="Obstructor">
         </div>
       </div>
     </div>
