@@ -10,9 +10,9 @@ const unique_ratios = [...new Set(PIT_TRIAL_LIST.map(item => item.ratio))].sort(
 
 // Trial stimulus function
 function generatePITstimulus(coin, ratio, settings) {
-  const ratio_index = experimentConfig.ratios.indexOf(ratio);
+  const ratio_index = unique_ratios.indexOf(ratio);
   // Calculate saturation based on ratio
-  const ratio_factor = ratio_index / (experimentConfig.ratios.length - 1);
+  const ratio_factor = ratio_index / (unique_ratios.length - 1);
   const piggy_style = `filter: saturate(${50 * (400 / 50) ** ratio_factor}%) brightness(${115 * (90/115) ** ratio_factor}%);`;
   const cloud_style = `filter: brightness(0.8) contrast(1.2);`;
   let PIT_imgs = {
