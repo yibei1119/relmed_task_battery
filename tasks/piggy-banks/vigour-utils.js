@@ -20,30 +20,11 @@ let trialState = {
 };
 
 
-// First preload for task
-function preloadVigour(settings) {
-  return {
-    type: jsPsychPreload,
-    images:
-      [
+// Images to preload
+const VIGOUR_PRELOAD_IMAGES = [
         "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", 
         "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png"
-      ].map(s => "/assets/images/piggy-banks/" + s),
-    post_trial_gap: 800,
-    data: {
-        trialphase: "preload_vigour"
-    },
-    on_start: () => {
-
-        // Report to tests
-        console.log("load_successful")
-
-        // Report to relmed.ac.uk
-        postToParent({message: "load_successful"})
-    },
-    continue_after_error: true
-  };
-}
+      ].map(s => "/assets/images/piggy-banks/" + s);
 
 
 // Drop coin animation
@@ -312,8 +293,8 @@ function createVigourCoreTimeline(settings) {
 
 export {
   createVigourCoreTimeline,
-  preloadVigour,
   updatePersistentCoinContainer, 
   observeResizing, 
-  dropCoin
+  dropCoin,
+  VIGOUR_PRELOAD_IMAGES
 }
