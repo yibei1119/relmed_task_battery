@@ -1,5 +1,10 @@
 import { updateState} from '/core/utils/index.js';
 
+/**
+ * Creates the main instruction pages for the PIT (Pavlovian-Instrumental Transfer) task
+ * @param {Object} settings - Configuration object containing session information
+ * @returns {Object} jsPsych instructions trial object
+ */
 function PITMainInstructions(settings) { 
   return {
     type: jsPsychInstructions,
@@ -83,9 +88,13 @@ function PITMainInstructions(settings) {
   };
 }
 
+/**
+ * Confirmation screen before starting the PIT task
+ * Shows instructions for key placement and allows user to start or review instructions
+ */
 const startPITconfirmation = {
   type: jsPsychHtmlKeyboardResponse,
-  choices: ['b', 'r'],
+  choices: ['b', 'r'], // 'b' to begin, 'r' to review instructions
   stimulus: `
   <div id="instruction-text">
       <p>You will now play the piggy-bank game in the clouds for about <strong>eight minutes</strong>.</p>
@@ -100,17 +109,25 @@ const startPITconfirmation = {
   data: { trialphase: 'pit_instructions' }
 }
 
+/**
+ * Main export function that creates the complete PIT instructions timeline
+ * @param {Object} settings - Configuration object containing session information
+ * @returns {Object} jsPsych timeline object with instruction pages and loop functionality
+ */
 export const PITInstructions = (settings) => {
   return {
     timeline: [PITMainInstructions(settings), startPITconfirmation],
+    // Loop function to repeat instructions if user presses 'r'
     loop_function: function (data) {
       const last_iter = data.last(1).values()[0];
+      // If user pressed 'r', repeat the instructions
       if (jsPsych.pluginAPI.compareKeys(last_iter.response, 'r')) {
         return true;
       } else {
-        return false;
+        return false; // Continue to next part of experiment
       }
     },
+    // Update experiment state when instructions begin
     on_timeline_start: () => {
       updateState(`pit_instructions_start`);
     }
