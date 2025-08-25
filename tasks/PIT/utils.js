@@ -271,39 +271,3 @@ const vigour_PIT_bonus2 = {
   }
 };
 
-const computeRelativeVigourPITBonus = () => {
-  const computePiggyMetrics = (trialphase) => {
-    const trials = jsPsych.data.get().filter({trialphase});
-    
-    if (trials.count() === 0) {
-      // console.log(`No trials found for ${trialphase}. Returning default values.`);
-      return { earned: 0, min: 0, max: 0 };
-    }
-    
-    const earned = trials.select('total_reward').values.slice(-1)[0] * 0.01;
-    const values = trials.values();
-    
-    const min = values.reduce((sum, trial) => 
-      sum + (1 * trial.timeline_variables.magnitude * 0.01 / trial.timeline_variables.ratio), 0);
-    
-    const max = values.reduce((sum, trial) => 
-      sum + (10 * trial.trial_duration / 1000 * 
-           (trial.timeline_variables.magnitude * 0.01 / trial.timeline_variables.ratio)), 0);
-    
-    return { 
-      earned: isNaN(earned) ? 0 : earned, 
-      min: isNaN(min) ? 0 : min, 
-      max: isNaN(max) ? 0 : max
-    }
-  };
-
-  const vigour = computePiggyMetrics("vigour_trial");
-  const pit = computePiggyMetrics("pit_trial");
-  
-  return {
-    earned: vigour.earned + pit.earned,
-    min: vigour.min + pit.min,
-    max: vigour.max + pit.max
-  };
-};
-
