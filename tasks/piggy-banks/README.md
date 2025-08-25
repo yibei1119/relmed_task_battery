@@ -1,42 +1,42 @@
-# Vigour Task
+# Piggy Banks Task Module
 
 ## Overview
-The vigour task is a behavioral paradigm that measures participants' motivation and effort allocation by having them shake a virtual piggy bank to earn coins. Participants press the 'B' key repeatedly to shake the piggy bank, with different trials requiring varying effort levels (ratio of presses per coin) for different reward magnitudes. The task assesses how participants balance effort expenditure with reward value, providing insights into motivational processing.
+This module contains behavioral paradigms that utilize a shared piggy bank interface to study motivation, effort allocation, and reward processing. The module includes two main tasks: the vigour task and the Pavlovian-to-Instrumental Transfer (PIT) task. Both tasks share common visual elements and mechanics involving a virtual piggy bank that participants interact with to earn coins, while measuring different aspects of motivated behavior.
+
+## Tasks Included
+
+### Vigour Task
+The vigour task measures participants' motivation and effort allocation by having them shake a virtual piggy bank to earn coins. Participants press the 'B' key repeatedly to shake the piggy bank, with different trials requiring varying effort levels (ratio of presses per coin) for different reward magnitudes. The task assesses how participants balance effort expenditure with reward value.
+
+### Pavlovian-to-Instrumental Transfer (PIT) Task
+The PIT task examines how Pavlovian cues influence instrumental behavior. Participants interact with the piggy bank in notional extinction, while being presented with previously conditioned stimuli, allowing researchers to study how learned associations affect motivated responding.
 
 ## File Structure
 
 ### Core Files
 
 #### `index.js`
-**Purpose**: Main entry point that centralizes all exports from the task module.
-- Re-exports all functions from `utils.js`, `instructions.js`, and `timeline.js`
-- Provides a single import point for accessing vigour task functionality
+**Purpose**: Main entry point that centralizes all exports from the piggy banks task module.
+- Re-exports all functions from vigour and PIT task components
+- Provides a single import point for accessing all piggy bank task functionality
 
-#### `timeline.js`
-**Purpose**: Contains the main timeline creation functions and task orchestration logic.
+#### Vigour Task Components
+
+##### `vigour-timeline.js`
+**Purpose**: Contains timeline creation functions for the vigour task.
 
 **Main Export Functions**:
 - **`createVigourTimeline(settings)`**: Creates the complete timeline for the vigour task
   - Handles asset preloading, instructions, and core task trials
   - Returns array of jsPsych trial objects for the full task sequence
 
-#### `utils.js`
-**Purpose**: Core utility functions for task construction, trial management, animations, and data tracking.
+##### `vigour-utils.js`
+**Purpose**: Core utility functions for vigour task construction, trial management, animations, and data tracking.
 
 **Main Export Functions**:
 - **`preloadVigour(settings)`**: Preloads all necessary images and assets for the task
-  - Loads coin images, piggy bank graphics, and pavlovian stimuli
-  - Includes error handling with continue_after_error option
-  
 - **`createVigourCoreTimeline(settings)`**: Constructs the main task trials from predefined trial structure
-  - Creates 36 trials with varying magnitude (1, 2, 5 pence) and ratio (1, 8, 16 presses) combinations
-  - Includes kick-out checks and fullscreen prompts for each trial
-  - Manages task state initialization and cleanup
-  
 - **`piggyBankTrial(settings)`**: Creates individual vigour trial objects
-  - Handles key press detection and response tracking
-  - Manages real-time coin dropping animations and piggy bank shaking
-  - Records detailed performance metrics including presses, rewards, and response times
 
 **Animation Functions**:
 - **`shakePiggy()`**: Animates piggy bank shaking when participants press keys
@@ -49,79 +49,88 @@ The vigour task is a behavioral paradigm that measures participants' motivation 
 - **`updatePersistentCoinContainer()`**: Maintains coin animation positioning across screen changes
 - **`observeResizing(elementId, callback)`**: Handles dynamic screen resizing during the task
 
-#### `instructions.js`
-**Purpose**: Manages interactive instruction sequence with practice demonstration.
+##### `vigour-instructions.js`
+**Purpose**: Manages interactive instruction sequence for the vigour task.
 
 **Main Export Functions**:
-- **`vigour_instructions`**: Complete interactive instruction timeline
-  - Allows participants to practice pressing 'B' to shake the piggy bank
-  - Demonstrates coin earning mechanism with visual feedback
-  - Includes restart functionality for repeated practice
-  - Provides continue button once minimum practice completed
+- **`vigour_instructions`**: Complete interactive instruction timeline for vigour task
 
-**Helper Functions**:
-- **`generateInstructStimulus()`**: Creates HTML structure for instruction interface
-- **`updateInstructionText(shakeCount)`**: Updates instruction text based on practice progress
-- **`setupKeyboardListener(callback)`**: Configures key press detection for practice
+#### PIT Task Components
 
-#### `styles.css`
-**Purpose**: CSS styling for the vigour task interface and animations.
+##### `PIT-timeline.js`
+**Purpose**: Contains timeline creation functions for the PIT task.
+
+##### `PIT-utils.js`
+**Purpose**: Core utility functions for PIT task construction and management.
+
+##### `PIT-instructions.js`
+**Purpose**: Manages instruction sequences for the PIT task.
+
+#### Shared Components
+
+##### `utils.js`
+**Purpose**: Shared utility functions used across both vigour and PIT tasks.
+
+##### `styles.css`
+**Purpose**: CSS styling for piggy bank task interfaces and animations.
 - Defines layout for piggy bank, coins, and instruction elements
 - Handles responsive design for different screen sizes
 - Styles for coin dropping animations and piggy bank effects
 - Manages visual feedback for tail indicators and saturation effects
 - Ensures consistent presentation across trials and instruction phases
 
-## Task Design
+## Shared Design Elements
 
-### Trial Structure
-The task consists of 36 trials with systematic manipulation of:
-- **Magnitude**: Reward value per coin (1, 2, or 5 pence)
-- **Ratio**: Number of key presses required per coin (1, 8, or 16 presses)
-- **Duration**: Fixed trial duration (~6.5-7.5 seconds per trial)
-The trial sequence is defined at the head of `utils.js`.
-
-### Visual Feedback System
-- **Piggy Bank**: Central visual element that shakes with each key press
-- **Coin Animations**: Different coin values (1p, 2p, 5p) drop when ratio requirements are met
-- **Tail Indicators**: Visual cues showing current trial parameters
+### Visual Interface Components
+- **Piggy Bank**: Central visual element that shakes with participant interactions
+- **Coin Animations**: Different coin values (1p, 2p, 5p) drop when requirements are met
+- **Tail Indicators**: Visual cues showing trial parameters
   - Number of tails indicates reward magnitude
-  - Saturation/brightness indicates effort requirement (ratio)
+  - Saturation/brightness indicates effort requirement or other trial conditions
 
-### Data saved
-The task records the following data:
-- **Trial-level metrics**: Number of presses, earned rewards, response times
-- **Global tracking**: Total presses and rewards across all trials
-- **Temporal data**: Response time patterns and inter-press intervals
-- **Efficiency measures**: Effort-to-reward ratios for motivation analysis
+### Common Data Output
+Both tasks record detailed behavioral data including:
+- **Trial-level metrics**: Response counts, earned rewards, response times
+- **Global tracking**: Total responses and rewards across trials
+- **Temporal data**: Response time patterns and inter-response intervals
+- **Task-specific measures**: Effort allocation strategies, cue-response relationships
 
-## Usage Example
+## Usage Examples
 
+### Vigour Task
 ```javascript
-import { createVigourTimeline } from './tasks/vigour/index.js';
+import { createVigourTimeline } from './tasks/piggy-banks/index.js';
 
-// Create vigour task timeline
 const settings = {
   session: "wk0",
   participant_id: "sub001"
 };
 
 const vigourTimeline = createVigourTimeline(settings);
+```
 
-// Add to jsPsych experiment
-jsPsych.run(vigourTimeline);
+### PIT Task
+```javascript
+import { createPITTimeline } from './tasks/piggy-banks/index.js';
+
+const settings = {
+  session: "wk0",
+  participant_id: "sub001"
+};
+
+const pitTimeline = createPITTimeline(settings);
 ```
 
 ## Dependencies
 - Core utilities from `/core/utils/index.js`
 - jsPsych framework and plugins (html-keyboard-response, preload)
-- Asset images in `/assets/images/vigour/` and `/assets/images/pavlovian-stims/`
+- Asset images in `/assets/images/piggy-banks/`, `/assets/images/pavlovian-stims/`, and `/assets/images/card-choosing/outcomes/`
 - Custom CSS styling for animations and responsive design
 
 ## Data Output
-The task records detailed trial-by-trial data including:
-- **Trial behaviour**: Trial presses, earned rewards, response times
-- **Trial parameters**: Magnitude, ratio, and trial duration
-- **Behavioral patterns**: Inter-press intervals and effort allocation strategies
-- **Overall behaviour**: Total presses and rewards for bonus calculations
+The tasks record detailed trial-by-trial data including:
+- **Trial behaviour**: Response counts, earned rewards, response times
+- **Trial parameters**: Magnitude, ratio, trial duration, and stimulus conditions
+- **Behavioral patterns**: Inter-response intervals and response allocation strategies
+- **Overall behaviour**: Total responses and rewards for bonus calculations
 - **Task progression**: Trial numbers and completion timestamps
