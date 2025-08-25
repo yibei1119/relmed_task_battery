@@ -8,5 +8,6 @@ export * from './vigour-instructions.js';
 export * from './vigour-utils.js';
 export * from './vigour-timeline.js';
 export * from './PIT-timeline.js';
-export * from './PIT-timeline.js';
-export * from './PIT-timeline.js';
+export * from './PIT-utils.js';
+export * from './PIT-instructions.js';
+export * from './utils.js';
