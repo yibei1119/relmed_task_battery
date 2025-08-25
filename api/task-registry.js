@@ -4,7 +4,7 @@
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '/tasks/card-choosing/index.js';
 import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
-import { createVigourTimeline, computeRelativePiggyTasksBonus } from '/tasks/vigour/index.js';
+import { createVigourTimeline, computeRelativePiggyTasksBonus } from '/tasks/pigg-banks/index.js';
 import { loadSequence } from '/core/utils/index.js';
 
 export const TaskRegistry = {
