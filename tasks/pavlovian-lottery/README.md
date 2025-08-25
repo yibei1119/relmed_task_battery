@@ -1,7 +1,7 @@
-# Max Press Test Task
+# Pavlovian Lottery Task
 
 ## Overview
-The max press test task is a simple keyboard calibration and motor assessment tool that measures participants' maximum key press rate. Participants repeatedly press the 'J' key as fast as possible for a fixed duration while receiving real-time feedback on their pressing speed. This task serves multiple purposes: calibrating keyboard responsiveness, assessing motor function, and establishing baseline performance metrics for analysing subsequent experimental tasks.
+The Pavlovian lottery task is a conditioning paradigm that establishes associations between visual stimuli and monetary outcomes. Participants observe slot machine-style animations that reveal Pavlovian stimuli (conditioned stimuli) paired with specific coin rewards or losses (unconditioned stimuli). The task serves to create learned associations between abstract visual patterns and their corresponding monetary values, which can be utilized in subsequent experimental tasks that require established stimulus-reward pairings.
 
 ## File Structure
 
@@ -10,124 +10,149 @@ The max press test task is a simple keyboard calibration and motor assessment to
 #### `index.js`
 **Purpose**: Main entry point that centralizes all exports from the task module.
 - Re-exports all functions from `task.js`
-- Provides a single import point for accessing max press test functionality
-- Maintains consistency with other task modules despite being a simple single-file task
+- Provides a single import point for accessing Pavlovian lottery functionality
+- Maintains consistency with other task modules despite being a single-file task
 
 #### `task.js`
-**Purpose**: Contains all task logic, trial construction, and timeline management functions.
+**Purpose**: Contains all task logic, stimulus-reward mappings, timeline construction, and animation management functions.
 
 **Main Export Functions**:
-- **`createMaxPressTimeline(settings)`**: Creates the complete timeline for the max press test
-  - Handles instructions, main test trial, retake logic, and feedback
-  - Returns array of jsPsych trial objects for the full assessment sequence
+- **`createPavlovianLotteryTimeline(settings)`**: Creates the complete timeline for the Pavlovian lottery task
+  - Handles asset preloading, instructions, lottery trials, and completion sequence
+  - Returns array of jsPsych trial objects for the full conditioning procedure
 
-**Core Trial Functions**:
-- **`maxPressRateTrial(settings)`**: Creates the main key pressing trial
-  - Implements press counting and speed calculation
-  - Displays live feedback with progress bar and timer
-  - Records detailed response time data and performance metrics
-  - Handles first-press trigger to start timing and countdown
+**Core Configuration**:
+- **`PREPILT_CONFIG`**: Central configuration object containing stimulus-reward mappings
+  - Maps numerical values (-1.0 to 1.0) to specific Pavlovian stimulus images
+  - Associates each stimulus with corresponding reward/punishment coin images
+  - Defines trial sequence with predefined stimulus-reward pairings
+  - Contains timing constants for animations and displays
 
-**Instruction and Feedback Functions**:
-- **`maxPressInstructions`**: Initial instruction screen with visual demonstration
-  - Shows animated GIF example of key pressing technique
-  - Explains the task requirements clearly
-  
-- **`maxPressFeedback`**: Post-test feedback displaying performance results
-  - Shows average pressing speed achieved
-  - Provides positive reinforcement for task completion
-  
-- **`maxPressRetakeMessage(settings)`**: Conditional retake prompt for low performance
-  - Displays current performance and explains retake rationale
-  - Only shown if performance falls below minimum threshold
+**Trial Functions**:
+- **`lotteryAnimation`**: Creates slot machine-style spinning animation trial
+  - Implements horizontal carousel with multiple stimuli scrolling across screen
+  - Uses Fisher-Yates shuffle to randomize stimulus order in carousel
+  - Prevents consecutive duplicate stimuli for smoother visual effect
+  - Precisely positions target stimulus in center frame after animation
 
-**Loop and Control Functions**:
-- **`maxPressRetakeLoop(settings)`**: Manages retake logic and performance validation
-  - Allows up to 2 attempts if performance is below minimum speed
-  - Automatically proceeds once acceptable performance is achieved
-  - Updates experiment state markers for data tracking
+- **`showResult`**: Displays final stimulus-reward pairing after lottery spin
+  - Shows both the Pavlovian stimulus and its associated coin outcome
+  - Applies appropriate styling for positive/negative monetary values
+  - Records trial data including stimulus type, reward value, and response timing
+
+**Instruction Functions**:
+- **`instructions`**: Multi-page instruction sequence with visual examples
+  - Welcome screen explaining the lottery concept
+  - Visual guide displaying all possible coin outcomes (intact and broken)
+  - Starting instructions with spacebar prompt
 
 **Utility Functions**:
-- **`getDifferences(array)`**: Calculates inter-press intervals from response time array
-  - Converts absolute response times to relative intervals
-  - Used for analyzing pressing rhythm and consistency
+- **`getSpeedUpFactor()`**: Returns timing multiplier for simulation mode
+  - Speeds up all animations by factor of 10 when `window.simulating` is true
+  - Allows rapid testing while preserving normal timing for participants
+
+- **`shuffleArray(array)`**: Implements Fisher-Yates algorithm for randomization
+  - Ensures random ordering of stimuli in slot machine carousel
+  - Creates unpredictable animation sequences while maintaining target outcome
 
 #### `styles.css`
-**Purpose**: CSS styling for the max press test interface.
-- Defines styling for keyboard key indicators (`.spacebar-icon`)
-- Styles for highlighted text and important instructions
-- Maintains visual consistency with other tasks in the battery
-- Ensures clear readability of performance feedback elements
+**Purpose**: CSS styling for the Pavlovian lottery interface and animations.
+- Defines slot machine container and carousel positioning (`.slot-machine-container`, `.slot-reel`)
+- Styles for selection frame highlighting and winning item emphasis (`.selection-frame`, `.winning-item`)
+- Animation transitions for smooth slot machine movement
+- Responsive sizing for different screen dimensions
+- Color schemes for positive/negative monetary value display
 
 ## Task Design
 
-### Assessment Protocol
-- **Duration**: Configurable test duration (typically 10 seconds)
-- **Key**: Uses 'J' key for right-hand pressing
-- **Trigger**: First key press starts the countdown timer
-- **Feedback**: Real-time display of press count, speed, and progress bar
+### Conditioning Protocol
+- **Trial Count**: 30 predetermined stimulus-reward pairings
+- **Stimulus Set**: 6 distinct Pavlovian stimuli with varying reward associations
+- **Outcome Range**: Monetary values from -£1 (loss) to +£1 (gain)
+- **Animation Style**: Slot machine carousel with horizontal scrolling motion
 
-### Performance Metrics
-- **Press Count**: Total number of valid key presses minus initial trigger press
-- **Average Speed**: Presses per second over the test duration
-- **Response Times**: Array of inter-press intervals for rhythm analysis
-- **Progress Visualization**: Live speed bar showing performance relative to target
+### Stimulus-Reward Mappings
+- **High Positive (1.0)**: PIT1.png → intact £1 coin
+- **Medium Positive (0.5)**: PIT2.png → intact 50p coin  
+- **Low Positive (0.01)**: PIT3.png → intact 1p coin
+- **Low Negative (-0.01)**: PIT4.png → broken 1p coin
+- **Medium Negative (-0.5)**: PIT5.png → broken 50p coin
+- **High Negative (-1.0)**: PIT6.png → broken £1 coin
 
-### Quality Control
-- **Minimum Speed Threshold**: Configurable minimum performance requirement
-- **Retake Logic**: Up to 2 attempts allowed if initial performance is insufficient
-- **Held Key Protection**: Prevents cheating by holding the key down
-- **Minimum Response Time**: 10ms minimum to filter out mechanical bouncing
+### Animation Sequence
+- **Initial Delay**: Configurable pause before carousel movement begins
+- **Reel Spin Duration**: Horizontal scrolling animation timing
+- **Landing Effect**: Target stimulus centers in selection frame
+- **Highlight Delay**: Pause before emphasizing winning item and frame
+- **Result Display**: Combined presentation of stimulus and reward outcome
 
-### Real-time Feedback System
-- **Live Counter**: Shows current press count
-- **Speed Display**: Updates pressing rate in real-time (presses/sec)
-- **Progress Bar**: Visual indicator scaling to maximum expected speed
-- **Countdown Timer**: Shows remaining time with 0.1s precision
+### Timing Controls
+- **Adaptive Speed**: All timing parameters adjust automatically for simulation mode
+- **Continue Prompt**: Minimum display time before spacebar prompt appears
+- **Response Validation**: Prevents accidental fast responses during result display
+- **Animation Synchronization**: Coordinated timing across multiple visual elements
+
+### Resumption Capability
+- **State Tracking**: Records progress through trial sequence for interruption recovery
+- **Trial Indexing**: Each trial numbered for precise resumption point identification
+- **Session Continuity**: Maintains stimulus set consistency across session interruptions
 
 ## Usage Example
 
 ```javascript
-import { createMaxPressTimeline } from './tasks/max-press-test/index.js';
+import { createPavlovianLotteryTimeline } from './tasks/pavlovian-lottery/index.js';
 
-// Create max press test timeline
+// Create Pavlovian lottery timeline
 const settings = {
-  validKey: 'j',           // Key to press (default: 'j')
-  duration: 10000,         // Test duration in milliseconds
-  minSpeed: 2.0           // Minimum acceptable speed (presses/sec)
+  session: 'pilot',                    // Session identifier for stimulus selection
+  task_name: 'pavlovian_lottery',      // Task name for preloading
+  initial_movement_delay: 500,         // Delay before animation starts (ms)
+  reel_spin_duration: 2000,           // Duration of slot spinning (ms)
+  winning_highlight_delay: 200,       // Delay before highlighting winner (ms)
+  max_result_display_time: 5000,      // Maximum result display duration (ms)
+  continue_message_delay: 1500        // Delay before continue prompt (ms)
 };
 
-const maxPressTimeline = createMaxPressTimeline(settings);
+const pavlovianLotteryTimeline = createPavlovianLotteryTimeline(settings);
 
 // Add to jsPsych experiment
-jsPsych.run(maxPressTimeline);
+jsPsych.run(pavlovianLotteryTimeline);
 ```
 
 ## Settings Configuration
 
 ### Required Parameters
-- **`validKey`**: The keyboard key participants should press (string)
-- **`duration`**: Test duration in milliseconds (number)
-- **`minSpeed`**: Minimum acceptable pressing speed in presses/second (number)
+- **`session`**: Session identifier determining which stimulus set to load (string)
+- **`task_name`**: Task identifier for asset preloading management (string)
+- **`initial_movement_delay`**: Milliseconds before carousel animation begins (number)
+- **`reel_spin_duration`**: Total duration of slot machine spinning animation (number)
+- **`winning_highlight_delay`**: Delay before highlighting the selected stimulus (number)
+- **`max_result_display_time`**: Maximum time for result display before automatic advance (number)
+- **`continue_message_delay`**: Minimum time before spacebar prompt appears (number)
 
 ### Example Settings
 ```javascript
 const defaultSettings = {
-  validKey: 'j',
-  duration: 10000,    // 10 seconds
-  minSpeed: 2.0       // 2 presses/second minimum
+  session: 'pilot',
+  task_name: 'pavlovian_lottery',
+  initial_movement_delay: 500,      // 0.5 seconds
+  reel_spin_duration: 2000,        // 2 seconds
+  winning_highlight_delay: 200,    // 0.2 seconds
+  max_result_display_time: 5000,   // 5 seconds
+  continue_message_delay: 1500     // 1.5 seconds
 };
 ```
 
 ## Dependencies
 - Core utilities from `/core/utils/index.js`
-- jsPsych framework and plugins (html-keyboard-response, html-button-response)
-- Asset image: `/assets/images/max_press_key.gif` for instruction demonstration
-- Custom CSS styling for consistent visual presentation
+- jsPsych framework and plugins (html-keyboard-response, instructions)
+- Pavlovian stimulus images: `/assets/images/pavlovian-stims/{session}/PIT{1-6}.png`
+- Coin outcome images: `/assets/images/card-choosing/outcomes/{coin}.png`
+- Custom CSS styling for slot machine animations and visual feedback
 
 ## Data Output
-The task records comprehensive performance data including:
-- **Primary metrics**: Total presses, average speed (presses/sec)
-- **Temporal data**: Array of inter-press intervals (responseTime)
-- **Trial information**: Phase markers, attempt numbers, completion status
-- **Quality indicators**: Whether retakes were required, final performance level
+The task records conditioning trial data including:
+- **Stimulus Information**: Pavlovian stimulus filename and associated reward value
+- **Timing Data**: Response times for spacebar presses and trial durations
+- **Trial Metadata**: Trial numbers, phase markers, and stimulus-reward pairings
+- **State Information**: Resumption markers and completion status for session continuity
