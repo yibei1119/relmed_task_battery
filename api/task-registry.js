@@ -163,8 +163,20 @@ export const TaskRegistry = {
     createTimeline: createPavlovianLotteryTimeline,
     computeBonus: () => 0, // No bonus computation for this task
     defaultConfig: {
+      initial_movement_delay: 50,
+      reel_spin_duration: 1500,
+      winning_highlight_delay: 450,
+      max_result_display_time: 4000,
+      continue_message_delay: 1500,
+      session: "wk0"
     },
     configOptions: {
+        initial_movement_delay: "Initial delay before the slot reel starts moving, in milliseconds. Default is 50.",
+        reel_spin_duration: "Duration for which the slot reel spins, in milliseconds. Default is 1500.",
+        winning_highlight_delay: "Delay before highlighting the winning outcome, in milliseconds. Default is 450.",
+        max_result_display_time: "Maximum time to display the result before automatically continuing, in milliseconds. Default is 4000.",
+        continue_message_delay: "Delay before showing the 'Press any key to continue' message, in milliseconds. Default is 1500.",
+        session: "Session identifier to select the appropriate stimulus set. Default is 'wk0'.",
     },
     requirements: {
       css: ['tasks/pavlovian-lottery/styles.css'],

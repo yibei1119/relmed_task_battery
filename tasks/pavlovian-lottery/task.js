@@ -16,6 +16,7 @@ export function createPavlovianLotteryTimeline(settings) {
   const getSpeedUpFactor = () => window.simulating ? 10 : 1;
 
   var PREPILT_CONFIG = {
+    // Trial sequence for lottery
     sequence: [{ "pav_value": -1.0 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -1.0 }, { "pav_value": 0.01 }, { "pav_value": 1.0 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": 0.5 }, { "pav_value": -0.01 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": 1.0 }, { "pav_value": 1.0 }, { "pav_value": -0.5 }, { "pav_value": 0.01 }, { "pav_value": -0.5 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -0.5 }, { "pav_value": 1.0 }, { "pav_value": 0.5 }, { "pav_value": -1.0 }, { "pav_value": -0.5 }, { "pav_value": -0.01 }, { "pav_value": 0.5 }, { "pav_value": 1.0 }, { "pav_value": 0.01 }, { "pav_value": -0.01 }, { "pav_value": -0.5 }],
 
     stimulus: {
@@ -47,11 +48,11 @@ export function createPavlovianLotteryTimeline(settings) {
 
     CONSTANTS: {
       SMALL_COIN_SIZE: 100,
-      get INITIAL_MOVEMENT_DELAY() { return 50 / getSpeedUpFactor(); },
-      get REEL_SPIN_DURATION() { return 1500 / getSpeedUpFactor(); },
-      get WINNING_HIGHLIGHT_DELAY() { return 450 / getSpeedUpFactor(); },
-      get MAX_RESULT_DISPLAY_TIME() { return 4000 / getSpeedUpFactor(); },
-      get CONTINUE_MESSAGE_DELAY() { return 1500 / getSpeedUpFactor(); }
+      get INITIAL_MOVEMENT_DELAY() { return settings.initial_movement_delay / getSpeedUpFactor(); },
+      get REEL_SPIN_DURATION() { return settings.reel_spin_duration / getSpeedUpFactor(); },
+      get WINNING_HIGHLIGHT_DELAY() { return settings.winning_highlight_delay / getSpeedUpFactor(); },
+      get MAX_RESULT_DISPLAY_TIME() { return settings.max_result_display_time / getSpeedUpFactor(); },
+      get CONTINUE_MESSAGE_DELAY() { return settings.continue_message_delay / getSpeedUpFactor(); }
     }
   };
 
