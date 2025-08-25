@@ -98,7 +98,7 @@ const startPITconfirmation = {
   data: { trialphase: 'pit_instructions' }
 }
 
-const PITInstructions = (settings) => {
+export const PITInstructions = (settings) => {
   return {
     timeline: [PITMainInstructions(settings), startPITconfirmation],
     loop_function: function (data) {

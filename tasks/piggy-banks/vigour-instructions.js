@@ -1,4 +1,5 @@
-import { updatePersistentCoinContainer, observeResizing, shakePiggy, dropCoin } from './utils.js';
+import { updatePersistentCoinContainer, observeResizing, dropCoin } from './vigour-utils.js';
+import { shakePiggy } from './utils.js';
 import { updateState } from '/core/utils/index.js';
 
 

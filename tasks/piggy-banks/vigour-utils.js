@@ -1,5 +1,6 @@
 // Import functions 
 import { postToParent, saveDataREDCap, updateBonusState, updateState, showTemporaryWarning, kick_out, fullscreen_prompt } from '/core/utils/index.js';
+import { shakePiggy, updatePiggyTails} from "./utils.js";
 
 // Trial plan for Vigour task
 const VIGOUR_TRIALS = [{ "magnitude": 1, "ratio": 1, "trialDuration": 6825 }, { "magnitude": 2, "ratio": 8, "trialDuration": 6956 }, { "magnitude": 1, "ratio": 16, "trialDuration": 7228 }, { "magnitude": 5, "ratio": 1, "trialDuration": 7221 }, { "magnitude": 5, "ratio": 16, "trialDuration": 7261 }, { "magnitude": 2, "ratio": 1, "trialDuration": 7386 }, { "magnitude": 1, "ratio": 8, "trialDuration": 7009 }, { "magnitude": 5, "ratio": 8, "trialDuration": 7376 }, { "magnitude": 2, "ratio": 16, "trialDuration": 6666 }, { "magnitude": 1, "ratio": 1, "trialDuration": 6962 }, { "magnitude": 2, "ratio": 8, "trialDuration": 6501 }, { "magnitude": 2, "ratio": 1, "trialDuration": 7236 }, { "magnitude": 5, "ratio": 1, "trialDuration": 7490 }, { "magnitude": 1, "ratio": 16, "trialDuration": 6902 }, { "magnitude": 1, "ratio": 8, "trialDuration": 6888 }, { "magnitude": 2, "ratio": 16, "trialDuration": 6891 }, { "magnitude": 5, "ratio": 8, "trialDuration": 6535 }, { "magnitude": 5, "ratio": 16, "trialDuration": 6652 }, { "magnitude": 1, "ratio": 8, "trialDuration": 6890 }, { "magnitude": 5, "ratio": 8, "trialDuration": 7452 }, { "magnitude": 5, "ratio": 16, "trialDuration": 6954 }, { "magnitude": 2, "ratio": 1, "trialDuration": 6827 }, { "magnitude": 5, "ratio": 1, "trialDuration": 6679 }, { "magnitude": 1, "ratio": 16, "trialDuration": 7199 }, { "magnitude": 2, "ratio": 16, "trialDuration": 7207 }, { "magnitude": 1, "ratio": 1, "trialDuration": 7145 }, { "magnitude": 2, "ratio": 8, "trialDuration": 7465 }, { "magnitude": 1, "ratio": 8, "trialDuration": 6870 }, { "magnitude": 5, "ratio": 8, "trialDuration": 6726 }, { "magnitude": 2, "ratio": 16, "trialDuration": 6688 }, { "magnitude": 2, "ratio": 8, "trialDuration": 6506 }, { "magnitude": 5, "ratio": 1, "trialDuration": 7044 }, { "magnitude": 2, "ratio": 1, "trialDuration": 7293 }, { "magnitude": 1, "ratio": 1, "trialDuration": 7182 }, { "magnitude": 1, "ratio": 16, "trialDuration": 6862 }, { "magnitude": 5, "ratio": 16, "trialDuration": 6985 }];
@@ -61,15 +62,6 @@ function animatePiggy(keyframes, options) {
     }));
     piggyBank.animate(animationKeyframes, options);
   }
-}
-
-// Shake piggy bank animation
-function shakePiggy() {
-  animatePiggy([
-    'translateX(-1%)',
-    'translateX(1%)',
-    'translateX(0)'
-  ], { duration: 80, easing: 'linear' });
 }
 
 // Drop coin animation
@@ -157,43 +149,6 @@ function updatePersistentCoinContainer() {
   }
 }
 
-function updatePiggyTails(magnitude, ratio) {
-  const piggyContainer = document.getElementById('piggy-container');
-  const piggyBank = document.getElementById('piggy-bank');
-
-  const magnitude_index = magnitudes.indexOf(magnitude);
-  const ratio_index = ratios.indexOf(ratio);
-  // Calculate saturation based on ratio
-  const ratio_factor = ratio_index / (ratios.length - 1);
-
-  // Remove existing tails
-  document.querySelectorAll('.piggy-tail').forEach(tail => tail.remove());
-
-  // Wait for the piggy bank image to load
-  piggyBank.onload = () => {
-    const piggyBankWidth = piggyBank.offsetWidth;
-    const tailWidth = piggyBankWidth * 0.1; // Adjust this factor as needed
-    const spacing = tailWidth * 0; // Adjust spacing between tails
-    for (let i = 0; i < magnitude_index + 1; i++) {
-      const tail = document.createElement('img');
-      tail.src = '/assets/images/vigour/piggy-tail2.png';
-      tail.alt = 'Piggy Tail';
-      tail.className = 'piggy-tail';
-
-      // Position each tail
-      tail.style.left = `calc(50% + ${piggyBankWidth / 2 + (tailWidth + spacing) * i}px - ${tailWidth / 20}px)`;
-      tail.style.width = `${tailWidth}px`;
-      tail.style.filter = `saturate(${50 * (400 / 50) ** ratio_factor}%) brightness(${115 * (90 / 115) ** ratio_factor}%)`;
-
-      piggyContainer.appendChild(tail);
-    }
-  };
-
-  // Trigger onload if the image is already cached
-  if (piggyBank.complete) {
-    piggyBank.onload();
-  }
-}
 
 // Trial stimulus function
 function generateTrialStimulus(magnitude, ratio) {
@@ -288,14 +243,19 @@ function piggyBankTrial(settings) {
     on_load: function () {
       const currentMag = jsPsych.evaluateTimelineVariable('magnitude');
       const currentRatio = jsPsych.evaluateTimelineVariable('ratio');
-      updatePiggyTails(currentMag, currentRatio);
+
+      // Add magnitudes and ratios to settings for piggy tails
+      settings.magnitudes = magnitudes;
+      settings.ratios = ratios;
+
+      updatePiggyTails(currentMag, currentRatio, settings);
       updatePersistentCoinContainer(); // Update the persistent coin container
       observeResizing('coin-container', updatePersistentCoinContainer);
 
       // Add fullscreen change listener to re-update piggy tails
       fsChangeHandler = () => {
         if (document.fullscreenElement || document.webkitFullscreenElement) {
-          updatePiggyTails(currentMag, currentRatio);
+          updatePiggyTails(currentMag, currentRatio, settings);
         }
       };
       document.addEventListener('fullscreenchange', fsChangeHandler);
@@ -373,6 +333,5 @@ export {
   preloadVigour,
   updatePersistentCoinContainer, 
   observeResizing, 
-  shakePiggy, 
   dropCoin
 }
