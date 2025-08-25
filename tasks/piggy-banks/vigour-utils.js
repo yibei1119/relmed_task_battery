@@ -29,7 +29,7 @@ function preloadVigour(settings) {
         "1p-num.png", "2p-num.png", "5p-num.png", "10p-num.png", "piggy-bank.png", 
         "ooc_2p.png", "piggy-tail2.png", "saturate-icon.png", "tail-icon.png",
         "occluding_clouds.png"
-      ].map(s => "/assets/images/vigour/" + s),
+      ].map(s => "/assets/images/piggy-banks/" + s),
       [
         "PIT1.png", "PIT2.png", "PIT3.png", "PIT4.png", "PIT5.png", "PIT6.png"
       ].map(s => "/assets/images/pavlovian-stims/" + settings.session + "/" + s)
@@ -66,7 +66,7 @@ function dropCoin(magnitude, persist = false) {
 function createCoin(magnitude) {
   const coin = document.createElement('img');
   coin.className = 'vigour_coin';
-  coin.src = magnitude === 0 ? '/assets/images/vigour/ooc_2p.png' : `/assets/images/vigour/${magnitude}p-num.png`;
+  coin.src = magnitude === 0 ? '/assets/images/piggy-banks/ooc_2p.png' : `/assets/images/piggy-banks/${magnitude}p-num.png`;
   coin.alt = `Coin of value ${magnitude}`;
   return coin;
 }
@@ -150,7 +150,7 @@ function generateTrialStimulus(magnitude, ratio) {
         <div id="coin-container"></div>
         <div id="piggy-container">
           <!-- Piggy Bank Image -->
-          <img id="piggy-bank" src="/assets/images/vigour/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
+          <img id="piggy-bank" src="/assets/images/piggy-banks/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
         </div>
       </div>
     </div>
