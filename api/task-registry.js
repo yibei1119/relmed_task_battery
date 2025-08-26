@@ -96,7 +96,7 @@ export const TaskRegistry = {
         present_pavlovian: "Whether to present stimuli for pavlovian conditioning along with trial outcomes. Default is true.",
         include_instructions: "Whether to show instructions before the task. Default is true.",
         sequence: "The key for the sequence to use for the learning phase. Default is 'wk0'.",
-        session: "Session identifier to govern session-specific behaviour. Default is 'wk0. Should be deprecated, with settings exposed."
+        session: "Session identifier to govern session-specific behaviour. Default is 'wk0'. Should be deprecated, with settings exposed."
     }
   },
   post_learning_test: {
