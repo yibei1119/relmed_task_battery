@@ -71,7 +71,7 @@ export const TaskRegistry = {
       enabled: true
     },
     configOptions: {
-        task_name: "The name of the task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
+        task_name: "The name of the learning task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials."
     }
   },
