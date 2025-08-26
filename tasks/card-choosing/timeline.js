@@ -1,4 +1,3 @@
-// tasks/card_choosing.js
 import { 
   preparePILTInstructions,
   testInstructions,
