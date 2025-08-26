@@ -9,9 +9,9 @@ import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js
 import { loadSequence } from '/core/utils/index.js';
 
 export const TaskRegistry = {
-  card_choosing: {
-    name: 'Card Choosing Task',
-    description: 'A task measuring learning and decision making in a card choosing scenario',
+  PILT: {
+    name: 'PILT',
+    description: 'A task measuring probabilistic instrumental learning in a card choosing scenario',
     createTimeline: createCardChoosingTimeline,
     computeBonus: computeRelativeCardChoosingBonus,
     defaultConfig: {
@@ -49,8 +49,54 @@ export const TaskRegistry = {
         n_choices: "Number of choice options presented. Default is 2.",
         valence: "Valence of the stimuli - can be 'both' (includes both punishment and reward blocks), 'mixed' (includes mixed valence blocks), 'punishment', or 'reward'. Default is 'mixed'.",
         present_pavlovian: "Whether to present stimuli for pavlovian conditioning along with trial outcomes. Default is true.",
-        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
-        include_instructions: "Whether to show instructions before the task. Default is true."
+        include_instructions: "Whether to show instructions before the task. Default is true.",
+        sequence: "The key for the sequence to use for the learning phase. Default is 'wk0'.",
+        session: "Session identifier to govern session-specific behaviour. Default is 'wk0'. Should be deprecated, with settings exposed."
+    }
+  },
+  WM: {
+    name: 'WM',
+    description: 'Anne Collins\'s RLWM task',
+    createTimeline: createCardChoosingTimeline,
+    computeBonus: computeRelativeCardChoosingBonus,
+    defaultConfig: {
+        task_name: "wm",
+        n_choices: 3,
+        valence: "reward",
+        present_pavlovian: false,
+        include_instructions: true,
+        sequence: 'wk0',
+        session: 'wk0'
+    },
+    sequences: {
+        screening: '../assets/sequences/trial1_screening_sequences.js',
+        wk0: '../assets/sequences/trial1_wk0_sequences.js',
+        wk2: '../assets/sequences/trial1_wk2_sequences.js',
+        wk4: '../assets/sequences/trial1_wk4_sequences.js',
+        wk24: '../assets/sequences/trial1_wk24_sequences.js',
+        wk28: '../assets/sequences/trial1_wk28_sequences.js',
+    },
+    requirements: {
+      css: ['tasks/card-choosing/styles.css'],
+      note: 'Make sure to include card-choosing/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+        granularity: 'block', // or 'trial' for finer control
+        statePattern: (taskName) => `${taskName}_block_(\\d+)_start`,
+        extractProgress: (lastState, taskName) => {
+            const match = lastState.match(new RegExp(`${taskName}_block_(\\d+)_start`));
+            return match ? parseInt(match[1]) : 0;
+        }
+    },
+    configOptions: {
+        task_name: "The name of the task being tested. Default is 'pilt'.",
+        n_choices: "Number of choice options presented. Default is 2.",
+        valence: "Valence of the stimuli - can be 'both' (includes both punishment and reward blocks), 'mixed' (includes mixed valence blocks), 'punishment', or 'reward'. Default is 'mixed'.",
+        present_pavlovian: "Whether to present stimuli for pavlovian conditioning along with trial outcomes. Default is true.",
+        include_instructions: "Whether to show instructions before the task. Default is true.",
+        sequence: "The key for the sequence to use for the learning phase. Default is 'wk0'.",
+        session: "Session identifier to govern session-specific behaviour. Default is 'wk0'. Should be deprecated, with settings exposed."
     }
   },
   post_learning_test: {

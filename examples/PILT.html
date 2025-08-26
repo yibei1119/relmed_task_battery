@@ -72,11 +72,6 @@
 
         // Configuration for the card choosing task
         const taskConfig = {
-            task_name: "pilt",
-            n_choices: 2,
-            valence: "mixed",
-            present_pavlovian: true,
-            include_instructions: true,
             sequence: 'wk0',
             session: 'wk0'
         };
@@ -87,11 +82,11 @@
                 console.log('Starting card choosing task...');
                 
                 // Get task information
-                const taskInfo = getTaskInfo('card_choosing');
+                const taskInfo = getTaskInfo('PILT');
                 console.log('Task info:', taskInfo);
                 
                 // Create the task timeline
-                const timeline = await createTaskTimeline('card_choosing', taskConfig);
+                const timeline = await createTaskTimeline('PILT', taskConfig);
                 console.log('Timeline created:', timeline);
                 
                 // Add fullscreen mode (optional)

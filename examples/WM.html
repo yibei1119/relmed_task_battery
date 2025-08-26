@@ -70,16 +70,6 @@
             }
         });
 
-        // Configuration for the card choosing task
-        const taskConfig = {
-            task_name: "wm",
-            n_choices: 3,
-            valence: "reward",
-            present_pavlovian: true,
-            include_instructions: true,
-            sequence: 'wk0',
-            session: 'wk0'
-        };
 
         // Function to run the experiment
         async function runExperiment() {
@@ -87,11 +77,11 @@
                 console.log('Starting card choosing task...');
                 
                 // Get task information
-                const taskInfo = getTaskInfo('card_choosing');
+                const taskInfo = getTaskInfo('WM');
                 console.log('Task info:', taskInfo);
                 
                 // Create the task timeline
-                const timeline = await createTaskTimeline('card_choosing', taskConfig);
+                const timeline = await createTaskTimeline('WM', {session: "wk0", sequence: "wk0"});
                 console.log('Timeline created:', timeline);
                 
                 // Add fullscreen mode (optional)
