@@ -1,4 +1,3 @@
-// tasks/card_choosing.js
 import { 
   preparePILTInstructions,
   testInstructions,
@@ -111,7 +110,7 @@ export function createPostLearningTestTimeline(settings) {
     let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
     
     // Adjust stimulus paths for main test
-    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
+    adjustStimuliPaths(test_structure, 'card-choosing/stimuli');
     
     // Process and add pavlovian test if available
     if (pav_test_structure) {
@@ -134,7 +133,7 @@ export function createPostLearningTestTimeline(settings) {
     }
   } else if (settings.task_name === "wm") {
     test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
-    adjustStimuliPaths(test_structure, 'card_choosing/stimuli');
+    adjustStimuliPaths(test_structure, 'card-choosing/stimuli');
   } else {
     return timeline; // Return empty timeline for unknown task
   }
