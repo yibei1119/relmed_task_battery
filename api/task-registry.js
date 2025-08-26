@@ -56,7 +56,7 @@ export const TaskRegistry = {
   },
   WM: {
     name: 'WM',
-    description: 'Anne Conllins\'s RLWM task',
+    description: 'Anne Collins\'s RLWM task',
     createTimeline: createCardChoosingTimeline,
     computeBonus: computeRelativeCardChoosingBonus,
     defaultConfig: {
