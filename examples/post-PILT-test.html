@@ -54,6 +54,7 @@
     <script type="module">
         // Import task registry functions
         import { createTaskTimeline, getTaskInfo } from '../api/index.js';
+        import { enterFullscreen } from '../core/utils/index.js';
 
         // Get parameters from URL
         window.participantID = new URLSearchParams(window.location.search).get('participant_id') || '';
@@ -88,13 +89,6 @@
                 // Create the task timeline
                 const timeline = await createTaskTimeline('post_learning_test', taskConfig);
                 console.log('Timeline created:', timeline);
-                
-                // Add fullscreen mode (optional)
-                const enterFullscreen = {
-                    type: jsPsychFullscreen,
-                    fullscreen_mode: true,
-                    message: '<p>The experiment will switch to full screen mode when you press the button below.</p>'
-                };
                 
                 const exitFullscreen = {
                     type: jsPsychFullscreen,

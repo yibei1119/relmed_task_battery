@@ -59,9 +59,29 @@ function createPreloadTrial(images, task_name) {
     };
 }
 
+// Save all URL parameters to jsPsych data
+function saveUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const params = {};
+    for (const [key, value] of urlParams.entries()) {
+        params[key] = value;
+    }
+    jsPsych.data.addProperties(params);
+    console.log("URL parameters saved to data:", params);
+}
+
+const enterFullscreen = {
+    type: jsPsychFullscreen,
+    fullscreen_mode: true,
+    message: '<p>The experiment will switch to full screen mode when you press the button below.</p>',
+    on_start: saveUrlParameters
+};
+
 // Export functions for use in other modules
 export {
     loadSequence,
-    createPreloadTrial
+    createPreloadTrial,
+    saveUrlParameters,
+    enterFullscreen
 };
 
