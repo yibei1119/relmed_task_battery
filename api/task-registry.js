@@ -60,8 +60,7 @@ export const TaskRegistry = {
     defaultConfig: {
         task_name: "pilt",
         test_confidence_every: 4,
-        sequence: 'wk0',
-        session: 'wk0'
+        sequence: 'wk0'
     },
     requirements: {
       css: ['tasks/card-choosing/styles.css'],
@@ -72,7 +71,8 @@ export const TaskRegistry = {
     },
     configOptions: {
         task_name: "The name of the learning task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
-        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials."
+        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
+        sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
     }
   },
   delay_discounting: {
