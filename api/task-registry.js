@@ -66,6 +66,14 @@ export const TaskRegistry = {
       css: ['tasks/card-choosing/styles.css'],
       note: 'Make sure to include card-choosing/styles.css in your HTML file'
     },
+    sequences: {
+      screening: '../assets/sequences/trial1_screening_sequences.js',
+      wk0: '../assets/sequences/trial1_wk0_sequences.js',
+      wk2: '../assets/sequences/trial1_wk2_sequences.js',
+      wk4: '../assets/sequences/trial1_wk4_sequences.js',
+      wk24: '../assets/sequences/trial1_wk24_sequences.js',
+      wk28: '../assets/sequences/trial1_wk28_sequences.js',
+    },
     resumptionRules: {
       enabled: true
     },
