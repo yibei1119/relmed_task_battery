@@ -406,7 +406,7 @@ export function createCoreControlTimeline(settings) {
       controlExploreTimeline[i].timeline_variables[0].trial = trial++;
       controlTimeline.push(controlExploreTimeline[i]);
       if ((i + 1) % 6 === 0) {
-        num_miniblock = Math.floor(i / 6);
+        const num_miniblock = Math.floor(i / 6);
         controlPredTimeline[num_miniblock].timeline_variables[0].trial = trial++;
         controlTimeline.push(controlPredTimeline[num_miniblock]);
       }
@@ -419,9 +419,9 @@ export function createCoreControlTimeline(settings) {
       controlExploreTimeline[i].timeline_variables[0].trial = trial++;
       controlTimeline.push(controlExploreTimeline[i]);
       if ((i + 1) % 6 === 0) {
-        num_miniblock = Math.floor(i / 6);
+        const num_miniblock = Math.floor(i / 6);
         if (num_miniblock % 2 === 0) {
-          indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
+          const indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
           pred_trials = controlPredTimeline.slice(indx[0], indx[1]);
           pred_trials.forEach(t => {
             t.timeline_variables[0].trial = trial++;
