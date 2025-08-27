@@ -315,55 +315,6 @@ const computeRelativeControlBonus = () => {
     }
 }
 
-let controlTotalReward = {
-  timeline: [{
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: function () {
-      const raw_bonus = computeRelativeControlBonus();
-      const total_bonus = (raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8;
-      if (window.context === "relmed" || window.task === "control") {
-        stimulus = `<main class="main-stage">
-          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
-            <div class="instruction-content" style="font-size: 32px; text-align: center;">
-              <p>Thank you for playing the game!</p>
-              <p>Your final bonus from all the successful quests in the game is ${total_bonus.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })}!</p>
-              <p>You may now press any key to continue.</p>
-            </div>
-          </div>
-        </main>`;
-      } else {
-        stimulus = `<main class="main-stage">
-          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
-          <div class="instruction-dialog" style="bottom:50%; min-width: 600px; width: 50%;">
-            <div class="instruction-content" style="font-size: 32px; text-align: center;">
-              <p>Thank you for playing the game!</p>
-              <p>You may now press any key to continue.</p>
-            </div>
-          </div>
-        </main>`;
-      }
-      return stimulus;
-    },
-    choices: "ALL_KEYS",
-    response_ends_trial: true,
-    post_trial_gap: 400,
-    data: {
-      trialphase: 'control_bonus'
-    },
-    on_finish: function (data) {
-      const raw_bonus = computeRelativeControlBonus();
-      data.control_bonus = raw_bonus.earned;
-      data.control_bonus_adjusted = Math.round(((raw_bonus.earned - raw_bonus.min) / (raw_bonus.max - raw_bonus.min) * 0.4 * 1.8 + 0.6 * 1.8) * 100) / 100;
-      console.log("Control bonus (adjusted): " + data.control_bonus_adjusted);
-      postToParent({ bonus: data.control_bonus_adjusted });
-      saveDataREDCap(retry = 3);
-    }
-  }],
-  conditional_function: () => {
-    return window.session !== "screening" && window.context !== "relmed";
-  }
-};
 
 // Reveal homebases in the experiment
 const controlHomebaseReveal = {
