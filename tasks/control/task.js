@@ -7,9 +7,8 @@ import {
   PREDICT_SEQUENCE_SCREENING 
 } from "./configurations.js"
 
-const controlPreload = {
-  type: jsPsychPreload,
-  images: [
+export const control_preload = createPreloadTrial(
+  [
     ...([
       "200p.png",
       "ocean.png",
@@ -37,20 +36,9 @@ const controlPreload = {
       "island_icon_i4.png"
     ].map(s => "imgs/Control_stims/" + window.session + "/" + s)),
   ],
-  post_trial_gap: 800,
-  continue_after_error: true,
-  data: {
-    trialphase: "control_preload"
-  },
-  on_start: () => {
-    // Report to tests
-    console.log("load_successful")
+  "control"
+);
 
-    // Report to relmed.ac.uk
-    postToParent({message: "load_successful"})
-  },
-  continue_after_error: true
-};
 
 const controlExploreTimeline = [];
 (window.session === "screening" 
