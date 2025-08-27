@@ -851,10 +851,6 @@ export function createControlInstructionsTimeline(settings) {
         }
     });
 
-    const controlInstructKickout = create_instruction_kick_out("control");
-    if (controlInstructKickout !== undefined) {
-        controlIntroComprehension.push(controlInstructKickout);
-    }
 
     const controlQuizExplanation = [
         {
