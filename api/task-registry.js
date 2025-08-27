@@ -194,6 +194,8 @@ export const TaskRegistry = {
     createTimeline: createControlTimeline,
     computeBonus: computeRelativeControlBonus,
     defaultConfig: {
+      session: "wk0",
+      max_instruction_fails: 3,
       default_response_deadline: 4000,
       long_response_deadline: 6000,
     },
@@ -205,6 +207,8 @@ export const TaskRegistry = {
         enabled: true,
     },
     configOptions: {
+        session: "Session identifier to govern session-specific behaviour and select stimuli. Default is 'wk0'.",
+        max_instruction_fails: "Maximum number of instruction quiz failures allowed before continuing to the task. Default is 3.",
         default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
         long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
     }
