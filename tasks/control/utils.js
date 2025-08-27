@@ -36,7 +36,7 @@ export const controlPreload = (settings) => {
       "island_icon_i2.png",
       "island_icon_i3.png",
       "island_icon_i4.png"
-    ].map(s => "/assets/images/control/" + settings.session + "/" + s)),
+    ].map(s => "/assets/images/control/session-specific/" + settings.session + "/" + s)),
   ];
 
   return createPreloadTrial(
@@ -163,7 +163,7 @@ export function createCoreControlTimeline(settings) {
         },
         noChoiceWarning("response", 
           `<main class="main-stage">
-            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <img class="background" src="/assets/images/control/ocean.png" alt="Background"/>
           </main>`,
           "control_explore"
         )
@@ -306,7 +306,7 @@ export function createCoreControlTimeline(settings) {
     timelineItems.push(
       noChoiceWarning("response",
         `<main class="main-stage">
-          <img class="background" src="imgs/ocean.png" alt="Background"/>
+          <img class="background" src="/assets/images/control/ocean.png" alt="Background"/>
         </main>`,
         "control_reward"
       )
@@ -318,7 +318,7 @@ export function createCoreControlTimeline(settings) {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
         <main class="main-stage">
-              <img class="background" src="imgs/ocean.png" alt="Background"/>
+              <img class="background" src="/assets/images/control/ocean.png" alt="Background"/>
         </main>
       `,
       trial_duration: 400,
@@ -350,7 +350,7 @@ export function createCoreControlTimeline(settings) {
       // Create the HTML stimulus with a table showing ships and their homebases
       let html = `
         <main class="main-stage">
-          <img class="background" src="imgs/ocean_above.png" alt="Background"/>
+          <img class="background" src="/assets/images/control/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:unset;">
             <div class="instruction-content" style="font-size: 24px; text-align: center;">
               <h3>Well done!</h3>
@@ -366,13 +366,13 @@ export function createCoreControlTimeline(settings) {
           html += `
             <tr>
               <td style="text-align: right; vertical-align: middle;">
-                <img src="imgs/simple_ship_${color}.png" alt="${color} ship" style="height: 80px;">
+                <img src="/assets/images/control/simple_ship_${color}.png" alt="${color} ship" style="height: 80px;">
               </td>
               <td style="text-align: center; vertical-align: middle; padding: 0 15px;">
                 <div style="font-size: 32px;">→</div>
               </td>
               <td style="text-align: left; vertical-align: middle;">
-                <img src="imgs/Control_stims/${settings.session}/island_icon_${homebase}.png" alt="Island ${homebase}" style="height: 100px;">
+                <img src="/assets/images/control/Control_stims/${settings.session}/island_icon_${homebase}.png" alt="Island ${homebase}" style="height: 100px;">
               </td>
             </tr>`;
         }
