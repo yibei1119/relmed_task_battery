@@ -3,12 +3,32 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
 
   const info = {
     name: "explore-ship-feedback",
-    version: "1.2.0",
+    version: "1.3.0",
     parameters: {
       feedback_duration: {
         type: jspsych.ParameterType.INT,
         default: 3000,
         description: "Duration to show feedback (ms)"
+      },
+      base_rule: {
+        type: jspsych.ParameterType.OBJECT,
+        default: {},
+        description: "Island transitions rule mapping for base rule"
+      },
+      control_rule: {
+        type: jspsych.ParameterType.OBJECT,
+        default: {},
+        description: "Island transitions rule mapping for control rule"
+      },
+      effort_threshold: {
+        type: jspsych.ParameterType.ARRAY,
+        default: [6, 12, 18],
+        description: "Effort thresholds by current strength"
+      },
+      scale: {
+        type: jspsych.ParameterType.FLOAT,
+        default: 2,
+        description: "Scaling factor for effort to probability conversion"
       },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
@@ -39,13 +59,6 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
   class ExploreShipFeedbackPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
-
-      // Define rule mappings - persistent across trials
-      this.baseRule = CONTROL_CONFIG.baseRule;
-      this.controlRule = CONTROL_CONFIG.controlRule;
-
-      this.effort_threshold = CONTROL_CONFIG.effort_threshold;
-      this.scale = CONTROL_CONFIG.scale;
     }
 
     sigmoid(x) {
@@ -53,7 +66,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     }
 
     chooseControlRule(effort, current) {
-      const extra_effort = (effort - this.effort_threshold[current - 1]) * this.scale;
+      const extra_effort = (effort - this.effort_threshold[current - 1]) * trial.scale;
       const prob = this.sigmoid(extra_effort);
       return Math.random() < prob ? 'control' : 'base';
     }
@@ -266,8 +279,8 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       );
 
       const destinationIsland = currentRule === 'base'
-        ? this.baseRule[nearIsland]
-        : this.controlRule[chosenColor];
+        ? trial.base_rule[nearIsland]
+        : trial.control_rule[chosenColor];
 
       // Clean up any existing animation styles
       const oldStyles = document.querySelectorAll('style[data-feedback-animation]');
@@ -300,7 +313,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         destination_island: destinationIsland,
         control_rule_used: currentRule,
         ship_color: chosenColor,
-        probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
+        probability_control: this.sigmoid((effortLevel - trial.effort_threshold[currentStrength - 1]) * trial.scale)
       };
 
       this.jsPsych.pluginAPI.setTimeout(() => {
@@ -336,15 +349,15 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       );
 
       const destinationIsland = currentRule === 'base'
-        ? this.baseRule[nearIsland]
-        : this.controlRule[chosenColor];
+        ? trial.base_rule[nearIsland]
+        : trial.control_rule[chosenColor];
 
       const default_data = {
         trialphase: "control_explore_feedback",
         destination_island: destinationIsland,
         control_rule_used: currentRule,
         ship_color: chosenColor,
-        probability_control: this.sigmoid((effortLevel - this.effort_threshold[currentStrength - 1]) * this.scale)
+        probability_control: this.sigmoid((effortLevel - trial.effort_threshold[currentStrength - 1]) * trial.scale)
       };
 
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);

@@ -156,6 +156,10 @@ export function createCoreControlTimeline(settings) {
           timeline: [{
             type: jsPsychExploreShipFeedback,
             feedback_duration: 3000,
+            base_rule: controlConfig(settings).baseRule,
+            control_rule: controlConfig(settings).controlRule,
+            effort_threshold: controlConfig(settings).effort_threshold,
+            scale: controlConfig(settings).scale,
             post_trial_gap: 0
           }],
           conditional_function: function () {
