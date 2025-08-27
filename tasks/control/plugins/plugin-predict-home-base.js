@@ -1,9 +1,12 @@
+// Written by Haoyang Luo 2025
+// Version 1.1.1: Removed use of global variables, Yaniv Abir 2025
+
 var jsPsychPredictHomeBase = (function (jspsych) {
   "use strict";
 
   const info = {
     name: "predict-home-base",
-    version: "1.0.1",
+    version: "1.1.1",
     parameters: {
       ship: {
         type: jspsych.ParameterType.STRING,
@@ -32,6 +35,11 @@ var jsPsychPredictHomeBase = (function (jspsych) {
           return `<button class="destination-button"><img src="imgs/Control_stims/${window.session}/island_icon_${choice}.png" style="width:100px;"></button>`;
         }
       },
+      control_rule: {
+        type: jspsych.ParameterType.OBJECT,
+        default: {},
+        description: "Island transitions rule mapping for control rule"
+      },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
         default: 300,
@@ -58,9 +66,6 @@ var jsPsychPredictHomeBase = (function (jspsych) {
   class PredictHomeBasePlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
-
-      // Home base answers
-      this.controlRule = CONTROL_CONFIG.controlRule;
     }
 
     trial(display_element, trial) {
@@ -137,7 +142,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
           rt: response.rt,
           response: response.button,
           button: trial.choices[response.button],
-          correct: this.controlRule[trial.ship] === trial.choices[response.button]
+          correct: trial.controlRule[trial.ship] === trial.choices[response.button]
         };
 
         // Clear display
@@ -165,7 +170,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         trialphase: "control_predict_homebase",
         response: button,
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
-        correct: this.controlRule[trial.ship] === trial.choices[button]
+        correct: trial.controlRule[trial.ship] === trial.choices[button]
       };
 
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);

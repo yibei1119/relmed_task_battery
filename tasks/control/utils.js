@@ -207,6 +207,7 @@ export function createCoreControlTimeline(settings) {
           choices: settings.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
           post_trial_gap: 0,
           save_timeline_variables: true,
+          control_rule: controlConfig(settings).controlRule,
           on_start: function (trial) {
             const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
             if (last_trialphase === "control_explore_feedback") {
