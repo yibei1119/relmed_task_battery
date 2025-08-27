@@ -154,7 +154,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
           rt: response.rt,
           response: response.button,
           button: trial.choices[response.button],
-          correct: trial.controlRule[trial.ship] === trial.choices[response.button]
+          correct: trial.control_rule[trial.ship] === trial.choices[response.button]
         };
 
         // Clear display
@@ -182,7 +182,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         trialphase: "control_predict_homebase",
         response: button,
         rt: Math.floor(this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)),
-        correct: trial.controlRule[trial.ship] === trial.choices[button]
+        correct: trial.control_rule[trial.ship] === trial.choices[button]
       };
 
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);

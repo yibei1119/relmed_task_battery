@@ -1,9 +1,12 @@
+// Written by Haoyang Luo 2025
+// Version 1.1.0: Removed use of global variables, Yaniv Abir 2025
+
 var jsPsychRewardPrompt = (function (jspsych) {
   "use strict";
 
   const info = {
     name: "reward-prompt",
-    version: "1.0.0",
+    version: "1.1.0",
     parameters: {
       target: {
         type: jspsych.ParameterType.STRING,
@@ -59,9 +62,6 @@ var jsPsychRewardPrompt = (function (jspsych) {
   class RewardPromptShipPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
-
-      // Define base rule mapping
-      this.baseRule = CONTROL_CONFIG.baseRule;
     }
 
     trial(display_element, trial) {
@@ -70,7 +70,7 @@ var jsPsychRewardPrompt = (function (jspsych) {
 
       // Generate trial HTML
       const generateHTML = () => {
-        const far = this.baseRule[trial.near];
+        const far = trial.base_rule[trial.near];
         return `
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>

@@ -265,6 +265,7 @@ export function createCoreControlTimeline(settings) {
         right: jsPsych.timelineVariable('right'),
         current: jsPsych.timelineVariable('current'),
         reward_amount: jsPsych.timelineVariable('reward_amount'),
+        base_rule: controlConfig(settings).baseRule,
         simulation_options: {
           data: {rt: 1100}
         }
