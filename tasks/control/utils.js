@@ -447,6 +447,8 @@ export function createCoreControlTimeline(settings) {
     const last_trial = parseInt(window.last_state.split("_")[2]);
     controlTimeline = controlTimeline.slice(last_trial);
   }
+
+  return controlTimeline;
 }
 
   // Add feedback on the final rewards in total
