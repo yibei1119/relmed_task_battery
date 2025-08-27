@@ -46,7 +46,7 @@ export const controlPreload = (settings) => {
 export function createControlTimeline(settings) {
 
   const controlExploreTimeline = [];
-  (window.session === "screening" 
+  (settings.session === "screening" 
     ? explore_sequence_screening 
     : explore_sequence).forEach(t => {
     controlExploreTimeline.push({
@@ -125,7 +125,7 @@ export function createControlTimeline(settings) {
   }
 
   const controlPredTimeline = [];
-  (window.session === "screening" 
+  (settings.session === "screening" 
     ? predict_sequence_screening 
     : predict_sequence).forEach(t => {
     controlPredTimeline.push({
@@ -142,7 +142,7 @@ export function createControlTimeline(settings) {
                 return window.default_long_response_deadline
             }
           },
-          choices: window.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
+          choices: settings.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
           post_trial_gap: 0,
           save_timeline_variables: true,
           on_start: function (trial) {
@@ -317,7 +317,7 @@ export function createControlTimeline(settings) {
                 <div style="font-size: 32px;">→</div>
               </td>
               <td style="text-align: left; vertical-align: middle;">
-                <img src="imgs/Control_stims/${window.session}/island_icon_${homebase}.png" alt="Island ${homebase}" style="height: 100px;">
+                <img src="imgs/Control_stims/${settings.session}/island_icon_${homebase}.png" alt="Island ${homebase}" style="height: 100px;">
               </td>
             </tr>`;
         }
