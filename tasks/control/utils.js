@@ -266,6 +266,7 @@ export function createCoreControlTimeline(settings) {
         current: jsPsych.timelineVariable('current'),
         reward_amount: jsPsych.timelineVariable('reward_amount'),
         base_rule: controlConfig(settings).baseRule,
+        island_path: `/assets/images/control/session-specific/${settings.session}`,
         simulation_options: {
           data: {rt: 1100}
         }

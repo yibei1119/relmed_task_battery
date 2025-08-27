@@ -46,7 +46,19 @@ var jsPsychRewardPrompt = (function (jspsych) {
         type: jspsych.ParameterType.INT,
         default: 0,
         description: "Gap between trials (ms)"
+      },
+      // Image paths
+      general_image_path: {
+        type: jspsych.ParameterType.STRING,
+        default: "/assets/images/control/",
+        description: "Base path for control images"
+      },
+      island_path: {
+        type: jspsych.ParameterType.STRING,
+        default: "/assets/images/control/session-specific/wk0",
+        description: "Path for island images"
       }
+
     },
     data: {
       rt: {
@@ -73,16 +85,16 @@ var jsPsychRewardPrompt = (function (jspsych) {
         const far = trial.base_rule[trial.near];
         return `
           <main class="main-stage">
-            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <img class="background" src="${trial.general_image_path}/ocean.png" alt="Background"/>
             <section class="scene">
-              <img class="island-far" style="visibility: hidden;" src="imgs/Control_stims/${window.session}/simple_island_${far}.png" alt="Farther island" />
+              <img class="island-far" style="visibility: hidden;" src="${trial.island_path}/simple_island_${far}.png" alt="Farther island" />
               <div class="quest-scroll">
                 <p style="position: absolute;z-index: 4;top: 1%;font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;font-weight: 600;">Target Island</p>
-                <img class="quest-scroll-img" src="imgs/scroll.png" alt="Quest scroll">
-                <img class="island-target glowing-border" src="imgs/Control_stims/${window.session}/simple_island_${trial.target}.png" alt="Target island">
+                <img class="quest-scroll-img" src="${trial.general_image_path}/scroll.png" alt="Quest scroll">
+                <img class="island-target glowing-border" src="${trial.island_path}/simple_island_${trial.target}.png" alt="Target island">
                 <div class="quest-reward" style="position: absolute;display: inline-flex;z-index: 4;top: 72%;flex-direction: row;align-items: center;background-color: #eedfbc;border-radius: 10px;">
                   <p style="font-size: 2.5vh;color: maroon;margin-top: 0px;margin-bottom: 0px;margin-left: 10px;font-weight: 500;"><strong>${trial.reward_amount}</strong></p>
-                  <img src="imgs/${trial.reward_amount === "£2" ? `200p.png`: `50pence.png`}" style="height:5em;margin: 10px;">
+                  <img src="${trial.general_image_path}/${trial.reward_amount === "£2" ? `200p.png`: `50pence.png`}" style="height:5em;margin: 10px;">
                 </div>
               </div>
               <div class="overlap-group">
@@ -92,18 +104,18 @@ var jsPsychRewardPrompt = (function (jspsych) {
                       <div class="fuel-indicator-bar"></div>
                     </div>
                   </div>
-                  <img class="ship-left" src="imgs/simple_ship_${trial.left}.png" alt="Left ship" />
-                  <img class="arrow-left" src="imgs/left.png" alt="Left arrow" />
+                  <img class="ship-left" src="${trial.general_image_path}/simple_ship_${trial.left}.png" alt="Left ship" />
+                  <img class="arrow-left" src="${trial.general_image_path}/left.png" alt="Left arrow" />
                 </div>
-                <img class="island-near" style="visibility: visible;" src="imgs/simple_island.png" alt="Nearer island" />
+                <img class="island-near" style="visibility: visible;" src="${trial.general_image_path}/simple_island.png" alt="Nearer island" />
                 <div class="choice-right">
                   <div class="fuel-container-right">
                     <div class="fuel-indicator-container">
                       <div class="fuel-indicator-bar"></div>
                     </div>
                   </div>
-                  <img class="ship-right" src="imgs/simple_ship_${trial.right}.png" alt="Right ship" />
-                  <img class="arrow-right" src="imgs/left.png" alt="Right arrow" />
+                  <img class="ship-right" src="${trial.general_image_path}/simple_ship_${trial.right}.png" alt="Right ship" />
+                  <img class="arrow-right" src="${trial.general_image_path}/left.png" alt="Right arrow" />
                 </div>
               </div>
               ${this.generateOceanCurrentsHTML(trial.current)}
