@@ -208,6 +208,7 @@ export function createCoreControlTimeline(settings) {
           post_trial_gap: 0,
           save_timeline_variables: true,
           control_rule: controlConfig(settings).controlRule,
+          island_path: `/assets/images/control/session-specific/${settings.session}`,
           on_start: function (trial) {
             const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
             if (last_trialphase === "control_explore_feedback") {

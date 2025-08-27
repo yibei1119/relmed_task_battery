@@ -32,7 +32,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       button_html: {
         type: jspsych.ParameterType.FUNCTION,
         default: function(choice, choice_index) {
-          return `<button class="destination-button"><img src="imgs/Control_stims/${window.session}/island_icon_${choice}.png" style="width:100px;"></button>`;
+          return `<button class="destination-button"><img src="${trial.island_path}/island_icon_${choice}.png" style="width:100px;"></button>`;
         }
       },
       control_rule: {
@@ -44,7 +44,19 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         type: jspsych.ParameterType.INT,
         default: 300,
         description: "Gap between trials (ms)"
+      },
+      // Image paths
+      general_image_path: {
+        type: jspsych.ParameterType.STRING,
+        default: "/assets/images/control/",
+        description: "Base path for control images"
+      },
+      island_path: {
+        type: jspsych.ParameterType.STRING,
+        default: "/assets/images/control/session-specific/wk0",
+        description: "Path for island images"
       }
+
     },
     data: {
       trialphase: {
@@ -78,12 +90,12 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       // Generate trial HTML
       const html = `
         <div class="instruction-stage" style="transform: unset;">
-          <img class="background" style="top: -5vh;" src="imgs/ocean.png" alt="Background"/>
+          <img class="background" style="top: -5vh;" src="${trial.general_image_path}/ocean.png" alt="Background"/>
           <section class="scene">
             <div class="overlap-group">
               <div class="choice-left">
-                <img class="island-near" src="imgs/simple_island.png" style="visibility:hidden;" alt="Nearer island" />
-                <img class="ship-left" src="imgs/simple_ship_${trial.ship}.png" style="top:-10%" alt="Prediction ship" />
+                <img class="island-near" src="${trial.general_image_path}/simple_island.png" style="visibility:hidden;" alt="Nearer island" />
+                <img class="ship-left" src="${trial.general_image_path}/simple_ship_${trial.ship}.png" style="top:-10%" alt="Prediction ship" />
               </div>
             </div>
           </section>
@@ -92,7 +104,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
         <div class="island-choices">
         </div>
         <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%; transform: translateX(-50%); left: 50%;">
-            <img src="imgs/icon-predict.png" alt="Test" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Test</p>
+            <img src="${trial.general_image_path}/icon-predict.png" alt="Test" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Test</p>
         </div>
       `;
 
