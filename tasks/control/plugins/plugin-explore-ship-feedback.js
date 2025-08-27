@@ -81,7 +81,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
     }
 
     chooseControlRule(effort, current, trial) {
-      const extra_effort = (effort - this.effort_threshold[current - 1]) * trial.scale;
+      const extra_effort = (effort - trial.effort_threshold[current - 1]) * trial.scale;
       const prob = this.sigmoid(extra_effort);
       return Math.random() < prob ? 'control' : 'base';
     }
