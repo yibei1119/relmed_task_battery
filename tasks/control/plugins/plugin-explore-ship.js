@@ -47,6 +47,11 @@ var jsPsychExploreShip = (function (jspsych) {
         default: 0,
         description: "Gap between trials (ms)"
       },
+      base_rule: {
+        type: jspsych.ParameterType.OBJECT,
+        default: { },
+        description: "Island transitions rule mapping"
+      },
       // Image paths
       general_image_path: {
         type: jspsych.ParameterType.STRING,
@@ -83,14 +88,11 @@ var jsPsychExploreShip = (function (jspsych) {
   class ExploreShipPlugin {
     constructor(jsPsych) {
       this.jsPsych = jsPsych;
-      
-      // Define base rule mapping - persistent across trials
-      this.baseRule = CONTROL_CONFIG.baseRule;
-    }
+      }
 
     generateTrialHTML(trial) {
-      const far = this.baseRule[trial.near];
-      const other_islands = Object.values(this.baseRule).filter(x => ![trial.near, far].includes(x));
+      const far = trial.base_rule[trial.near];
+      const other_islands = Object.values(trial.base_rule).filter(x => ![trial.near, far].includes(x));
       const left_island = other_islands[0];
       const right_island = other_islands[1];
       
