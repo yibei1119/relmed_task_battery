@@ -114,11 +114,11 @@
   height: 1vh;
 }
 
-.fuel-icon {
+/* .fuel-icon {
   width: 8vh;
   height: 8vh;
   position: absolute;
-}
+} */
 
 .instruction-stage .fuel-icon {
   width: 4vh;
@@ -126,9 +126,9 @@
   position: absolute;
 }
 
-.fuel-animation {
+/* .fuel-animation {
   animation: fuelAppear 0.5s ease-in-out forwards;
-}
+} */
 
 .fuel-animation.repeating {
   animation: fuelAppear 2s ease-out infinite;
@@ -253,7 +253,7 @@
   }
 }
 
-@keyframes fuelAppear {
+/* @keyframes fuelAppear {
   0% {
       opacity: 0;
       transform: translateY(-8vh);
@@ -266,7 +266,7 @@
       opacity: 0;
       transform: translateY(8vh);
   }
-}
+} */
 
 @keyframes keyPress {
   0%, 100% {
