@@ -1,9 +1,12 @@
+// Written by Haoyang Luo 2025
+// Version 1.2.0: Removed use of global variables, Yaniv Abir 2025
+
 var jsPsychRewardShip = (function (jspsych) {
   "use strict";
 
   const info = {
     name: "reward-ship",
-    version: "1.1.0",
+    version: "1.2.0",
     parameters: {
       target: {
         type: jspsych.ParameterType.STRING,
@@ -54,6 +57,26 @@ var jsPsychRewardShip = (function (jspsych) {
         type: jspsych.ParameterType.KEYS,
         default: ["ArrowLeft", "ArrowRight"]
       },
+            base_rule: {
+        type: jspsych.ParameterType.OBJECT,
+        default: {},
+        description: "Island transitions rule mapping for base rule"
+      },
+      control_rule: {
+        type: jspsych.ParameterType.OBJECT,
+        default: {},
+        description: "Island transitions rule mapping for control rule"
+      },
+      effort_threshold: {
+        type: jspsych.ParameterType.ARRAY,
+        default: [6, 12, 18],
+        description: "Effort thresholds by current strength"
+      },
+      scale: {
+        type: jspsych.ParameterType.FLOAT,
+        default: 2,
+        description: "Scaling factor for effort to probability conversion"
+      },
       post_trial_gap: {
         type: jspsych.ParameterType.INT,
         default: 300,
@@ -103,7 +126,7 @@ var jsPsychRewardShip = (function (jspsych) {
     }
 
     chooseControlRule(effort, current) {
-      const extra_effort = (effort - this.effort_threshold[current - 1]) * this.scale;
+      const extra_effort = (effort - trial.effort_threshold[current - 1]) * trial.scale;
       const prob = this.sigmoid(extra_effort);
       return Math.random() < prob ? 'control' : 'base';
     }
@@ -119,7 +142,7 @@ var jsPsychRewardShip = (function (jspsych) {
 
       // Generate trial HTML
       const generateHTML = () => {
-        const far = this.baseRule[trial.near];
+        const far = trial.base_rule[trial.near];
         return `
           <main class="main-stage">
             <img class="background" src="imgs/ocean.png" alt="Background"/>
@@ -287,8 +310,8 @@ var jsPsychRewardShip = (function (jspsych) {
         );
 
         const destinationIsland = currentRule === 'base' 
-          ? this.baseRule[trial.near]
-          : this.controlRule[choice === "left" ? trial.left : trial.right];
+          ? trial.base_rule[trial.near]
+          : trial.control_rule[choice === "left" ? trial.left : trial.right];
 
         const correct = trial.target === destinationIsland;
         const reward = correct ? trial.reward_number : 0;
@@ -379,8 +402,8 @@ var jsPsychRewardShip = (function (jspsych) {
       );
 
       const destinationIsland = currentRule === 'base' 
-        ? this.baseRule[trial.near]
-        : this.controlRule[choice === "left" ? trial.left : trial.right];
+        ? trial.base_rule[trial.near]
+        : trial.control_rule[choice === "left" ? trial.left : trial.right];
 
       const correct = trial.target === destinationIsland;
       const reward = correct ? trial.reward_number : 0;
