@@ -96,12 +96,12 @@ var jsPsychExploreShip = (function (jspsych) {
       
       return `
         <main class="main-stage">
-          <img class="background" src="${general_image_path}/ocean.png" alt="Background"/>
+          <img class="background" src="${trial. general_image_path}/ocean.png" alt="Background"/>
           <section class="scene">
             <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                <img src="${general_image_path}/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
+                <img src="${trial. general_image_path}/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
             </div>
-            <img class="island-far" src="${island_path}/simple_island_${far}.png" alt="Farther island" />
+            <img class="island-far" src="${trial. island_path}/simple_island_${far}.png" alt="Farther island" />
             <div class="overlap-group">
               <div class="choice-left">
                 <div class="fuel-container-left">
@@ -109,18 +109,18 @@ var jsPsychExploreShip = (function (jspsych) {
                     <div class="fuel-indicator-bar"></div>
                   </div>
                 </div>
-                <img class="ship-left" src="${general_image_path}/simple_ship_${trial.left}.png" alt="Left ship" />
-                <img class="arrow-left" src="${general_image_path}/left.png" alt="Left arrow" />
+                <img class="ship-left" src="${trial. general_image_path}/simple_ship_${trial.left}.png" alt="Left ship" />
+                <img class="arrow-left" src="${trial. general_image_path}/left.png" alt="Left arrow" />
               </div>
-              <img class="island-near" src="${island_path}/simple_island.png" alt="Nearer island" />
+              <img class="island-near" src="${trial. island_path}/simple_island.png" alt="Nearer island" />
               <div class="choice-right">
                 <div class="fuel-container-right">
                   <div class="fuel-indicator-container">
                     <div class="fuel-indicator-bar"></div>
                   </div>
                 </div>
-                <img class="ship-right" src="${general_image_path}/simple_ship_${trial.right}.png" alt="Right ship" />
-                <img class="arrow-right" src="${general_image_path}/right.png" alt="Right arrow" />
+                <img class="ship-right" src="${trial. general_image_path}/simple_ship_${trial.right}.png" alt="Right ship" />
+                <img class="arrow-right" src="${trial. general_image_path}/right.png" alt="Right arrow" />
               </div>
             </div>
             ${this.generateOceanCurrentsHTML(trial.current)}
@@ -173,7 +173,7 @@ var jsPsychExploreShip = (function (jspsych) {
 
     createFuelAnimation(container) {
       const fuelIcon = document.createElement('img');
-      fuelIcon.src = '${general_image_path}/fuel.png';
+      fuelIcon.src = `${trial.general_image_path}/fuel.png`;
       fuelIcon.className = 'fuel-icon fuel-animation';
       container.appendChild(fuelIcon);
 
