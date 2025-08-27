@@ -1,4 +1,11 @@
-import * from "./configurations.js"
+import { 
+  controlConfig, 
+  EXPLORE_SEQUENCE, 
+  PREDICT_SEQUENCE, 
+  REWARD_SEQUENCE, 
+  EXPLORE_SEQUENCE_SCREENING, 
+  PREDICT_SEQUENCE_SCREENING 
+} from "./configurations.js"
 
 const controlPreload = {
   type: jsPsychPreload,
