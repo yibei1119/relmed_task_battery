@@ -1001,7 +1001,7 @@ export function createControlInstructionsTimeline(settings) {
             `<p><strong>Great! You're now ready to begin the real game.</strong></p>
             <p>You'll play multiple rounds, which typically takes about <strong>${settings.session === "screening" ? 4 : 14} minutes</strong> to complete.</p>
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
-            <img src='assets/images/2_finger_keys.jpg' style='width:250px;'></img>`,
+            <img src='/assets/images/2_finger_keys.jpg' style='width:250px;'></img>`,
             "control_instruction_end"
         )
     ];

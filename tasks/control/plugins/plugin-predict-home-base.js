@@ -31,7 +31,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
       },
       button_html: {
         type: jspsych.ParameterType.FUNCTION,
-        default: function(choice, choice_index) {
+        default: function(choice, trial) {
           return `<button class="destination-button"><img src="${trial.island_path}/island_icon_${choice}.png" style="width:100px;"></button>`;
         }
       },
@@ -112,7 +112,7 @@ var jsPsychPredictHomeBase = (function (jspsych) {
 
       const buttonGroupElement = document.querySelector(".island-choices");
       for (const [choiceIndex, choice] of trial.choices.entries()) {
-        buttonGroupElement.insertAdjacentHTML("beforeend", trial.button_html(choice, choiceIndex));
+        buttonGroupElement.insertAdjacentHTML("beforeend", trial.button_html(choice, trial));
         const buttonElement = buttonGroupElement.lastChild;
         buttonElement.dataset.choice = choiceIndex.toString();
         buttonElement.addEventListener("click", () => {
