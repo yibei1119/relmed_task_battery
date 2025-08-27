@@ -7,6 +7,8 @@ import {
   PREDICT_SEQUENCE_SCREENING 
 } from "./configuration.js"
 
+import { createPreloadTrial } from "/core/utils/index.js"
+
 export const controlPreload = (settings) => {
   const image_assets = [
     ...([
