@@ -173,7 +173,7 @@ var jsPsychExploreShip = (function (jspsych) {
       `;
     }
 
-    createFuelAnimation(container) {
+    createFuelAnimation(container, trial) {
       const fuelIcon = document.createElement('img');
       fuelIcon.src = `${trial.general_image_path}/fuel.png`;
       fuelIcon.className = 'fuel-icon fuel-animation';
@@ -249,7 +249,7 @@ var jsPsychExploreShip = (function (jspsych) {
           ? display_element.querySelector('.fuel-container-left')
           : display_element.querySelector('.fuel-container-right');
         
-        this.createFuelAnimation(container);
+        this.createFuelAnimation(container, trial);
 
         // Update fuel indicator bar
         const fuelBar = container.querySelector('.fuel-indicator-bar');

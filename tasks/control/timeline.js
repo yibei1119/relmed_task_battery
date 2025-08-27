@@ -5,7 +5,7 @@ export function createControlTimeline(settings) {
 
     let procedure = [controlPreload(settings)];
     
-    procedure = procedure.concat(createControlInstructionsTimeline(settings));
+    // procedure = procedure.concat(createControlInstructionsTimeline(settings));
 
     procedure = procedure.concat(createCoreControlTimeline(settings));
 
