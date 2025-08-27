@@ -86,7 +86,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       return Math.random() < prob ? 'control' : 'base';
     }
 
-    generateFeedbackHTML(choice, chosenColor, destinationIsland, matchBaseRule) {
+    generateFeedbackHTML(trial, choice, chosenColor, destinationIsland, matchBaseRule) {
       // Invert the choice for feedback display
       const feedbackChoice = choice === 'left' ? 'right' : 'left';
       const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
@@ -306,7 +306,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       const matchBaseRule = currentRule === 'base';
       
       // Generate feedback display
-      display_element.innerHTML = this.generateFeedbackHTML(choice, chosenColor, destinationIsland, matchBaseRule);
+      display_element.innerHTML = this.generateFeedbackHTML(trial, choice, chosenColor, destinationIsland, matchBaseRule);
 
       // Add ocean currents only if using base rule
       // But this way also allows flexibility for future changes
