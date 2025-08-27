@@ -103,7 +103,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
               <img class="feedback-ship" src="${trial.general_image_path}/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
             </section>
           </main>
-        `;§
+        `;
       } else {
         return `
           <main class="main-stage">
