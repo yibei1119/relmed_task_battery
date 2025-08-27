@@ -188,6 +188,27 @@ export const TaskRegistry = {
         enabled: true,
     }
   },
+  control: {
+    name: 'Control Task',
+    description: 'Measure control-seeking, information-seeking, and reward-seeking behaviour',
+    createTimeline: createControlTimeline,
+    computeBonus: computeRelativeControlBonus,
+    defaultConfig: {
+      default_response_deadline: 4000,
+      long_response_deadline: 6000,
+    },
+    requirements: {
+      css: ['tasks/control/styles.css'],
+      note: 'Make sure to include control/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    },
+    configOptions: {
+        default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
+        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
+    }
+  },
   max_press_test: {
     name: 'Max Press Test',
     description: 'A test of maximum key press speed',

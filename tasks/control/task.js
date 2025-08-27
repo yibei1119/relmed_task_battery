@@ -61,9 +61,9 @@ export function createControlTimeline(settings) {
           current: jsPsych.timelineVariable('current'),
           explore_decision: () => {
             if (can_be_warned("control_explore")) {
-                return window.relemd_default_response_deadline
+                return settings.default_response_deadline
             } else {
-                return window.default_long_response_deadline
+                return settings.long_response_deadline
             }
           },
           explore_effort: 3000,
@@ -137,9 +137,9 @@ export function createControlTimeline(settings) {
           ship: jsPsych.timelineVariable('ship'),
           predict_decision: () => {
             if (can_be_warned("control_predict_homebase")) {
-                return window.relemd_default_response_deadline
+                return settings.default_response_deadline
             } else {
-                return window.default_long_response_deadline
+                return settings.long_response_deadline
             }
           },
           choices: settings.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
@@ -218,9 +218,9 @@ export function createControlTimeline(settings) {
       reward_number: jsPsych.timelineVariable('reward_number'),
       reward_decision: () => {
         if (can_be_warned("control_reward")) {
-            return window.relemd_default_response_deadline
+            return settings.default_response_deadline
         } else {
-            return window.default_long_response_deadline
+            return settings.long_response_deadline
         }
       },
       post_trial_gap: 0,
