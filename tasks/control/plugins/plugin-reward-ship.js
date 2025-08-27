@@ -130,7 +130,7 @@ var jsPsychRewardShip = (function (jspsych) {
       return 1 / (1 + Math.exp(-x));
     }
 
-    chooseControlRule(effort, current) {
+    chooseControlRule(trial, effort, current) {
       const extra_effort = (effort - trial.effort_threshold[current - 1]) * trial.scale;
       const prob = this.sigmoid(extra_effort);
       return Math.random() < prob ? 'control' : 'base';
@@ -310,6 +310,7 @@ var jsPsychRewardShip = (function (jspsych) {
 
         // Determine destination island based on control rule
         const currentRule = this.chooseControlRule(
+          trial,
           trial_presses, 
           trial.current
         );
@@ -402,6 +403,7 @@ var jsPsychRewardShip = (function (jspsych) {
 
       // Determine destination island based on control rule
       const currentRule = this.chooseControlRule(
+        trial,
         trial_presses, 
         trial.current
       );
