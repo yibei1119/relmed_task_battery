@@ -212,7 +212,7 @@ function setupFuelTrial(config) {
     }
 }
 
-export function createControlInstructionsTimelines(settings) {
+export function createControlInstructionsTimeline(settings) {
     // Main instruction pages configuration
     const nPages = 12;
     const leftShip = "green";
