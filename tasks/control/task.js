@@ -7,8 +7,8 @@ import {
   PREDICT_SEQUENCE_SCREENING 
 } from "./configurations.js"
 
-export const control_preload = createPreloadTrial(
-  [
+export const controlPreload = (settings) => {
+  const image_assets = [
     ...([
       "200p.png",
       "ocean.png",
@@ -24,7 +24,7 @@ export const control_preload = createPreloadTrial(
       "icon-reward.png",
       "icon-predict.png",
       "icon-explore.png"
-    ].map(s => "imgs/" + s)),
+    ].map(s => "/assets/images/control/" + s)),
     ...([
       "simple_island_i1.png", //wk0: banana
       "simple_island_i2.png", //wk0: coconut
@@ -34,11 +34,14 @@ export const control_preload = createPreloadTrial(
       "island_icon_i2.png",
       "island_icon_i3.png",
       "island_icon_i4.png"
-    ].map(s => "imgs/Control_stims/" + window.session + "/" + s)),
-  ],
-  "control"
-);
+    ].map(s => "/assets/images/control/" + settings.session + "/" + s)),
+  ];
 
+  return createPreloadTrial(
+    image_assets,
+    "control"
+  );
+} 
 
 const controlExploreTimeline = [];
 (window.session === "screening" 
