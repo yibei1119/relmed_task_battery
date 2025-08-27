@@ -159,6 +159,7 @@ export function createCoreControlTimeline(settings) {
             base_rule: controlConfig(settings).baseRule,
             control_rule: controlConfig(settings).controlRule,
             effort_threshold: controlConfig(settings).effort_threshold,
+            island_path: `/assets/images/control/session-specific/${settings.session}`,
             scale: controlConfig(settings).scale,
             post_trial_gap: 0
           }],

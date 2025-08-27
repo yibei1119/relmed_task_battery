@@ -34,7 +34,19 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
         type: jspsych.ParameterType.INT,
         default: 0,
         description: "Gap between trials (ms)"
+      },
+      // Image paths
+      general_image_path: {
+        type: jspsych.ParameterType.STRING,
+        default: "/assets/images/control/",
+        description: "Base path for control images"
+      },
+      island_path: {
+        type: jspsych.ParameterType.STRING,
+        default: "/assets/images/control/session-specific/wk0",
+        description: "Path for island images"
       }
+
     },
     data: {
       trialphase: {
@@ -79,32 +91,32 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
       if (matchBaseRule) {
         return `
           <main class="main-stage">
-            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <img class="background" src="${trial.general_image_path}/ocean.png" alt="Background"/>
             <section class="scene">
               <div class="icon-row" style="position: absolute; display: flex; align-items: center; top: 0%;">
-                  <img src="imgs/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
+                  <img src="${trial.general_image_path}/icon-explore.png" alt="Learning" style="width: 40px; height: 40px; margin-right: 15px;"><p style="text-align: left; color: #0F52BA;">Learning</p>
               </div>
-              <img class="island-far" src="imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Farther island" />
-              <img class="feedback-ship" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
+              <img class="island-far" src="${trial.island_path}/simple_island_${destinationIsland}.png" alt="Farther island" />
+              <img class="feedback-ship" src="${trial.general_image_path}/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />
             </section>
           </main>
-        `;
+        `;§
       } else {
         return `
           <main class="main-stage">
-            <img class="background" src="imgs/ocean.png" alt="Background"/>
+            <img class="background" src="${trial.general_image_path}/ocean.png" alt="Background"/>
             <section class="scene">
               <div class="overlap-group" style="justify-content: space-between;">
                 <div class="choice-left">
                   ${feedbackChoice === 'left' ? 
-                    `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                  ${islandSide === 'left' ? `<img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
+                    `<img class="ship-${feedbackChoice}" src="${trial.general_image_path}/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
+                  ${islandSide === 'left' ? `<img class="island-near" src="${trial.general_image_path}/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
                 </div>
-                <img class="island-near" style="visibility: hidden;" src="imgs/simple_island.png" alt="Hidden island" />
+                <img class="island-near" style="visibility: hidden;" src="${trial.general_image_path}/simple_island.png" alt="Hidden island" />
                 <div class="choice-right">
                   ${feedbackChoice === 'right' ? 
-                    `<img class="ship-${feedbackChoice}" src="imgs/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                  ${islandSide === 'right' ? `<img class="island-near" src="imgs/Control_stims/${window.session}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
+                    `<img class="ship-${feedbackChoice}" src="${trial.general_image_path}/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
+                  ${islandSide === 'right' ? `<img class="island-near" src="${trial.island_path}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
                 </div>
               </div>
             </section>
