@@ -122,6 +122,7 @@ export function createCoreControlTimeline(settings) {
             }
           },
           explore_effort: 3000,
+          island_path: `/assets/images/control/session-specific/${settings.session}`,
           post_trial_gap: 0,
           save_timeline_variables: true,
           on_start: function (trial) {
