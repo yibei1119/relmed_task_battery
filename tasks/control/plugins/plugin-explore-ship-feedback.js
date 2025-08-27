@@ -113,7 +113,7 @@ var jsPsychExploreShipFeedback = (function (jspsych) {
                 <div class="choice-left">
                   ${feedbackChoice === 'left' ? 
                     `<img class="ship-${feedbackChoice}" src="${trial.general_image_path}/simple_ship_${chosenColor}.png" alt="Ship" style="opacity: 0;" />` : ''}
-                  ${islandSide === 'left' ? `<img class="island-near" src="${trial.general_image_path}/${window.session}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
+                  ${islandSide === 'left' ? `<img class="island-near" src="${trial.island_path}/simple_island_${destinationIsland}.png" alt="Destination island" style="top: -10%;" />` : ''}
                 </div>
                 <img class="island-near" style="visibility: hidden;" src="${trial.general_image_path}/simple_island.png" alt="Hidden island" />
                 <div class="choice-right">
