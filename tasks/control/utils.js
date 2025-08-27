@@ -7,7 +7,7 @@ import {
   PREDICT_SEQUENCE_SCREENING 
 } from "./configuration.js"
 
-import { createPreloadTrial } from "/core/utils/index.js"
+import { createPreloadTrial, kick_out, fullscreen_prompt, noChoiceWarning, updateState, saveDataREDCap, canBeWarned, updateBonusState } from "/core/utils/index.js"
 
 export const controlPreload = (settings) => {
   const image_assets = [
@@ -62,7 +62,7 @@ export function createCoreControlTimeline(settings) {
           near: jsPsych.timelineVariable('near'),
           current: jsPsych.timelineVariable('current'),
           explore_decision: () => {
-            if (can_be_warned("control_explore")) {
+            if (canBeWarned("control_explore")) {
                 return settings.default_response_deadline
             } else {
                 return settings.long_response_deadline
@@ -138,7 +138,7 @@ export function createCoreControlTimeline(settings) {
           type: jsPsychPredictHomeBase,
           ship: jsPsych.timelineVariable('ship'),
           predict_decision: () => {
-            if (can_be_warned("control_predict_homebase")) {
+            if (canBeWarned("control_predict_homebase")) {
                 return settings.default_response_deadline
             } else {
                 return settings.long_response_deadline
@@ -219,7 +219,7 @@ export function createCoreControlTimeline(settings) {
       reward_amount: jsPsych.timelineVariable('reward_amount'),
       reward_number: jsPsych.timelineVariable('reward_number'),
       reward_decision: () => {
-        if (can_be_warned("control_reward")) {
+        if (canBeWarned("control_reward")) {
             return settings.default_response_deadline
         } else {
             return settings.long_response_deadline

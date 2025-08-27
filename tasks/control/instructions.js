@@ -1,4 +1,6 @@
 import { controlConfig } from "./configuration.js";
+import { createPressBothTrial, updateState } from "/core/utils/index.js"
+
 
 // Helper functions for creating instruction page elements
 const createOceanCurrents = (level = 3, choice = "right", matchBaseRule = true) => {
