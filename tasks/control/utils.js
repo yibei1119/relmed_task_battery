@@ -5,7 +5,7 @@ import {
   REWARD_SEQUENCE, 
   EXPLORE_SEQUENCE_SCREENING, 
   PREDICT_SEQUENCE_SCREENING 
-} from "./configurations.js"
+} from "./configuration.js"
 
 export const controlPreload = (settings) => {
   const image_assets = [

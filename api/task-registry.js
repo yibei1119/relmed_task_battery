@@ -6,6 +6,7 @@ import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.j
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
 import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
+import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
 import { loadSequence } from '/core/utils/index.js';
 
 export const TaskRegistry = {
