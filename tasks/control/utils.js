@@ -286,6 +286,7 @@ export function createCoreControlTimeline(settings) {
       control_rule: controlConfig(settings).controlRule,
       effort_threshold: controlConfig(settings).effort_threshold,
       scale: controlConfig(settings).scale,
+      island_path: `/assets/images/control/session-specific/${settings.session}`,
       reward_decision: () => {
         if (canBeWarned("control_reward")) {
             return settings.default_response_deadline
