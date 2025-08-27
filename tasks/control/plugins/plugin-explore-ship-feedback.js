@@ -1,3 +1,6 @@
+// Written by Haoyang Luo 2025
+// Version 1.3.0: Removed use of global variables, Yaniv Abir 2025
+
 var jsPsychExploreShipFeedback = (function (jspsych) {
   "use strict";
 
