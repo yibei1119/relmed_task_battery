@@ -14,8 +14,6 @@ export const console_debug = true // whether to print to console
 export const do_online = true // whether to run online or offline
 export const no_skip = true // prevent skipping question if no response or timeout
 
-export const run_sim = false || window.simulating // whether to run in simulation mode
-
 // Error codes
 export const no_consent_error = 'E_NC1' // return when no consent is given
 export const prolific_ids_error = 'E_PID1' // Prolific IDS don't match

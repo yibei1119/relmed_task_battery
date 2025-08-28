@@ -225,7 +225,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
         data: {trialphase: 'open-text'},
         on_load: function () {
             // preamble margin-top style if in simulation mod
-            if (!run_sim) {
+            if (!window.simulating) {
                 let q_name = qs_list[q_index]['name']
 
                 // initialise checked property
