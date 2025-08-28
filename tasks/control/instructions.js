@@ -1,28 +1,39 @@
 import { controlConfig } from "./configuration.js";
 import { createPressBothTrial, updateState } from "/core/utils/index.js"
 
-
-// Helper functions for creating instruction page elements
+/**
+ * Creates ocean current visual elements based on strength level and rule matching
+ * @param {number} level - Current strength level (1=weak, 2=medium, 3=strong)
+ * @param {string} choice - Ship choice direction ('left' or 'right')
+ * @param {boolean} matchBaseRule - Whether currents match base rule (true) or drift rule (false)
+ * @returns {string} HTML string for ocean current visualization
+ */
 const createOceanCurrents = (level = 3, choice = "right", matchBaseRule = true) => {
     // Invert the choice for feedback display
     const feedbackChoice = choice === 'left' ? 'right' : 'left';
 
-    // Helper function to create current lines based on level and direction
+    /**
+     * Helper function to create current lines based on level and direction
+     * @param {boolean} matchBaseRule - Whether to show normal currents or drift currents
+     * @param {boolean} isTrace - Whether to show trace lines (fainter background lines)
+     * @param {boolean} isLeft - Whether currents are on left side
+     * @returns {string} HTML for current lines
+     */
     const createCurrentLines = (matchBaseRule = true, isTrace = false, isLeft = true) => {
         let lines = '';
         if (matchBaseRule) {
-            // Generate positions based on level
+            // Normal current positions for ships reaching home bases
             const positions = {
-                1: [{ top: 49, offset: 20 }],
+                1: [{ top: 49, offset: 20 }], // Single weak current
                 2: [
                     { top: 43, offset: 50 },
                     { top: 55, offset: 30 }
-                ],
+                ], // Two medium currents
                 3: [
                     { top: 43, offset: 50 },
                     { top: 49, offset: 20 },
                     { top: 55, offset: 30 }
-                ]
+                ] // Three strong currents
             };
 
             const currentPositions = positions[level] || positions[3];
@@ -38,6 +49,7 @@ const createOceanCurrents = (level = 3, choice = "right", matchBaseRule = true) 
                 }
             });
         } else {
+            // Drift current positions for ships without enough fuel
             const positions = {
                 1: [{ top: 80, offset: 20 }],
                 2: [
@@ -68,6 +80,7 @@ const createOceanCurrents = (level = 3, choice = "right", matchBaseRule = true) 
         return lines;
     };
 
+    // Return appropriate current visualization based on rule type
     if (matchBaseRule) {
         return `
         <div class="ocean-current">
@@ -92,6 +105,11 @@ const createOceanCurrents = (level = 3, choice = "right", matchBaseRule = true) 
     }
 };
 
+/**
+ * Creates instruction dialog wrapper with consistent styling
+ * @param {string} content - HTML content for the dialog
+ * @returns {string} Complete instruction dialog HTML
+ */
 const createInstructionDialog = (content) => {
     return `
     <div class="instruction-dialog">
@@ -102,6 +120,12 @@ const createInstructionDialog = (content) => {
 `;
 };
 
+/**
+ * Creates progress bar for instruction pages
+ * @param {number} current - Current page number
+ * @param {number} total - Total number of pages
+ * @returns {string} Progress bar HTML
+ */
 const createProgressBar = (current, total) => {
     return `
     <div class="progress-bar-container">
@@ -110,9 +134,19 @@ const createProgressBar = (current, total) => {
 `;
 };
 
-// New helper to abstract the fuel trial common behavior
+// Global variables for fuel trial keyboard listeners
 let firstKeyListener = null;
 let repeatedKeyListener = null;
+
+/**
+ * Sets up interactive fuel trial with keyboard input handling
+ * @param {Object} config - Configuration object for the fuel trial
+ * @param {string} config.initialMessage - Message shown after first keypress
+ * @param {Function} config.progressCalculation - Function to calculate fuel progress
+ * @param {Function} config.finishCondition - Function to determine when trial is complete
+ * @param {string} config.finishMessage - Message shown when trial completes
+ * @param {number} [config.finishDelay=350] - Delay before enabling next button
+ */
 function setupFuelTrial(config) {
     let selectedKey = null;
     let trialPresses = 0;
@@ -121,12 +155,13 @@ function setupFuelTrial(config) {
     const leftContainer = document.querySelector('.fuel-container-left');
     const rightContainer = document.querySelector('.fuel-container-right');
 
+    // Disable next button until trial is complete (unless simulating)
     if (!window.simulating) {
         document.getElementById("jspsych-instructions-next").disabled = true;
     }
     document.getElementById(jsPsych.getDisplayContainerElement().id).focus();
 
-    // Listener for the first key press
+    // Set up listener for initial ship selection
     firstKeyListener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: handleFirstKey,
         valid_responses: ['ArrowRight'],
@@ -136,6 +171,10 @@ function setupFuelTrial(config) {
         minimum_valid_rt: 100
     });
     
+    /**
+     * Creates animated fuel icon that appears during fueling
+     * @param {HTMLElement} container - Container to add fuel icon to
+     */
     function createFuelIcon(container) {
         const fuelIcon = document.createElement('img');
         fuelIcon.src = '/assets/images/control/fuel.png';
@@ -146,14 +185,20 @@ function setupFuelTrial(config) {
         });
     }
     
+    /**
+     * Handles the first key press to select a ship
+     * @param {Object} info - jsPsych key response info object
+     */
     function handleFirstKey(info) {
         jsPsych.pluginAPI.cancelKeyboardResponse(firstKeyListener);
 
+        // Remove any existing selection indicators
         const selectionIndicator = document.querySelector('.selection-indicator');
         if (document.querySelector('.selection-indicator')) { selectionIndicator.remove(); }
         const islandIndicator = document.querySelector('.island-indicator');
         if (islandIndicator) { islandIndicator.remove(); }
 
+        // Update UI based on ship selection
         if (info.key === 'ArrowLeft') {
             selectedKey = 'left';
             leftArrow.classList.add('highlight');
@@ -165,10 +210,16 @@ function setupFuelTrial(config) {
             document.querySelector('.choice-left').style.visibility = 'hidden';
             document.querySelector('.fuel-container-right .fuel-indicator-container').style.opacity = '1';
         }
+        
+        // Update instruction text and set up repeated key listener
         document.querySelector('.instruction-content').innerHTML = config.initialMessage;
         repeatedKeyListener = setupRepeatedKeyListener();
     }
     
+    /**
+     * Sets up listener for repeated key presses to add fuel
+     * @returns {Object} jsPsych keyboard response object
+     */
     function setupRepeatedKeyListener() {
         return jsPsych.pluginAPI.getKeyboardResponse({
             callback_function: handleRepeatedKeypress,
@@ -180,32 +231,41 @@ function setupFuelTrial(config) {
         });
     }
     
+    /**
+     * Handles repeated key presses for fueling
+     * @param {Object} info - jsPsych key response info object
+     */
     function handleRepeatedKeypress(info) {
         trialPresses++;
         const container = selectedKey === 'left' ?
             document.querySelector('.fuel-container-left') :
             document.querySelector('.fuel-container-right');
         const fuelBar = container.querySelector('.fuel-indicator-bar');
-        // Update progress via a progressCalculation function
+        
+        // Update fuel progress using provided calculation function
         const progress = Math.min(config.progressCalculation(trialPresses), 100);
         fuelBar.style.width = `${progress}%`;
 
+        // Change color when full
         if (progress === 100) {
             fuelBar.style.backgroundColor = '#00ff00';
         }
 
+        // Add fuel animation
         createFuelIcon(selectedKey === 'left' ? leftContainer : rightContainer);
-        // When finishCondition returns true, finish the trial.
+        
+        // Check if trial should finish using provided condition function
         if (config.finishCondition(trialPresses, progress)) {
             jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
 
-            // Apply fade-out animation to the selected ship
+            // Apply ship fade-out animation
             if (selectedKey === 'left') {
                 display_element.querySelector('.ship-left').classList.add('fade-out-left');
             } else if (selectedKey === 'right') {
                 display_element.querySelector('.ship-right').classList.add('fade-out-right');
             }
 
+            // Show completion message and enable next button
             document.querySelector('.instruction-content').innerHTML = config.finishMessage;
             jsPsych.pluginAPI.setTimeout(() => {
                 document.getElementById("jspsych-instructions-next").disabled = false;
@@ -214,14 +274,20 @@ function setupFuelTrial(config) {
     }
 }
 
+/**
+ * Creates the complete control task instructions timeline
+ * @param {Object} settings - Task settings including session type and configuration
+ * @returns {Array} jsPsych timeline for control task instructions
+ */
 export function createControlInstructionsTimeline(settings) {
-    // Main instruction pages configuration
+    // Configuration for instruction pages
     const nPages = 12;
     const leftShip = "green";
     const rightShip = "blue";
-    const downstreamIsland = "i3"; // compatible to screening session too since there are only 3 islands
+    const downstreamIsland = "i3"; // Compatible with screening session (only 3 islands)
     const homebaseIsland = controlConfig(settings).controlRule[rightShip];
 
+    // Main instruction pages with interactive content
     const controlInstructionPages = [
         // Page 0: Initial Welcome
         {
@@ -559,7 +625,7 @@ export function createControlInstructionsTimeline(settings) {
         }
     ];
 
-    // Create the instruction trial
+    // Create main instruction trial with page change handlers
     var controlInstructionTrial = [];
     controlInstructionTrial = {
         type: jsPsychInstructions,
@@ -586,7 +652,7 @@ export function createControlInstructionsTimeline(settings) {
             });
         },
         on_page_change: function(current_page) {
-            // Cancel any existing first or repeatedKeyListener before proceeding
+            // Clean up any existing keyboard listeners before proceeding
             if (typeof repeatedKeyListener !== 'undefined' && repeatedKeyListener) {
                 jsPsych.pluginAPI.cancelKeyboardResponse(repeatedKeyListener);
                 repeatedKeyListener = null;
@@ -597,40 +663,37 @@ export function createControlInstructionsTimeline(settings) {
                 firstKeyListener = null;
             }
 
+            // Page 3: Interactive fuel trial - high fuel demonstration
             if (current_page === 3) {
                 setupFuelTrial({
                     initialMessage: `<p>Now press the same <strong>right arrow key</strong> multiple times to give it a lot of fuel.</p>`,
-                    // Update progress based on 30 presses (i.e. progress runs from 0 to 100%).
+                    // Progress calculation: 30 presses = 100% fuel
                     progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
-                    // Finish trial when the fuel bar reaches 100% width.
+                    // Complete when fuel bar reaches 75%
                     finishCondition: (trialPresses, progress) => progress >= 75,
                     finishMessage: `<p>Now the fuel is sufficient for this ship, and it's leaving now!</p>`
                 });
             }
 
+            // Page 4: Ship animation to home base
             if (current_page === 4) {
                 const choice = 'right';
                 const feedbackChoice = choice === 'left' ? 'right' : 'left';
                 const islandSide = feedbackChoice === 'left' ? 'right' : 'left';
 
-                // Add animation styles
+                // Set up ship movement animation
                 const shipImg = display_element.querySelector(`.ship-${feedbackChoice}`);
                 const islandImg = display_element.querySelector(`.choice-${islandSide} .island-near`);
                 
-                // Calculate the distance to move the ship
+                // Calculate movement distance and direction
                 const distance = islandImg.offsetWidth + shipImg.offsetWidth / 4;
-
-                // Determine if ship should be flipped based on which side it starts from
-                // Ships on the left are already flipped with scaleX(-1) in the CSS
-                // As long as it's flipped here, it will move in the correct direction
                 const shouldFlip = feedbackChoice === 'left';
                 const scaleX = shouldFlip ? '-1' : '1';
 
                 const animationStyle = document.createElement('style');
                 animationStyle.setAttribute('data-feedback-animation', 'true');
 
-
-                // Create the animation CSS with proper scale preservation
+                // Create CSS animation for ship movement
                 animationStyle.textContent = `
                     @keyframes moveShip {
                         0% { 
@@ -649,39 +712,36 @@ export function createControlInstructionsTimeline(settings) {
                 `;
                 document.head.appendChild(animationStyle);
 
-                // Apply the animation class after a small delay to ensure DOM is ready
+                // Apply animation after DOM is ready
                 setTimeout(() => {
                     shipImg.classList.add('ship-animate');
                 }, 50);
             }
 
+            // Page 5: Interactive fuel trial - low fuel demonstration
             if (current_page === 5) {
                 setupFuelTrial({
                     initialMessage: `<p>Try again, this time press only a few times to add only a little fuel.</p>`,
                     progressCalculation: (trialPresses) => (trialPresses / 30) * 100,
-                    // Finish trial when 5 fuel presses have been recorded.
+                    // Complete after only 5 presses to show insufficient fuel
                     finishCondition: (trialPresses, progress) => trialPresses >= 5,
                     finishMessage: `<p>Fueling time is limited. The ship has gone now!</p>`
                 });
             }
 
+            // Page 6: Ship drift animation (insufficient fuel)
             if (current_page === 6) {
                 const choice = 'right';
 
-                // Add animation styles
+                // Set up drift animation to top island
                 const shipImg = display_element.querySelector(`.feedback-ship`);
                 const islandImg = display_element.querySelector(`.island-far`);
                 
-                // Calculate the distance to move the ship
                 const distance = islandImg.offsetWidth/2 + shipImg.offsetWidth;
-
-                // Determine if ship should be flipped based on which side it starts from
-                // Ships on the left are already flipped with scaleX(-1) in the CSS
-                // As long as it's flipped here, it will move in the correct direction
                 const shouldFlip = choice === 'left';
                 const scaleX = shouldFlip ? '-1' : '1';
 
-                // Remove any existing animation style elements
+                // Remove any existing animation styles
                 const existingAnimationStyle = document.querySelector('style[data-feedback-animation="true"]');
                 if (existingAnimationStyle) {
                     existingAnimationStyle.remove();
@@ -690,8 +750,7 @@ export function createControlInstructionsTimeline(settings) {
                 const animationStyle = document.createElement('style');
                 animationStyle.setAttribute('data-feedback-animation', 'true');
 
-
-                // Create the animation CSS with proper scale preservation
+                // Create drift animation (ship moves to top island)
                 animationStyle.textContent = `
                     @keyframes moveShip {
                         0% { 
@@ -710,7 +769,7 @@ export function createControlInstructionsTimeline(settings) {
                 `;
                 document.head.appendChild(animationStyle);
 
-                // Apply the animation class after a small delay to ensure DOM is ready
+                // Apply drift animation
                 setTimeout(() => {
                     shipImg.classList.add('ship-animate');
                 }, 100);
@@ -801,6 +860,7 @@ export function createControlInstructionsTimeline(settings) {
         type: jsPsychSurveyMultiChoice,
         preamble: () => {
             var preamble = `<div class=instructions><p>For each statement, please indicate whether it is true or false:</p></div>`
+            // Show warning if participant is close to max failures
             if (jsPsych.data.get().last(1).select('control_instruction_fail').values[0] == settings.max_instruction_fails - 1) {
                 preamble += `<p style="color:#f44336; font-weight:bold">You have almost reached the maximum number of failures allowed. Please pay close attention to the instructions.</p>`;
             }
@@ -844,6 +904,7 @@ export function createControlInstructionsTimeline(settings) {
             }
         },
         on_finish: function(data) {
+            // Track failed comprehension attempts
             if (!Object.values(data.response).every(value => value === "True")) {
                 var up_to_now = parseInt(jsPsych.data.get().last(1).select('control_instruction_fail').values[0]);
                 jsPsych.data.addProperties({

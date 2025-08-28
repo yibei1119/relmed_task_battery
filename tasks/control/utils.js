@@ -9,7 +9,13 @@ import {
 
 import { createPreloadTrial, kick_out, fullscreen_prompt, noChoiceWarning, updateState, saveDataREDCap, canBeWarned, updateBonusState } from "/core/utils/index.js"
 
+/**
+ * Creates preload trial for control task assets
+ * @param {Object} settings - Task settings including session information
+ * @returns {Object} jsPsych preload trial configuration
+ */
 export const controlPreload = (settings) => {
+  // Core control task images used across all sessions
   const image_assets = [
     ...([
       "200p.png",
@@ -27,6 +33,7 @@ export const controlPreload = (settings) => {
       "icon-predict.png",
       "icon-explore.png"
     ].map(s => "/assets/images/control/" + s)),
+    // Session-specific island images with different reward types
     ...([
       "simple_island_i1.png", //wk0: banana
       "simple_island_i2.png", //wk0: coconut
@@ -45,6 +52,7 @@ export const controlPreload = (settings) => {
   );
 } 
 
+// Control rating timeline for measuring sense of agency
 const controlRating = {
   timeline: [{
     type: jsPsychHtmlButtonResponse,
@@ -58,6 +66,7 @@ const controlRating = {
     on_finish: function (data) {
       updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
 
+      // Track warnings for participants who don't respond
       if (data.response === null) {
         var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
         console.log("n_warnings: " + up_to_now);
@@ -71,9 +80,14 @@ const controlRating = {
 ]
 };
 
-
+/**
+ * Creates the main control task timeline with explore, predict, and reward phases
+ * @param {Object} settings - Task configuration including session type and response deadlines
+ * @returns {Array} Complete jsPsych timeline for the control task
+ */
 export function createCoreControlTimeline(settings) {
 
+  // Confidence rating after prediction trials (not shown in screening)
   const confidenceRating = {
     timeline: [{
       type: jsPsychHtmlButtonResponse,
@@ -85,6 +99,7 @@ export function createCoreControlTimeline(settings) {
           trialphase: "control_confidence"
       },
       on_finish: function (data) {
+        // Track warnings for non-responses
         if (data.response === null) {
           var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
           console.log("n_warnings: " + up_to_now);
@@ -94,12 +109,14 @@ export function createCoreControlTimeline(settings) {
         }
       }
     }],
+    // Only show confidence rating if participant made a choice and not in screening
     conditional_function: function () {
       const last_trial_choice = jsPsych.data.get().last(1).select('response').values[0];
       return last_trial_choice !== null && settings.session !== "screening";
     }
   };
 
+  // Build exploration phase trials
   const controlExploreTimeline = [];
   (settings.session === "screening" 
     ? EXPLORE_SEQUENCE_SCREENING 
@@ -114,6 +131,7 @@ export function createCoreControlTimeline(settings) {
           right: jsPsych.timelineVariable('right'),
           near: jsPsych.timelineVariable('near'),
           current: jsPsych.timelineVariable('current'),
+          // Adaptive response deadline based on warning history
           explore_decision: () => {
             if (canBeWarned("control_explore")) {
                 return settings.default_response_deadline
@@ -127,22 +145,26 @@ export function createCoreControlTimeline(settings) {
           post_trial_gap: 0,
           save_timeline_variables: true,
           on_start: function (trial) {
+            // Add extra time if coming from a rating trial
             const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
             if (last_trialphase === "control_confidence" || last_trialphase === "control_controllability") {
               trial.explore_decision += 2000;
             }
           },
           on_finish: function (data) {
+            // Count total control trials across all phases
             const n_trials = jsPsych.data.get().filter([{trialphase: "control_explore"}, {trialphase: "control_predict_homebase"}, {trialphase: "control_reward"}]).count();
             data.n_control_trials = n_trials;
             console.log("Trial number: " + n_trials + " (explore)");
 
             updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
 
+            // Save data to REDCap every 24 trials
             if (n_trials % 24 === 0) {
               saveDataREDCap(3);
             }
 
+            // Track non-response warnings
             if (data.response === null) {
               var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
               console.log("n_warnings: " + up_to_now);
@@ -153,6 +175,7 @@ export function createCoreControlTimeline(settings) {
           }
         },
         {
+          // Show feedback only if participant made a choice
           timeline: [{
             type: jsPsychExploreShipFeedback,
             feedback_duration: 3000,
@@ -179,6 +202,7 @@ export function createCoreControlTimeline(settings) {
     });
   });
 
+  // Initialize warning counter for exploration phase
   controlExploreTimeline[0]["on_timeline_start"] = () => {
     updateState(`control_task_start`);
     jsPsych.data.addProperties({
@@ -186,6 +210,7 @@ export function createCoreControlTimeline(settings) {
     });
   }
 
+  // Build prediction phase trials
   const controlPredTimeline = [];
   (settings.session === "screening" 
     ? PREDICT_SEQUENCE_SCREENING 
@@ -197,6 +222,7 @@ export function createCoreControlTimeline(settings) {
         {
           type: jsPsychPredictHomeBase,
           ship: jsPsych.timelineVariable('ship'),
+          // Adaptive response deadline
           predict_decision: () => {
             if (canBeWarned("control_predict_homebase")) {
                 return settings.default_response_deadline
@@ -204,12 +230,14 @@ export function createCoreControlTimeline(settings) {
                 return settings.long_response_deadline
             }
           },
+          // Different island choices for screening vs main sessions
           choices: settings.session === "screening" ? ["i1", "i2", "i3"] : ["i2", "i3", "i4", "i1"],
           post_trial_gap: 0,
           save_timeline_variables: true,
           control_rule: controlConfig(settings).controlRule,
           island_path: `/assets/images/control/session-specific/${settings.session}`,
           on_start: function (trial) {
+            // Add extra time if coming from feedback
             const last_trialphase = jsPsych.data.getLastTrialData().values()[0].trialphase;
             if (last_trialphase === "control_explore_feedback") {
               trial.predict_decision += 2000;
@@ -242,12 +270,14 @@ export function createCoreControlTimeline(settings) {
     });
   });
 
+  // Initialize warning counter for prediction phase
   controlPredTimeline[0]["on_timeline_start"] = () => {
     jsPsych.data.addProperties({
         control_predict_homebase_n_warnings: 0
     });
   }
 
+  // Build reward phase trials
   const controlRewardTimeline = [];
   REWARD_SEQUENCE.forEach((t, index) => {
     const timelineItems = [
@@ -255,7 +285,7 @@ export function createCoreControlTimeline(settings) {
       fullscreen_prompt
     ];
     
-    // Add prompt before the first reward trial
+    // Show prompt explaining reward phase before first trial
     if (index === 0) {
       timelineItems.push({
         type: jsPsychRewardPrompt,
@@ -328,7 +358,7 @@ export function createCoreControlTimeline(settings) {
       )
     );
     
-    // Add reward post trial gap but with ocean background
+    // Add brief inter-trial interval with ocean background
     timelineItems.push({
       timeline: [{
       type: jsPsychHtmlKeyboardResponse,
@@ -352,6 +382,7 @@ export function createCoreControlTimeline(settings) {
     });
   });
 
+  // Initialize reward phase
   controlRewardTimeline[0]["on_timeline_start"] = () => {
     updateState(`control_reward_start`);
     jsPsych.data.addProperties({
@@ -359,22 +390,22 @@ export function createCoreControlTimeline(settings) {
     });
   }
 
-  // Reveal homebases in the experiment
+  // Final reveal of ship-homebase mappings (for learning validation)
   const controlHomebaseReveal = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: () => {
-      // Create the HTML stimulus with a table showing ships and their homebases
+      // Create table showing which ship belongs to which island
       let html = `
         <main class="main-stage">
           <img class="background" src="/assets/images/control/ocean_above.png" alt="Background"/>
           <div class="instruction-dialog" style="bottom:unset;">
             <div class="instruction-content" style="font-size: 24px; text-align: center;">
               <h3>Well done!</h3>
-              <p>In case you’re curious, this is the home base for each ship in today's session:</p>
+              <p>In case you're curious, this was the home base for each ship in today's session:</p>
               <table style="margin: auto; border-collapse: separate; border-spacing: 20px 0px;">
                 <tbody>`;
       
-      // Add a row for each ship that has a defined homebase
+      // Show mapping for each ship with a defined homebase
       const shipColors = ["blue", "green", "red", "yellow"];
       shipColors.forEach(color => {
         const homebase = controlConfig(settings).controlRule[color];
@@ -412,15 +443,16 @@ export function createCoreControlTimeline(settings) {
       trialphase: 'control_reveal'}
   };
 
-  // Assembling the control task timeline
+  // Assemble the complete timeline based on session type
   let controlTimeline = [];
 
-  // Add the control trials depending on the session
   if (settings.session === "screening") {
+    // Screening: simpler structure with fewer prediction trials
     let trial = 1;
     for (let i = 0; i < EXPLORE_SEQUENCE_SCREENING.length; i++) {
       controlExploreTimeline[i].timeline_variables[0].trial = trial++;
       controlTimeline.push(controlExploreTimeline[i]);
+      // Add prediction trial every 6 exploration trials
       if ((i + 1) % 6 === 0) {
         const num_miniblock = Math.floor(i / 6);
         controlPredTimeline[num_miniblock].timeline_variables[0].trial = trial++;
@@ -428,15 +460,20 @@ export function createCoreControlTimeline(settings) {
       }
     }
   } else {
+    // Main sessions: alternating blocks of exploration/prediction and controllability ratings
     let trial = 1;
     let pred_trials = [];
-    // Add the explore, predict, report trials
+    
+    // Exploration phase with interleaved prediction trials and control ratings
     for (let i = 0; i < EXPLORE_SEQUENCE.length; i++) {
       controlExploreTimeline[i].timeline_variables[0].trial = trial++;
       controlTimeline.push(controlExploreTimeline[i]);
+      
+      // Every 6 trials, add either prediction trials or control rating
       if ((i + 1) % 6 === 0) {
         const num_miniblock = Math.floor(i / 6);
         if (num_miniblock % 2 === 0) {
+          // Even miniblocks: add prediction trials
           const indx = [0, 4].map(num => num + num_miniblock / 2 * 4);
           pred_trials = controlPredTimeline.slice(indx[0], indx[1]);
           pred_trials.forEach(t => {
@@ -444,6 +481,7 @@ export function createCoreControlTimeline(settings) {
           });
           controlTimeline.push(...pred_trials);
         } else {
+          // Odd miniblocks: add control rating
           controlTimeline.push({
             ...controlRating,
             timeline_variables: [{trial: trial++}]
@@ -451,14 +489,15 @@ export function createCoreControlTimeline(settings) {
         }
       }
     }
-    // Add the reward trials as a separate block
+    
+    // Add reward phase as separate block
     controlRewardTimeline.forEach((t, index) => {
       t.timeline_variables[0].trial = trial++;
     });
     controlTimeline.push(...controlRewardTimeline);
   }
 
-  // If resuming, remove all the trials they have finished
+  // Resume from last completed trial if applicable
   if (typeof window.last_state !== "undefined" && window.last_state.includes("control_trial_")) {
     const last_trial = parseInt(window.last_state.split("_")[2]);
     controlTimeline = controlTimeline.slice(last_trial);
@@ -467,18 +506,20 @@ export function createCoreControlTimeline(settings) {
   return controlTimeline;
 }
 
-  // Add feedback on the final rewards in total
-  export const computeRelativeControlBonus = () => {
-
-      // Compute lowest and highest sum of coins possible to earn
-      
-      const earned_sum = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
-      const min_sum = 0;
-      const max_sum = jsPsych.data.get().filter({trialphase: 'control_reward'}).select('timeline_variables').values.reduce((sum, value) => sum + value.reward_number, 0);
-      
-      return {
-          earned: earned_sum,
-          min: min_sum,
-          max: max_sum
-      }
+/**
+ * Computes participant's bonus payment based on reward trial performance
+ * @returns {Object} Object with earned, minimum, and maximum possible coins
+ */
+export const computeRelativeControlBonus = () => {
+  // Calculate total coins earned in reward trials
+  const earned_sum = jsPsych.data.get().filter({ trialphase: 'control_reward' }).select('reward').sum();
+  const min_sum = 0; // Minimum possible (no rewards earned)
+  // Maximum possible based on reward amounts available in trials
+  const max_sum = jsPsych.data.get().filter({trialphase: 'control_reward'}).select('timeline_variables').values.reduce((sum, value) => sum + value.reward_number, 0);
+  
+  return {
+      earned: earned_sum,
+      min: min_sum,
+      max: max_sum
   }
+}
