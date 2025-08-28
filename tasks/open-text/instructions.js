@@ -206,3 +206,37 @@ let alert_content_oq  = `
                     </div>
             </div>
 `
+
+let openText_instructions = {
+    type: jsPsychInstructions,
+    pages: instr_pages,
+    css_classes: ['instructions'],
+    show_clickable_nav: true,
+    button_label_previous: 'Back',
+    button_label_next: 'Next',
+    allow_keys: false,
+    simulation_options: {
+        data: {
+            rt: 1000
+        }
+    },
+    on_start: function(trial) {
+        if (window.simulating) {
+            trial.allow_keys = true;
+            trial.key_forward = ' ';
+        }
+    },
+    on_page_change: function (current_page) {
+        let next_button_element = document.querySelector('button#jspsych-instructions-next')
+        if (current_page === instr_pages.length - 1) {
+            next_button_element.innerHTML = '<b><u>Start answering questions</u></b>'
+        }
+    },
+    show_page_number: true,
+    on_finish: () => {
+        if (["wk24", "wk28"].includes(window.session)){
+            updateState("no_resume");
+        }
+        updateState("open_text_task_start");
+    }
+}
