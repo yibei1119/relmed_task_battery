@@ -6,6 +6,7 @@ import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.j
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
 import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
+import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
 import { loadSequence } from '/core/utils/index.js';
 
 export const TaskRegistry = {
@@ -186,6 +187,31 @@ export const TaskRegistry = {
     },
     resumptionRules: {
         enabled: true,
+    }
+  },
+  control: {
+    name: 'Control Task',
+    description: 'Measure control-seeking, information-seeking, and reward-seeking behaviour',
+    createTimeline: createControlTimeline,
+    computeBonus: computeRelativeControlBonus,
+    defaultConfig: {
+      session: "wk0",
+      max_instruction_fails: 3,
+      default_response_deadline: 4000,
+      long_response_deadline: 6000,
+    },
+    requirements: {
+      css: ['tasks/control/styles.css'],
+      note: 'Make sure to include control/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    },
+    configOptions: {
+        session: "Session identifier to govern session-specific behaviour and select stimuli. Default is 'wk0'.",
+        max_instruction_fails: "Maximum number of instruction quiz failures allowed before continuing to the task. Default is 3.",
+        default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
+        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
     }
   },
   max_press_test: {
