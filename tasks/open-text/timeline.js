@@ -22,5 +22,5 @@ let relmed_open_timeline = {
 
 // Assemble timeline
 // Instructions timeline
-openTextTimeline.push(openText_instructions) // <--------
+openTextTimeline.push(openTextInstructions(settings)) // <--------
 openTextTimeline.push(relmed_open_timeline); // <--------
