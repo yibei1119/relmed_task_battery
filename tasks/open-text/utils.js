@@ -1,5 +1,5 @@
 // User class for storing booleans etc for a given participant
-class User {
+export class User {
     constructor() {
         this.consent = null
         this.attention_check1 = 0

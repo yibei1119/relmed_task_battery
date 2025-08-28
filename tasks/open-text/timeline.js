@@ -1,6 +1,9 @@
+import { User, question_trial } from "./utils.js"
+import { openTextInstructions } from "./instructions.js"
+
 // Setup requisite objects
 const currentUser = new User()
-// const jsPsych = my_jsPsych_init(); // Should be already defined in experiment.html
+
 let openTextTimeline = []
 
 
