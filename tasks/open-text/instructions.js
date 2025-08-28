@@ -1,7 +1,6 @@
 import { 
     oq_timelimit_text, 
-    min_words, 
-    max_timeout 
+    min_words
 } from "./configuration.js"
 
 import { updateState } from "/core/utils/index.js"
