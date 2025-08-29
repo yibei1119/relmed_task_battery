@@ -14,7 +14,7 @@ export class User {
 }
 
 
-function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych_instance) {
+function separateWords(input, counter, div_counter, submit_bttn, q_name) {
     /**
      * Processes the input text, counts words, and controls UI elements based on the word count.
      * Handles attention checks for specific question types.
@@ -24,7 +24,6 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
      * @param {HTMLElement} div_counter - The UI element that shows or hides the word count message.
      * @param {HTMLElement} submit_bttn - The submit button that becomes visible when the minimum word count is met.
      * @param {string} q_name - The identifier of the current question, used to check for special cases.
-     * @param {Object} jsPsych_instance - The jsPsych instance used for adding experimental data.
      */
     // process text input
     let text = input.value
@@ -59,7 +58,7 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name, jsPsych
 
             // attention check case
             let catch_resp = input.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-            jsPsych_instance.data.addProperties({ 'lvl2_attention': catch_resp })
+            jsPsych.data.addProperties({ 'lvl2_attention': catch_resp })
             if (catch_resp) {
                 submit_bttn.style.visibility = "visible"
                 div_counter.style.visibility = "hidden"
@@ -106,13 +105,10 @@ function startTimer_sec(duration, display, warning_time, min_instr = null) {
     }, 1000);
 }
 
-function showAlert(jsPsych_instance, currentUser_instance) {
+function showAlert() {
     /**
      * Displays a custom alert warning the user about timeouts and pauses the experiment.
      * Resumes the experiment after a set duration.
-     *
-     * @param {Object} jsPsych_instance - The jsPsych instance managing the experiment.
-     * @param {Object} currentUser_instance - The current user object, which contains the warning count.
      */
 
     let alert_text = `
@@ -123,12 +119,12 @@ function showAlert(jsPsych_instance, currentUser_instance) {
     let alertBox = document.getElementById("customAlert");
     alertBox.style.display = "block";  // Show the alert box
 
-    jsPsych_instance.pauseExperiment()
+    jsPsych.pauseExperiment()
 
     // Hide the alert  and resume Experiment after set time
     setTimeout(function () {
         alertBox.style.display = "none";
-        jsPsych_instance.resumeExperiment()
+        jsPsych.resumeExperiment()
     }, (timeout_alert_duration) * 1000);
 }
 
@@ -165,20 +161,6 @@ let time_word = `<div id="qs_words">
 let lvl_x_question_button_label = "Submit answer"
 
 // ------------> RELMED open-ended questions <---------------
-let nQ = relmed_qs.length
-let relmed_question_array = []
-let q = 0
-for (let relmed_q of relmed_qs) {
-    q += 1
-    let tmp_json = {
-        prompt: `<div id="qs_instr">` + relmed_q + `</div>` + avoid_answer + time_word,
-        rows: 8,
-        required: qs_ans_required,
-        columns: 100,
-        name: 'relmed_q' + q.toString(),
-    }
-    relmed_question_array.push(tmp_json)
-}
 
 // If you want to have a catch question
 let lvl2_catch_ans = 'catch response'
@@ -187,7 +169,7 @@ let lvl2_catch_ans = 'catch response'
 /*
 
 */
-function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsPsych_instance) {
+function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
     /**
      * Creates a jsPsych survey text trial with various UI enhancements and validation mechanisms.
      *
@@ -195,7 +177,6 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
      * @param {number} [q_index=0] - Index of the current question in the list.
      * @param {number} q_count - The current question number in the experiment sequence.
      * @param {Object} currentUser_instance - Object representing the current user session and progress.
-     * @param {Object} jsPsych_instance - Instance of jsPsyc
      *
      * @returns {Object} - A jsPsych trial object with the configured survey text question.
      *
@@ -289,7 +270,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                 if (q_name === 'lvl2_q_catch') {
                     // if a catch question
                     let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                    jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+                    jsPsych.data.addProperties({'lvl2_attention': catch_resp})
                 }
 
                 // Checkbox alert object
@@ -310,7 +291,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                         if (q_name === 'lvl2_q_catch') {
                             // if a catch question
                             let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                            jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+                            jsPsych.data.addProperties({'lvl2_attention': catch_resp})
                         }
 
                         document.getElementById('close_alert').addEventListener('click', function (event) {
@@ -332,7 +313,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                                 div_counter.style.visibility = "visible"
                                 if (q_name === 'lvl2_q_catch') {
                                     let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                    jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+                                    jsPsych.data.addProperties({'lvl2_attention': catch_resp})
                                     if (catch_resp) {
                                         submit_bttn.style.visibility = "visible"
                                         div_counter.style.visibility = "hidden"
@@ -344,7 +325,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                             } else { // if words written
                                 if (q_name === 'lvl2_q_catch') {
                                     let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                    jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+                                    jsPsych.data.addProperties({'lvl2_attention': catch_resp})
                                 }
                             }
                         });
@@ -355,7 +336,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                             alert_el.style.visibility = 'hidden'
                             submit_bttn.style.visibility = 'hidden'
                             // document.getElementById('display_element').innerHTML = ''
-                            jsPsych_instance.finishTrial()
+                            jsPsych.finishTrial()
                         });
                     } else {
                         // normal case
@@ -367,7 +348,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                             div_counter.style.visibility = "visible"
                             if (q_name === 'lvl2_q_catch') {
                                 let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+                                jsPsych.data.addProperties({'lvl2_attention': catch_resp})
                                 if (catch_resp) {
                                     submit_bttn.style.visibility = "visible"
                                     div_counter.style.visibility = "hidden"
@@ -381,7 +362,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                             div_counter.style.visibility = "hidden"
                             if (q_name === 'lvl2_q_catch') {
                                 let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                jsPsych_instance.data.addProperties({'lvl2_attention': catch_resp})
+                                jsPsych.data.addProperties({'lvl2_attention': catch_resp})
                             }
                         }
                     }
@@ -390,7 +371,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
 
                 // Enable word counting by attaching the counter function to the textbox event listener
                 my_txt_area.addEventListener('input', function () {
-                    separateWords(my_txt_area, counter, div_counter, submit_bttn, q_name, jsPsych_instance);
+                    separateWords(my_txt_area, counter, div_counter, submit_bttn, q_name, jsPsych);
                 })
             }
 
@@ -410,7 +391,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                         code: 'RETURNED'
                     }
                     saveDataREDCap(3);
-                    jsPsych_instance.abortExperiment(return_text)
+                    jsPsych.abortExperiment(return_text)
                 }
             } else {
                 // check for timeout
@@ -461,9 +442,9 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, jsP
                             code: 'WARNED'
                         }
                         saveDataREDCap(3);
-                        jsPsych_instance.abortExperiment(return_timeout_text);
+                        jsPsych.abortExperiment(return_timeout_text);
                     } else {
-                        showAlert(jsPsych_instance, currentUser_instance);
+                        showAlert(jsPsych, currentUser_instance);
                     }
                 }
             }
