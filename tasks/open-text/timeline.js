@@ -1,8 +1,9 @@
 import { User, question_trial } from "./utils.js"
 import { openTextInstructions } from "./instructions.js"
 import { RELMED_QS } from "./configuration.js"
+import { saveDataREDCap } from "/core/utils/index.js"
 
-function createOpenTextTimeline() {
+function createOpenTextTimeline(settings) {
     // Setup requisite objects
     const currentUser = new User()
     
