@@ -165,13 +165,6 @@ let time_word = `<div id="qs_words">
 let lvl_x_question_button_label = "Submit answer"
 
 // ------------> RELMED open-ended questions <---------------
-let relmed_q1 = "<p>Please describe any <b>rewarding experiences</b> you've had during the past week.</p><p>How have these experiences affected you personally?</p>"
-let relmed_q2 = "<p>Describe specific times in the past week when things turned out <b>better than you expected</b>. How did these experiences affect your energy and motivation?</p>"
-let relmed_q4 = "<p>Describe specific times in the past week when things turned out <b>worse than you expected</b>. How did these experiences affect your energy and motivation?</p>"
-let relmed_q6 = "<p>What <b>meaningful goals</b> have you been motivated to pursue in the past week?</p>"
-let relmed_q7 = "<p>How did you find answering these questions?</p>"
-
-let relmed_qs = [relmed_q1, relmed_q2, relmed_q4, relmed_q6]
 let nQ = relmed_qs.length
 let relmed_question_array = []
 let q = 0

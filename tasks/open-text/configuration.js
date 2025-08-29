@@ -1,5 +1,13 @@
 // Configurations for open-text task
 
+// Questions
+export const RELMED_QS = [
+    "<p>Please describe any <b>rewarding experiences</b> you've had during the past week.</p><p>How have these experiences affected you personally?</p>",
+    "<p>Describe specific times in the past week when things turned out <b>better than you expected</b>. How did these experiences affect your energy and motivation?</p>",
+    "<p>Describe specific times in the past week when things turned out <b>worse than you expected</b>. How did these experiences affect your energy and motivation?</p>",
+    "<p>What <b>meaningful goals</b> have you been motivated to pursue in the past week?</p>"
+]
+
 // Open-ended questions config
 export const min_words = 30 // Minimum number of words required to write <=================== CHANGE FOR LIVE (def: 30)
 export const qs_ans_required = false // obsolete boolean for requiring response
