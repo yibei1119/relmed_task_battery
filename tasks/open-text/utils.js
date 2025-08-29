@@ -152,7 +152,7 @@ let lvl2_catch_ans = 'catch response'
 /*
 
 */
-function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
+export function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
     /**
      * Creates a jsPsych survey text trial with various UI enhancements and validation mechanisms.
      *
