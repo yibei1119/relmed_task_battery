@@ -51,26 +51,9 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name) {
         div_counter.style.visibility = "hidden"
         counter.innerHTML = 0
     } else {
-        if (q_name === 'lvl2_q_catch') {
-            submit_bttn.style.visibility = "hidden"
-            div_counter.style.visibility = "visible"
-            counter.innerHTML = min_words - words.length
-
-            // attention check case
-            let catch_resp = input.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-            jsPsych.data.addProperties({ 'lvl2_attention': catch_resp })
-            if (catch_resp) {
-                submit_bttn.style.visibility = "visible"
-                div_counter.style.visibility = "hidden"
-            } else {
-                submit_bttn.style.visibility = "hidden"
-                div_counter.style.visibility = "visible"
-            }
-        } else {
-            submit_bttn.style.visibility = "hidden"
-            div_counter.style.visibility = "visible"
-            counter.innerHTML = min_words - words.length
-        }
+        submit_bttn.style.visibility = "hidden"
+        div_counter.style.visibility = "visible"
+        counter.innerHTML = min_words - words.length
     }
 };
 
@@ -267,12 +250,6 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
                     my_txt_area.addEventListener('paste', e => e.preventDefault());
                 }
 
-                if (q_name === 'lvl2_q_catch') {
-                    // if a catch question
-                    let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                    jsPsych.data.addProperties({'lvl2_attention': catch_resp})
-                }
-
                 // Checkbox alert object
                 let alert_el = document.getElementById('formAlert')
 
@@ -288,11 +265,6 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
                         my_txt_area.style["content-visibility"] = "hidden"
                         my_txt_area.style.background = `rgb(211, 211, 211, 0.5)`;
                         my_txt_area.readOnly = true
-                        if (q_name === 'lvl2_q_catch') {
-                            // if a catch question
-                            let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                            jsPsych.data.addProperties({'lvl2_attention': catch_resp})
-                        }
 
                         document.getElementById('close_alert').addEventListener('click', function (event) {
                             // when they close down the alert to continue
@@ -311,23 +283,7 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
                             if (words_left > 0) { // if there are more words to write
                                 submit_bttn.style.visibility = "hidden"
                                 div_counter.style.visibility = "visible"
-                                if (q_name === 'lvl2_q_catch') {
-                                    let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                    jsPsych.data.addProperties({'lvl2_attention': catch_resp})
-                                    if (catch_resp) {
-                                        submit_bttn.style.visibility = "visible"
-                                        div_counter.style.visibility = "hidden"
-                                    } else {
-                                        submit_bttn.style.visibility = "hidden"
-                                        div_counter.style.visibility = "visible"
-                                    }
-                                }
-                            } else { // if words written
-                                if (q_name === 'lvl2_q_catch') {
-                                    let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                    jsPsych.data.addProperties({'lvl2_attention': catch_resp})
-                                }
-                            }
+                            } 
                         });
                         // when they want to return the submission and skip
                         document.getElementById('return_alert').addEventListener('click', (event) => {
@@ -346,24 +302,9 @@ function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
                         if (words_left > 0) {// if more words to write
                             submit_bttn.style.visibility = "hidden"
                             div_counter.style.visibility = "visible"
-                            if (q_name === 'lvl2_q_catch') {
-                                let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                jsPsych.data.addProperties({'lvl2_attention': catch_resp})
-                                if (catch_resp) {
-                                    submit_bttn.style.visibility = "visible"
-                                    div_counter.style.visibility = "hidden"
-                                } else {
-                                    submit_bttn.style.visibility = "hidden"
-                                    div_counter.style.visibility = "visible"
-                                }
-                            }
                         } else { // if minimum met
                             submit_bttn.style.visibility = "visible"
                             div_counter.style.visibility = "hidden"
-                            if (q_name === 'lvl2_q_catch') {
-                                let catch_resp = my_txt_area.value.replace(/\s+/g, ' ').trim() === lvl2_catch_ans
-                                jsPsych.data.addProperties({'lvl2_attention': catch_resp})
-                            }
                         }
                     }
                 })
