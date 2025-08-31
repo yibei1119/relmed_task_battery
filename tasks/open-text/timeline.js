@@ -10,7 +10,6 @@ function createOpenTextTimeline(settings) {
     let openTextTimeline = []
 
     // RELMED open-ended questions
-    let nQ = RELMED_QS.length
     let relmed_question_array = []
     let q = 0
     for (let relmed_q of RELMED_QS) {

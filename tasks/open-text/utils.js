@@ -1,18 +1,3 @@
-import { 
-    min_words,
-    warning_text,
-    timeout_alert_duration,
-    oq_timelimit_text,
-    writing_time,
-    qs_read_time,
-    warning_time,
-    nQ,
-    prevent_paste,
-    no_skip,
-    return_text,
-    max_timeout,
-    return_timeout_text
-} from './configuration.js'; // or wherever these are defined
 
 // Data saving function
 import { saveDataREDCap } from '/core/utils/index.js'; // or wherever this is defined
@@ -66,14 +51,14 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name) {
         }
     }
 
-    if (words.length >= min_words) {
+    if (words.length >= settings.min_words) {
         submit_bttn.style.visibility = "visible"
         div_counter.style.visibility = "hidden"
         counter.innerHTML = 0
     } else {
         submit_bttn.style.visibility = "hidden"
         div_counter.style.visibility = "visible"
-        counter.innerHTML = min_words - words.length
+        counter.innerHTML = settings.min_words - words.length
     }
 };
 
@@ -108,7 +93,7 @@ function startTimer_sec(duration, display, warning_time, min_instr = null) {
     }, 1000);
 }
 
-function showAlert() {
+function showAlert(settings) {
     /**
      * Displays a custom alert warning the user about timeouts and pauses the experiment.
      * Resumes the experiment after a set duration.
@@ -116,7 +101,7 @@ function showAlert() {
 
     let alert_text = `
                    <div id="customAlert">
-                   ` + warning_text 
+                   ` + settings.warning_text 
     document.getElementById('jspsych-content').innerHTML = alert_text
 
     let alertBox = document.getElementById("customAlert");
@@ -128,7 +113,7 @@ function showAlert() {
     setTimeout(function () {
         alertBox.style.display = "none";
         jsPsych.resumeExperiment()
-    }, (timeout_alert_duration) * 1000);
+    }, (settings.timeout_alert_duration) * 1000);
 }
 
 // ------------> Generic content for questions <---------------
@@ -137,9 +122,9 @@ function showAlert() {
 Question preamble with instructions for the specific question
 Displays: question counter (q out of Q); time limit and time remaining
 */
-let question_preamble = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
+let questionPreabmle(settings) = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
     <h4>` + "Please type your answer in detail in the box below." + `</h4>
-    <p id="qs_preamble_disclosure">(You have <b>` + oq_timelimit_text + `</b> to answer)</p>
+    <p id="qs_preamble_disclosure">(You have <b>` + settings.oq_timelimit_text + `</b> to answer)</p>
     <div id="qs_timeleft">
     Your time will soon be over. Don't forget to submit your answer!
     </div>
@@ -155,11 +140,6 @@ let avoid_answer = `<div id="qs_avoid">
     </div>
     `
 
-// Word counter information for ppt
-let time_word = `<div id="qs_words">
-    Please write at least <span id="qs_words_left">` + min_words + `</span> more words.
-    </div>
-    `
 // Once the minimum number of words is reached, display submit button
 let lvl_x_question_button_label = "Submit answer"
 
@@ -172,7 +152,7 @@ let lvl2_catch_ans = 'catch response'
 /*
 
 */
-export function question_trial(qs_list, q_index = 0, q_count, currentUser_instance) {
+export function question_trial(qs_list, q_index = 0, q_count, currentUser_instance, settings) {
     /**
      * Creates a jsPsych survey text trial with various UI enhancements and validation mechanisms.
      *
@@ -192,13 +172,15 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
      * - Attention check question processing.
      * - Data saving and warning system for empty responses or timeouts.
      */
+    const nQ = qs_list.length
+    
     return {
         type: jsPsychSurveyText,
-        preamble: question_preamble,
+        preamble: questionPreabmle(settings),
         button_label: lvl_x_question_button_label,
         questions: [qs_list[q_index]],
         css_classes: ['lvlx_qs'],
-        trial_duration: 1000 * (writing_time + qs_read_time),
+        trial_duration: 1000 * (settings.writing_time + settings.qs_read_time),
         data: {trialphase: 'open-text'},
         on_load: function () {
             // preamble margin-top style if in simulation mod
@@ -229,7 +211,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
                 let time_display = document.querySelector('#qs_timeleft')
                 time_display.style.visibility = 'hidden'
                 let minute_instr = document.getElementById('qs_preamble_disclosure')
-                startTimer_sec(writing_time, time_display, warning_time, minute_instr)
+                startTimer_sec(settings.writing_time, time_display, settings.warning_time, minute_instr)
 
                 // get elements to adjust
                 let preamble = document.getElementById("qs_preamble").clientHeight
@@ -266,7 +248,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
                 submit_bttn.style.visibility = "hidden"
 
                 // prevent pasting into textbox
-                if (prevent_paste) {
+                if (settings.prevent_paste) {
                     my_txt_area.addEventListener('paste', e => e.preventDefault());
                 }
 
@@ -344,7 +326,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
             // return submission checkbox
             if (na_check) {
                 // if rather not say, then ask to return submission
-                if (no_skip) {
+                if (settings.no_skip) {
                     // Use saveDataREDCap to save the return status
                     var extraFields = {
                         completed: "Yes",
@@ -370,7 +352,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
                     }
                 }
                 let n_words = words.length
-                let empty_response = n_words < min_words
+                let empty_response = n_words < settings.min_words
 
                 currentUser_instance.empty_count += empty_response * 1
                 // console.log('empty count: ', currentUser_instance.empty_count)
@@ -396,7 +378,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
                 if (data['timeout'] || empty_response) {
                     currentUser_instance.warning_count += 1
                     
-                    if (currentUser_instance.warning_count > max_timeout && no_skip) {
+                    if (currentUser_instance.warning_count > settings.max_timeout && settings.no_skip) {
                         var extraFields = {
                             completed: "Yes", 
                             returned: "Yes", 
@@ -405,7 +387,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
                         saveDataREDCap(3);
                         jsPsych.abortExperiment(return_timeout_text);
                     } else {
-                        showAlert(jsPsych, currentUser_instance);
+                        showAlert(settings);
                     }
                 }
             }
