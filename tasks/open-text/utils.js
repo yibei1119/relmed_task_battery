@@ -1,3 +1,23 @@
+import { 
+    min_words,
+    warning_text,
+    timeout_alert_duration,
+    oq_timelimit_text,
+    writing_time,
+    qs_read_time,
+    warning_time,
+    nQ,
+    prevent_paste,
+    no_skip,
+    return_text,
+    max_timeout,
+    return_timeout_text
+} from './configuration.js'; // or wherever these are defined
+
+// Data saving function
+import { saveDataREDCap } from '/core/utils/index.js'; // or wherever this is defined
+
+
 // User class for storing booleans etc for a given participant
 export class User {
     constructor() {
