@@ -1,9 +1,16 @@
 import { User, question_trial } from "./utils.js"
 import { openTextInstructions } from "./instructions.js"
-import { RELMED_QS } from "./configuration.js"
 import { saveDataREDCap } from "/core/utils/index.js"
 
-function createOpenTextTimeline(settings) {
+const RELMED_QS = [
+    "<p>Please describe any <b>rewarding experiences</b> you've had during the past week.</p><p>How have these experiences affected you personally?</p>",
+    "<p>Describe specific times in the past week when things turned out <b>better than you expected</b>. How did these experiences affect your energy and motivation?</p>",
+    "<p>Describe specific times in the past week when things turned out <b>worse than you expected</b>. How did these experiences affect your energy and motivation?</p>",
+    "<p>What <b>meaningful goals</b> have you been motivated to pursue in the past week?</p>"
+]
+
+
+export function createOpenTextTimeline(settings) {
     // Setup requisite objects
     const currentUser = new User()
     
@@ -46,5 +53,3 @@ function createOpenTextTimeline(settings) {
     
     return openTextTimeline
 }
-
-export { createOpenTextTimeline }
