@@ -19,7 +19,7 @@ export class User {
 }
 
 
-function separateWords(input, counter, div_counter, submit_bttn, q_name) {
+function separateWords(input, counter, div_counter, submit_bttn, settings) {
     /**
      * Processes the input text, counts words, and controls UI elements based on the word count.
      * Handles attention checks for specific question types.
@@ -28,7 +28,6 @@ function separateWords(input, counter, div_counter, submit_bttn, q_name) {
      * @param {HTMLElement} counter - The element displaying the remaining word count.
      * @param {HTMLElement} div_counter - The UI element that shows or hides the word count message.
      * @param {HTMLElement} submit_bttn - The submit button that becomes visible when the minimum word count is met.
-     * @param {string} q_name - The identifier of the current question, used to check for special cases.
      */
     // process text input
     let text = input.value
@@ -107,7 +106,7 @@ function showAlert(settings) {
     let alertBox = document.getElementById("customAlert");
     alertBox.style.display = "block";  // Show the alert box
 
-    jsPsych.pauseExperiment()
+    // jsPsych.pauseExperiment()
 
     // Hide the alert  and resume Experiment after set time
     setTimeout(function () {
@@ -173,9 +172,11 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
      * - Data saving and warning system for empty responses or timeouts.
      */
     const nQ = qs_list.length
+
+    console.log(1000 * (settings.writing_time + settings.qs_read_time))
     
     return {
-        type: jsPsychSurveyText,
+        type: jsPsychOpenText,
         preamble: questionPreamble(settings),
         button_label: lvl_x_question_button_label,
         questions: [qs_list[q_index]],
@@ -250,7 +251,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
 
                 // Enable word counting by attaching the counter function to the textbox event listener
                 my_txt_area.addEventListener('input', function () {
-                    separateWords(my_txt_area, counter, div_counter, submit_bttn, q_name, jsPsych);
+                    separateWords(my_txt_area, counter, div_counter, submit_bttn, settings);
                 })
             }
 
@@ -258,73 +259,58 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
         },
         on_finish: function (data) {
             let q_name = qs_list[q_index]['name']
-            let na_check = currentUser_instance.last_checked
-            // return submission checkbox
-            if (na_check) {
-                // if rather not say, then ask to return submission
-                if (settings.no_skip) {
-                    // Use saveDataREDCap to save the return status
+           
+            // check for timeout
+            currentUser_instance.timeout_count += data['timeout'] * 1
+            // console.log('timeout count: ', currentUser_instance.timeout_count)
+
+            // check if empty response - count words
+            let words = data['response'][q_name].replace(/\s\s+/g, ' ').split(" ")
+            if (words.length > 0) {
+                if (words[words.length - 1] === " ") {
+                    words.pop()
+                }
+                if (words[words.length - 1] === "") {
+                    words.pop()
+                }
+            }
+            let n_words = words.length
+            let empty_response = n_words < settings.min_words
+
+            currentUser_instance.empty_count += empty_response * 1
+            // console.log('empty count: ', currentUser_instance.empty_count)
+
+            // Process and prepare data for REDCap as extra fields
+            var extraFields = {
+                // Response data
+                [`responses_${q_name}`]: data['response'],
+                [`is_empty_${q_name}`]: empty_response,
+                
+                // Response time and timeout data
+                [`rts_${q_name}`]: data['rt'],
+                [`timeout_${q_name}`]: data['timeout'],
+                
+                // User metrics
+                empty_count: currentUser_instance.empty_count,
+                timeout_count: currentUser_instance.timeout_count
+            };
+
+            // saveDataREDCap(3);
+
+            // count warn about timeouts or empty responses
+            if (data['timeout'] || empty_response) {
+                currentUser_instance.warning_count += 1
+                
+                if (currentUser_instance.warning_count > settings.max_timeout && settings.no_skip) {
                     var extraFields = {
-                        completed: "Yes",
-                        returned: "Yes",
-                        code: 'RETURNED'
+                        completed: "Yes", 
+                        returned: "Yes", 
+                        code: 'WARNED'
                     }
                     saveDataREDCap(3);
-                    jsPsych.abortExperiment(return_text)
-                }
-            } else {
-                // check for timeout
-                currentUser_instance.timeout_count += data['timeout'] * 1
-                // console.log('timeout count: ', currentUser_instance.timeout_count)
-
-                // check if empty response - count words
-                let words = data['response'][q_name].replace(/\s\s+/g, ' ').split(" ")
-                if (words.length > 0) {
-                    if (words[words.length - 1] === " ") {
-                        words.pop()
-                    }
-                    if (words[words.length - 1] === "") {
-                        words.pop()
-                    }
-                }
-                let n_words = words.length
-                let empty_response = n_words < settings.min_words
-
-                currentUser_instance.empty_count += empty_response * 1
-                // console.log('empty count: ', currentUser_instance.empty_count)
-
-                // Process and prepare data for REDCap as extra fields
-                var extraFields = {
-                    // Response data
-                    [`responses_${q_name}`]: data['response'],
-                    [`is_empty_${q_name}`]: empty_response,
-                    
-                    // Response time and timeout data
-                    [`rts_${q_name}`]: data['rt'],
-                    [`timeout_${q_name}`]: data['timeout'],
-                    
-                    // User metrics
-                    empty_count: currentUser_instance.empty_count,
-                    timeout_count: currentUser_instance.timeout_count
-                };
-
-                // saveDataREDCap(3);
-
-                // count warn about timeouts or empty responses
-                if (data['timeout'] || empty_response) {
-                    currentUser_instance.warning_count += 1
-                    
-                    if (currentUser_instance.warning_count > settings.max_timeout && settings.no_skip) {
-                        var extraFields = {
-                            completed: "Yes", 
-                            returned: "Yes", 
-                            code: 'WARNED'
-                        }
-                        saveDataREDCap(3);
-                        jsPsych.abortExperiment(return_timeout_text);
-                    } else {
-                        showAlert(settings);
-                    }
+                    jsPsych.abortExperiment(return_timeout_text);
+                } else {
+                    showAlert(settings);
                 }
             }
 

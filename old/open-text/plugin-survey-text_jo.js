@@ -1,8 +1,8 @@
-var jsPsychSurveyText = (function (jspsych) {
+var jsPsychOpenText = (function (jspsych) {
     'use strict';
 
     var _package = {
-        name: "@jspsych/plugin-survey-text",
+        name: "@jspsych/plugin-open-text",
         version: "2.0.0",
         description: "a jspsych plugin for free response survey questions",
         type: "module",
@@ -46,7 +46,7 @@ var jsPsychSurveyText = (function (jspsych) {
     };
 
     const info = {
-        name: "survey-text",
+        name: "open-text",
         version: _package.version,
         parameters: {
             questions: {
@@ -126,7 +126,7 @@ var jsPsychSurveyText = (function (jspsych) {
         }
     };
 
-    class SurveyTextPlugin {
+    class OpenTextPlugin {
         constructor(jsPsych) {
             this.jsPsych = jsPsych;
         }
@@ -302,6 +302,6 @@ var jsPsychSurveyText = (function (jspsych) {
         }
     }
 
-    return SurveyTextPlugin;
+    return OpenTextPlugin;
 
 })(jsPsychModule);

@@ -275,7 +275,7 @@ export const TaskRegistry = {
     defaultConfig: {
       min_words: 30,
       prevent_paste: true,
-      writing_time: 120,
+      writing_time: 5,
       warning_time: 90,
       qs_read_time: 7,
       oq_timelimit_text: 'two minutes',
