@@ -8,7 +8,7 @@ import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
 import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
 import { loadSequence } from '/core/utils/index.js';
-import { min_words } from '../tasks/open-text/configuration';
+import { createOpenTextTimeline } from '/tasks/open-text/index.js';
 
 export const TaskRegistry = {
   PILT: {
