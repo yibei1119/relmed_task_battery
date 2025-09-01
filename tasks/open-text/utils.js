@@ -336,20 +336,8 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
             if (data['timeout'] || empty_response) {
                 currentUser_instance.warning_count += 1
                 
-                // Check if maximum warnings exceeded
-                if (currentUser_instance.warning_count > settings.max_timeout && settings.no_skip) {
-                    // Terminate experiment with warning code
-                    var extraFields = {
-                        completed: "Yes", 
-                        returned: "Yes", 
-                        code: 'WARNED'
-                    }
-                    saveDataREDCap(3);
-                    jsPsych.abortExperiment(return_timeout_text);
-                } else {
-                    // Show warning alert for timeout/empty response
-                    showAlert(settings);
-                }
+                // Show warning alert for timeout/empty response
+                showAlert(settings);
             }
         }
     }
