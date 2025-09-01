@@ -70,7 +70,7 @@ function saveUrlParameters() {
     console.log("URL parameters saved to data:", params);
 }
 
-const enterFullscreen = {
+const enterExperiment = {
     type: jsPsychFullscreen,
     fullscreen_mode: true,
     message: '<p>The experiment will switch to full screen mode when you press the button below.</p>',
@@ -82,6 +82,6 @@ export {
     loadSequence,
     createPreloadTrial,
     saveUrlParameters,
-    enterFullscreen
+    enterExperiment
 };
 
