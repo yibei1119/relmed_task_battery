@@ -106,7 +106,7 @@ function showAlert(settings) {
     let alertBox = document.getElementById("customAlert");
     alertBox.style.display = "block";  // Show the alert box
 
-    // jsPsych.pauseExperiment()
+    jsPsych.pauseExperiment()
 
     // Hide the alert  and resume Experiment after set time
     setTimeout(function () {
