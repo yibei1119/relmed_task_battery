@@ -1,9 +1,22 @@
+/**
+ * Open Text Task Instructions
+ * 
+ * This module provides instruction pages for the open text response task,
+ * where participants answer questions by typing text responses about themselves,
+ * their feelings, background, attitudes, and behaviors.
+ */
+
 import { updateState } from "/core/utils/index.js"
 
 // ------------> Instruction texts <---------------
 
-
-// Page 2
+/**
+ * Creates the main instruction page explaining the open text task
+ * @param {Object} settings - Task configuration settings
+ * @param {string} settings.oq_timelimit_text - Time limit display text for responses
+ * @param {number} settings.min_words - Minimum word count required per response
+ * @returns {string} HTML content for instruction page 2
+ */
 const instrPage2 = (settings) => {
     return `
         <p><b>Next, you'll be answering questions by typing text responses.</b></p>
@@ -12,16 +25,28 @@ const instrPage2 = (settings) => {
     `
 }
 
-
-// Page 5
+/**
+ * Instruction page explaining that questions may seem repetitive
+ * Encourages participants to answer each question thoroughly despite similarities
+ */
 const instr_page5 = `
     <p>You may notice that some questions appear to be similar or repetitive. This is intentional - <b>please answer each question carefully and thoroughly.</b></p>
     `
 
 
-// All pages
+/**
+ * Combines all instruction pages into an array
+ * @param {Object} settings - Task configuration settings
+ * @returns {string[]} Array of HTML instruction page content
+ */
 const instrPages = (settings) => {return [instrPage2(settings), instr_page5]} 
 
+/**
+ * Creates the jsPsych instructions trial for the open text task
+ * @param {Object} settings - Task configuration settings
+ * @param {string} settings.session - Current session identifier (e.g., "wk24", "wk28")
+ * @returns {Object} jsPsych instructions trial configuration
+ */
 export function openTextInstructions(settings) {
     const instr_pages = instrPages(settings);
 
@@ -38,12 +63,14 @@ export function openTextInstructions(settings) {
                 rt: 1000
             }
         },
+        // Enable keyboard navigation during simulation mode
         on_start: function(trial) {
             if (window.simulating) {
                 trial.allow_keys = true;
                 trial.key_forward = ' ';
             }
         },
+        // Update button text on final page to indicate task start
         on_page_change: function (current_page) {
             let next_button_element = document.querySelector('button#jspsych-instructions-next')
             if (current_page === instr_pages.length - 1) {
@@ -51,11 +78,14 @@ export function openTextInstructions(settings) {
             }
         },
         show_page_number: true,
+        // Update application state when instructions complete
         on_finish: () => {
+            // Disable resume functionality for specific sessions
             if (["wk24", "wk28"].includes(settings.session)){
                 updateState("no_resume");
             }
+            // Mark that open text task has started
             updateState("open_text_task_start");
         }
     }
-} 
+}
