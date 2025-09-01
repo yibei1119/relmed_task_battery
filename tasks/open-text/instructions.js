@@ -23,9 +23,11 @@ const instr_page5 = `
 const instrPages = (settings) => {return [instrPage2(settings), instr_page5]} 
 
 export function openTextInstructions(settings) {
+    const instr_pages = instrPages(settings);
+
     return {
         type: jsPsychInstructions,
-        pages: instrPages(settings),
+        pages: instr_pages,
         css_classes: ['instructions'],
         show_clickable_nav: true,
         button_label_previous: 'Back',
