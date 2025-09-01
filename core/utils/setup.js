@@ -4,8 +4,8 @@
  */
 
 // Import communication utility for sending messages to parent window
-import { postToParent } from './data_handling.js';
-import { preventParticipantTermination } from './participation_validation.js';
+import { postToParent } from './data-handling.js';
+import { preventParticipantTermination } from './participation-validation.js';
 
 /**
  * Dynamically loads a JavaScript file with Promise-based interface
