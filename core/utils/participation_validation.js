@@ -13,6 +13,27 @@ function preventRefresh(e) {
     e.returnValue = '';
 }
 
+/**
+ * Prevents users from terminating or interfering with the experiment by disabling
+ * common browser developer tools and refresh actions.
+ * 
+ * Blocks right-click context menu, F12 key, Ctrl+Shift+I, Cmd+I shortcuts,
+ * and prompts before page refresh to maintain experiment integrity.
+ */
+function preventParticipantTermination() {
+    // Prevent right-click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I") || (e.metaKey && e.code === "KeyI")) {
+            e.preventDefault();
+        }
+    });
+
+    // Prompt before refresh
+    window.addEventListener('beforeunload', preventRefresh);
+}
+
   // Function that checks for fullscreen
 function check_fullscreen(){
     if (window.debug || window.context === "relmed"){
@@ -486,5 +507,6 @@ export {
     showTemporaryWarning,
     noChoiceWarning,
     setupMultiKeysListener,
-    createPressBothTrial
+    createPressBothTrial,
+    preventParticipantTermination
 };

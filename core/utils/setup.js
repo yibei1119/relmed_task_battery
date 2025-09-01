@@ -5,6 +5,7 @@
 
 // Import communication utility for sending messages to parent window
 import { postToParent } from './data_handling.js';
+import { preventParticipantTermination } from './participation_validation.js';
 
 /**
  * Dynamically loads a JavaScript file with Promise-based interface
@@ -70,11 +71,24 @@ function saveUrlParameters() {
     console.log("URL parameters saved to data:", params);
 }
 
-const enterFullscreen = {
+/**
+ * Creates a jsPsych fullscreen trial that initiates the experiment
+ * Handles URL parameter saving and participant termination prevention
+ * @type {Object} jsPsych trial configuration for entering fullscreen mode
+ */
+const enterExperiment = {
     type: jsPsychFullscreen,
     fullscreen_mode: true,
     message: '<p>The experiment will switch to full screen mode when you press the button below.</p>',
-    on_start: saveUrlParameters
+    on_start: () => {
+        // Save all URL parameters to jsPsych data for experiment tracking
+        saveUrlParameters();
+
+        // Prevent participant from terminating experiment unless in debug mode
+        if (!(window.participantID && window.participantID.includes("debug"))) {
+            preventParticipantTermination();
+        }
+    }
 };
 
 // Export functions for use in other modules
@@ -82,6 +96,6 @@ export {
     loadSequence,
     createPreloadTrial,
     saveUrlParameters,
-    enterFullscreen
+    enterExperiment
 };
 
