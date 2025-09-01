@@ -8,6 +8,7 @@ import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
 import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
 import { loadSequence } from '/core/utils/index.js';
+import { createOpenTextTimeline } from '/tasks/open-text/index.js';
 
 export const TaskRegistry = {
   PILT: {
@@ -265,7 +266,44 @@ export const TaskRegistry = {
     resumptionRules: {
         enabled: true,
     }
-  }
+  },
+  open_text: {
+    name: 'Open Text Questions',
+    description: 'A task for answering open text questions',
+    createTimeline: createOpenTextTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+      min_words: 30,
+      prevent_paste: true,
+      writing_time: 120,
+      warning_time: 90,
+      qs_read_time: 7,
+      oq_timelimit_text: 'two minutes',
+      no_skip: true,
+      timeout_alert_duration: 4,
+      max_timeout: 5,
+      warning_text: `Didn't catch a response - moving on.`
+    },
+    configOptions: {
+      min_words: "Minimum number of words required for each response. Default is 30.",
+      prevent_paste: "Whether to prevent pasting text into the response box. Default is true.",
+      writing_time: "Time in seconds allocated for writing each response. Default is 120 seconds.",
+      warning_time: "Time in seconds before the end of writing time to display a warning. Default is 90 seconds.",
+      qs_read_time: "Extra time in seconds allocated to read  the question before writing time starts. Default is 7 seconds.", 
+      oq_timelimit_text: "Text to display indicating the time limit for answering each question. Default is 'two minutes'.",
+      no_skip: "Whether to prevent skipping questions if no response is given or time runs out. Default is true.",
+      timeout_alert_duration: "Duration in seconds of the timeout/empty response alert. Default is 4 seconds.",
+      max_timeout: "Maximum number of timeouts or empty responses allowed before the participant is asked to return their submission. Default is 5.",
+      warning_text: "Text to display when a response is not captured before moving on. Default is `Didn't catch a response - moving on.`"
+    },
+    requirements: {
+      css: ['tasks/open-text/styles.css'],
+      note: 'Make sure to include open-text/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true,
+    }
+  },
 };
 
 // Helper functions

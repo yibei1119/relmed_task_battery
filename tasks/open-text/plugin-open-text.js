@@ -184,7 +184,7 @@ var jsPsychOpenText = (function (jspsych) {
             display_element.innerHTML = html;
 
             // Added alert by Jakub 09/10/24
-            display_element.innerHTML += alert_content_oq
+            // display_element.innerHTML += alert_content_oq
 
             display_element.querySelector("#input-" + question_order[0]).focus();
             display_element.querySelector("#jspsych-survey-text-form").addEventListener("submit", (e) => {
