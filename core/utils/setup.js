@@ -85,7 +85,7 @@ const enterExperiment = {
         saveUrlParameters();
 
         // Prevent participant from terminating experiment unless in debug mode
-        if (!(window.participant_id && window.participant_id.includes("debug"))) {
+        if (!(window.participantID && window.participantID.includes("debug"))) {
             preventParticipantTermination();
         }
     }
