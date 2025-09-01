@@ -35,7 +35,7 @@ export function createOpenTextTimeline(settings) {
     let q_max = relmed_question_array.length
     for (let i = 0; i < q_max; i++) {
         q_count += 1
-        relmed_open_timeline_array.push(question_trial(relmed_question_array, i, q_count, currentUser, jsPsych))
+        relmed_open_timeline_array.push(question_trial(relmed_question_array, i, q_count, currentUser, settings))
     }
     let relmed_open_timeline = {
         timeline: relmed_open_timeline_array,

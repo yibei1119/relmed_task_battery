@@ -230,13 +230,6 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
                 }
 
 
-                // checkbox objects
-                let na_check = document.getElementById("qs_preamble_na_check")
-
-                // Prevent checking the checkbox with a key
-                na_check.addEventListener('keydown', function (event) {
-                    event.preventDefault();
-                });
 
                 // get the word counter relevant elements
                 let my_txt_area = document.getElementsByTagName('textarea')[0]
@@ -254,63 +247,6 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
 
                 // Checkbox alert object
                 let alert_el = document.getElementById('formAlert')
-
-                // 'Rather not say' checkbox handling - hide/show the submit button and textarea text - including catch question handling
-                na_check.addEventListener('change', function () {
-                    currentUser_instance.last_checked = na_check.checked
-                    let words_left = Number(document.getElementById("qs_words_left").innerText) // words left to write
-                    if (na_check.checked) { // handle when someones checked they dont want to answer
-                        na_check.disabled = true; // disable checkbox
-                        submit_bttn.style.visibility = 'hidden'
-                        alert_el.style.visibility = 'visible'
-                        div_counter.style.visibility = "hidden"
-                        my_txt_area.style["content-visibility"] = "hidden"
-                        my_txt_area.style.background = `rgb(211, 211, 211, 0.5)`;
-                        my_txt_area.readOnly = true
-
-                        document.getElementById('close_alert').addEventListener('click', function (event) {
-                            // when they close down the alert to continue
-                            event.preventDefault()
-                            na_check.checked = false;
-                            na_check.disabled = false;
-                            currentUser_instance.last_checked = na_check.checked
-
-                            alert_el.style.visibility = 'hidden'
-                            submit_bttn.style.visibility = 'visible'
-
-                            my_txt_area.readOnly = false
-                            my_txt_area.style["content-visibility"] = "visible"
-                            my_txt_area.style.background = `rgb(255, 255, 255, 1)`;
-                            div_counter.style.visibility = "hidden"
-                            if (words_left > 0) { // if there are more words to write
-                                submit_bttn.style.visibility = "hidden"
-                                div_counter.style.visibility = "visible"
-                            } 
-                        });
-                        // when they want to return the submission and skip
-                        document.getElementById('return_alert').addEventListener('click', (event) => {
-                            event.preventDefault()
-                            // na_check.disabled = false; // disable checkbox
-                            alert_el.style.visibility = 'hidden'
-                            submit_bttn.style.visibility = 'hidden'
-                            // document.getElementById('display_element').innerHTML = ''
-                            jsPsych.finishTrial()
-                        });
-                    } else {
-                        // normal case
-                        my_txt_area.readOnly = false
-                        my_txt_area.style["content-visibility"] = "visible"
-                        my_txt_area.style.background = `rgb(255, 255, 255, 1)`;
-                        if (words_left > 0) {// if more words to write
-                            submit_bttn.style.visibility = "hidden"
-                            div_counter.style.visibility = "visible"
-                        } else { // if minimum met
-                            submit_bttn.style.visibility = "visible"
-                            div_counter.style.visibility = "hidden"
-                        }
-                    }
-                })
-
 
                 // Enable word counting by attaching the counter function to the textbox event listener
                 my_txt_area.addEventListener('input', function () {
