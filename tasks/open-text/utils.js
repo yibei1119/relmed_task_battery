@@ -122,13 +122,15 @@ function showAlert(settings) {
 Question preamble with instructions for the specific question
 Displays: question counter (q out of Q); time limit and time remaining
 */
-let questionPreabmle(settings) = `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
-    <h4>` + "Please type your answer in detail in the box below." + `</h4>
-    <p id="qs_preamble_disclosure">(You have <b>` + settings.oq_timelimit_text + `</b> to answer)</p>
-    <div id="qs_timeleft">
-    Your time will soon be over. Don't forget to submit your answer!
-    </div>
-    </div>`
+const questionPreamble = (settings) => {
+    return `<div id="qs_preamble"><p id="qs_preamble_q_p"><u>Question <span id="qs_preamble_q_no"></span> of <span id="qs_preamble_q_max"></span></u></p>
+        <h4>` + "Please type your answer in detail in the box below." + `</h4>
+        <p id="qs_preamble_disclosure">(You have <b>` + settings.oq_timelimit_text + `</b> to answer)</p>
+        <div id="qs_timeleft">
+        Your time will soon be over. Don't forget to submit your answer!
+        </div>
+        </div>`
+}
 
 // Checkbox to skip a question -> would result in returned submission
 let avoid_label = window.context === "prolific" ? "If you'd rather not say, check this box and return your submission." : ""
