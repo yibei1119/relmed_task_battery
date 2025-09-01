@@ -1,19 +1,16 @@
-import { 
-    oq_timelimit_text, 
-    min_words
-} from "./configuration.js"
-
 import { updateState } from "/core/utils/index.js"
 
 // ------------> Instruction texts <---------------
 
 
 // Page 2
-const instr_page2 = `
-    <p><b>Next, you'll be answering questions by typing text responses.</b></p>
-    <p>These questions will ask about yourself, your feelings, background, attitudes, and everyday behaviors.</p>
-    <p>For each question, you'll have <b>`+oq_timelimit_text+`</b> to write a response containing <b>at least `+min_words.toString()+` words</b>.</p>
-`
+const instrPage2 = (settings) => {
+    return `
+        <p><b>Next, you'll be answering questions by typing text responses.</b></p>
+        <p>These questions will ask about yourself, your feelings, background, attitudes, and everyday behaviors.</p>
+        <p>For each question, you'll have <b>`+settings.oq_timelimit_text+`</b> to write a response containing <b>at least `+settings.min_words.toString()+` words</b>.</p>
+    `
+}
 
 
 // Page 5
@@ -23,12 +20,12 @@ const instr_page5 = `
 
 
 // All pages
-let instr_pages = [instr_page2, instr_page5]
+const instrPages = (settings) => {return [instrPage2(settings), instr_page5]} 
 
 export function openTextInstructions(settings) {
     return {
         type: jsPsychInstructions,
-        pages: instr_pages,
+        pages: instrPages(settings),
         css_classes: ['instructions'],
         show_clickable_nav: true,
         button_label_previous: 'Back',
