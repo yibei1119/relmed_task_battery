@@ -1,4 +1,4 @@
-import { User, question_trial } from "./utils.js"
+import { User, question_trial, timeWord } from "./utils.js"
 import { openTextInstructions } from "./instructions.js"
 import { saveDataREDCap } from "/core/utils/index.js"
 
@@ -22,9 +22,8 @@ export function createOpenTextTimeline(settings) {
     for (let relmed_q of RELMED_QS) {
         q += 1
         let tmp_json = {
-            prompt: `<div id="qs_instr">` + relmed_q + `</div>` + avoid_answer + time_word,
+            prompt: `<div id="qs_instr">` + relmed_q + `</div>` + timeWord(settings),
             rows: 8,
-            required: qs_ans_required,
             columns: 100,
             name: 'relmed_q' + q.toString(),
         }

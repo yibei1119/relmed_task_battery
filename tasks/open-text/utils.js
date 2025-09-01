@@ -132,15 +132,13 @@ const questionPreamble = (settings) => {
         </div>`
 }
 
-// Checkbox to skip a question -> would result in returned submission
-let avoid_label = window.context === "prolific" ? "If you'd rather not say, check this box and return your submission." : ""
-let avoid_answer = `<div id="qs_avoid">
-        <label>
-            <input type="checkbox" id="qs_preamble_na_check" ${window.context === "relmed" ? "disabled style='visibility: hidden'" : ""}>
-                <span>` + avoid_label + `</span> 
-        </label>
+// Word counter information for ppt
+export const timeWord = (settings) => {
+    return `<div id="qs_words">
+    Please write at least <span id="qs_words_left">` + settings.min_words + `</span> more words.
     </div>
     `
+}
 
 // Once the minimum number of words is reached, display submit button
 let lvl_x_question_button_label = "Submit answer"
@@ -178,7 +176,7 @@ export function question_trial(qs_list, q_index = 0, q_count, currentUser_instan
     
     return {
         type: jsPsychSurveyText,
-        preamble: questionPreabmle(settings),
+        preamble: questionPreamble(settings),
         button_label: lvl_x_question_button_label,
         questions: [qs_list[q_index]],
         css_classes: ['lvlx_qs'],
