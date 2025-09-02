@@ -181,6 +181,9 @@ var jsPsychReversal = (function (jspsych) {
                     response = resp;
                 }
 
+                // Set deadline warning to false, since response was made
+                response.response_deadline_warning = false;
+
                 var chosen_side = this.keys[response.key.toLowerCase()];
                 
                 this.triggerCoinAnimation(chosen_side);
@@ -191,6 +194,50 @@ var jsPsychReversal = (function (jspsych) {
                 this.jsPsych.pluginAPI.setTimeout(ITI, simulating ? 80 : trial.animation_duration);
 
             };
+
+            function showTemporaryWarning(message, duration = 800) {
+                // Create warning element
+                const warningElement = document.createElement('div');
+                warningElement.id = 'vigour-warning-temp';
+                warningElement.innerText = message;
+
+                // Style the warning with modern CSS
+                warningElement.style.cssText = `
+                    position: fixed;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: 9999;
+                    background-color: rgba(244, 206, 92, 0.9);
+                    padding: 15px 25px;
+                    border-radius: 8px;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                    font-size: 24px;
+                    font-weight: 500;
+                    color: #182b4b;
+                    opacity: 0;
+                    transition: opacity 0.2s ease;
+                    text-align: center;
+                    letter-spacing: 0.0px;
+                `;
+
+                // Add to document body
+                document.body.appendChild(warningElement);
+
+                // Force reflow to ensure transition works
+                warningElement.offsetHeight;
+
+                // Show warning with fade-in effect
+                warningElement.style.opacity = '1';
+
+                // Remove after duration with fade-out effect
+                setTimeout(() => {
+                    warningElement.style.opacity = '0';
+                    setTimeout(() => {
+                        warningElement.remove();
+                    }, 200); // Wait for fade out transition
+                }, duration);
+            }
 
             // Warn that responses need to be quicker
             const deadline_warning = () => {
