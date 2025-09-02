@@ -175,9 +175,9 @@ const computeRelativeReversalBonus = () => {
     const n_trials = reversal_data.values().length;
 
     // Compute maximal possible earnings
-    max_sum = n_trials; // Best and luckiest participant gets one pound on every trial
+    const max_sum = n_trials; // Best and luckiest participant gets one pound on every trial
 
-    min_sum = n_trials * 0.01; // Worst and most unfortunate participant gets one penny on every trial
+    const min_sum = n_trials * 0.01; // Worst and most unfortunate participant gets one penny on every trial
 
     // Compute the actual sum of coins
     const earned_sum = reversal_data.select("chosen_feedback").sum();
