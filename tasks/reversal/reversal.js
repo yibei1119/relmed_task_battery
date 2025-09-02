@@ -1,12 +1,10 @@
 // This files creates the jsPsych timeline for the reversal task block
 
-// Parameters
-const rev_n_trials = (window.demo || (window.task === "screening")) ? 50 : 150; // N trials
+import { createPreloadTrial } from "/core/assets/utils/index.js"
 
 // First preload for task
-const reversal_preload = {
-    type: jsPsychPreload,
-    images: [
+const reversal_preload = createPreloadTrial(
+    [
         "imgs/squirrels_empty.png",
         "imgs/squirrels_bg.png",
         "imgs/squirrels_fg.png",
@@ -14,19 +12,8 @@ const reversal_preload = {
         "imgs/1pound.png",
         "imgs/PILT_keys.jpg"
     ],
-    post_trial_gap: 400,
-    data: {
-        trialphase: "reversal_preload"
-    },
-    continue_after_error: true,
-    on_start: () => {
-        // Report to tests
-        console.log("load_successful")
-
-        // Report to relmed.ac.uk
-        postToParent({message: "load_successful"})
-    }
-}
+    "reversal"
+);
 
 function generateReversalBlocks(settings) {
 
@@ -192,4 +179,11 @@ const computeRelativeReversalBonus = () => {
         min: min_sum, 
         max: max_sum
     }
+}
+
+export {
+    reversal_preload,
+    reversalInstructions,
+    generateReversalBlocks,
+    computeRelativeReversalBonus
 }
