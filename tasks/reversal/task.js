@@ -58,7 +58,7 @@ function generateReversalBlocks(settings) {
                                 feedback_left: jsPsych.timelineVariable('feedback_left'),
                                 optimal_right: jsPsych.timelineVariable('optimal_right'),
                                 response_deadline: () => {
-                                    if (canBeWarned("reversal")){
+                                    if (canBeWarned(settings)){
                                         // console.log(window.default_response_deadline)
                                         return window.default_response_deadline
                                     } else {

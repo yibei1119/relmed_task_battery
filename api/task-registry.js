@@ -338,12 +338,30 @@ export const TaskRegistry = {
   },
 };
 
+// Global settings that apply to all tasks unless overridden
+const globalConfig = {
+    max_warnings_per_task: 3, 
+    warning_expected_n_back: 1 
+}
+
+const globalConfigOptions = {
+    max_warnings_per_task: "Maximum number of deadline warnings allowed per task. Default is 3.",
+    warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 1."
+}
+
 // Helper functions
 export function getTask(taskName) {
   if (!(taskName in TaskRegistry)) {
     throw new Error(`Task "${taskName}" not found. Available tasks: ${Object.keys(TaskRegistry).join(', ')}`);
   }
-  return TaskRegistry[taskName];
+
+  let task = TaskRegistry[taskName];
+
+  // Add global settings to task
+  task.defaultConfig = { ...globalConfig, ...task.defaultConfig };
+  task.configOptions = { ...globalConfigOptions, ...task.configOptions };
+
+  return task;
 }
 
 export async function createTaskTimeline(taskName, config = {}) {
@@ -351,7 +369,7 @@ export async function createTaskTimeline(taskName, config = {}) {
     const task = getTask(taskName);
 
     // Merge configurations with defaults 
-    const mergedConfig = { ...task.defaultConfig, ...config };
+    const mergedConfig = { ...globalConfig, ...task.defaultConfig, ...config };
 
     // Attach task object for internal use
     mergedConfig.__task = task;
