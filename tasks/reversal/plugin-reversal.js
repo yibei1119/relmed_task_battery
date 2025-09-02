@@ -3,7 +3,7 @@ var jsPsychReversal = (function (jspsych) {
 
     const info = {
         name: "reversal",
-        version: "0.1", 
+        version: "0.1.1", 
         parameters: {
             /** Value of left-hand side feedback */
             feedback_left: {
@@ -57,6 +57,10 @@ var jsPsychReversal = (function (jspsych) {
                 type: jspsych.ParameterType.INT,
                 default: 300
             },
+            images_path: {
+                type: jspsych.ParameterType.STRING,
+                default: '/assets/images/reversal/'
+            }
         },
         data: {
             /** Value of left-hand side feedback. */
@@ -237,19 +241,19 @@ var jsPsychReversal = (function (jspsych) {
 
             let stimulus = `
                 <div class="rev-squirrel-empty">
-                    <img id="rev-squirrel-empty" src="imgs/squirrels_empty.png"></img>
+                    <img id="rev-squirrel-empty" src="${trial.images_path}/squirrels_empty.png"></img>
                 </div>
                 <div class="rev-squirrel-bg">
-                    <img id="rev-squirrel-bg" src="imgs/squirrels_bg.png"></img>
+                    <img id="rev-squirrel-bg" src="${trial.images_path}/squirrels_bg.png"></img>
                 </div>
                 <div id='rev-coin-left' class="rev-coin-side">
-                    <img id="rev-coin-left" src="imgs/${trial.coin_images[trial.feedback_left]}"></img>
+                    <img id="rev-coin-left" src="${trial.images_path}/${trial.coin_images[trial.feedback_left]}"></img>
                 </div>
                 <div id='rev-coin-right' class="rev-coin-side">
-                    <img id="rev-coin-right" src="imgs/${trial.coin_images[trial.feedback_right]}"></img>
+                    <img id="rev-coin-right" src="${trial.images_path}/${trial.coin_images[trial.feedback_right]}"></img>
                 </div>
                 <div class="rev-squirrel-fg">
-                    <img id="rev-squirrel-fg" src="imgs/squirrels_fg.png"></img>
+                    <img id="rev-squirrel-fg" src="${trial.images_path}/squirrels_fg.png"></img>
                 </div>
                 <div id="rev-deadline-warning">
                 </div>
