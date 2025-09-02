@@ -83,7 +83,6 @@ function generateReversalBlocks(settings) {
                                         saveDataREDCap(3);
                                     }
 
-                                                            console.log(data);
                                     if (data.response === null) {
                                         const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
                                         jsPsych.data.addProperties({
@@ -91,7 +90,6 @@ function generateReversalBlocks(settings) {
                                         });
                                     }
 
-                                    console.log(data.response_deadline_warning);    
                                     if (data.response_deadline_warning) {
                                         const up_to_now = parseInt(jsPsych.data.get().last(1).select('reversal_n_warnings').values);
                                         jsPsych.data.addProperties({
