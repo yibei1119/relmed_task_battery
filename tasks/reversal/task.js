@@ -1,6 +1,14 @@
 // This files creates the jsPsych timeline for the reversal task block
 
-import { createPreloadTrial } from "/core/utils/index.js"
+import { 
+    createPreloadTrial, 
+    createPressBothTrial, 
+    kick_out, 
+    fullscreen_prompt, 
+    canBeWarned, 
+    updateState, 
+    updateBonusState, 
+    saveDataREDCap } from "/core/utils/index.js"
 
 // First preload for task
 const reversal_preload = createPreloadTrial(
@@ -50,7 +58,7 @@ function generateReversalBlocks(settings) {
                                 feedback_left: jsPsych.timelineVariable('feedback_left'),
                                 optimal_right: jsPsych.timelineVariable('optimal_right'),
                                 response_deadline: () => {
-                                    if (can_be_warned("reversal")){
+                                    if (canBeWarned("reversal")){
                                         // console.log(window.default_response_deadline)
                                         return window.default_response_deadline
                                     } else {
@@ -59,7 +67,7 @@ function generateReversalBlocks(settings) {
                                     }
                                 },
                                 show_warning: () => {
-                                    return can_be_warned("reversal")
+                                    return canBeWarned("reversal")
                                 },
                                 on_finish: () => {
                                     const trial_number = jsPsych.data.get().last(1).select('trial').values[0];
