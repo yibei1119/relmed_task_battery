@@ -138,8 +138,9 @@ export const TaskRegistry = {
     createTimeline: createReversalTimeline,
     computeBonus: computeRelativeReversalBonus,
     defaultConfig: {
-        n_trials: 150,
-        sequence: 'wk0'
+      task_name: "reversal",
+      n_trials: 150,
+      sequence: 'wk0'
     },
     sequences: {
         screening: '/assets/sequences/trial1_screening_sequences.js',
@@ -157,6 +158,7 @@ export const TaskRegistry = {
         enabled: true
     },
     configOptions: {
+        task_name: "The name of the task as it would appear in the bonus object. Default is 'reversal'.",
         n_trials: "Total number of trials in the reversal task. Default is 150.",
         sequence: "The key for the sequence to use for the reversal task. Default is 'wk0'.",
     }
