@@ -355,7 +355,7 @@ export async function createTaskTimeline(taskName, config = {}) {
     mergedConfig.__task = task;
     
     // Load required sequence using robust script loading
-    if (task.sequences && mergedConfig.task_name) {
+    if (task.sequences) {
         const sequenceName = mergedConfig.sequence;
         const sequencePath = task.sequences?.[sequenceName];
 
