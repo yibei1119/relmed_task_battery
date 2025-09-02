@@ -67,9 +67,9 @@ function generateReversalBlocks(settings) {
                                     }
                                 },
                                 show_warning: () => {
-                                    return canBeWarned("reversal")
+                                    return canBeWarned(settings)
                                 },
-                                on_finish: () => {
+                                on_finish: (data) => {
                                     const trial_number = jsPsych.data.get().last(1).select('trial').values[0];
                                     const block_number = jsPsych.data.get().last(1).select('block').values[0];
 
@@ -82,7 +82,24 @@ function generateReversalBlocks(settings) {
                                     if (n_trials % 40 == 0) {
                                         saveDataREDCap(retry = 3);
                                     }
-                                }
+
+                                                            console.log(data);
+                                    if (data.response === null) {
+                                        const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+                                        jsPsych.data.addProperties({
+                                            n_warnings: up_to_now + 1
+                                        });
+                                    }
+
+                                    console.log(data.response_deadline_warning);    
+                                    if (data.response_deadline_warning) {
+                                        const up_to_now = parseInt(jsPsych.data.get().last(1).select('reversal_n_warnings').values);
+                                        jsPsych.data.addProperties({
+                                            reversal_n_warnings: up_to_now + 1
+                                        });
+                                    }
+
+                                },
                             }
                         ],
                         conditional_function: () => {
@@ -100,21 +117,6 @@ function generateReversalBlocks(settings) {
                             .count()
                             
                             return (n_trials < settings.n_trials) && (num_correct < criterion)
-                    },
-                    on_finish: function(data) {
-                        if (data.response === null) {
-                            const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-                            jsPsych.data.addProperties({
-                                n_warnings: up_to_now + 1
-                            });
-                        }
-
-                        if (data.response_deadline_warning) {
-                            const up_to_now = parseInt(jsPsych.data.get().last(1).select('reversal_n_warnings').values);
-                            jsPsych.data.addProperties({
-                                reversal_n_warnings: up_to_now + 1
-                            });
-                        }
                     },
                 }
                 ],
