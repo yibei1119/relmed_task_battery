@@ -305,14 +305,14 @@ function checkFullscreen(){
 const canBeWarned = (settings) => {
     // Fetch number of previous warnings on this task
     const task_n_warnings = jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values[0] ?? 0;
-    
+
     // Check the type of last trial. For tasks with external warning messages this would be "no_choice_warning"
     const last_trial = jsPsych.data.get().last(settings.warning_expected_n_back).select("trialphase").values[0];
-    
+
     // Check for a data field documenting warning message shown. For tasks with internal warning messages this would be "response_deadline_warning"
     const last_trial_shown = jsPsych.data.get().filter({trialphase: settings.task_name}).last(settings.warning_expected_n_back).select("response_deadline_warning").values[0] ?? false;
 
-    return ((task_n_warnings < settings.max_warnings_per_task) && (last_trial !== "no_choice_warning") && (!last_trial_shown)) || (window.context === "prolific");
+    return ((task_n_warnings < settings.max_warnings_per_task) && (last_trial !== "no_choice_warning") && (!last_trial_shown));
 };
 
 /**
