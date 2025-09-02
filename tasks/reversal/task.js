@@ -29,7 +29,7 @@ function generateReversalBlocks(settings) {
     let reversal_timeline = JSON.parse(reversal_json);
 
     // Remove blocks and trials from the timeline if this is a resumption
-    if (window.last_state.includes("reversal_block_")) {
+    if (window.last_state && window.last_state.includes("reversal_block_")) {
         const last_block = parseInt(window.last_state.split("_")[2]) - 1;
         const last_trial = parseInt(window.last_state.split("_")[4]);
 
