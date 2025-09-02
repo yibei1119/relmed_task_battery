@@ -131,6 +131,35 @@ export const TaskRegistry = {
         sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
     }
   },
+  reversal: {
+    name: 'reversal',
+    description: 'A task measuring probabilistic instrumental reversal learning, using a two squirrel cover story.',
+    createTimeline: createReversalTimeline,
+    computeBonus: computeRelativeReversalBonus,
+    defaultConfig: {
+        n_trials: 150,
+        sequence: 'wk0'
+    },
+    sequences: {
+        screening: '../assets/sequences/trial1_screening_sequences.js',
+        wk0: '../assets/sequences/trial1_wk0_sequences.js',
+        wk2: '../assets/sequences/trial1_wk2_sequences.js',
+        wk4: '../assets/sequences/trial1_wk4_sequences.js',
+        wk24: '../assets/sequences/trial1_wk24_sequences.js',
+        wk28: '../assets/sequences/trial1_wk28_sequences.js',
+    },
+    requirements: {
+      css: ['tasks/reversal/styles.css'],
+      note: 'Make sure to include reversal/styles.css in your HTML file'
+    },
+    resumptionRules: {
+        enabled: true
+    },
+    configOptions: {
+        n_trials: "Total number of trials in the reversal task. Default is 150.",
+        sequence: "The key for the sequence to use for the reversal task. Default is 'wk0'.",
+    }
+  },
   delay_discounting: {
     name: 'Delay Discounting Task',
     description: 'Measure preferences for smaller-sooner vs larger-later monetary rewards',
