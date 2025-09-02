@@ -44,7 +44,7 @@ function generateReversalBlocks(settings) {
     // Assemble list of blocks
     var reversal_blocks = [
     ];
-    for (i=0; i<reversal_timeline.length; i++){
+    for (let i=0; i<reversal_timeline.length; i++){
         reversal_blocks.push([
             {
                 timeline: [
@@ -75,7 +75,7 @@ function generateReversalBlocks(settings) {
 
                                     updateState(`reversal_block_${block_number}_trial_${trial_number}`, false)
 
-                                    updateBonusState();
+                                    updateBonusState(settings);
 
                                     n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
                                     
