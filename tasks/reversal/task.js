@@ -1,6 +1,6 @@
 // This files creates the jsPsych timeline for the reversal task block
 
-import { createPreloadTrial } from "/core/assets/utils/index.js"
+import { createPreloadTrial } from "/core/utils/index.js"
 
 // First preload for task
 const reversal_preload = createPreloadTrial(
