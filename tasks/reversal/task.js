@@ -13,13 +13,13 @@ import {
 // First preload for task
 const reversal_preload = createPreloadTrial(
     [
-        "imgs/squirrels_empty.png",
-        "imgs/squirrels_bg.png",
-        "imgs/squirrels_fg.png",
-        "imgs/1penny.png",
-        "imgs/1pound.png",
-        "imgs/PILT_keys.jpg"
-    ],
+        "/reversal/squirrels_empty.png",
+        "/reversal/squirrels_bg.png",
+        "/reversal/squirrels_fg.png",
+        "/reversal/1penny.png",
+        "/reversal/1pound.png",
+        "2_finger_keys.jpg"
+    ].map(img => `/assets/images/${img}`),
     "reversal"
 );
 
