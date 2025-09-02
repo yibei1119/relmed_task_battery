@@ -77,7 +77,7 @@ function generateReversalBlocks(settings) {
 
                                     updateBonusState(settings);
 
-                                    n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
+                                    const n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
                                     
                                     if (n_trials % 40 == 0) {
                                         saveDataREDCap(retry = 3);
