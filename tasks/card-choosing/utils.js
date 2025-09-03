@@ -291,14 +291,14 @@ const cardChoosingTrial = (settings) => {
                 } 
 
                 // Use defaults otherwise
-                if (canBeWarned(settings.task_name)){
+                if (canBeWarned(settings)){
                     return settings.default_response_deadline
                 } else {
                     return settings.default_long_response_deadline
                 }
             },
             show_warning: () => {
-                return canBeWarned(settings.task_name)
+                return canBeWarned(settings)
             },
             n_stimuli: jsPsych.timelineVariable('n_stimuli'),
             present_pavlovian: jsPsych.timelineVariable('present_pavlovian'),
