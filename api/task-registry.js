@@ -107,7 +107,7 @@ export const TaskRegistry = {
     description: 'A test phase that evaluates learning performance in notional extinction after completing a card-choosing learning phase',
     createTimeline: createPostLearningTestTimeline,
     defaultConfig: {
-        task_name: "pilt",
+        task_name: "pilt_test",
         test_confidence_every: 4,
         sequence: 'wk0'
     },
@@ -127,7 +127,7 @@ export const TaskRegistry = {
       enabled: true
     },
     configOptions: {
-        task_name: "The name of the learning task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
+        task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'pilt_test'.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
         sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
     }
@@ -341,12 +341,16 @@ export const TaskRegistry = {
 // Global settings that apply to all tasks unless overridden
 const globalConfig = {
     max_warnings_per_task: 3, 
-    warning_expected_n_back: 1 
+    warning_expected_n_back: 1,
+    default_response_deadline: 4000,
+    long_response_deadline: 6000
 }
 
 const globalConfigOptions = {
     max_warnings_per_task: "Maximum number of deadline warnings allowed per task. Default is 3.",
-    warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 1."
+    warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 1.",
+    default_response_deadline: "Default response deadline in milliseconds. Default is 4000.",
+    long_response_deadline: "Long response deadline in milliseconds. Default is 6000."
 }
 
 // Helper functions

@@ -133,7 +133,7 @@ export function createCoreControlTimeline(settings) {
           current: jsPsych.timelineVariable('current'),
           // Adaptive response deadline based on warning history
           explore_decision: () => {
-            if (canBeWarned("control_explore")) {
+            if (canBeWarned(settings)) {
                 return settings.default_response_deadline
             } else {
                 return settings.long_response_deadline
@@ -224,7 +224,7 @@ export function createCoreControlTimeline(settings) {
           ship: jsPsych.timelineVariable('ship'),
           // Adaptive response deadline
           predict_decision: () => {
-            if (canBeWarned("control_predict_homebase")) {
+            if (canBeWarned(settings)) {
                 return settings.default_response_deadline
             } else {
                 return settings.long_response_deadline
@@ -318,7 +318,7 @@ export function createCoreControlTimeline(settings) {
       scale: controlConfig(settings).scale,
       island_path: `/assets/images/control/session-specific/${settings.session}`,
       reward_decision: () => {
-        if (canBeWarned("control_reward")) {
+        if (canBeWarned(settings)) {
             return settings.default_response_deadline
         } else {
             return settings.long_response_deadline
