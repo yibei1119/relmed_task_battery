@@ -292,9 +292,9 @@ const cardChoosingTrial = (settings) => {
 
                 // Use defaults otherwise
                 if (canBeWarned(settings.task_name)){
-                    return window.default_response_deadline
+                    return settings.default_response_deadline
                 } else {
-                    return window.default_long_response_deadline
+                    return settings.default_long_response_deadline
                 }
             },
             show_warning: () => {
