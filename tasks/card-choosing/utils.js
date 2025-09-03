@@ -294,7 +294,7 @@ const cardChoosingTrial = (settings) => {
                 if (canBeWarned(settings)){
                     return settings.default_response_deadline
                 } else {
-                    return settings.default_long_response_deadline
+                    return settings.long_response_deadline
                 }
             },
             show_warning: () => {
@@ -322,7 +322,9 @@ const cardChoosingTrial = (settings) => {
                 }
 
                 if (data.response_deadline_warning) {
-                    const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values);
+                    let up_to_now = parseInt(jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values);
+
+                    up_to_now = isNaN(up_to_now) ? 0 : up_to_now;
                     jsPsych.data.addProperties({
                         [`${settings.task_name}_n_warnings`]: up_to_now + 1
                     });
