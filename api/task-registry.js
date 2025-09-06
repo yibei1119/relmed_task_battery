@@ -232,6 +232,8 @@ export const TaskRegistry = {
       max_instruction_fails: 3,
       default_response_deadline: 4000,
       long_response_deadline: 6000,
+      task_name: "control",
+      warning_expected_n_back: 2
     },
     requirements: {
       css: ['tasks/control/styles.css'],
@@ -244,7 +246,9 @@ export const TaskRegistry = {
         session: "Session identifier to govern session-specific behaviour and select stimuli. Default is 'wk0'.",
         max_instruction_fails: "Maximum number of instruction quiz failures allowed before continuing to the task. Default is 3.",
         default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
-        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
+        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds).",
+        task_name: "The name of the task as it would appear in the bonus object, and for monitoring warnings. Default is 'control'.",
+        warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 2."
     }
   },
   max_press_test: {

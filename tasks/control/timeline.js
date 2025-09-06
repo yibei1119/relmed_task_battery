@@ -12,7 +12,7 @@ export function createControlTimeline(settings) {
     let procedure = [controlPreload(settings)];
     
     // Instructions
-    procedure = procedure.concat(createControlInstructionsTimeline(settings));
+    // procedure = procedure.concat(createControlInstructionsTimeline(settings));
 
     // Add the main control task trials (explore, predict, reward phases)
     procedure = procedure.concat(createCoreControlTimeline(settings));
