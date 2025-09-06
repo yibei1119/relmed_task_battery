@@ -137,7 +137,7 @@ function reversalInstructions(settings) {
             type: jsPsychInstructions,
             css_classes: ['instructions'],
             pages: [
-                `${window.session !== "screening" ? "<p>Let's start with the first game!</p>" : ""}
+                `${settings.session !== "screening" ? "<p>Let's start with the first game!</p>" : ""}
                 <p>Next, you will meet two friendly squirrels, each with a bag of coins to share. 
                 Use the arrow keys to choose either the left or right squirrel. 
                 The squirrel you pick will give you a coin to add to your safe.</p>`,
@@ -151,7 +151,7 @@ function reversalInstructions(settings) {
                 updateState(`reversal_instructions_start`)
             },
             on_finish: () => {
-                if (window.session !== "screening") {
+                if (settings.session !== "screening") {
                     updateState(`no_resume_10_minutes`)
                 }
                 updateState(`reversal_task_start`)    
