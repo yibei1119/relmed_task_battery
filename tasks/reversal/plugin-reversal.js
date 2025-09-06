@@ -83,7 +83,7 @@ var jsPsychReversal = (function (jspsych) {
             chosen_feedback: {
                 type: jspsych.ParameterType.FLOAT
             },
-            /** Whther optimal option chosen */
+            /** Whether optimal option chosen */
             response_optimal: {
                 type: jspsych.ParameterType.BOOL
             }
@@ -93,7 +93,7 @@ var jsPsychReversal = (function (jspsych) {
   /**
    * **reversal**
    *
-   * jsPysch plugin to dispaly a reversal learning task trial, with two squirrels in a forest, a choice of one of the results in the squirrel tossing a coin.
+   * jsPsych plugin to display a reversal learning task trial, with two squirrels in a forest, a choice of one of the results in the squirrel tossing a coin.
    *
    * @author {Yaniv Abir}
    */
@@ -125,7 +125,7 @@ var jsPsychReversal = (function (jspsych) {
             // Trial end procedure
             const end_trial = () => {
 
-                // Create trial dta to be saved
+                // Create trial data to be saved
                 var trial_data = {
                     feedback_left: trial.feedback_left, 
                     feedback_right: trial.feedback_right,
