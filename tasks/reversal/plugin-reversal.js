@@ -83,7 +83,7 @@ var jsPsychReversal = (function (jspsych) {
             chosen_feedback: {
                 type: jspsych.ParameterType.FLOAT
             },
-            /** Whther optimal option chosen */
+            /** Whether optimal option chosen */
             response_optimal: {
                 type: jspsych.ParameterType.BOOL
             }
