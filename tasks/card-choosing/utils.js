@@ -154,7 +154,6 @@ const testTrial = (settings) => {
                 feedback_middle: '',
                 optimal_right: jsPsych.timelineVariable('optimal_right'),
                 optimal_side: '',
-                response_deadline: settings.default_response_deadline,
                 n_stimuli: 2,
                 present_pavlovian: false,
                 present_feedback: false,
