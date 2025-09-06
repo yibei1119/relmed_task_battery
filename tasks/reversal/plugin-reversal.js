@@ -125,7 +125,7 @@ var jsPsychReversal = (function (jspsych) {
             // Trial end procedure
             const end_trial = () => {
 
-                // Create trial dta to be saved
+                // Create trial data to be saved
                 var trial_data = {
                     feedback_left: trial.feedback_left, 
                     feedback_right: trial.feedback_right,
