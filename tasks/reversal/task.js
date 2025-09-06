@@ -100,7 +100,7 @@ function generateReversalBlocks(settings) {
                         ],
                         conditional_function: () => {
 
-                            // Check whether participants are up to crtierion
+                            // Check whether participants are up to criterion
                             const criterion = jsPsych.evaluateTimelineVariable('criterion');
 
                             let num_correct = jsPsych.data.get()
