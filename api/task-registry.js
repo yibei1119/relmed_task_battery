@@ -107,7 +107,7 @@ export const TaskRegistry = {
     description: 'A test phase that evaluates learning performance in notional extinction after completing a card-choosing learning phase',
     createTimeline: createPostLearningTestTimeline,
     defaultConfig: {
-        task_name: "pilt",
+        task_name: "pilt_test",
         test_confidence_every: 4,
         sequence: 'wk0'
     },
@@ -127,7 +127,7 @@ export const TaskRegistry = {
       enabled: true
     },
     configOptions: {
-        task_name: "The name of the learning task being tested - can be 'pilt' or 'wm'. Default is 'pilt'.",
+        task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'pilt_test'.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
         sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
     }
@@ -140,7 +140,8 @@ export const TaskRegistry = {
     defaultConfig: {
       task_name: "reversal",
       n_trials: 150,
-      sequence: 'wk0'
+      sequence: 'wk0',
+      session: 'wk0'
     },
     sequences: {
         screening: '/assets/sequences/trial1_screening_sequences.js',
@@ -161,6 +162,7 @@ export const TaskRegistry = {
         task_name: "The name of the task as it would appear in the bonus object. Default is 'reversal'.",
         n_trials: "Total number of trials in the reversal task. Default is 150.",
         sequence: "The key for the sequence to use for the reversal task. Default is 'wk0'.",
+        session: "Session identifier to govern session-specific behaviour. Default is 'wk0'. Should be deprecated, with settings exposed."
     }
   },
   delay_discounting: {
@@ -232,6 +234,8 @@ export const TaskRegistry = {
       max_instruction_fails: 3,
       default_response_deadline: 4000,
       long_response_deadline: 6000,
+      task_name: "control",
+      warning_expected_n_back: 2
     },
     requirements: {
       css: ['tasks/control/styles.css'],
@@ -244,7 +248,9 @@ export const TaskRegistry = {
         session: "Session identifier to govern session-specific behaviour and select stimuli. Default is 'wk0'.",
         max_instruction_fails: "Maximum number of instruction quiz failures allowed before continuing to the task. Default is 3.",
         default_response_deadline: "Default response deadline in milliseconds. Default is 4000 (4 seconds).",
-        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds)."
+        long_response_deadline: "Extended response deadline in milliseconds for trials where no deadline warning is displayed. This allows a softer regime for participant populations who need it. Default is 6000 (6 seconds).",
+        task_name: "The name of the task as it would appear in the bonus object, and for monitoring warnings. Default is 'control'.",
+        warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 2."
     }
   },
   max_press_test: {
@@ -341,12 +347,16 @@ export const TaskRegistry = {
 // Global settings that apply to all tasks unless overridden
 const globalConfig = {
     max_warnings_per_task: 3, 
-    warning_expected_n_back: 1 
+    warning_expected_n_back: 1,
+    default_response_deadline: 4000,
+    long_response_deadline: 6000
 }
 
 const globalConfigOptions = {
     max_warnings_per_task: "Maximum number of deadline warnings allowed per task. Default is 3.",
-    warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 1."
+    warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 1.",
+    default_response_deadline: "Default response deadline in milliseconds. Default is 4000.",
+    long_response_deadline: "Long response deadline in milliseconds. Default is 6000."
 }
 
 // Helper functions

@@ -118,12 +118,27 @@ const interBlockMsg = (settings) => {
 }
 
 /**
- * Create a test trial for post-learning phase
- * @param {string} task - Task name (e.g., 'pilt', 'wm')
- * @param {number} test_confidence_every - Show confidence rating every N trials
- * @returns {Object} jsPsych timeline object for test trial
+ * Creates a test trial configuration for the card choosing task.
+ * 
+ * @param {Object} settings - Configuration object for the test trial
+ * @param {string} settings.task_name - Name of the task for data tracking
+ * @param {number} settings.test_confidence_every - Frequency of confidence rating trials (e.g., every N trials)
+ * @returns {Object} jsPsych timeline object containing the test trial sequence
+ * 
+ * @description
+ * This function generates a complete test trial timeline that includes:
+ * - Kick out and fullscreen prompt screens
+ * - Main card choosing trial without feedback
+ * - Optional confidence rating (shown periodically based on settings)
+ * - Response deadline handling with custom or default values
+ * - Warning system for missed responses
+ * - Data collection for trial parameters and responses
+ * 
+ * The trial uses timeline variables for stimuli, feedback, and trial metadata.
+ * Response deadlines are dynamically determined based on warning eligibility.
+ * Confidence ratings are conditionally shown based on response success and trial frequency.
  */
-const testTrial = (task, test_confidence_every = 4) => {
+const testTrial = (settings) => {
     return {
         timeline: [
             kick_out,
@@ -139,7 +154,6 @@ const testTrial = (task, test_confidence_every = 4) => {
                 feedback_middle: '',
                 optimal_right: jsPsych.timelineVariable('optimal_right'),
                 optimal_side: '',
-                response_deadline: window.defaul_response_deadline,
                 n_stimuli: 2,
                 present_pavlovian: false,
                 present_feedback: false,
@@ -159,17 +173,17 @@ const testTrial = (task, test_confidence_every = 4) => {
                     } 
     
                     // Use default deadlines based on warning eligibility
-                    if (canBeWarned(`${task}_test`)){
-                        return window.default_response_deadline
+                    if (canBeWarned(settings)){
+                        return settings.default_response_deadline
                     } else {
-                        return window.default_long_response_deadline
+                        return settings.long_response_deadline
                     }
                 },
                 show_warning: () => {
-                    return canBeWarned(`${task}_test`)
+                    return canBeWarned(settings)
                 },    
                 data: {
-                    trialphase: `${task}_test`,
+                    trialphase: settings.task_name,
                     block: jsPsych.timelineVariable("block"),
                     trial: jsPsych.timelineVariable("trial"),
                     stimulus_left: jsPsych.timelineVariable("stimulus_left"),
@@ -192,9 +206,9 @@ const testTrial = (task, test_confidence_every = 4) => {
 
                     // Track deadline warnings for this specific test
                     if (data.response_deadline_warning) {
-                        const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${task}_test_n_warnings`).values);
+                        const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values);
                         jsPsych.data.addProperties({
-                            [`${task}_test_n_warnings`]: up_to_now + 1
+                            [`${settings.task_name}_n_warnings`]: up_to_now + 1
                         });
                     }
                  },
@@ -223,15 +237,15 @@ const testTrial = (task, test_confidence_every = 4) => {
                             }
                          }
                     },
-                    noChoiceWarning("response", "", task)
+                    noChoiceWarning("response", "", settings.task_name)
                 ],
                 conditional_function: () => {
                     // Only show confidence rating if response was made and it's time for rating
                     let missed = jsPsych.data.get().last(1).select("response").values[0] == null
     
                     let n_trials = jsPsych.data.get().filterCustom((trial) => /^[a-zA-Z]+_test$/.test(trial.trialphase)).count()
-    
-                    return !missed && ((n_trials % test_confidence_every) === (test_confidence_every - 1))
+
+                    return !missed && ((n_trials % settings.test_confidence_every) === (settings.test_confidence_every - 1))
                 }
             }
         ]
@@ -276,14 +290,14 @@ const cardChoosingTrial = (settings) => {
                 } 
 
                 // Use defaults otherwise
-                if (canBeWarned(settings.task_name)){
-                    return window.default_response_deadline
+                if (canBeWarned(settings)){
+                    return settings.default_response_deadline
                 } else {
-                    return window.default_long_response_deadline
+                    return settings.long_response_deadline
                 }
             },
             show_warning: () => {
-                return canBeWarned(settings.task_name)
+                return canBeWarned(settings)
             },
             n_stimuli: jsPsych.timelineVariable('n_stimuli'),
             present_pavlovian: jsPsych.timelineVariable('present_pavlovian'),
@@ -307,7 +321,9 @@ const cardChoosingTrial = (settings) => {
                 }
 
                 if (data.response_deadline_warning) {
-                    const up_to_now = parseInt(jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values);
+                    let up_to_now = parseInt(jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values);
+
+                    up_to_now = isNaN(up_to_now) ? 0 : up_to_now;
                     jsPsych.data.addProperties({
                         [`${settings.task_name}_n_warnings`]: up_to_now + 1
                     });
@@ -376,7 +392,7 @@ const cardChoosingTrial = (settings) => {
  * @param {Object} settings - Settings object with test_confidence_every property
  * @returns {Array} Timeline array for test phase
  */
-function buildPostLearningTest(structure, task_name = "pilt", settings = {test_confidence_every: 4}) {
+function buildPostLearningTest(structure, settings = {test_confidence_every: 4}) {
     // Preload all test images upfront
     let test = [
         {
@@ -393,7 +409,7 @@ function buildPostLearningTest(structure, task_name = "pilt", settings = {test_c
     for (let i = 0; i < structure.length; i++) {
         test.push({
             timeline: [
-                testTrial(task_name, settings.test_confidence_every)
+                testTrial(settings)
             ],
             timeline_variables: structure[i]
         });
