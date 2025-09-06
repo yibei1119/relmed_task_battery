@@ -237,7 +237,7 @@ const testTrial = (settings) => {
                             }
                          }
                     },
-                    noChoiceWarning("response", "", settings.task_name)
+                    noChoiceWarning("response", "", settings)
                 ],
                 conditional_function: () => {
                     // Only show confidence rating if response was made and it's time for rating
