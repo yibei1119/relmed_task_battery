@@ -93,7 +93,7 @@ var jsPsychReversal = (function (jspsych) {
   /**
    * **reversal**
    *
-   * jsPysch plugin to dispaly a reversal learning task trial, with two squirrels in a forest, a choice of one of the results in the squirrel tossing a coin.
+   * jsPsych plugin to display a reversal learning task trial, with two squirrels in a forest, a choice of one of the results in the squirrel tossing a coin.
    *
    * @author {Yaniv Abir}
    */
