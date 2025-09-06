@@ -188,7 +188,7 @@ var jsPsychReversal = (function (jspsych) {
                 
                 this.triggerCoinAnimation(chosen_side);
 
-                // Remove keayboard listener
+                // Remove keyboard listener
                 this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
                 
                 this.jsPsych.pluginAPI.setTimeout(ITI, simulating ? 80 : trial.animation_duration);
@@ -242,7 +242,7 @@ var jsPsychReversal = (function (jspsych) {
             // Warn that responses need to be quicker
             const deadline_warning = () => {
 
-                // Remove keayboard listener
+                // Remove keyboard listener
                 this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
 
                 // Document that warning was shown
