@@ -51,7 +51,7 @@ const ddTrial = (settings) => {
         },
         enable_button_after: 300,
         trial_duration: () => {
-            if (canBeWarned("dd")){
+            if (canBeWarned(settings)){
                 return settings.default_response_deadline
             } else {
                 return settings.long_response_deadline

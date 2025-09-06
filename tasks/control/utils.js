@@ -53,32 +53,34 @@ export const controlPreload = (settings) => {
 } 
 
 // Control rating timeline for measuring sense of agency
-const controlRating = {
-  timeline: [{
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `<p><span class="highlight-txt">How <strong>in control</strong> do you feel at this moment?</span></p>`,
-    choices: ["1<br>Not at all", "2", "3<br>I don't know", "4", "5<br>Completely in control"],
-    trial_duration: 10000,
-    post_trial_gap: 400,
-    data: {
-      trialphase: "control_controllability"
-    },
-    on_finish: function (data) {
-      updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
+const controlRating = (settings) => {
+  return {
+    timeline: [{
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `<p><span class="highlight-txt">How <strong>in control</strong> do you feel at this moment?</span></p>`,
+      choices: ["1<br>Not at all", "2", "3<br>I don't know", "4", "5<br>Completely in control"],
+      trial_duration: 10000,
+      post_trial_gap: 400,
+      data: {
+        trialphase: "control_controllability"
+      },
+      on_finish: function (data) {
+        updateState(`control_trial_${jsPsych.evaluateTimelineVariable('trial')}`, false);
 
-      // Track warnings for participants who don't respond
-      if (data.response === null) {
-        var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-        console.log("n_warnings: " + up_to_now);
-        jsPsych.data.addProperties({
-            n_warnings: up_to_now + 1
-        });
+        // Track warnings for participants who don't respond
+        if (data.response === null) {
+          var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
+          console.log("n_warnings: " + up_to_now);
+          jsPsych.data.addProperties({
+              n_warnings: up_to_now + 1
+          });
+        }
       }
-    }
-  },
-  noChoiceWarning("response", "", "control_explore")
-]
-};
+    },
+    noChoiceWarning("response", "", settings)
+  ]
+  };
+}
 
 /**
  * Creates the main control task timeline with explore, predict, and reward phases
@@ -133,10 +135,11 @@ export function createCoreControlTimeline(settings) {
           current: jsPsych.timelineVariable('current'),
           // Adaptive response deadline based on warning history
           explore_decision: () => {
-            if (canBeWarned("control_explore")) {
-                return settings.default_response_deadline
+            if (canBeWarned(settings, 1)) {
+              return settings.default_response_deadline
             } else {
-                return settings.long_response_deadline
+              console.log("No warning will be shown; using long deadline");
+              return settings.long_response_deadline
             }
           },
           explore_effort: 3000,
@@ -167,7 +170,6 @@ export function createCoreControlTimeline(settings) {
             // Track non-response warnings
             if (data.response === null) {
               var up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
-              console.log("n_warnings: " + up_to_now);
               jsPsych.data.addProperties({
                   n_warnings: up_to_now + 1
               });
@@ -195,7 +197,7 @@ export function createCoreControlTimeline(settings) {
           `<main class="main-stage">
             <img class="background" src="/assets/images/control/ocean.png" alt="Background"/>
           </main>`,
-          "control_explore"
+          settings
         )
       ],
       timeline_variables: [t]
@@ -206,7 +208,7 @@ export function createCoreControlTimeline(settings) {
   controlExploreTimeline[0]["on_timeline_start"] = () => {
     updateState(`control_task_start`);
     jsPsych.data.addProperties({
-        control_explore_n_warnings: 0
+        control_n_warnings: 0
     });
   }
 
@@ -224,10 +226,11 @@ export function createCoreControlTimeline(settings) {
           ship: jsPsych.timelineVariable('ship'),
           // Adaptive response deadline
           predict_decision: () => {
-            if (canBeWarned("control_predict_homebase")) {
-                return settings.default_response_deadline
+            if (canBeWarned(settings, 1)) {
+              return settings.default_response_deadline
             } else {
-                return settings.long_response_deadline
+              console.log("No warning will be shown; using long deadline");
+              return settings.long_response_deadline
             }
           },
           // Different island choices for screening vs main sessions
@@ -264,18 +267,12 @@ export function createCoreControlTimeline(settings) {
           }
         },
         confidenceRating,
-        noChoiceWarning("response", '', "control_predict_homebase")
+        noChoiceWarning("response", '', settings)
       ],
       timeline_variables: [t]
     });
   });
 
-  // Initialize warning counter for prediction phase
-  controlPredTimeline[0]["on_timeline_start"] = () => {
-    jsPsych.data.addProperties({
-        control_predict_homebase_n_warnings: 0
-    });
-  }
 
   // Build reward phase trials
   const controlRewardTimeline = [];
@@ -318,9 +315,10 @@ export function createCoreControlTimeline(settings) {
       scale: controlConfig(settings).scale,
       island_path: `/assets/images/control/session-specific/${settings.session}`,
       reward_decision: () => {
-        if (canBeWarned("control_reward")) {
+        if (canBeWarned(settings, 1)) {
             return settings.default_response_deadline
         } else {
+          console.log("No warning will be shown; using long deadline");
             return settings.long_response_deadline
         }
       },
@@ -354,7 +352,7 @@ export function createCoreControlTimeline(settings) {
         `<main class="main-stage">
           <img class="background" src="/assets/images/control/ocean.png" alt="Background"/>
         </main>`,
-        "control_reward"
+        settings
       )
     );
     
@@ -386,7 +384,7 @@ export function createCoreControlTimeline(settings) {
   controlRewardTimeline[0]["on_timeline_start"] = () => {
     updateState(`control_reward_start`);
     jsPsych.data.addProperties({
-        control_reward_n_warnings: 0
+        control_n_warnings: 0
     });
   }
 
@@ -483,7 +481,7 @@ export function createCoreControlTimeline(settings) {
         } else {
           // Odd miniblocks: add control rating
           controlTimeline.push({
-            ...controlRating,
+            ...controlRating(settings),
             timeline_variables: [{trial: trial++}]
           });
         }

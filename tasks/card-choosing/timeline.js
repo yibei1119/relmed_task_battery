@@ -105,7 +105,7 @@ export function createPostLearningTestTimeline(settings) {
   
   // Parse test structure based on task type
   let test_structure;
-  if (settings.task_name === "pilt") {
+  if (settings.task_name === "pilt_test") {
     test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
     let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
     
@@ -131,7 +131,7 @@ export function createPostLearningTestTimeline(settings) {
         test_structure = [pav_test_structure].concat(test_structure);
       }
     }
-  } else if (settings.task_name === "wm") {
+  } else if (settings.task_name === "wm_test") {
     test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;
     adjustStimuliPaths(test_structure, 'card-choosing/stimuli');
   } else {
@@ -141,7 +141,7 @@ export function createPostLearningTestTimeline(settings) {
   // Build test timeline if structure is valid
   if ((test_structure != null) && (test_structure.length == 1 || test_structure[1] != null)) {
     timeline.push(testInstructions(settings.task_name));
-    let test_blocks = buildPostLearningTest(test_structure, settings.task_name, settings);
+    let test_blocks = buildPostLearningTest(test_structure, settings);
     // Set test start state tracking
     test_blocks[0]["on_start"] = () => {
       updateState(`${settings.task_name}_test_task_start`);
