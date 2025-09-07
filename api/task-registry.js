@@ -330,6 +330,23 @@ export const TaskRegistry = {
         enabled: true,
     }
   },
+  acceptability_judgment: {
+    name: 'Acceptability Judgment',
+    description: 'Measure participant acceptability of a preceding task',
+    createTimeline: createAcceptabilityTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+      task_name: "task",
+      game_description: "game you have just completed"
+    },
+    configOptions: {
+      task_name: "Short identifier for the task (used in data field names). Default is 'task'.",
+      game_description: "Human-readable description of the game/task. Default is 'game you have just completed'."
+    },
+    resumptionRules: {
+        enabled: false,
+    }
+  }
 };
 
 // Global settings that apply to all tasks unless overridden
