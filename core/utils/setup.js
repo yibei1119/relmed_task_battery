@@ -38,6 +38,36 @@ function loadSequence(scriptSrc) {
         document.head.appendChild(script);
     });
 }
+
+async function loadCSS(cssPath) {
+    return new Promise((resolve, reject) => {
+        // Check if CSS is already loaded
+        const existingLink = document.querySelector(`link[href="${cssPath}"]`);
+        if (existingLink) {
+            console.log(`CSS already loaded: ${cssPath}`);
+            resolve();
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = cssPath;
+        
+        link.onload = () => {
+            console.log(`Successfully loaded CSS: ${cssPath}`);
+            resolve();
+        };
+        
+        link.onerror = () => {
+            console.warn(`Failed to load CSS: ${cssPath}`);
+            reject(new Error(`Failed to load CSS: ${cssPath}`));
+        };
+        
+        document.head.appendChild(link);
+    });
+}
+
 /**
  * Creates a jsPsych preload trial for loading images before task execution
  * @param {string[]} images - Array of image file paths to preload
@@ -96,6 +126,7 @@ export {
     loadSequence,
     createPreloadTrial,
     saveUrlParameters,
-    enterExperiment
+    enterExperiment,
+    loadCSS
 };
 
