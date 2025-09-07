@@ -36,7 +36,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
-      note: 'Make sure to include card-choosing/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -81,7 +80,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
-      note: 'Make sure to include card-choosing/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -113,7 +111,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
-      note: 'Make sure to include card-choosing/styles.css in your HTML file'
     },
     sequences: {
       screening: '../assets/sequences/trial1_screening_sequences.js',
@@ -153,7 +150,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/reversal/styles.css'],
-      note: 'Make sure to include reversal/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true
@@ -176,7 +172,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/delay-discounting/styles.css'],
-      note: 'Make sure to include delay-discounting/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -199,7 +194,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/piggy-banks/styles.css'],
-      note: 'Make sure to include piggy-banks/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -218,7 +212,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/piggy-banks/styles.css'],
-      note: 'Make sure to include piggy-banks/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -239,7 +232,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/control/styles.css'],
-      note: 'Make sure to include control/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -270,7 +262,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/max-press-test/styles.css'],
-      note: 'Make sure to include max-press-test/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -299,7 +290,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/pavlovian-lottery/styles.css'],
-      note: 'Make sure to include pavlovian-lottery/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
@@ -336,7 +326,6 @@ export const TaskRegistry = {
     },
     requirements: {
       css: ['/tasks/open-text/styles.css'],
-      note: 'Make sure to include open-text/styles.css in your HTML file'
     },
     resumptionRules: {
         enabled: true,
