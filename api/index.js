@@ -4,10 +4,5 @@
  */
 
 // Import and re-export all task registry functions
-export {
-    TaskRegistry,
-    getTask,
-    createTaskTimeline,
-    listTasks,
-    getTaskInfo
-} from './task-registry.js';
+export * from './task-registry.js';
+export * from './utils.js';
