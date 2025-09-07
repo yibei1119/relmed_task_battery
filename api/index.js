@@ -4,5 +4,4 @@
  */
 
 // Import and re-export all task registry functions
-export * from './task-registry.js';
 export * from './utils.js';
