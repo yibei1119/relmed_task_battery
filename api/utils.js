@@ -66,19 +66,3 @@ export function listTasks() {
   return Object.keys(TaskRegistry);
 }
 
-export function getTaskInfo(taskName) {
-  const task = getTask(taskName);
-  
-  // Add extra_media_assets as a universal config option for all tasks
-  const universalConfigOptions = {
-    extra_media_assets: "Additional media assets to preload for the task. Default is an empty array."
-  };
-  
-  return {
-    name: task.name,
-    description: task.description,
-    defaultConfig: task.defaultConfig,
-    configOptions: { ...task.configOptions, ...universalConfigOptions },
-    resumptionRules: task.resumptionRules
-  };
-}
