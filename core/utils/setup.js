@@ -39,6 +39,28 @@ function loadSequence(scriptSrc) {
     });
 }
 
+/**
+ * Asynchronously loads a CSS stylesheet into the document head.
+ * Checks if the CSS is already loaded to prevent duplicates.
+ * 
+ * @async
+ * @function loadCSS
+ * @param {string} cssPath - The path or URL to the CSS file to load
+ * @returns {Promise<void>} A promise that resolves when the CSS is successfully loaded
+ * @throws {Error} Throws an error if the CSS file fails to load
+ * 
+ * @example
+ * // Load a CSS file
+ * await loadCSS('/styles/main.css');
+ * 
+ * @example
+ * // Handle loading errors
+ * try {
+ *   await loadCSS('/styles/theme.css');
+ * } catch (error) {
+ *   console.error('CSS loading failed:', error);
+ * }
+ */
 async function loadCSS(cssPath) {
     return new Promise((resolve, reject) => {
         // Check if CSS is already loaded
