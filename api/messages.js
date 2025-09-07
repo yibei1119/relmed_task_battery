@@ -34,13 +34,24 @@ const messages = {
     }
 }
 
+function instructionTrial(message) {
+    return {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: message,
+        show_clickable_nav: true,
+        data: {trialphase: "instruction"}
+    };
+}
+
 export function getMessage(moduleName, messageKey, settings={}) {
     if (messages[moduleName] && messages[moduleName][messageKey]) {
         const message = messages[moduleName][messageKey];
         if (typeof message === 'function') {
-            return message(settings);
+            const messageContent = message(settings);
+            return instructionTrial(Array.isArray(messageContent) ? messageContent : [messageContent]);
         } else {
-            return message;
+            return instructionTrial(Array.isArray(messageContent) ? messageContent : [messageContent]);
         }
     } else {
         console.warn(`Message not found for module: ${moduleName}, key: ${messageKey}`);

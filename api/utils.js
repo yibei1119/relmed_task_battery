@@ -1,5 +1,7 @@
 import { loadSequence, loadCSS } from '/core/utils/index.js';
 import { TaskRegistry, globalConfig, globalConfigOptions } from './task-registry.js';
+import { getMessage } from './messages.js';
+import { ModuleRegistry } from './module-registry.js';
 
 export function getTask(taskName) {
   if (!(taskName in TaskRegistry)) {
@@ -66,3 +68,35 @@ export function listTasks() {
   return Object.keys(TaskRegistry);
 }
 
+export async function createModuleTimeline(moduleName, config) {
+    // Get module
+    const module = getModule(moduleName);
+
+    // Create timeline for each task in the module
+    const timelines = module.elements.map(element => {
+        if (element.type === "task") {
+            return createTaskTimeline(element.name, { ...module.moduleConfig, ...element.config, ...config });
+        }
+        if (element.type === "instructions") {
+            return getMessage(moduleName, element.config.text, { ...module.moduleConfig, ...element.config, ...config });
+        }
+        return null;
+    });
+
+    const result = await Promise.all(timelines);
+    return result.flat();
+}
+
+export function getModule(moduleName) {
+  if (!(moduleName in ModuleRegistry)) {
+    throw new Error(`Module "${moduleName}" not found. Available modules: ${Object.keys(ModuleRegistry).join(', ')}`);
+  }
+
+  let module = ModuleRegistry[moduleName];
+
+  return module;
+}
+
+export function listModules() {
+  return Object.keys(ModuleRegistry);
+}

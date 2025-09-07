@@ -1,9 +1,6 @@
 // A module is a collection of tasks to be completed in a single sitting.
 // Each module can contain one or more tasks, and each task can have its own configuration settings.
 
-import { TaskRegistry } from './task-registry.js';
-import { getMessage } from './messages.js';
-
 export const ModuleRegistry = {
     full_battery: {
         name: "Full RELEMD Task Battery",
@@ -32,18 +29,4 @@ export const ModuleRegistry = {
         ]
     }
 };
-
-export function getModule(moduleName) {
-  if (!(moduleName in ModuleRegistry)) {
-    throw new Error(`Module "${moduleName}" not found. Available modules: ${Object.keys(ModuleRegistry).join(', ')}`);
-  }
-
-  let module = ModuleRegistry[moduleName];
-
-  return module;
-}
-
-export function listModules() {
-  return Object.keys(ModuleRegistry);
-}
 
