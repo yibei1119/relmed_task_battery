@@ -38,6 +38,58 @@ function loadSequence(scriptSrc) {
         document.head.appendChild(script);
     });
 }
+
+/**
+ * Asynchronously loads a CSS stylesheet into the document head.
+ * Checks if the CSS is already loaded to prevent duplicates.
+ * 
+ * @async
+ * @function loadCSS
+ * @param {string} cssPath - The path or URL to the CSS file to load
+ * @returns {Promise<void>} A promise that resolves when the CSS is successfully loaded
+ * @throws {Error} Throws an error if the CSS file fails to load
+ * 
+ * @example
+ * // Load a CSS file
+ * await loadCSS('/styles/main.css');
+ * 
+ * @example
+ * // Handle loading errors
+ * try {
+ *   await loadCSS('/styles/theme.css');
+ * } catch (error) {
+ *   console.error('CSS loading failed:', error);
+ * }
+ */
+async function loadCSS(cssPath) {
+    return new Promise((resolve, reject) => {
+        // Check if CSS is already loaded
+        const existingLink = document.querySelector(`link[href="${cssPath}"]`);
+        if (existingLink) {
+            console.log(`CSS already loaded: ${cssPath}`);
+            resolve();
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = cssPath;
+        
+        link.onload = () => {
+            console.log(`Successfully loaded CSS: ${cssPath}`);
+            resolve();
+        };
+        
+        link.onerror = () => {
+            console.warn(`Failed to load CSS: ${cssPath}`);
+            reject(new Error(`Failed to load CSS: ${cssPath}`));
+        };
+        
+        document.head.appendChild(link);
+    });
+}
+
 /**
  * Creates a jsPsych preload trial for loading images before task execution
  * @param {string[]} images - Array of image file paths to preload
@@ -96,6 +148,7 @@ export {
     loadSequence,
     createPreloadTrial,
     saveUrlParameters,
-    enterExperiment
+    enterExperiment,
+    loadCSS
 };
 

@@ -7,7 +7,7 @@ import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
 import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
 import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
-import { loadSequence } from '/core/utils/index.js';
+import { loadSequence, loadCSS } from '/core/utils/index.js';
 import { createOpenTextTimeline } from '/tasks/open-text/index.js';
 import { createReversalTimeline, computeRelativeReversalBonus } from '/tasks/reversal/index.js';
 
@@ -35,8 +35,7 @@ export const TaskRegistry = {
         wk28: '../assets/sequences/trial1_wk28_sequences.js',
     },
     requirements: {
-      css: ['tasks/card-choosing/styles.css'],
-      note: 'Make sure to include card-choosing/styles.css in your HTML file'
+      css: ['/tasks/card-choosing/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -80,8 +79,7 @@ export const TaskRegistry = {
         wk28: '../assets/sequences/trial1_wk28_sequences.js',
     },
     requirements: {
-      css: ['tasks/card-choosing/styles.css'],
-      note: 'Make sure to include card-choosing/styles.css in your HTML file'
+      css: ['/tasks/card-choosing/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -112,8 +110,7 @@ export const TaskRegistry = {
         sequence: 'wk0'
     },
     requirements: {
-      css: ['tasks/card-choosing/styles.css'],
-      note: 'Make sure to include card-choosing/styles.css in your HTML file'
+      css: ['/tasks/card-choosing/styles.css'],
     },
     sequences: {
       screening: '../assets/sequences/trial1_screening_sequences.js',
@@ -152,8 +149,7 @@ export const TaskRegistry = {
         wk28: '/assets/sequences/trial1_wk28_sequences.js',
     },
     requirements: {
-      css: ['tasks/reversal/styles.css'],
-      note: 'Make sure to include reversal/styles.css in your HTML file'
+      css: ['/tasks/reversal/styles.css'],
     },
     resumptionRules: {
         enabled: true
@@ -175,8 +171,7 @@ export const TaskRegistry = {
       long_response_deadline: 6000,
     },
     requirements: {
-      css: ['tasks/delay-discounting/styles.css'],
-      note: 'Make sure to include delay-discounting/styles.css in your HTML file'
+      css: ['/tasks/delay-discounting/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -198,8 +193,7 @@ export const TaskRegistry = {
       task_name: "The name of the task as it would appear in the bonus object. Default is 'vigour'."
     },
     requirements: {
-      css: ['tasks/piggy-banks/styles.css'],
-      note: 'Make sure to include piggy-banks/styles.css in your HTML file'
+      css: ['/tasks/piggy-banks/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -217,8 +211,7 @@ export const TaskRegistry = {
       task_name: "The name of the task as it would appear in the bonus object. Default is 'PIT'."
     },
     requirements: {
-      css: ['tasks/piggy-banks/styles.css'],
-      note: 'Make sure to include piggy-banks/styles.css in your HTML file'
+      css: ['/tasks/piggy-banks/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -238,8 +231,7 @@ export const TaskRegistry = {
       warning_expected_n_back: 2
     },
     requirements: {
-      css: ['tasks/control/styles.css'],
-      note: 'Make sure to include control/styles.css in your HTML file'
+      css: ['/tasks/control/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -269,8 +261,7 @@ export const TaskRegistry = {
         minSpeed: "Minimum speed in presses per second required to pass the test. Default is 3.0, which was the 5th percentile in pilots 7 & 8."
     },
     requirements: {
-      css: ['tasks/max-press-test/styles.css'],
-      note: 'Make sure to include max-press-test/styles.css in your HTML file'
+      css: ['/tasks/max-press-test/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -298,8 +289,7 @@ export const TaskRegistry = {
         session: "Session identifier to select the appropriate stimulus set. Default is 'wk0'.",
     },
     requirements: {
-      css: ['tasks/pavlovian-lottery/styles.css'],
-      note: 'Make sure to include pavlovian-lottery/styles.css in your HTML file'
+      css: ['/tasks/pavlovian-lottery/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -335,8 +325,7 @@ export const TaskRegistry = {
       warning_text: "Text to display when a response is not captured before moving on. Default is `Didn't catch a response - moving on.`"
     },
     requirements: {
-      css: ['tasks/open-text/styles.css'],
-      note: 'Make sure to include open-text/styles.css in your HTML file'
+      css: ['/tasks/open-text/styles.css'],
     },
     resumptionRules: {
         enabled: true,
@@ -383,7 +372,21 @@ export async function createTaskTimeline(taskName, config = {}) {
 
     // Attach task object for internal use
     mergedConfig.__task = task;
-    
+
+    // Load required CSS assets
+    if (task.requirements?.css) {
+        console.log(`Loading CSS assets for task ${taskName}:`, task.requirements.css);
+        
+        try {
+            await Promise.all(
+                task.requirements.css.map(cssPath => loadCSS(cssPath))
+            );
+            console.log(`Successfully loaded all CSS assets for task ${taskName}`);
+        } catch (error) {
+            console.warn(`Some CSS assets failed to load for task ${taskName}:`, error);
+        }
+    }
+
     // Load required sequence using robust script loading
     if (task.sequences) {
         const sequenceName = mergedConfig.sequence;
