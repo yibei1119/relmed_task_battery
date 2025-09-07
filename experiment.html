@@ -52,7 +52,7 @@
     
     <script type="module">
         // Import task registry functions
-        import { createModuleTimeline, getModule } from '/api/index.js';
+        import { createModuleTimeline, getModuleInfo } from '/api/index.js';
         import { enterExperiment } from '/core/utils/index.js';
 
         // Get parameters from URL
@@ -81,7 +81,7 @@
         async function runExperiment() {
             try {
                 // Get module information
-                const moduleInfo = getModule('full_battery');
+                const moduleInfo = getModuleInfo('full_battery');
                 console.log('Module info:', moduleInfo);
 
                 // Create the timeline

@@ -68,6 +68,17 @@ export function listTasks() {
   return Object.keys(TaskRegistry);
 }
 
+export function getModule(moduleName) {
+  if (!(moduleName in ModuleRegistry)) {
+    throw new Error(`Module "${moduleName}" not found. Available modules: ${Object.keys(ModuleRegistry).join(', ')}`);
+  }
+
+  let module = ModuleRegistry[moduleName];
+
+  return module;
+}
+
+
 export async function createModuleTimeline(moduleName, config) {
     // Get module
     const module = getModule(moduleName);
@@ -87,16 +98,42 @@ export async function createModuleTimeline(moduleName, config) {
     return result.flat();
 }
 
-export function getModule(moduleName) {
-  if (!(moduleName in ModuleRegistry)) {
-    throw new Error(`Module "${moduleName}" not found. Available modules: ${Object.keys(ModuleRegistry).join(', ')}`);
-  }
-
-  let module = ModuleRegistry[moduleName];
-
-  return module;
-}
-
 export function listModules() {
   return Object.keys(ModuleRegistry);
+}
+
+export function getModuleInfo(moduleName) {
+    const module = ModuleRegistry[moduleName];
+    if (!module) {
+        return `Module "${moduleName}" not found in registry.`;
+    }
+
+    let info = `\n=== ${module.name} ===\n`;
+    
+    // Add module config if it exists
+    if (module.moduleConfig) {
+        info += `Module Config:\n`;
+        Object.entries(module.moduleConfig).forEach(([key, value]) => {
+            info += `  ${key}: ${value}\n`;
+        });
+        info += '\n';
+    }
+
+    // Add elements list
+    info += `Sequence: (${module.elements.length} elements total):\n`;
+    module.elements.forEach((element, index) => {
+        const num = (index + 1).toString().padStart(2, '0');
+        if (element.type === 'task') {
+            info += `  ${num}. ${element.name}`;
+            if (element.config) {
+                const configItems = Object.entries(element.config).map(([k, v]) => `${k}: ${v}`);
+                info += ` (${configItems.join(', ')})`;
+            }
+            info += '\n';
+        } else if (element.type === 'instructions') {
+            info += `  ${num}. [Instructions: ${element.config?.text || 'unknown'}]\n`;
+        }
+    });
+
+    return info;
 }
