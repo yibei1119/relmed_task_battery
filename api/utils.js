@@ -68,6 +68,51 @@ export function listTasks() {
   return Object.keys(TaskRegistry);
 }
 
+export function getTaskInfo(taskName) {
+    const task = TaskRegistry[taskName];
+    if (!task) {
+        return `Task "${taskName}" not found in registry.`;
+    }
+
+    let info = `\n=== ${task.name} ===\n`;
+    info += `${task.description}\n\n`;
+
+    // Merged configuration options with descriptions
+    const mergedConfigOptions = { ...globalConfigOptions, ...task.configOptions };
+    if (Object.keys(mergedConfigOptions).length > 0) {
+        info += `Configuration Options:\n`;
+        Object.entries(mergedConfigOptions).forEach(([key, description]) => {
+            info += `  ${key}: ${description}\n`;
+        });
+        info += '\n';
+    }
+
+    // Requirements
+    if (task.requirements) {
+        info += `Requirements:\n`;
+        if (task.requirements.css) {
+            info += `  CSS: ${task.requirements.css.join(', ')}\n`;
+        }
+        info += '\n';
+    }
+
+    // Resumption rules
+    if (task.resumptionRules) {
+        info += `Resumption: ${task.resumptionRules.enabled ? 'Enabled' : 'Disabled'}`;
+        if (task.resumptionRules.granularity) {
+            info += ` (${task.resumptionRules.granularity} level)`;
+        }
+        info += '\n';
+    }
+
+    // Sequences (if available)
+    if (task.sequences) {
+        info += `\nAvailable Sequences: ${Object.keys(task.sequences).join(', ')}\n`;
+    }
+
+    return info;
+}
+
 export function getModule(moduleName) {
   if (!(moduleName in ModuleRegistry)) {
     throw new Error(`Module "${moduleName}" not found. Available modules: ${Object.keys(ModuleRegistry).join(', ')}`);
