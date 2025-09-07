@@ -52,7 +52,7 @@
     
     <script type="module">
         // Import task registry functions
-        import { createTaskTimeline, getTaskInfo } from '/api/index.js';
+        import { createModuleTimeline, getModule } from '/api/index.js';
         import { enterExperiment } from '/core/utils/index.js';
 
         // Get parameters from URL
@@ -70,23 +70,22 @@
             }
         });
 
-        // Configuration for the card choosing task
-        const taskConfig = {
-            sequence: 'wk0',
-            session: 'wk0'
+        // Configurations
+        const session = new URLSearchParams(window.location.search).get('session') || 'wk0';
+        const settings = {
+            sequence: session,
+            session: session
         };
 
         // Function to run the experiment
         async function runExperiment() {
             try {
-                console.log('Starting card choosing task...');
-                
-                // Get task information
-                const taskInfo = getTaskInfo('PILT');
-                console.log('Task info:', taskInfo);
-                
-                // Create the task timeline
-                const timeline = await createTaskTimeline('PILT', taskConfig);
+                // Get module information
+                const moduleInfo = getModule('full_battery');
+                console.log('Module info:', moduleInfo);
+
+                // Create the timeline
+                const timeline = await createModuleTimeline('full_battery', settings);
                 console.log('Timeline created:', timeline);
                 
                 const exitFullscreen = {
