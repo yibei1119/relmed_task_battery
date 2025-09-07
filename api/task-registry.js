@@ -9,6 +9,7 @@ import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js
 import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
 import { createOpenTextTimeline } from '/tasks/open-text/index.js';
 import { createReversalTimeline, computeRelativeReversalBonus } from '/tasks/reversal/index.js';
+import { createAcceptabilityTimeline } from '/tasks/acceptability-judgment/index.js';
 
 export const TaskRegistry = {
   PILT: {
