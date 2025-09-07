@@ -12,7 +12,7 @@ export const ModuleRegistry = {
             { type: "instructions", config: { text: "start_message" } },
             { type: "task", name: "reversal"},
             { type: "task", name: "max_press_test" },
-            { type: "task", name: "pavlovian_lottery" },§
+            { type: "task", name: "pavlovian_lottery" },
             { type: "task", name: "PILT" },
             { type: "task", name: "acceptability_judgment", config: { game_description: "card choosing game" } },
             { type: "task", name: "vigour" },
