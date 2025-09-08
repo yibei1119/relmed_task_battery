@@ -15,8 +15,8 @@ const formatted_warning_msg = `
     ">Didn't catch a response - moving on</div>
 `;
 
-                
-const messages = {
+
+export const messages = {
     full_battery: {
         start_message: (settings) => { 
             return [`<p><b>Thank you for taking part in this session!</b></p>
@@ -88,7 +88,7 @@ export function getMessage(moduleName, messageKey, settings={}) {
         } else {
             messageContent = message;
         }
-        
+
         // If the message is an object with a 'message' property, extract it and any additional properties
         if (typeof messageContent === 'object' && messageContent !== null && messageContent.hasOwnProperty('message')) {
             const { message: msg, ...additionalArgs } = messageContent;
