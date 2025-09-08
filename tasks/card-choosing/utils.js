@@ -455,7 +455,7 @@ function interBlockStimulus(settings){
     let txt = ``
 
     // Add text and tallies for early stop
-    if (window.skipThisBlock && (settings.module_name ? settings.module_name !== "screening" : true)){
+    if (window.skipThisBlock && (settings.session ? settings.session !== "screening" : true)){
         
         txt += `<p>You've found the better ${n_groups > 1 ? "cards" : "card"}.</p><p>You will skip the remaining turns and `;
         
