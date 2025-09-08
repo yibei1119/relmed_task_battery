@@ -70,7 +70,7 @@ function generatePITstimulus(coin, ratio, settings) {
         </div>
         <div id="piggy-container">
           <!-- Piggy Bank Image -->
-          <img id="piggy-bank" src="/assets/images/piggy-bank/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
+          <img id="piggy-bank" src="/assets/images/piggy-banks/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
         </div>
         <div id="obstructor-container">
           <img id="obstructor" src="/assets/images/piggy-banks/occluding_clouds.png" alt="Obstructor">
