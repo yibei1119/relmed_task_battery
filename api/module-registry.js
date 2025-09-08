@@ -21,10 +21,11 @@ export const ModuleRegistry = {
             { type: "task", name: "PIT"},
             { type: "task", name: "acceptability_judgment", config: { task_name: "PIT", game_description: "piggy-bank game in cloudy space" } },
             { type: "task", name: "vigour_test"},
-            { type: "task", name: "post_learning_test"},
+            { type: "task", name: "post_PILT_test"},
             { type: "task", name: "control"},
             { type: "task", name: "acceptability_judgment", config: { task_name: "control", game_description: "shipping game" } },
             { type: "task", name: "WM" },
+            { type: "task", name: "post_WM_test"},
             { type: "task", name: "acceptability_judgment", config: { task_name: "wm", game_description: "one-card game you just completed" } },
             { type: "task", name: "open_text" },
             { type: "instructions", config: { text: "end_message" } }
