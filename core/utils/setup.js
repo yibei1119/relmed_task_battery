@@ -151,17 +151,6 @@ const enterExperiment = {
     }
 };
 
-// Function to call at the end of the experiment
-function endExperiment() {
-
-    window.removeEventListener('beforeunload', preventRefresh);
-
-    
-    saveDataREDCap(10, {
-        message: "endTask"
-    });
-}
-
 
 // Export functions for use in other modules
 export {

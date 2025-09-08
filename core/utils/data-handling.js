@@ -1,3 +1,5 @@
+import { preventRefresh} from "./participation-validation.js"
+
 /**
  * Data handling and communication utilities
  * Manages data saving, state updates, and communication with parent windows/servers
@@ -186,23 +188,16 @@ function saveDataREDCap(retry = 1, extra_fields = {}, callback = () => {}) {
  */
 function endExperiment() {
 
+    // Print end experiment message
+    console.log("Experiment finished. Sending final data...");
+
     // Remove beforeunload event listener to allow page navigation
     window.removeEventListener('beforeunload', preventRefresh);
 
-    if (window.context === "relmed") {
-        // Save data with end task message for RELMED context
-        saveDataREDCap(10, {
-            message: "endTask"
-        });
-    } else {
-        // Save data and redirect to Prolific completion page
-        saveDataREDCap(10, {
-            message: "endTask"
-        }, () => {
-            // Redirect to Prolific completion page
-            window.location.replace("https://app.prolific.com/submissions/complete?cc=CQTRGXFP")
-        });
-    }
+    // Save data with end task message for RELMED context
+    saveDataREDCap(10, {
+        message: "endTask"
+    });
 }
 
 // Export functions for use in other modules
