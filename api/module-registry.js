@@ -24,7 +24,7 @@ export const ModuleRegistry = {
             { type: "task", name: "post_learning_test"},
             { type: "task", name: "control"},
             { type: "task", name: "acceptability_judgment", config: { task_name: "control", game_description: "shipping game" } },
-            { type: "task", name: "wm" },
+            { type: "task", name: "WM" },
             { type: "task", name: "acceptability_judgment", config: { task_name: "wm", game_description: "one-card game you just completed" } },
             { type: "task", name: "open_text" },
             { type: "instructions", config: { text: "end_message" } }
