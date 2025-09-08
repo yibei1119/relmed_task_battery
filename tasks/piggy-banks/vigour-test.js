@@ -41,7 +41,7 @@ function generatePiggyHTML(magnitude, ratio, side) {
   const piggy_style = `filter: saturate(${50 * (400 / 50) ** ratio_factor}%) brightness(${115 * (90/115) ** ratio_factor}%);`;
 
   return `
-      <img id="piggy-bank-${side}" src="imgs/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
+      <img id="piggy-bank-${side}" src="/assets/images/piggy-banks/piggy-bank.png" alt="Piggy Bank" style="${piggy_style}">
   `;
 }
 
@@ -66,7 +66,7 @@ function updateDualPiggyTails(magnitude, ratio, side) {
     const spacing = tailWidth * 0; // Adjust spacing between tails
     for (let i = 0; i < magnitude_index + 1; i++) {
       const tail = document.createElement('img');
-      tail.src = 'imgs/piggy-tail2.png';
+      tail.src = '/assets/images/piggy-banks/piggy-tail2.png';
       tail.alt = 'Piggy Tail';
       tail.className = 'piggy-tail';
 
@@ -121,7 +121,7 @@ const postVigourTrial = {
     }
     const n_trials = jsPsych.data.get().filter({ trialphase: "vigour_test" }).count()
     if (n_trials % 9 == 0) {
-      saveDataREDCap(retry = 3);
+      saveDataREDCap(3);
     }
   },
   post_trial_gap: 400
