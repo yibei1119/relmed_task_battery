@@ -4,7 +4,7 @@
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '/tasks/card-choosing/index.js';
 import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
-import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
+import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline, createVigourTestTimeline } from '/tasks/piggy-banks/index.js';
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
 import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
 import { createOpenTextTimeline } from '/tasks/open-text/index.js';
@@ -132,30 +132,17 @@ export const TaskRegistry = {
   vigour_test: {
     name: 'Vigour Test',
     description: 'A test of knowledge of the stimulus-reward contingencies in the vigour task',
-    createTimeline: createPostLearningTestTimeline,
+    createTimeline: createVigourTestTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
     defaultConfig: {
-        task_name: "vigour_test",
-        test_confidence_every: 4,
-        sequence: 'wk0'
     },
     requirements: {
-      css: ['/tasks/card-choosing/styles.css'],
-    },
-    sequences: {
-      screening: '/assets/sequences/trial1_screening_sequences.js',
-      wk0: '/assets/sequences/trial1_wk0_sequences.js',
-      wk2: '/assets/sequences/trial1_wk2_sequences.js',
-      wk4: '/assets/sequences/trial1_wk4_sequences.js',
-      wk24: '/assets/sequences/trial1_wk24_sequences.js',
-      wk28: '/assets/sequences/trial1_wk28_sequences.js',
+      css: ['/tasks/piggy-banks/styles.css'],
     },
     resumptionRules: {
       enabled: true
     },
     configOptions: {
-        task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'pilt_test'.",
-        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
-        sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
     }
   },
   reversal: {
