@@ -42,7 +42,7 @@ export const ModuleRegistry = {
             { type: "task", name: "max_press_test" },
             { type: "task", name: "PILT" },
             { type: "task", name: "acceptability_judgment", config: { task_name: "PILT", game_description: "card choosing game" } },
-            // { type: "task", name: "control" },
+            { type: "task", name: "control" },
             { type: "task", name: "acceptability_judgment", config: { task_name: "control", game_description: "shipping game" } },
             { type: "task", name: "reversal", config: { n_trials: 50 } },
             { type: "task", name: "acceptability_judgment", config: { task_name: "reversal", game_description: "squirrel game" } },
