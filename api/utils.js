@@ -3,6 +3,11 @@ import { TaskRegistry, globalConfig, globalConfigOptions } from './task-registry
 import { getMessage } from './messages.js';
 import { ModuleRegistry } from './module-registry.js';
 
+/**
+ * Get a task from the registry with global config merged
+ * @param {string} taskName - Name of the task to retrieve
+ * @returns {Object} Task object with merged global configuration
+ */
 export function getTask(taskName) {
   if (!(taskName in TaskRegistry)) {
     throw new Error(`Task "${taskName}" not found. Available tasks: ${Object.keys(TaskRegistry).join(', ')}`);
@@ -17,6 +22,12 @@ export function getTask(taskName) {
   return task;
 }
 
+/**
+ * Create a timeline for a specific task with all required assets loaded
+ * @param {string} taskName - Name of the task
+ * @param {Object} config - Task configuration object
+ * @returns {Promise<Array>} Timeline array for the task
+ */
 export async function createTaskTimeline(taskName, config = {}) {
     // Get task
     const task = getTask(taskName);
@@ -41,7 +52,7 @@ export async function createTaskTimeline(taskName, config = {}) {
         }
     }
 
-    // Load required sequence using robust script loading
+    // Load task-specific sequence if available
     if (task.sequences) {
         const sequenceName = mergedConfig.sequence;
         const sequencePath = task.sequences?.[sequenceName];
@@ -64,10 +75,19 @@ export async function createTaskTimeline(taskName, config = {}) {
     return task.createTimeline(mergedConfig);
 }
 
+/**
+ * Get list of all available task names
+ * @returns {Array<string>} Array of task names
+ */
 export function listTasks() {
   return Object.keys(TaskRegistry);
 }
 
+/**
+ * Get detailed information about a specific task
+ * @param {string} taskName - Name of the task
+ * @returns {string} Formatted information string about the task
+ */
 export function getTaskInfo(taskName) {
     const task = TaskRegistry[taskName];
     if (!task) {
@@ -113,6 +133,11 @@ export function getTaskInfo(taskName) {
     return info;
 }
 
+/**
+ * Get a module from the registry
+ * @param {string} moduleName - Name of the module to retrieve
+ * @returns {Object} Module object
+ */
 export function getModule(moduleName) {
   if (!(moduleName in ModuleRegistry)) {
     throw new Error(`Module "${moduleName}" not found. Available modules: ${Object.keys(ModuleRegistry).join(', ')}`);
@@ -123,12 +148,17 @@ export function getModule(moduleName) {
   return module;
 }
 
-
+/**
+ * Create a timeline for a module by processing all its elements
+ * @param {string} moduleName - Name of the module
+ * @param {Object} config - Module configuration object
+ * @returns {Promise<Array>} Flattened timeline array for all module elements
+ */
 export async function createModuleTimeline(moduleName, config) {
     // Get module
     const module = getModule(moduleName);
 
-    // Create timeline for each task in the module
+    // Create timeline for each element in the module
     const timelines = module.elements.map(element => {
         if (element.type === "task") {
             return createTaskTimeline(element.name, { ...module.moduleConfig, ...element.config, ...config });
@@ -143,10 +173,19 @@ export async function createModuleTimeline(moduleName, config) {
     return result.flat();
 }
 
+/**
+ * Get list of all available module names
+ * @returns {Array<string>} Array of module names
+ */
 export function listModules() {
   return Object.keys(ModuleRegistry);
 }
 
+/**
+ * Get detailed information about a specific module
+ * @param {string} moduleName - Name of the module
+ * @returns {string} Formatted information string about the module
+ */
 export function getModuleInfo(moduleName) {
     const module = ModuleRegistry[moduleName];
     if (!module) {
