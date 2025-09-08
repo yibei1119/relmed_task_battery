@@ -89,12 +89,15 @@
         // Function to run the experiment
         async function runExperiment() {
             try {
+                // Which module to run
+                const module_name = session == "screening" ? 'screening' : 'full_battery';
+
                 // Get module information
-                const moduleInfo = getModuleInfo('full_battery');
+                const moduleInfo = getModuleInfo(module_name);
                 console.log('Module info:', moduleInfo);
 
                 // Create the timeline
-                const timeline = await createModuleTimeline('full_battery', settings);
+                const timeline = await createModuleTimeline(module_name, settings);
                 console.log('Timeline created:', timeline);
                 
                 const exitFullscreen = {
