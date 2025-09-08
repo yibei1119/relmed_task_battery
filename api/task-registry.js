@@ -27,12 +27,12 @@ export const TaskRegistry = {
         session: 'wk0'
     },
     sequences: {
-        screening: '/assets/sequences/trial1_screening_sequences.js',
-        wk0: '/assets/sequences/trial1_wk0_sequences.js',
-        wk2: '/assets/sequences/trial1_wk2_sequences.js',
-        wk4: '/assets/sequences/trial1_wk4_sequences.js',
-        wk24: '/assets/sequences/trial1_wk24_sequences.js',
-        wk28: '/assets/sequences/trial1_wk28_sequences.js',
+        screening: '/tasks/card-choosing/sequences/PILT/trial1_screening.js',
+        wk0: '/tasks/card-choosing/sequences/PILT/trial1_wk0.js',
+        wk2: '/tasks/card-choosing/sequences/PILT/trial1_wk2.js',
+        wk4: '/tasks/card-choosing/sequences/PILT/trial1_wk4.js',
+        wk24: '/tasks/card-choosing/sequences/PILT/trial1_wk24.js',
+        wk28: '/tasks/card-choosing/sequences/PILT/trial1_wk28.js',
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
@@ -71,12 +71,11 @@ export const TaskRegistry = {
         session: 'wk0'
     },
     sequences: {
-        screening: '/assets/sequences/trial1_screening_sequences.js',
-        wk0: '/assets/sequences/trial1_wk0_sequences.js',
-        wk2: '/assets/sequences/trial1_wk2_sequences.js',
-        wk4: '/assets/sequences/trial1_wk4_sequences.js',
-        wk24: '/assets/sequences/trial1_wk24_sequences.js',
-        wk28: '/assets/sequences/trial1_wk28_sequences.js',
+        wk0: '/tasks/card-choosing/sequences/WM/trial1_wk0.js',
+        wk2: '/tasks/card-choosing/sequences/WM/trial1_wk2.js',
+        wk4: '/tasks/card-choosing/sequences/WM/trial1_wk4.js',
+        wk24: '/tasks/card-choosing/sequences/WM/trial1_wk24.js',
+        wk28: '/tasks/card-choosing/sequences/WM/trial1_wk28.js',
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
@@ -113,12 +112,11 @@ export const TaskRegistry = {
       css: ['/tasks/card-choosing/styles.css'],
     },
     sequences: {
-      screening: '/assets/sequences/trial1_screening_sequences.js',
-      wk0: '/assets/sequences/trial1_wk0_sequences.js',
-      wk2: '/assets/sequences/trial1_wk2_sequences.js',
-      wk4: '/assets/sequences/trial1_wk4_sequences.js',
-      wk24: '/assets/sequences/trial1_wk24_sequences.js',
-      wk28: '/assets/sequences/trial1_wk28_sequences.js',
+      wk0: '/tasks/card-choosing/sequences/PILT-test/trial1_wk0.js',
+      wk2: '/tasks/card-choosing/sequences/PILT-test/trial1_wk2.js',
+      wk4: '/tasks/card-choosing/sequences/PILT-test/trial1_wk4.js',
+      wk24: '/tasks/card-choosing/sequences/PILT-test/trial1_wk24.js',
+      wk28: '/tasks/card-choosing/sequences/PILT-test/trial1_wk28.js',
     },
     resumptionRules: {
       enabled: true
@@ -157,12 +155,12 @@ export const TaskRegistry = {
       session: 'wk0'
     },
     sequences: {
-        screening: '/assets/sequences/trial1_screening_sequences.js',
-        wk0: '/assets/sequences/trial1_wk0_sequences.js',
-        wk2: '/assets/sequences/trial1_wk2_sequences.js',
-        wk4: '/assets/sequences/trial1_wk4_sequences.js',
-        wk24: '/assets/sequences/trial1_wk24_sequences.js',
-        wk28: '/assets/sequences/trial1_wk28_sequences.js',
+        screening: '/tasks/reversal/sequences/trial1_screening.js',
+        wk0: '/tasks/reversal/sequences/trial1_wk0.js',
+        wk2: '/tasks/reversal/sequences/trial1_wk2.js',
+        wk4: '/tasks/reversal/sequences/trial1_wk4.js',
+        wk24: '/tasks/reversal/sequences/trial1_wk24.js',
+        wk28: '/tasks/reversal/sequences/trial1_wk28.js',
     },
     requirements: {
       css: ['/tasks/reversal/styles.css'],
