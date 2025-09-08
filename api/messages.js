@@ -51,7 +51,7 @@ export function getMessage(moduleName, messageKey, settings={}) {
             const messageContent = message(settings);
             return instructionTrial(Array.isArray(messageContent) ? messageContent : [messageContent]);
         } else {
-            return instructionTrial(Array.isArray(messageContent) ? messageContent : [messageContent]);
+            return instructionTrial(Array.isArray(message) ? message : [message]);
         }
     } else {
         console.warn(`Message not found for module: ${moduleName}, key: ${messageKey}`);
