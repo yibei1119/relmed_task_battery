@@ -1,6 +1,6 @@
 import { loadSequence, loadCSS } from '/core/utils/index.js';
 import { TaskRegistry, globalConfig, globalConfigOptions } from './task-registry.js';
-import { getMessage } from './messages.js';
+import { messages } from './messages.js';
 import { ModuleRegistry } from './module-registry.js';
 
 /**
@@ -131,6 +131,62 @@ export function getTaskInfo(taskName) {
     }
 
     return info;
+}
+
+/**
+ * Create an instruction trial object with base configuration
+ * @param {string|Array} message - Instruction message(s) to display
+ * @param {...Object} additionalArgs - Additional configuration objects to merge
+ * @returns {Object} Instruction trial configuration object
+ */
+function instructionTrial(message, ...additionalArgs) {
+    let baseObject = {
+        type: jsPsychInstructions,
+        css_classes: ['instructions'],
+        pages: message,
+        show_clickable_nav: true,
+        data: {trialphase: "instruction"}
+    };
+
+    // Merge additional arguments into the base object
+    additionalArgs.forEach(arg => {
+        if (typeof arg === 'object' && arg !== null) {
+            Object.assign(baseObject, arg);
+        }
+    });
+
+    return baseObject;
+}
+
+/**
+ * Get a message and create an instruction trial from the message registry
+ * @param {string} moduleName - Name of the module containing the message
+ * @param {string} messageKey - Key of the message to retrieve
+ * @param {Object} settings - Settings object to pass to message functions
+ * @returns {Object|string} Instruction trial object or empty string if message not found
+ */
+export function getMessage(moduleName, messageKey, settings={}) {
+    if (messages[moduleName] && messages[moduleName][messageKey]) {
+        const message = messages[moduleName][messageKey];
+        
+        let messageContent;
+        if (typeof message === 'function') {
+            messageContent = message(settings);
+        } else {
+            messageContent = message;
+        }
+
+        // If the message is an object with a 'message' property, extract it and any additional properties
+        if (typeof messageContent === 'object' && messageContent !== null && messageContent.hasOwnProperty('message')) {
+            const { message: msg, ...additionalArgs } = messageContent;
+            return instructionTrial(Array.isArray(msg) ? msg : [msg], additionalArgs);
+        }   
+
+        return instructionTrial(Array.isArray(messageContent) ? messageContent : [messageContent]);
+    } else {
+        console.warn(`Message not found for module: ${moduleName}, key: ${messageKey}`);
+        return "";
+    }
 }
 
 /**

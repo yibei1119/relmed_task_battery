@@ -1,3 +1,17 @@
+
+/**
+ * RELMED Task Battery - Messages Module
+ * 
+ * This module contains standardized messages and instructions displayed to participants
+ * during different phases of the RELMED experiment sessions. It includes:
+ * 
+ * - Start and end messages for different session types (full_battery, screening)
+ * - Formatted warning messages for response timeouts
+ * - Dynamic content based on session settings (e.g., week 0 vs other weeks)
+ * 
+ * The messages support HTML formatting and can include optional fields passed on to the jsPsych instructions trial object.
+ */
+
 import { endExperiment } from '/core/utils/index.js';
 
 const formatted_warning_msg = `
@@ -15,8 +29,8 @@ const formatted_warning_msg = `
     ">Didn't catch a response - moving on</div>
 `;
 
-                
-const messages = {
+
+export const messages = {
     full_battery: {
         start_message: (settings) => { 
             return [`<p><b>Thank you for taking part in this session!</b></p>
@@ -59,45 +73,3 @@ const messages = {
     }
 }
 
-function instructionTrial(message, ...additionalArgs) {
-    let baseObject = {
-        type: jsPsychInstructions,
-        css_classes: ['instructions'],
-        pages: message,
-        show_clickable_nav: true,
-        data: {trialphase: "instruction"}
-    };
-
-    // Merge additional arguments into the base object
-    additionalArgs.forEach(arg => {
-        if (typeof arg === 'object' && arg !== null) {
-            Object.assign(baseObject, arg);
-        }
-    });
-
-    return baseObject;
-}
-
-export function getMessage(moduleName, messageKey, settings={}) {
-    if (messages[moduleName] && messages[moduleName][messageKey]) {
-        const message = messages[moduleName][messageKey];
-        
-        let messageContent;
-        if (typeof message === 'function') {
-            messageContent = message(settings);
-        } else {
-            messageContent = message;
-        }
-        
-        // If the message is an object with a 'message' property, extract it and any additional properties
-        if (typeof messageContent === 'object' && messageContent !== null && messageContent.hasOwnProperty('message')) {
-            const { message: msg, ...additionalArgs } = messageContent;
-            return instructionTrial(Array.isArray(msg) ? msg : [msg], additionalArgs);
-        }   
-
-        return instructionTrial(Array.isArray(messageContent) ? messageContent : [messageContent]);
-    } else {
-        console.warn(`Message not found for module: ${moduleName}, key: ${messageKey}`);
-        return "";
-    }
-}
