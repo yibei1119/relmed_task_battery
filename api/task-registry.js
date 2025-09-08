@@ -99,9 +99,9 @@ export const TaskRegistry = {
         session: "Session identifier to govern session-specific behaviour. Default is 'wk0'. Should be deprecated, with settings exposed."
     }
   },
-  post_learning_test: {
-    name: 'Post Learning Test',
-    description: 'A test phase that evaluates learning performance in notional extinction after completing a card-choosing learning phase',
+  post_PILT_test: {
+    name: 'Post PILT Test',
+    description: 'A test phase that evaluates learning performance in notional extinction after completing the PILT task',
     createTimeline: createPostLearningTestTimeline,
     defaultConfig: {
         task_name: "pilt_test",
@@ -123,6 +123,34 @@ export const TaskRegistry = {
     },
     configOptions: {
         task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'pilt_test'.",
+        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
+        sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
+    }
+  },
+  post_WM_test: {
+    name: 'Post WM Task Test',
+    description: 'A test phase that evaluates learning performance in notional extinction after completing the RLWM task',
+    createTimeline: createPostLearningTestTimeline,
+    defaultConfig: {
+        task_name: "wm_test",
+        test_confidence_every: 4,
+        sequence: 'wk0'
+    },
+    requirements: {
+      css: ['/tasks/card-choosing/styles.css'],
+    },
+    sequences: {
+      wk0: '/tasks/card-choosing/sequences/WM-test/trial1_wk0.js',
+      wk2: '/tasks/card-choosing/sequences/WM-test/trial1_wk2.js',
+      wk4: '/tasks/card-choosing/sequences/WM-test/trial1_wk4.js',
+      wk24: '/tasks/card-choosing/sequences/WM-test/trial1_wk24.js',
+      wk28: '/tasks/card-choosing/sequences/WM-test/trial1_wk28.js',
+    },
+    resumptionRules: {
+      enabled: true
+    },
+    configOptions: {
+        task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'wm_test'.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
         sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
     }
