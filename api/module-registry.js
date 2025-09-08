@@ -32,13 +32,13 @@ export const ModuleRegistry = {
         ]
     },
     training: {
-        name: "Training Module",
+        name: "Screening Module",
         moduleConfig: { // Settings that apply to all tasks in the module unless overridden
             session: "screening",
             sequence: "screening"
         }, 
         elements: [
-            { type: "instructions", config: { text: "traning_start_message" } },
+            { type: "instructions", config: { text: "screening_start_message" } },
             { type: "task", name: "max_press_test" },
             { type: "task", name: "PILT" },
             { type: "task", name: "acceptability_judgment", config: { task_name: "PILT", game_description: "card choosing game" } },
@@ -46,7 +46,7 @@ export const ModuleRegistry = {
             { type: "task", name: "acceptability_judgment", config: { task_name: "control", game_description: "shipping game" } },
             { type: "task", name: "reversal", config: { n_trials: 50 } },
             { type: "task", name: "acceptability_judgment", config: { task_name: "reversal", game_description: "squirrel game" } },
-            { type: "instructions", config: { text: "traning_end_message" } }
+            { type: "instructions", config: { text: "screening_end_message" } }
         ]
     }
 };
