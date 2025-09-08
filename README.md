@@ -32,7 +32,10 @@ relmed_task_battery/
 ├── README
 ├── api/                          # Task registry and unified interface
 │   ├── index.js                 # Main API entry point
-│   └── task-registry.js         # Task definitions and configuration
+│   ├── task-registry.js         # Task definitions and configuration
+│   ├── module-registry.js       # Module definitions for multi-task experiments
+│   ├── messages.js              # Instruction messages for modules
+│   └── utils.js                 # Core API utility functions
 ├── tasks/                       # Individual task implementations
 │   ├── card-choosing/           # PILT and WM tasks
 │   ├── control/                 # Control task
@@ -56,7 +59,15 @@ relmed_task_battery/
 
 **If you don't need to modify task behavior**, creating an experiment is straightforward - you just need to write an HTML file that loads the required dependencies and calls the API functions. The framework handles all the task logic, timing, and data collection automatically.
 
-### Steps to Create an HTML Experiment File
+**You have two main approaches:**
+1. **Individual Tasks**: Build experiments by combining individual tasks using `createTaskTimeline()`
+2. **Modules**: Use collections of tasks using `createModuleTimeline()` 
+
+### Approach 1: Individual Tasks
+
+This approach gives you maximum flexibility to customize which tasks to include and their order.
+
+#### Steps to Create an HTML Experiment File
 
 1. **Set up HTML structure**: Create a basic HTML page with a display element for jsPsych
 
@@ -77,11 +88,90 @@ relmed_task_battery/
 
 5. **Run the experiment** using `jsPsych.run()`
 
-### Single vs Multiple Tasks
+#### Single vs Multiple Tasks
 
 - **Single Task**: Call `createTaskTimeline()` once with your desired configuration
 - **Multiple Tasks**: Call `createTaskTimeline()` for each task and combine the resulting arrays into one timeline
 - **Task Order**: Simply arrange the timeline arrays in the order you want tasks to appear
+
+### Approach 2: Predefined Modules
+
+Modules are predefined collections of tasks designed to be completed in a single session. They include task sequencing, instruction messages, and standardized configurations.
+
+#### Available Modules
+
+- **`full_battery`**: Complete RELMED task battery with all tasks and questionnaires
+- **`screening`**: Shortened version for participant screening with key tasks
+
+#### Using Modules
+
+```javascript
+// Import module functions
+import { createModuleTimeline, getModuleInfo, listModules } from '/api/index.js';
+
+// Get information about available modules
+console.log(listModules()); // ['full_battery', 'screening']
+console.log(getModuleInfo('screening')); // Detailed module information
+
+// Create timeline for a module
+const timeline = await createModuleTimeline('screening', {
+    session: 'screening',
+    sequence: 'screening'
+});
+
+// Run the experiment
+await jsPsych.run([enterExperiment, ...timeline, exitFullscreen]);
+```
+
+#### Module Configuration
+
+Modules support three levels of configuration (in order of precedence):
+1. **Module-level config**: Applied to all tasks in the module
+2. **Element-level config**: Applied to specific tasks within the module 
+3. **Runtime config**: Passed to `createModuleTimeline()`, overrides all others
+
+```javascript
+// Module definition example (from module-registry.js)
+{
+    name: "Screening Module",
+    moduleConfig: {           // Applied to all tasks
+        session: "screening",
+        sequence: "screening"
+    },
+    elements: [
+        { type: "task", name: "PILT", config: { present_pavlovian: false } }, // Task-specific config
+        { type: "instructions", config: { text: "start_message" } }
+    ]
+}
+
+// Runtime configuration overrides everything
+const timeline = await createModuleTimeline('screening', {
+    session: 'custom_session'  // This will override moduleConfig.session
+});
+```
+
+#### Creating Custom Modules
+
+You can define your own modules in `api/module-registry.js`:
+
+```javascript
+export const ModuleRegistry = {
+    my_custom_module: {
+        name: "My Custom Module",
+        moduleConfig: {
+            session: "custom",
+            sequence: "wk0"
+        },
+        elements: [
+            { type: "instructions", config: { text: "start_message" } },
+            { type: "task", name: "PILT" },
+            { type: "task", name: "control", config: { max_instruction_fails: 5 } },
+            { type: "task", name: "open_text" },
+            { type: "instructions", config: { text: "end_message" } }
+        ]
+    }
+};
+```
 
 ### Required Files and Dependencies
 
@@ -141,10 +231,20 @@ console.log(taskInfo.defaultConfig);  // Shows default values
 
 ### Core Functions
 
+#### Individual Tasks
 - `createTaskTimeline(taskName, config)` - Creates a timeline for the specified task
 - `getTaskInfo(taskName)` - Returns task information including configuration options
 - `listTasks()` - Returns array of all available task names
 - `getTask(taskName)` - Returns the complete task object from registry
+
+#### Modules (Multi-Task Collections)
+- `createModuleTimeline(moduleName, config)` - Creates a timeline for an entire module
+- `getModuleInfo(moduleName)` - Returns module information including task sequence
+- `listModules()` - Returns array of all available module names
+- `getModule(moduleName)` - Returns the complete module object from registry
+
+#### Messages and Instructions
+- `getMessage(moduleName, messageKey, settings)` - Retrieves instruction messages for modules
 
 ### Utility Functions
 
@@ -154,13 +254,22 @@ console.log(taskInfo.defaultConfig);  // Shows default values
 ### Task Names
 
 Use these exact strings when calling `createTaskTimeline()`:
-- `'PILT'`, `'WM'`, `'post_learning_test'`
-- `'delay_discounting'`, `'vigour'`, `'PIT'` 
+- `'PILT'`, `'WM'`, `'post_learning_test'`, `'post_PILT_test'`, `'post_WM_test'`
+- `'delay_discounting'`, `'vigour'`, `'vigour_test'`, `'PIT'` 
 - `'control'`, `'max_press_test'`, `'pavlovian_lottery'`, `'open_text'`
+- `'reversal'`, `'acceptability_judgment'`
+
+### Module Names
+
+Use these exact strings when calling `createModuleTimeline()`:
+- `'full_battery'` - Complete RELMED task battery 
+- `'screening'` - Shortened screening version
 
 ## Examples
 
 Complete working examples are available in the `examples/` folder:
+
+### Individual Task Examples
 - `PILT.html` - Card choosing learning task
 - `control.html` - Control-seeking task  
 - `delay-discounting.html` - Intertemporal choice task
@@ -168,3 +277,28 @@ Complete working examples are available in the `examples/` folder:
 - And more...
 
 Each example demonstrates proper file loading, API usage, and task configuration for that specific task type.
+
+### Module Example
+- `experiment.html` - Complete module-based experiment using `createModuleTimeline()`
+
+This example shows how to:
+- Load all required dependencies for multiple tasks
+- Use URL parameters to select modules (`full_battery` vs `screening`)
+- Handle module configuration and timeline creation
+- Support simulation mode for testing
+
+**Key features demonstrated:**
+```javascript
+// Module selection based on URL parameter
+const module_name = session == "screening" ? 'screening' : 'full_battery';
+
+// Module timeline creation
+const timeline = await createModuleTimeline(module_name, settings);
+
+// Complete experiment structure
+const fullTimeline = [
+    enterExperiment,
+    ...timeline,
+    exitFullscreen
+];
+```
