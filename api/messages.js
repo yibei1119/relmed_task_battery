@@ -1,3 +1,17 @@
+
+/**
+ * RELMED Task Battery - Messages Module
+ * 
+ * This module contains standardized messages and instructions displayed to participants
+ * during different phases of the RELMED experiment sessions. It includes:
+ * 
+ * - Start and end messages for different session types (full_battery, screening)
+ * - Formatted warning messages for response timeouts
+ * - Dynamic content based on session settings (e.g., week 0 vs other weeks)
+ * 
+ * The messages support HTML formatting and can include optional fields passed on to the jsPsych instructions trial object.
+ */
+
 import { endExperiment } from '/core/utils/index.js';
 
 const formatted_warning_msg = `
