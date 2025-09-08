@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card Choosing Task</title>
+    <title>Study</title>
     
     <!-- jsPsych Core Files -->
     <script src="/core/jspsych/jspsych.js"></script>
@@ -14,13 +14,22 @@
     <script src="/core/jspsych/plugin-call-function.js"></script>
     <script src="/core/jspsych/plugin-fullscreen.js"></script>
     <script src="/core/jspsych/plugin-survey-multi-choice.js"></script>
+    <script src="/core/jspsych/plugin-survey-likert.js"></script>
 
     
     <!-- Task-specific files -->
     <script src="/tasks/card-choosing/plugin-card-choosing.js"></script>
+    <script src="/tasks/control/plugins/plugin-explore-ship.js"></script>
+    <script src="/tasks/control/plugins/plugin-explore-ship-feedback.js"></script>
+    <script src="/tasks/control/plugins/plugin-predict-home-base.js"></script>
+    <script src="/tasks/control/plugins/plugin-reward-ship.js"></script>
+    <script src="/tasks/control/plugins/plugin-reward-prompt.js"></script>
+    <script src="/tasks/reversal/plugin-reversal.js"></script>
+    <script src="/tasks/open-text/plugin-open-text.js"></script>
+
     
     <!-- Core utilities -->
-    <script type="module" src="../core/utils/index.js"></script>
+    <script type="module" src="/core/utils/index.js"></script>
     
     <!-- CSS Styles -->
     <link href="/core/jspsych/jspsych.css" rel="stylesheet" type="text/css" />
@@ -52,8 +61,8 @@
     
     <script type="module">
         // Import task registry functions
-        import { createTaskTimeline, getTaskInfo } from '../api/index.js';
-        import { enterExperiment } from '../core/utils/index.js';
+        import { createModuleTimeline, getModuleInfo } from '/api/index.js';
+        import { enterExperiment } from '/core/utils/index.js';
 
         // Get parameters from URL
         window.participantID = new URLSearchParams(window.location.search).get('participant_id') || '';
@@ -65,29 +74,29 @@
             display_element: 'display_element',
             on_finish: function(data) {
                 // Display results
-                jsPsych.getDisplayElement().innerHTML = '<p>Experiment complete. Thank you for participating!</p>';
-                console.log('Experiment data:', data.values());
+                jsPsych.getDisplayElement().innerHTML = session == "screening" ? '<p>Thank you for participating! You may now close this tab.</p>' : '<p>Thank you for participating! Please call the experimenter.</p>';
             }
         });
 
-        // Configuration for the card choosing task
-        const taskConfig = {
-            task_name: "pilt_test",
-            sequence: 'wk0',
-            session: "wk0"
+        // Configurations
+        const session = new URLSearchParams(window.location.search).get('session') || 'wk0';
+        const settings = {
+            sequence: session,
+            session: session
         };
 
         // Function to run the experiment
         async function runExperiment() {
             try {
-                console.log('Starting card choosing task...');
-                
-                // Get task information
-                const taskInfo = getTaskInfo('post_PILT_test');
-                console.log('Task info:', taskInfo);
-                
-                // Create the task timeline
-                const timeline = await createTaskTimeline('post_PILT_test', taskConfig);
+                // Which module to run
+                const module_name = session == "screening" ? 'screening' : 'full_battery';
+
+                // Get module information
+                const moduleInfo = getModuleInfo(module_name);
+                console.log('Module info:', moduleInfo);
+
+                // Create the timeline
+                const timeline = await createModuleTimeline(module_name, settings);
                 console.log('Timeline created:', timeline);
                 
                 const exitFullscreen = {
@@ -110,7 +119,9 @@
                     let simulation_options = {
                             default: {
                                 data: {
-                                rt: 200
+                                    rt: 200,
+                                    speed_up: true,
+                                    speed_up_factor: 10,
                                 }
                             }
                     }

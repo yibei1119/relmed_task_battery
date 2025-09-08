@@ -24,8 +24,8 @@ const acceptability_intro =
 /**
  * Creates a standardized acceptability questionnaire for a specific task
  * 
- * @param {string} taskName - Short identifier for the task (used in data field names)
- * @param {string} gameDescription - Human-readable description of the game/task
+ * @param {string} task_name - Short identifier for the task (used in data field names)
+ * @param {string} game_description - Human-readable description of the game/task
  * @returns {Array} Array containing intro screen and Likert scale questionnaire
  * 
  * @example
@@ -36,34 +36,34 @@ const acceptability_intro =
  * // Create acceptability questionnaire for a working memory task
  * const wmAcceptability = createAcceptabilityTask("wm", "one-card memory game");
  */
-export function createAcceptabilityTask(taskName, gameDescription) {
+export function createAcceptabilityTimeline(settings) {
     return [
         acceptability_intro,
         {
             type: jsPsychSurveyLikert,
-            preamble: `<p>Please answer these questions regarding the ${gameDescription}:<p>`,
+            preamble: `<p>Please answer these questions regarding the ${settings.game_description}:<p>`,
             questions: [
                 {
-                    prompt: `How difficult was the ${gameDescription}?`,
+                    prompt: `How difficult was the ${settings.game_description}?`,
                     labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very difficult"],
                     required: true,
-                    name: `${taskName}_difficulty`
+                    name: `${settings.task_name}_difficulty`
                 },
                 {
-                    prompt: `How enjoyable was the ${gameDescription}?`,
+                    prompt: `How enjoyable was the ${settings.game_description}?`,
                     labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very enjoyable"],
                     required: true,
-                    name: `${taskName}_enjoy`
+                    name: `${settings.task_name}_enjoy`
                 },
                 {
-                    prompt: `Was it clear to you what you needed to do in the ${gameDescription}?`,
+                    prompt: `Was it clear to you what you needed to do in the ${settings.game_description}?`,
                     labels: ["1<br>Not clear at all", "2", "3", "4", "5<br>Extremely clear"],
                     required: true,
-                    name: `${taskName}_clear`
+                    name: `${settings.task_name}_clear`
                 }
             ],
             data: {
-                trialphase: `acceptability_${taskName}` // Used for data analysis and filtering
+                trialphase: `acceptability_${settings.task_name}` // Used for data analysis and filtering
             }
         }
     ];

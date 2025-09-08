@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELMED Task Battery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .start-button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <form id="startForm">
+            <div class="form-group">
+                <label for="participantId">Participant ID:</label>
+                <input 
+                    type="text" 
+                    id="participantId" 
+                    name="participantId" 
+                    placeholder="Enter participant ID"
+                    required
+                    autocomplete="off"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="session">Session:</label>
+                <select id="session" name="session" required style="width: 100%; padding: 12px 16px; font-size: 16px; border: 2px solid #e1e8ed; border-radius: 8px; transition: border-color 0.3s ease; outline: none; background: white;">
+                    <option value="">Select session</option>
+                    <option value="wk0">Session 1</option>
+                    <option value="wk2">Session 2</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="start-button" id="startButton">
+                Start Experiment
+            </button>
+            
+            <div class="error-message" id="errorMessage">
+                Please enter a valid participant ID
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('startForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const participantId = document.getElementById('participantId').value.trim();
+            const session = document.getElementById('session').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide error message
+            errorMessage.style.display = 'none';
+            
+            // Validate participant ID
+            if (!participantId) {
+                errorMessage.textContent = 'Please enter a participant ID';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Validate session selection
+            if (!session) {
+                errorMessage.textContent = 'Please select a session';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Check if participant ID contains only valid characters (alphanumeric, hyphens, underscores)
+            if (!/^[a-zA-Z0-9_-]+$/.test(participantId)) {
+                errorMessage.textContent = 'Participant ID can only contain letters, numbers, hyphens, and underscores';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Redirect to experiment.html with participant_id and session parameters
+            window.location.href = `experiment.html?participant_id=${encodeURIComponent(participantId)}&session=${encodeURIComponent(session)}`;
+        });
+
+        // Enable real-time validation
+        document.getElementById('participantId').addEventListener('input', function() {
+            const errorMessage = document.getElementById('errorMessage');
+            if (this.value.trim()) {
+                errorMessage.style.display = 'none';
+            }
+        });
+
+        // Hide error message when session is selected
+        document.getElementById('session').addEventListener('change', function() {
+            const errorMessage = document.getElementById('errorMessage');
+            if (this.value) {
+                errorMessage.style.display = 'none';
+            }
+        });
+
+        // Focus on the input field when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('participantId').focus();
+        });
+    </script>
+</body>
+</html>

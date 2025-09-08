@@ -9,13 +9,14 @@ import {
   adjustStimuliPaths,
   buildPostLearningTest
 } from './utils.js';
+import { PAV_TEST_JSON } from './sequences/trial1_pavlovian_test.js';
 import { 
   updateState,
   computeBestRest,
   createPreloadTrial,
   applyWithinTaskResumptionRules, 
   getResumptionState
-} from '../../core/utils/index.js';
+} from '/core/utils/index.js';
 
 // MAIN EXPORT FUNCTIONS
 /**
@@ -106,8 +107,9 @@ export function createPostLearningTestTimeline(settings) {
   // Parse test structure based on task type
   let test_structure;
   if (settings.task_name === "pilt_test") {
+    console.log("here")
     test_structure = typeof PILT_test_json !== "undefined" ? JSON.parse(PILT_test_json) : null;
-    let pav_test_structure = typeof pav_test_json !== "undefined" ? JSON.parse(pav_test_json) : null;
+    let pav_test_structure = typeof PAV_TEST_JSON !== "undefined" ? JSON.parse(PAV_TEST_JSON) : null;
     
     // Adjust stimulus paths for main test
     adjustStimuliPaths(test_structure, 'card-choosing/stimuli');
@@ -116,8 +118,8 @@ export function createPostLearningTestTimeline(settings) {
     if (pav_test_structure) {
       pav_test_structure.forEach(trial => {
         // Set pavlovian-specific paths and properties
-        trial.stimulus_left = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_left}`;
-        trial.stimulus_right = `assets/images/pavlovian_stims/${window.session}/${trial.stimulus_right}`;
+        trial.stimulus_left = `/assets/images/pavlovian-stims/${settings.session}/${trial.stimulus_left}`;
+        trial.stimulus_right = `/assets/images/pavlovian-stims/${settings.session}/${trial.stimulus_right}`;
         trial.block = "pavlovian";
         trial.feedback_left = trial.magnitude_left;
         trial.feedback_right = trial.magnitude_right;
@@ -126,10 +128,8 @@ export function createPostLearningTestTimeline(settings) {
         trial.optimal_right = trial.magnitude_right > trial.magnitude_left;
       });
       
-      // Prepend pavlovian test to main test (except in demo mode)
-      if (!window.demo) {
-        test_structure = [pav_test_structure].concat(test_structure);
-      }
+      // Prepend pavlovian test to main test
+      test_structure = [pav_test_structure].concat(test_structure);
     }
   } else if (settings.task_name === "wm_test") {
     test_structure = typeof WM_test_json !== "undefined" ? JSON.parse(WM_test_json) : null;

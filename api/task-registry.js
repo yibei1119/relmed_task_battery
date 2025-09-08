@@ -4,12 +4,12 @@
 import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '/tasks/card-choosing/index.js';
 import { createDelayDiscountingTimeline } from '/tasks/delay-discounting/index.js';
 import { createMaxPressTimeline } from '/tasks/max-press-test/task.js';
-import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline } from '/tasks/piggy-banks/index.js';
+import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline, createVigourTestTimeline } from '/tasks/piggy-banks/index.js';
 import { createPavlovianLotteryTimeline } from '/tasks/pavlovian-lottery/task.js';
 import { createControlTimeline, computeRelativeControlBonus } from '/tasks/control/index.js';
-import { loadSequence, loadCSS } from '/core/utils/index.js';
 import { createOpenTextTimeline } from '/tasks/open-text/index.js';
 import { createReversalTimeline, computeRelativeReversalBonus } from '/tasks/reversal/index.js';
+import { createAcceptabilityTimeline } from '/tasks/acceptability-judgment/index.js';
 
 export const TaskRegistry = {
   PILT: {
@@ -27,12 +27,12 @@ export const TaskRegistry = {
         session: 'wk0'
     },
     sequences: {
-        screening: '../assets/sequences/trial1_screening_sequences.js',
-        wk0: '../assets/sequences/trial1_wk0_sequences.js',
-        wk2: '../assets/sequences/trial1_wk2_sequences.js',
-        wk4: '../assets/sequences/trial1_wk4_sequences.js',
-        wk24: '../assets/sequences/trial1_wk24_sequences.js',
-        wk28: '../assets/sequences/trial1_wk28_sequences.js',
+        screening: '/tasks/card-choosing/sequences/PILT/trial1_screening.js',
+        wk0: '/tasks/card-choosing/sequences/PILT/trial1_wk0.js',
+        wk2: '/tasks/card-choosing/sequences/PILT/trial1_wk2.js',
+        wk4: '/tasks/card-choosing/sequences/PILT/trial1_wk4.js',
+        wk24: '/tasks/card-choosing/sequences/PILT/trial1_wk24.js',
+        wk28: '/tasks/card-choosing/sequences/PILT/trial1_wk28.js',
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
@@ -71,12 +71,11 @@ export const TaskRegistry = {
         session: 'wk0'
     },
     sequences: {
-        screening: '../assets/sequences/trial1_screening_sequences.js',
-        wk0: '../assets/sequences/trial1_wk0_sequences.js',
-        wk2: '../assets/sequences/trial1_wk2_sequences.js',
-        wk4: '../assets/sequences/trial1_wk4_sequences.js',
-        wk24: '../assets/sequences/trial1_wk24_sequences.js',
-        wk28: '../assets/sequences/trial1_wk28_sequences.js',
+        wk0: '/tasks/card-choosing/sequences/WM/trial1_wk0.js',
+        wk2: '/tasks/card-choosing/sequences/WM/trial1_wk2.js',
+        wk4: '/tasks/card-choosing/sequences/WM/trial1_wk4.js',
+        wk24: '/tasks/card-choosing/sequences/WM/trial1_wk24.js',
+        wk28: '/tasks/card-choosing/sequences/WM/trial1_wk28.js',
     },
     requirements: {
       css: ['/tasks/card-choosing/styles.css'],
@@ -100,9 +99,9 @@ export const TaskRegistry = {
         session: "Session identifier to govern session-specific behaviour. Default is 'wk0'. Should be deprecated, with settings exposed."
     }
   },
-  post_learning_test: {
-    name: 'Post Learning Test',
-    description: 'A test phase that evaluates learning performance in notional extinction after completing a card-choosing learning phase',
+  post_PILT_test: {
+    name: 'Post PILT Test',
+    description: 'A test phase that evaluates learning performance in notional extinction after completing the PILT task',
     createTimeline: createPostLearningTestTimeline,
     defaultConfig: {
         task_name: "pilt_test",
@@ -113,12 +112,11 @@ export const TaskRegistry = {
       css: ['/tasks/card-choosing/styles.css'],
     },
     sequences: {
-      screening: '../assets/sequences/trial1_screening_sequences.js',
-      wk0: '../assets/sequences/trial1_wk0_sequences.js',
-      wk2: '../assets/sequences/trial1_wk2_sequences.js',
-      wk4: '../assets/sequences/trial1_wk4_sequences.js',
-      wk24: '../assets/sequences/trial1_wk24_sequences.js',
-      wk28: '../assets/sequences/trial1_wk28_sequences.js',
+      wk0: '/tasks/card-choosing/sequences/PILT-test/trial1_wk0.js',
+      wk2: '/tasks/card-choosing/sequences/PILT-test/trial1_wk2.js',
+      wk4: '/tasks/card-choosing/sequences/PILT-test/trial1_wk4.js',
+      wk24: '/tasks/card-choosing/sequences/PILT-test/trial1_wk24.js',
+      wk28: '/tasks/card-choosing/sequences/PILT-test/trial1_wk28.js',
     },
     resumptionRules: {
       enabled: true
@@ -127,6 +125,50 @@ export const TaskRegistry = {
         task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'pilt_test'.",
         test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
         sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
+    }
+  },
+  post_WM_test: {
+    name: 'Post WM Task Test',
+    description: 'A test phase that evaluates learning performance in notional extinction after completing the RLWM task',
+    createTimeline: createPostLearningTestTimeline,
+    defaultConfig: {
+        task_name: "wm_test",
+        test_confidence_every: 4,
+        sequence: 'wk0'
+    },
+    requirements: {
+      css: ['/tasks/card-choosing/styles.css'],
+    },
+    sequences: {
+      wk0: '/tasks/card-choosing/sequences/WM-test/trial1_wk0.js',
+      wk2: '/tasks/card-choosing/sequences/WM-test/trial1_wk2.js',
+      wk4: '/tasks/card-choosing/sequences/WM-test/trial1_wk4.js',
+      wk24: '/tasks/card-choosing/sequences/WM-test/trial1_wk24.js',
+      wk28: '/tasks/card-choosing/sequences/WM-test/trial1_wk28.js',
+    },
+    resumptionRules: {
+      enabled: true
+    },
+    configOptions: {
+        task_name: "The name of the test phase - can be 'pilt_test' or 'wm_test'. Default is 'wm_test'.",
+        test_confidence_every: "How often (in trials) to elicit confidence ratings in the test phase. Default is every 4 trials.",
+        sequence: "The key for the sequence to use for the test phase - should match the learning phase. Default is 'wk0'.",
+    }
+  },
+  vigour_test: {
+    name: 'Vigour Test',
+    description: 'A test of knowledge of the stimulus-reward contingencies in the vigour task',
+    createTimeline: createVigourTestTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+    },
+    requirements: {
+      css: ['/tasks/piggy-banks/styles.css'],
+    },
+    resumptionRules: {
+      enabled: true
+    },
+    configOptions: {
     }
   },
   reversal: {
@@ -141,12 +183,12 @@ export const TaskRegistry = {
       session: 'wk0'
     },
     sequences: {
-        screening: '/assets/sequences/trial1_screening_sequences.js',
-        wk0: '/assets/sequences/trial1_wk0_sequences.js',
-        wk2: '/assets/sequences/trial1_wk2_sequences.js',
-        wk4: '/assets/sequences/trial1_wk4_sequences.js',
-        wk24: '/assets/sequences/trial1_wk24_sequences.js',
-        wk28: '/assets/sequences/trial1_wk28_sequences.js',
+        screening: '/tasks/reversal/sequences/trial1_screening.js',
+        wk0: '/tasks/reversal/sequences/trial1_wk0.js',
+        wk2: '/tasks/reversal/sequences/trial1_wk2.js',
+        wk4: '/tasks/reversal/sequences/trial1_wk4.js',
+        wk24: '/tasks/reversal/sequences/trial1_wk24.js',
+        wk28: '/tasks/reversal/sequences/trial1_wk28.js',
     },
     requirements: {
       css: ['/tasks/reversal/styles.css'],
@@ -331,102 +373,37 @@ export const TaskRegistry = {
         enabled: true,
     }
   },
+  acceptability_judgment: {
+    name: 'Acceptability Judgment',
+    description: 'Measure participant acceptability of a preceding task',
+    createTimeline: createAcceptabilityTimeline,
+    computeBonus: () => 0, // No bonus computation for this task
+    defaultConfig: {
+      task_name: "task",
+      game_description: "game you have just completed"
+    },
+    configOptions: {
+      task_name: "Short identifier for the task (used in data field names). Default is 'task'.",
+      game_description: "Human-readable description of the game/task. Default is 'game you have just completed'."
+    },
+    resumptionRules: {
+        enabled: false,
+    }
+  }
 };
 
 // Global settings that apply to all tasks unless overridden
-const globalConfig = {
+export const globalConfig = {
     max_warnings_per_task: 3, 
     warning_expected_n_back: 1,
     default_response_deadline: 4000,
     long_response_deadline: 6000
 }
 
-const globalConfigOptions = {
+export const globalConfigOptions = {
     max_warnings_per_task: "Maximum number of deadline warnings allowed per task. Default is 3.",
     warning_expected_n_back: "How many jsPsych trials back to check for the previous deadline warning. Default is 1.",
     default_response_deadline: "Default response deadline in milliseconds. Default is 4000.",
     long_response_deadline: "Long response deadline in milliseconds. Default is 6000."
 }
 
-// Helper functions
-export function getTask(taskName) {
-  if (!(taskName in TaskRegistry)) {
-    throw new Error(`Task "${taskName}" not found. Available tasks: ${Object.keys(TaskRegistry).join(', ')}`);
-  }
-
-  let task = TaskRegistry[taskName];
-
-  // Add global settings to task
-  task.defaultConfig = { ...globalConfig, ...task.defaultConfig };
-  task.configOptions = { ...globalConfigOptions, ...task.configOptions };
-
-  return task;
-}
-
-export async function createTaskTimeline(taskName, config = {}) {
-    // Get task
-    const task = getTask(taskName);
-
-    // Merge configurations with defaults 
-    const mergedConfig = { ...globalConfig, ...task.defaultConfig, ...config };
-
-    // Attach task object for internal use
-    mergedConfig.__task = task;
-
-    // Load required CSS assets
-    if (task.requirements?.css) {
-        console.log(`Loading CSS assets for task ${taskName}:`, task.requirements.css);
-        
-        try {
-            await Promise.all(
-                task.requirements.css.map(cssPath => loadCSS(cssPath))
-            );
-            console.log(`Successfully loaded all CSS assets for task ${taskName}`);
-        } catch (error) {
-            console.warn(`Some CSS assets failed to load for task ${taskName}:`, error);
-        }
-    }
-
-    // Load required sequence using robust script loading
-    if (task.sequences) {
-        const sequenceName = mergedConfig.sequence;
-        const sequencePath = task.sequences?.[sequenceName];
-
-        console.log(`Loading sequence for task ${taskName}: ${sequenceName} from ${sequencePath}`);
-
-        if (sequencePath) {
-            console.log(`Loading sequence using script loading: ${sequencePath}`);
-            
-            try {
-                await loadSequence(sequencePath);
-                console.log(`Successfully loaded sequence: ${sequenceName}`);
-            } catch (error) {
-                console.warn(`Failed to load sequence ${sequencePath}, continuing without it:`, error);
-                // Continue without the sequence - let the task handle missing sequences gracefully
-            }
-        }
-    }
-    
-    return task.createTimeline(mergedConfig);
-}
-
-export function listTasks() {
-  return Object.keys(TaskRegistry);
-}
-
-export function getTaskInfo(taskName) {
-  const task = getTask(taskName);
-  
-  // Add extra_media_assets as a universal config option for all tasks
-  const universalConfigOptions = {
-    extra_media_assets: "Additional media assets to preload for the task. Default is an empty array."
-  };
-  
-  return {
-    name: task.name,
-    description: task.description,
-    defaultConfig: task.defaultConfig,
-    configOptions: { ...task.configOptions, ...universalConfigOptions },
-    resumptionRules: task.resumptionRules
-  };
-}

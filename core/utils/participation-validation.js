@@ -305,15 +305,15 @@ function checkFullscreen(){
 const canBeWarned = (settings, override_n_back = null) => {
     // Fetch number of previous warnings on this task
     const task_n_warnings = jsPsych.data.get().last(1).select(`${settings.task_name}_n_warnings`).values[0] ?? 0;
-    console.log(`Task ${settings.task_name} has received ${task_n_warnings} warnings so far.`)
+    // console.log(`Task ${settings.task_name} has received ${task_n_warnings} warnings so far.`)
 
     // Check the type of last trial. For tasks with external warning messages this would be "no_choice_warning"
     const last_trial = jsPsych.data.get().last(override_n_back ?? settings.warning_expected_n_back).select("trialphase").values[0];
-    console.log(`The last trial was of type: ${last_trial}`);
+    // console.log(`The last trial was of type: ${last_trial}`);
 
     // Check for a data field documenting warning message shown. For tasks with internal warning messages this would be "response_deadline_warning"
     const last_trial_shown = jsPsych.data.get().filter({trialphase: settings.task_name}).last(override_n_back ?? settings.warning_expected_n_back).select("response_deadline_warning").values[0] ?? false;
-    console.log(`Was a warning shown in the last trial? ${last_trial_shown || last_trial == "no_choice_warning"}`);
+    // console.log(`Was a warning shown in the last trial? ${last_trial_shown || last_trial == "no_choice_warning"}`);
 
     return ((task_n_warnings < settings.max_warnings_per_task) && (last_trial !== "no_choice_warning") && (!last_trial_shown));
 };

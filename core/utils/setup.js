@@ -15,6 +15,14 @@ import { preventParticipantTermination } from './participation-validation.js';
  */
 function loadSequence(scriptSrc) {
     return new Promise((resolve, reject) => {
+        // Check if script is already loaded
+        const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+        if (existingScript) {
+            console.log(`Script already loaded: ${scriptSrc}`);
+            resolve();
+            return;
+        }
+
         // Create a new script element for dynamic loading
         const script = document.createElement("script");
         
@@ -142,6 +150,7 @@ const enterExperiment = {
         }
     }
 };
+
 
 // Export functions for use in other modules
 export {
