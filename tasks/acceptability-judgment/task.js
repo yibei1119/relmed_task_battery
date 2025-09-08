@@ -44,7 +44,7 @@ export function createAcceptabilityTimeline(settings) {
             preamble: `<p>Please answer these questions regarding the ${settings.game_description}:<p>`,
             questions: [
                 {
-                    prompt: `How difficult was the ${settingsgame_description}?`,
+                    prompt: `How difficult was the ${settings.game_description}?`,
                     labels: ["1<br>Not at all", "2", "3", "4", "5<br>Very difficult"],
                     required: true,
                     name: `${settings.task_name}_difficulty`
