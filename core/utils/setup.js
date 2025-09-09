@@ -48,6 +48,35 @@ function loadSequence(scriptSrc) {
 }
 
 /**
+ * Resolves path aliases using the import map defined in the HTML file
+ * @param {string} path - The path that may contain aliases
+ * @returns {string} The resolved path
+ */
+function resolvePath(path) {
+    // Get the import map from the document
+    const importMapScript = document.querySelector('script[type="importmap"]');
+    
+    if (importMapScript) {
+        try {
+            const importMap = JSON.parse(importMapScript.textContent);
+            const imports = importMap.imports || {};
+            
+            // Check if path starts with any alias from the import map
+            for (const [alias, actualPath] of Object.entries(imports)) {
+                if (path.startsWith(alias)) {
+                    return path.replace(alias, "../../" + actualPath);
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to parse import map:', error);
+        }
+    }
+    
+    // Return original path if no mapping found
+    return path;
+}
+
+/**
  * Asynchronously loads a CSS stylesheet into the document head.
  * Checks if the CSS is already loaded to prevent duplicates.
  * 
@@ -71,10 +100,13 @@ function loadSequence(scriptSrc) {
  */
 async function loadCSS(cssPath) {
     return new Promise((resolve, reject) => {
+        // Resolve any path aliases using the import map
+        const resolvedPath = resolvePath(cssPath);
+
         // Check if CSS is already loaded
-        const existingLink = document.querySelector(`link[href="${cssPath}"]`);
+        const existingLink = document.querySelector(`link[href="${resolvedPath}"]`);
         if (existingLink) {
-            console.log(`CSS already loaded: ${cssPath}`);
+            console.log(`CSS already loaded: ${resolvedPath}`);
             resolve();
             return;
         }
@@ -82,16 +114,16 @@ async function loadCSS(cssPath) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = cssPath;
+        link.href = resolvedPath;
         
         link.onload = () => {
-            console.log(`Successfully loaded CSS: ${cssPath}`);
+            console.log(`Successfully loaded CSS: ${resolvedPath}`);
             resolve();
         };
         
         link.onerror = () => {
-            console.warn(`Failed to load CSS: ${cssPath}`);
-            reject(new Error(`Failed to load CSS: ${cssPath}`));
+            console.warn(`Failed to load CSS: ${resolvedPath}`);
+            reject(new Error(`Failed to load CSS: ${resolvedPath}`));
         };
         
         document.head.appendChild(link);
