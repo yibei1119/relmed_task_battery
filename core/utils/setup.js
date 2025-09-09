@@ -15,10 +15,14 @@ import { preventParticipantTermination } from './participation-validation.js';
  */
 function loadSequence(scriptSrc) {
     return new Promise((resolve, reject) => {
+
+        // Resolve any path aliases using the import map
+        const resolvedPath = resolvePath(scriptSrc);
+
         // Check if script is already loaded
-        const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+        const existingScript = document.querySelector(`script[src="${resolvedPath}"]`);
         if (existingScript) {
-            console.log(`Script already loaded: ${scriptSrc}`);
+            console.log(`Script already loaded: ${resolvedPath}`);
             resolve();
             return;
         }
@@ -27,19 +31,19 @@ function loadSequence(scriptSrc) {
         const script = document.createElement("script");
         
         // Set the src attribute to the provided script path
-        script.src = scriptSrc;
+        script.src = resolvedPath;
         script.type = "text/javascript";
         
         // Success handler
         script.onload = () => {
-            console.log("Script loaded successfully:", scriptSrc);
+            console.log("Script loaded successfully:", resolvedPath);
             resolve();
         };
         
         // Error handler
         script.onerror = () => {
-            console.error("Failed to load script:", scriptSrc);
-            reject(new Error(`Failed to load sequence script: ${scriptSrc}`));
+            console.error("Failed to load script:", resolvedPath);
+            reject(new Error(`Failed to load sequence script: ${resolvedPath}`));
         };
         
         // Append the script to the document's head to trigger loading
