@@ -59,7 +59,7 @@ var jsPsychReversal = (function (jspsych) {
             },
             images_path: {
                 type: jspsych.ParameterType.STRING,
-                default: '@images/reversal/'
+                default: './assets/images/reversal/'
             }
         },
         data: {
