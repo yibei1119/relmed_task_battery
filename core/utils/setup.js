@@ -68,7 +68,7 @@ function resolvePath(path) {
             // Check if path starts with any alias from the import map
             for (const [alias, actualPath] of Object.entries(imports)) {
                 if (path.startsWith(alias)) {
-                    return path.replace(alias, "../../" + actualPath);
+                    return path.replace(alias, actualPath.replace("./", "../../"));
                 }
             }
         } catch (error) {
