@@ -139,12 +139,6 @@ export function getTaskInfo(taskName) {
  * @param {...Object} additionalArgs - Additional configuration objects to merge
  * @returns {Object} Instruction trial configuration object
  */
-/**
- * Create an instruction trial object with base configuration
- * @param {string|Array} message - Instruction message(s) to display as pages
- * @param {...Object} additionalArgs - Additional configuration objects to merge
- * @returns {Object} Instruction trial configuration object for jsPsych
- */
 function instructionTrial(message, ...additionalArgs) {
     // Default configuration for instruction trials
     let defaultArgs = {
