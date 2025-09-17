@@ -140,20 +140,20 @@ export function getTaskInfo(taskName) {
  * @returns {Object} Instruction trial configuration object
  */
 function instructionTrial(message, ...additionalArgs) {
-    let baseObject = {
-        type: jsPsychInstructions,
-        css_classes: ['instructions'],
-        pages: message,
-        show_clickable_nav: true,
-        data: {trialphase: "instruction"}
-    };
+    // Default configuration for instruction trials
+    let defaultArgs = {
+        css_classes: ['instructions'], // Apply instructions CSS styling
+        show_clickable_nav: true,      // Enable navigation buttons
+        data: {trialphase: "instruction"} // Mark trial phase for data collection
+    }
 
-    // Merge additional arguments into the base object
-    additionalArgs.forEach(arg => {
-        if (typeof arg === 'object' && arg !== null) {
-            Object.assign(baseObject, arg);
-        }
-    });
+    // Create the base jsPsych instructions trial object
+    let baseObject = {
+        type: jsPsychInstructions,     // Use jsPsych instructions plugin
+        pages: message,                // Set the instruction pages content
+        ...defaultArgs,                // Apply default configuration
+        ...additionalArgs[0]           // Override with any additional arguments
+    };
 
     return baseObject;
 }
