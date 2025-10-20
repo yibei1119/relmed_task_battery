@@ -16,7 +16,7 @@ import {
     canBeWarned, 
     updateState, 
     updateBonusState, 
-    saveDataREDCap } from "@utils/index.js"
+    saveDataREDCap } from "../core/utils/index.js"
 
 // First preload for task
 const reversal_preload = createPreloadTrial(
