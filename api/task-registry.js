@@ -1,15 +1,15 @@
 // api/task-registry.js
 // This module defines a registry for tasks in the API, allowing for easy management and execution of tasks.
 
-import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '@tasks/card-choosing/index.js';
-import { createDelayDiscountingTimeline } from '@tasks/delay-discounting/index.js';
-import { createMaxPressTimeline } from '@tasks/max-press-test/task.js';
-import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline, createVigourTestTimeline } from '@tasks/piggy-banks/index.js';
-import { createPavlovianLotteryTimeline } from '@tasks/pavlovian-lottery/task.js';
-import { createControlTimeline, computeRelativeControlBonus } from '@tasks/control/index.js';
-import { createOpenTextTimeline } from '@tasks/open-text/index.js';
-import { createReversalTimeline, computeRelativeReversalBonus } from '@tasks/reversal/index.js';
-import { createAcceptabilityTimeline } from '@tasks/acceptability-judgment/index.js';
+import { computeRelativeCardChoosingBonus, createCardChoosingTimeline, createPostLearningTestTimeline } from '../tasks/card-choosing/index.js';
+import { createDelayDiscountingTimeline } from '../tasks/delay-discounting/index.js';
+import { createMaxPressTimeline } from '../tasks/max-press-test/task.js';
+import { createVigourTimeline, computeRelativePiggyTasksBonus, createPITTimeline, createVigourTestTimeline } from '../tasks/piggy-banks/index.js';
+import { createPavlovianLotteryTimeline } from '../tasks/pavlovian-lottery/task.js';
+import { createControlTimeline, computeRelativeControlBonus } from '../tasks/control/index.js';
+import { createOpenTextTimeline } from '../tasks/open-text/index.js';
+import { createReversalTimeline, computeRelativeReversalBonus } from '../tasks/reversal/index.js';
+import { createAcceptabilityTimeline } from '../tasks/acceptability-judgment/index.js';
 
 export const TaskRegistry = {
   PILT: {
