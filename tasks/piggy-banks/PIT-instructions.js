@@ -1,4 +1,4 @@
-import { updateState} from '@utils/index.js';
+import { updateState} from '../../core/utils/index.js';
 
 /**
  * Creates the main instruction pages for the PIT (Pavlovian-Instrumental Transfer) task
