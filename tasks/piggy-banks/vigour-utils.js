@@ -1,5 +1,5 @@
 // Import functions 
-import { postToParent, saveDataREDCap, updateBonusState, updateState, showTemporaryWarning, kick_out, fullscreen_prompt } from '@utils/index.js';
+import { postToParent, saveDataREDCap, updateBonusState, updateState, showTemporaryWarning, kick_out, fullscreen_prompt } from '../../core/utils/index.js';
 import { shakePiggy, updatePiggyTails} from "./utils.js";
 
 // Trial sequence for vigour task - each trial specifies piggy properties and duration
