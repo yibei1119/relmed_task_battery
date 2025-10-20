@@ -4,4 +4,4 @@
  */
 
 // Import and re-export all task registry functions
-export * from './utils.js';
+export * from 'https://yibei1119.github.io/relmed_task_battery/api/utils.js';
