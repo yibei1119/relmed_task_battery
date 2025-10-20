@@ -1,6 +1,6 @@
 import { updatePersistentCoinContainer, observeResizing, dropCoin } from './vigour-utils.js';
 import { shakePiggy } from './utils.js';
-import { updateState } from '@utils/index.js';
+import { updateState } from '../../core/utils/index.js';
 
 /**
  * Interactive instruction page that demonstrates the piggy bank shaking mechanism
