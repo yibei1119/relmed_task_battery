@@ -1,5 +1,5 @@
 // Import functions 
-import { saveDataREDCap, updateBonusState, updateState, showTemporaryWarning, kick_out, fullscreen_prompt } from '@utils/index.js';
+import { saveDataREDCap, updateBonusState, updateState, showTemporaryWarning, kick_out, fullscreen_prompt } from '../../core/utils/index.js';
 import { updatePiggyTails, shakePiggy } from './utils.js';
 
 // Define trial sequence - each trial specifies piggy properties and background stimulus
