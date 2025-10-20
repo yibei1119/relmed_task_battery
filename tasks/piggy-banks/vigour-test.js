@@ -1,4 +1,4 @@
-import { saveDataREDCap, updateState, kick_out, fullscreen_prompt } from '@utils/index.js';
+import { saveDataREDCap, updateState, kick_out, fullscreen_prompt } from '../../core/utils/index.js';
 
 // Trial plan for the vigour test task
 const POST_VIGOUR_PAIRS =
