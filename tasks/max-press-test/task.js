@@ -1,4 +1,4 @@
-import { updateState } from '@utils/index.js';
+import { updateState } from '../../core/utils/index.js';
 
 // Function to get each key press RT
 function getDifferences(array) {
