@@ -7,7 +7,7 @@ import {
   PREDICT_SEQUENCE_SCREENING 
 } from "./configuration.js"
 
-import { createPreloadTrial, kick_out, fullscreen_prompt, noChoiceWarning, updateState, saveDataREDCap, canBeWarned, updateBonusState } from "@utils/index.js"
+import { createPreloadTrial, kick_out, fullscreen_prompt, noChoiceWarning, updateState, saveDataREDCap, canBeWarned, updateBonusState } from "../../core/utils/index.js"
 
 /**
  * Creates preload trial for control task assets
