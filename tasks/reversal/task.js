@@ -27,7 +27,7 @@ const reversal_preload = createPreloadTrial(
         "/reversal/1penny.png",
         "/reversal/1pound.png",
         "2_finger_keys.jpg"
-    ].map(img => `../assets/images${img}`),
+    ].map(img => `https://yibei1119.github.io/relmed_task_battery/assets/images${img}`),
     "reversal"
 );
 
