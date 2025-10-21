@@ -183,15 +183,15 @@ export const TaskRegistry = {
       session: 'wk0'
     },
     sequences: {
-        screening: '@tasks/reversal/sequences/trial1_screening.js',
-        wk0: '@tasks/reversal/sequences/trial1_wk0.js',
-        wk2: '@tasks/reversal/sequences/trial1_wk2.js',
-        wk4: '@tasks/reversal/sequences/trial1_wk4.js',
-        wk24: '@tasks/reversal/sequences/trial1_wk24.js',
-        wk28: '@tasks/reversal/sequences/trial1_wk28.js',
+        screening: '../tasks/reversal/sequences/trial1_screening.js',
+        wk0: '../tasks/reversal/sequences/trial1_wk0.js',
+        wk2: '../tasks/reversal/sequences/trial1_wk2.js',
+        wk4: '../tasks/reversal/sequences/trial1_wk4.js',
+        wk24: '../tasks/reversal/sequences/trial1_wk24.js',
+        wk28: '../tasks/reversal/sequences/trial1_wk28.js',
     },
     requirements: {
-      css: ['@tasks/reversal/styles.css'],
+      css: ['../tasks/reversal/styles.css'],
     },
     resumptionRules: {
         enabled: true
