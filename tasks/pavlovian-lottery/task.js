@@ -8,7 +8,7 @@
  * followed by its associated coin reward with animation effects.
  */
 
-import { createPreloadTrial, updateState } from '@utils/index.js';
+import { createPreloadTrial, updateState } from '../../core/utils/index.js';
 
 /**
  * Creates the complete timeline for the Pavlovian Lottery experiment.
