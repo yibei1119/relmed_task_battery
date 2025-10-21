@@ -1,5 +1,5 @@
 import { controlConfig } from "./configuration.js";
-import { createPressBothTrial, updateState } from "@utils/index.js"
+import { createPressBothTrial, updateState } from "../../core/utils/index.js"
 
 /**
  * Creates ocean current visual elements based on strength level and rule matching
