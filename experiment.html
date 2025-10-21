@@ -73,8 +73,8 @@
     
     <script type="module">
         // Import task registry functions
-        import { createModuleTimeline, getModuleInfo } from '@api/index.js';
-        import { enterExperiment } from '@utils/index.js';
+        import { createModuleTimeline, getModuleInfo } from './api/index.js';
+        import { enterExperiment } from './core/utils/index.js';
 
         // Get parameters from URL
         window.participantID = new URLSearchParams(window.location.search).get('participant_id') || '';
