@@ -4,7 +4,7 @@ import {
     updateState,
     createPressBothTrial,
     shuffleArray
-} from '@utils/index.js';
+} from '../../core/utils/index.js';
 import { 
     buildCardChoosingTask,
     getPavlovianImages 
