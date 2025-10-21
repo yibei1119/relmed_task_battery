@@ -19,16 +19,18 @@ import {
     saveDataREDCap } from "../../core/utils/index.js"
 
 // First preload for task
+const baseURL = "https://yibei1119.github.io/relmed_task_battery/assets/images/";
+
 const reversal_preload = createPreloadTrial(
-    [
-    "https://yibei1119.github.io/relmed_task_battery/assets/images/reversal/squirrels_empty.png",
-    "https://yibei1119.github.io/relmed_task_battery/assets/images/reversal/squirrels_bg.png",
-    "https://yibei1119.github.io/relmed_task_battery/assets/images/reversal/squirrels_fg.png",
-    "https://yibei1119.github.io/relmed_task_battery/assets/images/reversal/1penny.png",
-    "https://yibei1119.github.io/relmed_task_battery/assets/images/reversal/1pound.png",
-    "https://yibei1119.github.io/relmed_task_battery/assets/images/2_finger_keys.jpg"
-  ],
-    "reversal"
+  [
+    "reversal/squirrels_empty.png",
+    "reversal/squirrels_bg.png",
+    "reversal/squirrels_fg.png",
+    "reversal/1penny.png",
+    "reversal/1pound.png",
+    "2_finger_keys.jpg"
+  ].map(img => `${baseURL}${img}`),
+  "reversal"
 );
 
 /**
