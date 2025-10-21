@@ -21,13 +21,13 @@ import {
 // First preload for task
 const reversal_preload = createPreloadTrial(
     [
-        "/reversal/squirrels_empty.png",
-        "/reversal/squirrels_bg.png",
-        "/reversal/squirrels_fg.png",
-        "/reversal/1penny.png",
-        "/reversal/1pound.png",
-        "/reversal/2_finger_keys.jpg"
-    ].map(img => `https://yibei1119.github.io/relmed_task_battery/assets/images${img}`),
+        "reversal/squirrels_empty.png",
+        "reversal/squirrels_bg.png",
+        "reversal/squirrels_fg.png",
+        "reversal/1penny.png",
+        "reversal/1pound.png",
+        "2_finger_keys.jpg"
+    ].map(img => `https://yibei1119.github.io/relmed_task_battery/assets/images/${img}`),
     "reversal"
 );
 
