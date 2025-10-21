@@ -16,7 +16,7 @@ import {
   createPreloadTrial,
   applyWithinTaskResumptionRules, 
   getResumptionState
-} from '@utils/index.js';
+} from '../../core/utils/index.js';
 
 // MAIN EXPORT FUNCTIONS
 /**
