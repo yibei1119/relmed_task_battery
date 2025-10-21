@@ -9,7 +9,7 @@ import {
   updateState,
   isValidNumber,
   countOccurrences
-} from '@utils/index.js'; // Adjust path as needed
+} from '../../core/utils/index.js'; // Adjust path as needed
 
 
 // CONSTANTS
