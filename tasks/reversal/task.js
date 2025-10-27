@@ -23,12 +23,12 @@ const baseURL = "https://yibei1119.github.io/relmed_task_battery/";
 
 const reversal_preload = createPreloadTrial(
   [
-    "reversal/squirrels_empty.png",
-    "reversal/squirrels_bg.png",
-    "reversal/squirrels_fg.png",
-    "reversal/1penny.png",
-    "reversal/1pound.png",
-    "reversal/2_finger_keys.jpg"
+    "reversal_image/squirrels_empty.png",
+    "reversal_image/squirrels_bg.png",
+    "reversal_image/squirrels_fg.png",
+    "reversal_image/1penny.png",
+    "reversal_image/1pound.png",
+    "reversal_image/2_finger_keys.jpg"
   ].map(img => `${baseURL}${img}`),
   "reversal"
 );
