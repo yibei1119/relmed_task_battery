@@ -19,7 +19,7 @@ import {
     saveDataREDCap } from "../../core/utils/index.js"
 
 // First preload for task
-const baseURL = "https://yibei1119.github.io/relmed_task_battery/assets/images/";
+const baseURL = "https://yibei1119.github.io/relmed_task_battery/";
 
 const reversal_preload = createPreloadTrial(
   [
