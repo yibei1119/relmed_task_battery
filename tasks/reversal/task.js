@@ -202,7 +202,7 @@ function reversalInstructions(settings) {
         createPressBothTrial(`
             <p>You will now play the squirrel game for about ${settings.n_trials == 50 ? "three" : "five"} minutes without breaks.</p>
             <p>When you're ready, place your fingers comfortably on the <strong>left and right arrow keys</strong> as shown below. Press down <strong> both left and right arrow keys at the same time </strong> to begin.</p>
-            <img src='./assets/images/2_finger_keys.jpg' style='width:250px;'></img>`,
+            <img src='../reversal_image/2_finger_keys.jpg' style='width:250px;'></img>`,
             "reversal_instruction"
         )
     ]
