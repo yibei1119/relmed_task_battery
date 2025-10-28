@@ -53,8 +53,8 @@
         import { createTaskTimeline, getTaskInfo } from '../api/index.js';
         import { enterExperiment } from '../core/utils/index.js';
 
-        // Get parameters from URL
-        window.participantID = new URLSearchParams(window.location.search).get('participant_id') || '';
+        // Get parameters from URL (modified to get 'subject')
+        window.participantID = new URLSearchParams(window.location.search).get('subject') || ''; 
         window.simulating = window.participantID.includes("simulate") || false;
 
         // Initialize jsPsych
