@@ -86,10 +86,25 @@
                     fullscreen_mode: false
                 };
                 
+                    // ✅ Create the DataPipe save trial
+                // needs change filename
+    const filename = `reversal_${window.participantID || "anon"}_${Date.now()}.csv`;
+
+    const save_data = {
+      type: jsPsychPipe,
+      action: "save",
+      experiment_id: "tRlO0WO08reK",  // ← Replace with your real DataPipe experiment ID
+      filename: filename,
+      data_string: () => jsPsych.data.get().csv(),
+      on_finish: function() {
+        console.log("✅ Data successfully sent to DataPipe!");
+      }
+    };
                 // Create the complete timeline
                 const fullTimeline = [
                     enterExperiment,
                     ...timeline,
+                    save_data,
                     exitFullscreen
                 ];
                 
