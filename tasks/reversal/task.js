@@ -103,17 +103,10 @@ function generateReversalBlocks(settings) {
                                     const n_trials = jsPsych.data.get().filter({trial_type: "reversal"}).count()
                                     
                                     // Save data to REDCap every 40 trials
-                                    // update with datapipe save
-                                    if (n_trials % 40 == 0) {
-                                        jsPsych.run([{
-                                        type: jsPsychPipe,
-                                        action: "save",
-                                        experiment_id: "tRlO0WO08reK",
-                                        filename: `${window.participantID}_${window.module_start_time}_trial${n_trials}.csv`,
-                                        data_string: () => jsPsych.data.get().csv()
-                                        }]);
+                                    // 
+                                   if (n_trials % 40 == 0) {
+                                       saveDataREDCap(3);
                                     }
-
                                     // Track missed responses (null responses)
                                     if (data.response === null) {
                                         const up_to_now = parseInt(jsPsych.data.get().last(1).select('n_warnings').values);
