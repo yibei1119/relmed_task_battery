@@ -62,8 +62,12 @@
             display_element: 'display_element',
             on_finish: function(data) {
                 // Display results
-                jsPsych.getDisplayElement().innerHTML = '<p>Experiment complete. Thank you for participating!</p>';
+                jsPsych.getDisplayElement().innerHTML = '<p>Experiment complete. Thank you for participating!</p>'
+                 <p>You will be redirected shortly...</p>
+        ;
                 console.log('Experiment data:', data.values());
+                 const qualtricsRedirectURL = `https://survey.uu.nl/jfe/form/SV_xxx?subject=${participantID}`;
+                
             }
         });
 
@@ -87,13 +91,12 @@
                 };
                 
                     // ✅ Create the DataPipe save trial
-                // needs change filename
-    const filename = `reversal_${window.participantID || "anon"}_${Date.now()}.csv`;
+    const filename = `${window.participantID || "anon"}_${Date.now()}.csv`;
 
     const save_data = {
       type: jsPsychPipe,
       action: "save",
-      experiment_id: "tRlO0WO08reK",  // ← Replace with your real DataPipe experiment ID
+      experiment_id: "tRlO0WO08reK",  
       filename: filename,
       data_string: () => jsPsych.data.get().csv(),
       on_finish: function() {
