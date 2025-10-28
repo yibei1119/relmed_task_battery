@@ -181,7 +181,7 @@ function reversalInstructions(settings) {
                 Use the arrow keys to choose either the left or right squirrel. 
                 The squirrel you pick will give you a coin to add to your safe.</p>`,
                 // Task explanation
-                `<p>One squirrel has higher-value coins, and the other has lower-value coins. 
+                `<p>One squirrel has higher-value coins （i.e., silver coin of 1 pound), and the other has lower-value coins （i.e., copper coin of 1 penny). 
                 But every few turns they secretly switch bags.</p>
                 <p>Your goal is to figure out which squirrel has the better coins and collect as many high-value ones as possible.<p>`
             ],
