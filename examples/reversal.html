@@ -62,12 +62,17 @@
             display_element: 'display_element',
             on_finish: function(data) {
                 // Display results
-                jsPsych.getDisplayElement().innerHTML = '<p>Experiment complete. Thank you for participating!</p>'
-                 <p>You will be redirected shortly...</p>
-        ;
+                jsPsych.getDisplayElement().innerHTML = 
+                `
+              <p>Experiment complete. Thank you for participating!</p>
+              <p>You will be redirected shortly...</p>
+               `;
                 console.log('Experiment data:', data.values());
-                 const qualtricsRedirectURL = `https://survey.uu.nl/jfe/form/SV_xxx?subject=${participantID}`;
-                
+                 const qualtricsRedirectURL = `https://survey.uu.nl/jfe/form/SV_eMew8v6yPgwPGUC?subject=${participantID}`;
+                // Redirect after a short delay (e.g. 2 seconds)
+                setTimeout(() => {
+                window.location.href = qualtricsRedirectURL;
+                }, 5000);
             }
         });
 
